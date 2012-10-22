@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'HEROES SAS GSE' target in the 'HEROES SAS GSE' project
+//
+
+#ifdef __OBJC__
+    #import <Cocoa/Cocoa.h>
+#endif
