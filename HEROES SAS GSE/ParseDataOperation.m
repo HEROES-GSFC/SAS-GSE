@@ -14,14 +14,25 @@
 #include <unistd.h>     /* for close() */
 
 #import "ParseDataOperation.h"
-#import "AppController.h"
+#import "DataPacket.h"
 
 #define PAYLOAD_SIZE 9
 #define DEFAULT_PORT 7000 /* The default port to send on */
 
-@class AppController;
+// NSNotification name to tell the Window controller an image file as found
+NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
+
+@interface ParseDataOperation(){
+    DataPacket *dataPacket;
+}
+
+@property (retain) DataPacket *dataPacket;
+
+@end
 
 @implementation ParseDataOperation
+
+@synthesize dataPacket;
 
 // -------------------------------------------------------------------------------
 //	main:
@@ -38,6 +49,8 @@
         unsigned short echoServPort;     /* Server port */
         int recvMsgSize;                 /* Size of received message */
 
+        DataPacket* dataPacket = [[DataPacket alloc] init];
+        
         echoServPort = DEFAULT_PORT;
         
         /* Create socket for sending/receiving datagrams */
@@ -85,10 +98,27 @@
                 NSLog(@"payload[0] %u\n", (uint8_t) payload[0]);
                 
                 NSLog(@"sync word is %u\n", sync);
+                
+                [dataPacket setFrameNumber:payload[0]];
+                NSLog(@"frame number is %u\n", (uint8_t) [dataPacket frameNumber]);
+
+                NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:
+                                      dataPacket, @"packet",
+                                      nil];
+                
+                if (![self isCancelled])
+                {
+                    // for the purposes of this sample, we're just going to post the information
+                    // out there and let whoever might be interested receive it (in our case its MyWindowController).
+                    //
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kReceiveAndParseDataDidFinish object:nil userInfo:info];
+                }
             }
             //[self setQueuePriority:2.0];      // second priority
         }
     }
 }
+
+
 
 @end

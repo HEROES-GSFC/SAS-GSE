@@ -21,10 +21,12 @@
 
 - (NSAttributedString*) attributedStringForObjectValue: (id)anObject withDefaultAttributes: (NSDictionary*)attr;
 {
-    NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] initWithString:[self stringForObjectValue:anObject]];
+    NSString *string = [self stringForObjectValue:anObject];
+    NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] initWithString:string];
+    NSInteger stringLength = [string length];
     
     if ([[attrString string] floatValue] < -20.0f) {
-        [attrString addAttribute:@"NSForegroundColorAttributeName" value:[NSColor redColor] range:NSMakeRange(0, 10)];
+        [attrString addAttribute:@"NSForegroundColorAttributeName" value:[NSColor redColor] range:NSMakeRange(0, stringLength)];
         return attrString;
     } else return attrString;
 }

@@ -8,6 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
+// NSNotification name to tell the Window controller an image file as found
+extern NSString *kReceiveAndParseDataDidFinish;
+
 @interface ParseDataOperation : NSOperation
 
 @end
