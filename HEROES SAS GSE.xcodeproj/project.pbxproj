@@ -22,6 +22,7 @@
 		860EF3661636079800B46E35 /* PreferencesWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 860EF3651636079800B46E35 /* PreferencesWindowController.m */; };
 		86669FFF1692344200B0DACE /* TemperatureFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 86669FFE1692344200B0DACE /* TemperatureFormatter.m */; };
 		8666A002169254AE00B0DACE /* DataPacket.m in Sources */ = {isa = PBXBuildFile; fileRef = 8666A001169254AE00B0DACE /* DataPacket.m */; };
+		8666A0081694874900B0DACE /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 8666A0071694874900B0DACE /* README.md */; };
 		86881A74163D9231003CC656 /* ParseDataOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 86881A73163D9231003CC656 /* ParseDataOperation.m */; };
 		86A62FE7164D7EE10049527C /* CameraView.m in Sources */ = {isa = PBXBuildFile; fileRef = 86A62FE6164D7EE10049527C /* CameraView.m */; };
 		86A62FEA164D80BF0049527C /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86A62FE9164D80BF0049527C /* OpenGL.framework */; };
@@ -66,6 +67,7 @@
 		86669FFE1692344200B0DACE /* TemperatureFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TemperatureFormatter.m; sourceTree = "<group>"; };
 		8666A000169254AE00B0DACE /* DataPacket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataPacket.h; sourceTree = "<group>"; };
 		8666A001169254AE00B0DACE /* DataPacket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataPacket.m; sourceTree = "<group>"; };
+		8666A0071694874900B0DACE /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		86881A72163D9231003CC656 /* ParseDataOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParseDataOperation.h; sourceTree = "<group>"; };
 		86881A73163D9231003CC656 /* ParseDataOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParseDataOperation.m; sourceTree = "<group>"; };
 		86A62FE5164D7EE10049527C /* CameraView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraView.h; sourceTree = "<group>"; };
@@ -163,6 +165,7 @@
 			isa = PBXGroup;
 			children = (
 				860EF333163605D300B46E35 /* HEROES SAS GSE-Info.plist */,
+				8666A0071694874900B0DACE /* README.md */,
 				860EF334163605D300B46E35 /* InfoPlist.strings */,
 				860EF337163605D300B46E35 /* main.m */,
 				860EF339163605D300B46E35 /* HEROES SAS GSE-Prefix.pch */,
@@ -265,6 +268,7 @@
 				860EF33C163605D300B46E35 /* Credits.rtf in Resources */,
 				860EF342163605D300B46E35 /* MainMenu.xib in Resources */,
 				860EF3631636073000B46E35 /* PreferencesWindow.xib in Resources */,
+				8666A0081694874900B0DACE /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
