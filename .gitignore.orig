@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #########################
 # .gitignore file for Xcode4 / OS X Source projects
 #
@@ -115,3 +116,20 @@ xcuserdata
 # UNKNOWN: recommended by others, but I can't discover what these files are
 #
 # ...none. Everything is now explained.
+=======
+# Xcode
+build/*
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+*.xcworkspace
+!default.xcworkspace
+xcuserdata
+profile
+*.moved-aside
+>>>>>>> 29ebe2824d70a84f4f619d91c3933168a748d75e
