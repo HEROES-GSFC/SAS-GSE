@@ -26,6 +26,8 @@
 		86881A74163D9231003CC656 /* ParseDataOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 86881A73163D9231003CC656 /* ParseDataOperation.m */; };
 		86A62FE7164D7EE10049527C /* CameraView.m in Sources */ = {isa = PBXBuildFile; fileRef = 86A62FE6164D7EE10049527C /* CameraView.m */; };
 		86A62FEA164D80BF0049527C /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86A62FE9164D80BF0049527C /* OpenGL.framework */; };
+		86E1D84E1695ED1B0079303F /* lib_crc.c in Sources */ = {isa = PBXBuildFile; fileRef = 86E1D84A1695ED1B0079303F /* lib_crc.c */; };
+		86E1D84F1695ED1B0079303F /* lib_crc.txt in Resources */ = {isa = PBXBuildFile; fileRef = 86E1D84C1695ED1B0079303F /* lib_crc.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -73,6 +75,9 @@
 		86A62FE5164D7EE10049527C /* CameraView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraView.h; sourceTree = "<group>"; };
 		86A62FE6164D7EE10049527C /* CameraView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CameraView.m; sourceTree = "<group>"; };
 		86A62FE9164D80BF0049527C /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		86E1D84A1695ED1B0079303F /* lib_crc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lib_crc.c; sourceTree = "<group>"; };
+		86E1D84B1695ED1B0079303F /* lib_crc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lib_crc.h; sourceTree = "<group>"; };
+		86E1D84C1695ED1B0079303F /* lib_crc.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = lib_crc.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -156,6 +161,7 @@
 				860EF3621636073000B46E35 /* PreferencesWindow.xib */,
 				860EF3641636079800B46E35 /* PreferencesWindowController.h */,
 				860EF3651636079800B46E35 /* PreferencesWindowController.m */,
+				86E1D8481695ED1B0079303F /* lib */,
 				860EF332163605D300B46E35 /* Supporting Files */,
 			);
 			path = "HEROES SAS GSE";
@@ -191,6 +197,24 @@
 				860EF351163605D400B46E35 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		86E1D8481695ED1B0079303F /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				86E1D8491695ED1B0079303F /* lib_crc */,
+			);
+			path = lib;
+			sourceTree = "<group>";
+		};
+		86E1D8491695ED1B0079303F /* lib_crc */ = {
+			isa = PBXGroup;
+			children = (
+				86E1D84A1695ED1B0079303F /* lib_crc.c */,
+				86E1D84B1695ED1B0079303F /* lib_crc.h */,
+				86E1D84C1695ED1B0079303F /* lib_crc.txt */,
+			);
+			path = lib_crc;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -269,6 +293,7 @@
 				860EF342163605D300B46E35 /* MainMenu.xib in Resources */,
 				860EF3631636073000B46E35 /* PreferencesWindow.xib in Resources */,
 				8666A0081694874900B0DACE /* README.md in Resources */,
+				86E1D84F1695ED1B0079303F /* lib_crc.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -311,6 +336,7 @@
 				86A62FE7164D7EE10049527C /* CameraView.m in Sources */,
 				86669FFF1692344200B0DACE /* TemperatureFormatter.m in Sources */,
 				8666A002169254AE00B0DACE /* DataPacket.m in Sources */,
+				86E1D84E1695ED1B0079303F /* lib_crc.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -424,11 +450,13 @@
 		860EF35A163605D400B46E35 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HEROES SAS GSE/HEROES SAS GSE-Prefix.pch";
 				INFOPLIST_FILE = "HEROES SAS GSE/HEROES SAS GSE-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "\"$(PROJECT_DIR)/HEROES\\ SAS\\ GSE/lib/lib_crc/\"";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -436,11 +464,13 @@
 		860EF35B163605D400B46E35 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HEROES SAS GSE/HEROES SAS GSE-Prefix.pch";
 				INFOPLIST_FILE = "HEROES SAS GSE/HEROES SAS GSE-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "\"$(PROJECT_DIR)/HEROES\\ SAS\\ GSE/lib/lib_crc/\"";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

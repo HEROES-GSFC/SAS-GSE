@@ -12,6 +12,7 @@
 #include <arpa/inet.h>  /* for sockaddr_in and inet_ntoa() */
 #include <string.h>     /* for memset() */
 #include <unistd.h>     /* for close() */
+#include "lib_crc.h"
 
 #import "ParseDataOperation.h"
 #import "DataPacket.h"
@@ -25,7 +26,7 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
 @interface ParseDataOperation(){
     DataPacket *dataPacket;
 }
-
+    
 @property (retain) DataPacket *dataPacket;
 
 @end
@@ -89,8 +90,12 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                 NSLog(@"Receiving Packet.");
                 NSLog(@"Handling client %s\n", inet_ntoa(echoClntAddr.sin_addr));
 
+                // initialize checksum
+                unsigned short crc_16_modbus_checksum  = 0xffff;
+                
                 for(int i = 0; i < sizeof(payload)-1; i++){
                     NSLog(@"Received message %u\n", (uint8_t) payload[i]);
+                    crc_16_modbus_checksum  = update_crc_16( crc_16_modbus_checksum, payload[i]);
                 }
 
                 uint16_t sync;
@@ -106,6 +111,7 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                                       dataPacket, @"packet",
                                       nil];
                 
+                NSLog(@"checksum is %x", crc_16_modbus_checksum);
                 if (![self isCancelled])
                 {
                     // for the purposes of this sample, we're just going to post the information

@@ -10,6 +10,7 @@
 #import "PreferencesWindowController.h"
 #import "ParseDataOperation.h"
 #import "DataPacket.h"
+#import "lib_crc.h"
 
 @interface AppController (){
     NSOperationQueue *queue;
@@ -77,7 +78,9 @@
 
 - (IBAction)RunTest:(id)sender {
     // register for the notification when an image file has been loaded by the NSOperation: "LoadOperation"
-  
+    // calculate the checksum
+    
+    
     [PYASFTemperatureTextField setFloatValue:-100];
 }
 
