@@ -11,5 +11,6 @@
 @interface DataPacket : NSObject
 
 @property (nonatomic) uint8_t frameNumber;
+@property (nonatomic) uint8_t frameTime;
 
 @end

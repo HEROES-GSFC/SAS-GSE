@@ -27,6 +27,7 @@
     
     if ([[attrString string] floatValue] < -20.0f) {
         [attrString addAttribute:@"NSForegroundColorAttributeName" value:[NSColor redColor] range:NSMakeRange(0, stringLength)];
+        NSLog(@"%@", attrString);
         return attrString;
     } else return attrString;
 }

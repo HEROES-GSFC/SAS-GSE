@@ -99,7 +99,7 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                 
                 NSLog(@"sync word is %u\n", sync);
                 
-                [dataPacket setFrameNumber:payload[0]];
+                [dataPacket setFrameNumber:payload[5]];
                 NSLog(@"frame number is %u\n", (uint8_t) [dataPacket frameNumber]);
 
                 NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:

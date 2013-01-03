@@ -28,6 +28,8 @@
 @synthesize RunningIndicator;
 @synthesize PYASFTemperatureTextField;
 @synthesize PYASRTemperatureTextField;
+@synthesize FrameNumberTextField;
+@synthesize FrameTimeTextField;
 
 @synthesize timer;
 
@@ -50,26 +52,25 @@
     // start the GetPathsOperation with the root path to start the search
 	ParseDataOperation *parseOp = [[ParseDataOperation alloc] init];
 	
-	[queue addOperation:parseOp];	// this will start the "TestOperation"
+    [queue addOperation:parseOp];	// this will start the "TestOperation"
     
-    // schedule our update timer for our UI
-    //self.timer = [NSTimer scheduledTimerWithTimeInterval:1.0
-    //                                              target:self
-    //                                            selector:@selector(RunningIndicator:)
-    //                                            userInfo:nil
-    //                                             repeats:YES];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(anyThread_handleData:)
-                                                 name:kReceiveAndParseDataDidFinish
-                                               object:nil];
+    if([[queue operations] containsObject:parseOp]){
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(anyThread_handleData:)
+                                                     name:kReceiveAndParseDataDidFinish
+                                                   object:nil];
 
-    
-    [StartButton setEnabled:NO];
-    [StopButton setEnabled:YES];
+        [RunningIndicator setHidden:NO];
+        [RunningIndicator startAnimation:self];
+        [StartButton setEnabled:NO];
+        [StopButton setEnabled:YES];
+    }
 }
 
 - (IBAction)StopButtonAction:(id)sender {
     [queue cancelAllOperations];
+    [RunningIndicator setHidden:YES];
+    [RunningIndicator stopAnimation:self];
     [StartButton setEnabled:YES];
     [StopButton setEnabled:NO];
 }
@@ -127,7 +128,7 @@
     
     DataPacket *packet = [notifData valueForKey:@"packet"];
  
-    [PYASRTemperatureTextField setIntegerValue:[packet frameNumber]];
+    [FrameNumberTextField setIntegerValue:[packet frameNumber]];
  
 }
 

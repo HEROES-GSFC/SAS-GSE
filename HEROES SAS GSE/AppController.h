@@ -23,11 +23,11 @@
 
 @property (weak) IBOutlet NSFormCell *PYASFTemperatureTextField;
 @property (weak) IBOutlet NSFormCell *PYASRTemperatureTextField;
-@property (weak) IBOutlet NSFormCell *RASTemperatureTextField;
-@property (weak) IBOutlet NSFormCell *PYASCPUTemperatureTextField;
 @property (weak) IBOutlet NSButton *StartButton;
 @property (weak) IBOutlet NSButton *StopButton;
 @property (weak) IBOutlet NSProgressIndicator *RunningIndicator;
+@property (weak) IBOutlet NSFormCell *FrameNumberTextField;
+@property (weak) IBOutlet NSFormCell *FrameTimeTextField;
 
 @property (strong) DataPacket *dataPacket;
 
