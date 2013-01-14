@@ -8,6 +8,7 @@
 
 #import "AppController.h"
 #import "PreferencesWindowController.h"
+#import "CommandingWindowController.h"
 #import "ParseDataOperation.h"
 #import "DataPacket.h"
 #import "lib_crc.h"
@@ -31,6 +32,8 @@
 @synthesize PYASRTemperatureTextField;
 @synthesize FrameNumberTextField;
 @synthesize FrameTimeTextField;
+@synthesize CommandKeyTextField;
+@synthesize CommandValueTextField;
 
 @synthesize timer;
 
@@ -42,6 +45,7 @@
 	if (self)
     {
         queue = [[NSOperationQueue alloc] init];
+        commander = [[Commander alloc] init];
 	}
 	return self;
 }
@@ -84,7 +88,7 @@
     [PYASFTemperatureTextField setFloatValue:-100];
 }
 
-- (IBAction)showPreferences:(id)sender{
+- (IBAction)showPreferencesWindow:(id)sender{
     
     // lazy instantiation, only initialize if window is opened
     if (!preferencesWindowController) {
@@ -93,14 +97,27 @@
     [preferencesWindowController showWindow:self];
 }
 
+- (IBAction)showCommandingWindow:(id)sender{
+    
+    // lazy instantiation, only initialize if window is opened
+    if (!commandingWindowController) {
+        commandingWindowController = [[CommandingWindowController alloc] initWithWindowNibName:@"CommandingWindow"];
+    }
+    [commandingWindowController showWindow:self];
+}
+
+- (IBAction)sendCommandButtonAction:(id)sender{
+    [commander send:[CommandKeyTextField integerValue] :[CommandValueTextField integerValue]];
+}
+
+
 // -------------------------------------------------------------------------------
-//	anyThread_handleLoadedImages:note
+//	anyThread_handleData:note
 //
 //	This method is called from any possible thread (any NSOperation) used to
 //	update our table view and its data source.
 //
-//	The notification contains the NSDictionary containing the image file's info
-//	to add to the table view.
+//	The notification contains an NSDictionary
 // -------------------------------------------------------------------------------
 - (void)anyThread_handleData:(NSNotification *)note
 {

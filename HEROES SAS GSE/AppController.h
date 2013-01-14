@@ -10,15 +10,20 @@
 #import "CameraView.h"
 #import "TemperatureFormatter.h"
 #import "DataPacket.h"
+#import "Commander.h"
 
 @class PreferencesWindowController;
+@class CommandingWindowController;
 @class TemperatureFormatter;
 @class DataPacket;
+@class Commander;
 
 @interface AppController : NSObject{
 @private
     PreferencesWindowController *preferencesWindowController;
+    CommandingWindowController *commandingWindowController;
     TemperatureFormatter *temperatureFormatter;
+    Commander *commander;
 }
 
 @property (weak) IBOutlet NSFormCell *PYASFTemperatureTextField;
@@ -28,6 +33,8 @@
 @property (weak) IBOutlet NSProgressIndicator *RunningIndicator;
 @property (weak) IBOutlet NSFormCell *FrameNumberTextField;
 @property (weak) IBOutlet NSFormCell *FrameTimeTextField;
+@property (weak) IBOutlet NSTextField *CommandKeyTextField;
+@property (weak) IBOutlet NSTextField *CommandValueTextField;
 
 @property (strong) DataPacket *dataPacket;
 
@@ -35,6 +42,9 @@
 - (IBAction)StopButtonAction:(id)sender;
 - (IBAction)RunTest:(id)sender;
 
-- (IBAction)showPreferences:(id)sender;
+- (IBAction)showPreferencesWindow:(id)sender;
+- (IBAction)showCommandingWindow:(id)sender;
+
+- (IBAction)sendCommandButtonAction:(id)sender;
 
 @end

@@ -23,8 +23,6 @@
 - (void) drawRect: (NSRect) dirtyRect;
 - (void) cleanUp;
 - (NSPoint) calculateCentroid:(NSMutableArray *)points;
-
-
 @end
 
 @implementation CameraView
