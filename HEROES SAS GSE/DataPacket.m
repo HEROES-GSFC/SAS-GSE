@@ -23,6 +23,7 @@
 
 -(void) setFrameNumber:(uint8_t)frameNumber{
     _frameNumber = frameNumber;
+    
 }
 
 -(void) setFrameTime:(uint8_t)frameTime{
