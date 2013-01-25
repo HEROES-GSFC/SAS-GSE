@@ -25,15 +25,15 @@
 @implementation AppController
 
 // GUI Elements
-@synthesize StopButton;
-@synthesize StartButton;
 @synthesize RunningIndicator;
-@synthesize PYASFTemperatureTextField;
-@synthesize PYASRTemperatureTextField;
-@synthesize FrameNumberTextField;
-@synthesize FrameTimeTextField;
+@synthesize PYASFCPUTemperatureLabel;
+@synthesize PYASRCameraTemperatureLabel;
+@synthesize FrameNumberLabel;
+@synthesize FrameTimeLabel;
 @synthesize CommandKeyTextField;
 @synthesize CommandValueTextField;
+@synthesize StartStopSegmentedControl;
+@synthesize ConsoleScrollView;
 
 @synthesize timer;
 
@@ -51,41 +51,40 @@
 }
 
 
-- (IBAction)StartButtonAction:(id)sender {
-    [queue cancelAllOperations];
-    
-    // start the GetPathsOperation with the root path to start the search
-	ParseDataOperation *parseOp = [[ParseDataOperation alloc] init];
-	
-    [queue addOperation:parseOp];	// this will start the "TestOperation"
-    
-    if([[queue operations] containsObject:parseOp]){
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(anyThread_handleData:)
-                                                     name:kReceiveAndParseDataDidFinish
-                                                   object:nil];
+- (IBAction)StartStopButtonAction:(id)sender {
+    if ([StartStopSegmentedControl selectedSegment] == 0) {
+        
+        [queue cancelAllOperations];
+        
+        // start the GetPathsOperation with the root path to start the search
+        ParseDataOperation *parseOp = [[ParseDataOperation alloc] init];
+        
+        [queue addOperation:parseOp];	// this will start the "TestOperation"
+        
+        if([[queue operations] containsObject:parseOp]){
+            [[NSNotificationCenter defaultCenter] addObserver:self
+                                                     selector:@selector(anyThread_handleData:)
+                                                         name:kReceiveAndParseDataDidFinish
+                                                       object:nil];
 
-        [RunningIndicator setHidden:NO];
-        [RunningIndicator startAnimation:self];
-        [StartButton setEnabled:NO];
-        [StopButton setEnabled:YES];
+            [RunningIndicator setHidden:NO];
+            [RunningIndicator startAnimation:self];
+        }
     }
-}
+    if ([StartStopSegmentedControl selectedSegment] == 1) {
+        [queue cancelAllOperations];
+        [RunningIndicator setHidden:YES];
+        [RunningIndicator stopAnimation:self];
+    }
 
-- (IBAction)StopButtonAction:(id)sender {
-    [queue cancelAllOperations];
-    [RunningIndicator setHidden:YES];
-    [RunningIndicator stopAnimation:self];
-    [StartButton setEnabled:YES];
-    [StopButton setEnabled:NO];
 }
 
 - (IBAction)RunTest:(id)sender {
     // register for the notification when an image file has been loaded by the NSOperation: "LoadOperation"
     // calculate the checksum
+    [PYASFCPUTemperatureLabel setFloatValue:10.0f];
+    [ConsoleScrollView ]
     
-    
-    [PYASFTemperatureTextField setFloatValue:-100];
 }
 
 - (IBAction)showPreferencesWindow:(id)sender{
@@ -148,7 +147,7 @@
     
     DataPacket *packet = [notifData valueForKey:@"packet"];
  
-    [FrameNumberTextField setIntegerValue:[packet frameNumber]];
+    [FrameNumberLabel setIntegerValue:[packet frameNumber]];
  
 }
 
