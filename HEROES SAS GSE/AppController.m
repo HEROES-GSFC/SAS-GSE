@@ -83,7 +83,6 @@
     // register for the notification when an image file has been loaded by the NSOperation: "LoadOperation"
     // calculate the checksum
     [PYASFCPUTemperatureLabel setFloatValue:10.0f];
-    [ConsoleScrollView ]
     
 }
 

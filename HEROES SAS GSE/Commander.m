@@ -46,7 +46,7 @@
     self = [super init]; // call our super’s designated initializer
     if (self) {
         // initialize our subclass here
-        serverIP = @"10.1.49.140";
+        serverIP = @"192.168.2.221";
         serverPort = 7000;
         frame_sequence_number = 0;
     }
