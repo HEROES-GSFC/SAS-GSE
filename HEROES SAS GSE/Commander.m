@@ -12,7 +12,7 @@
 #include "lib_crc.h"
 
 #define DEFAULT_PORT 7001 /* The default port to send on */
-#define PAYLOAD_SIZE 9     /* Longest string to echo */
+#define PAYLOAD_SIZE 14    /* Longest string to echo */
 
 @interface Commander(){
 @private
@@ -26,17 +26,21 @@
     struct sockaddr_in ClntAddr; /* Client address */
     unsigned int cliAddrLen;         /* Length of incoming message */
     uint16_t frame_sequence_number;
-    uint8_t payload[10];
+    uint8_t payload[PAYLOAD_SIZE];
     NSString *serverIP;
+    uint16_t syncWord;
 }
 
 - (uint16_t) calculateChecksum;
 - (void) addChecksum;
 - (void) buildHeader;
 - (void) initSocket;
-- (void) update_sequence_number;
-- (bool) test_checksum;
+- (void) closeSocket;
+- (void) updateSequenceNumber;
+- (bool) testChecksum;
+- (void) printPacket;
 - (void) buildPayload;
+- (void) sendPacket;
 
 @end
 
@@ -46,20 +50,30 @@
     self = [super init]; // call our super’s designated initializer
     if (self) {
         // initialize our subclass here
-        serverIP = @"10.1.49.140";
-        serverPort = 7000;
+        serverIP = @"192.168.1.32";     // according to Table 5-1
+        serverPort = 5010;              // according to Table 5-2
         frame_sequence_number = 0;
+        syncWord = 0xc39a;
     }
     return self;
+}
+
+- (void) closeSocket{
+    close(sock);
 }
 
 -(void)send:(uint16_t)command_key :(uint16_t)command_value{
 
     // update the frame number every time we send out a packet
-    [self update_sequence_number];
+    [self updateSequenceNumber];
     [self buildHeader];
     [self buildPayload:command_key:command_value];
     [self addChecksum];
+    [self printPacket];
+    [self sendPacket];
+}
+
+-(void)sendPacket{
     
     NSLog(@"Sending to %@\n", serverIP);
     
@@ -70,7 +84,7 @@
     /* Construct the server address structure */
     memset(&ServAddr, 0, sizeof(ServAddr));    /* Zero out structure */
     ServAddr.sin_family = AF_INET;                 /* Internet addr family */
-    ServAddr.sin_addr.s_addr = inet_addr([serverIP  cString]);  /* Server IP address */
+    ServAddr.sin_addr.s_addr = inet_addr([serverIP  UTF8String]);  /* Server IP address */
     ServAddr.sin_port   = htons(serverPort);     /* Server port */
     
     /* Send the string to the server */
@@ -79,7 +93,7 @@
         NSLog(@"sendto() sent a different number of bytes than expected");
 }
 
-bool test_checksum( void )
+bool testChecksum( void )
 {
     // initialize check sum variable
     unsigned short checksum;
@@ -92,7 +106,7 @@ bool test_checksum( void )
     if (checksum == 0x4b37) return 1; else return 0;
 }
 
-- (void) update_sequence_number{
+- (void) updateSequenceNumber{
     frame_sequence_number++;
 }
 
@@ -112,30 +126,30 @@ bool test_checksum( void )
     uint16_t checksum = [self calculateChecksum];
     
     payload[6] = (uint8_t) checksum  & 0xFF;
-    payload[7] = (uint8_t) checksum & 0xFF00 >> 8;
+    payload[7] = (uint8_t) (checksum >> 8);
     NSLog(@"checksum is %x", checksum);
 }
 
 - (void) buildHeader{
     // build the HEROES Command Packet Header (see Table 6-1)
     // uint16 - the sync word, split into two 8 bit chars
-    payload[0] = (uint8_t) 0xc39a & 0xFF;
-    payload[1] = (uint8_t) (0xc39a & 0xFF00) >> 8;
+    payload[0] = (uint8_t) syncWord & 0xFF;
+    payload[1] = (uint8_t) (syncWord>> 8);
     payload[2] = 0x30;              // destination SAS (Table 6-2)
     payload[3] = PAYLOAD_SIZE;      // size of the packet in bytes
-    payload[4] = frame_sequence_number & 0xFF;                 // packet sequence number1
-    payload[5] = frame_sequence_number & 0xFF00 >> 8;                 // packet sequence number2
+    payload[4] = (uint8_t) (frame_sequence_number >> 8);                 // packet sequence number2
+    payload[5] = (uint8_t) frame_sequence_number & 0xFF;                 // packet sequence number1
     payload[6] = 0;                 // checksum1
     payload[7] = 0;                 // checksum1
     payload[8] = (uint8_t) 0x10ff & 0xFF;       // RAW command for SAS
-    payload[9] = (uint8_t) (0x10ff & 0xFF00) >> 8; // RAW command for SAS
+    payload[9] = (uint8_t) (0x10ff >> 8); // RAW command for SAS
 }
 
 - (void) buildPayload:(uint16_t)command_key:(uint16_t)command_value{
-    payload[10] = (uint8_t) command_key & 0xFF;
-    payload[11] = (uint8_t) (command_key & 0xFF00) >> 8;
-    payload[12] = (uint8_t) command_value & 0xFF;
-    payload[13] = (uint8_t) (command_value & 0xFF00) >> 8;
+    payload[10] = (uint8_t) (command_key >> 8);
+    payload[11] = (uint8_t) command_key & 0xff;
+    payload[12] = (uint8_t) (command_value >> 8);
+    payload[13] = (uint8_t) command_value & 0xff;
 }
 
 - (void) initSocket{
@@ -154,6 +168,13 @@ bool test_checksum( void )
     /* Bind to the local address */
     if (bind(sock, (struct sockaddr *) &ServAddr, sizeof(ServAddr)) < 0)
         NSLog(@"bind() failed");
+}
+
+- (void) printPacket{
+    for(int i = 0; i <= PAYLOAD_SIZE-1; i++)
+    {
+        NSLog(@"%i:%x", i, payload[i]);
+    }
 }
 
 @end

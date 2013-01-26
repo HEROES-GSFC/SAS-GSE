@@ -20,6 +20,7 @@
 		860EF3611636060100B46E35 /* AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = 860EF3601636060100B46E35 /* AppController.m */; };
 		860EF3631636073000B46E35 /* PreferencesWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 860EF3621636073000B46E35 /* PreferencesWindow.xib */; };
 		860EF3661636079800B46E35 /* PreferencesWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 860EF3651636079800B46E35 /* PreferencesWindowController.m */; };
+		8660983916B3984900BE26D1 /* icon.iconset in Resources */ = {isa = PBXBuildFile; fileRef = 8660983816B3984900BE26D1 /* icon.iconset */; };
 		86669FFF1692344200B0DACE /* TemperatureFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 86669FFE1692344200B0DACE /* TemperatureFormatter.m */; };
 		8666A002169254AE00B0DACE /* DataPacket.m in Sources */ = {isa = PBXBuildFile; fileRef = 8666A001169254AE00B0DACE /* DataPacket.m */; };
 		8666A0081694874900B0DACE /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 8666A0071694874900B0DACE /* README.md */; };
@@ -69,6 +70,7 @@
 		860EF3621636073000B46E35 /* PreferencesWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PreferencesWindow.xib; sourceTree = "<group>"; };
 		860EF3641636079800B46E35 /* PreferencesWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreferencesWindowController.h; sourceTree = "<group>"; };
 		860EF3651636079800B46E35 /* PreferencesWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreferencesWindowController.m; sourceTree = "<group>"; };
+		8660983816B3984900BE26D1 /* icon.iconset */ = {isa = PBXFileReference; lastKnownFileType = folder.iconset; path = icon.iconset; sourceTree = "<group>"; };
 		86669FFD1692344200B0DACE /* TemperatureFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TemperatureFormatter.h; sourceTree = "<group>"; };
 		86669FFE1692344200B0DACE /* TemperatureFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TemperatureFormatter.m; sourceTree = "<group>"; };
 		8666A000169254AE00B0DACE /* DataPacket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataPacket.h; sourceTree = "<group>"; };
@@ -115,6 +117,7 @@
 		860EF31C163605D300B46E35 = {
 			isa = PBXGroup;
 			children = (
+				8660983816B3984900BE26D1 /* icon.iconset */,
 				860EF331163605D300B46E35 /* HEROES SAS GSE */,
 				860EF34E163605D400B46E35 /* HEROES SAS GSETests */,
 				860EF32A163605D300B46E35 /* Frameworks */,
@@ -312,6 +315,7 @@
 				86E1D84F1695ED1B0079303F /* lib_crc.txt in Resources */,
 				8666E3B416A3B64000A9DD85 /* Commanding.xib in Resources */,
 				8666E3C116A3B87200A9DD85 /* CommandingWindow.xib in Resources */,
+				8660983916B3984900BE26D1 /* icon.iconset in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -476,7 +480,7 @@
 				GCC_PREFIX_HEADER = "HEROES SAS GSE/HEROES SAS GSE-Prefix.pch";
 				INFOPLIST_FILE = "HEROES SAS GSE/HEROES SAS GSE-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				USER_HEADER_SEARCH_PATHS = "\"$(PROJECT_DIR)/HEROES\\ SAS\\ GSE/lib/lib_crc/\"";
+				USER_HEADER_SEARCH_PATHS = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -490,7 +494,7 @@
 				GCC_PREFIX_HEADER = "HEROES SAS GSE/HEROES SAS GSE-Prefix.pch";
 				INFOPLIST_FILE = "HEROES SAS GSE/HEROES SAS GSE-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				USER_HEADER_SEARCH_PATHS = "\"$(PROJECT_DIR)/HEROES\\ SAS\\ GSE/lib/lib_crc/\"";
+				USER_HEADER_SEARCH_PATHS = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
