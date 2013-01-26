@@ -17,8 +17,8 @@
 #import "ParseDataOperation.h"
 #import "DataPacket.h"
 
-#define PAYLOAD_SIZE 9
-#define DEFAULT_PORT 7000 /* The default port to send on */
+#define PAYLOAD_SIZE 20
+#define DEFAULT_PORT 5003 /* The default port to send on */
 
 // NSNotification name to tell the Window controller an image file as found
 NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";

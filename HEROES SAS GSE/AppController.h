@@ -25,25 +25,23 @@
     TemperatureFormatter *temperatureFormatter;
     Commander *commander;
 }
+@property (weak) IBOutlet NSSegmentedControl *StartStopSegmentedControl;
 
-@property (weak) IBOutlet NSFormCell *PYASFTemperatureTextField;
-@property (weak) IBOutlet NSFormCell *PYASRTemperatureTextField;
-@property (weak) IBOutlet NSButton *StartButton;
-@property (weak) IBOutlet NSButton *StopButton;
 @property (weak) IBOutlet NSProgressIndicator *RunningIndicator;
-@property (weak) IBOutlet NSFormCell *FrameNumberTextField;
-@property (weak) IBOutlet NSFormCell *FrameTimeTextField;
 @property (weak) IBOutlet NSTextField *CommandKeyTextField;
 @property (weak) IBOutlet NSTextField *CommandValueTextField;
+@property (weak) IBOutlet NSTextField *FrameNumberLabel;
+@property (weak) IBOutlet NSTextField *FrameTimeLabel;
+@property (weak) IBOutlet NSTextField *PYASFCPUTemperatureLabel;
+@property (weak) IBOutlet NSTextField *PYASRCameraTemperatureLabel;
+@property (weak) IBOutlet NSScrollView *ConsoleScrollView;
 
 @property (strong) DataPacket *dataPacket;
 
-- (IBAction)StartButtonAction:(id)sender;
-- (IBAction)StopButtonAction:(id)sender;
+- (IBAction)StartStopButtonAction:(id)sender;
 - (IBAction)RunTest:(id)sender;
 
 - (IBAction)showPreferencesWindow:(id)sender;
-- (IBAction)showCommandingWindow:(id)sender;
 
 - (IBAction)sendCommandButtonAction:(id)sender;
 
