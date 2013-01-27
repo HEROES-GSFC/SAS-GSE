@@ -34,15 +34,11 @@
 @property (weak) IBOutlet NSTextField *FrameTimeLabel;
 @property (weak) IBOutlet NSTextField *PYASFCPUTemperatureLabel;
 @property (weak) IBOutlet NSTextField *PYASRCameraTemperatureLabel;
-@property (weak) IBOutlet NSScrollView *ConsoleScrollView;
 
 @property (strong) DataPacket *dataPacket;
 
 - (IBAction)StartStopButtonAction:(id)sender;
 - (IBAction)RunTest:(id)sender;
-
-- (IBAction)showPreferencesWindow:(id)sender;
-
 - (IBAction)sendCommandButtonAction:(id)sender;
 
 @end

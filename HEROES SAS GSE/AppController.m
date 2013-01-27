@@ -33,7 +33,6 @@
 @synthesize CommandKeyTextField;
 @synthesize CommandValueTextField;
 @synthesize StartStopSegmentedControl;
-@synthesize ConsoleScrollView;
 
 @synthesize timer;
 
@@ -82,27 +81,29 @@
 - (IBAction)RunTest:(id)sender {
     // register for the notification when an image file has been loaded by the NSOperation: "LoadOperation"
     // calculate the checksum
-    [PYASFCPUTemperatureLabel setFloatValue:10.0f];
+    [self.PYASFCPUTemperatureLabel setFloatValue:10.0f];
+    [self.PYASFCPUTemperatureLabel setBackgroundColor:[NSColor redColor]];
+    //[ConsoleScrollView setString:@"hello"];
     
 }
 
-- (IBAction)showPreferencesWindow:(id)sender{
-    
-    // lazy instantiation, only initialize if window is opened
-    if (!preferencesWindowController) {
-        preferencesWindowController = [[PreferencesWindowController alloc] initWithWindowNibName:@"PreferencesWindow"];
-    }
-    [preferencesWindowController showWindow:self];
-}
+//- (IBAction)showPreferencesWindow:(id)sender{
+//    
+//    // lazy instantiation, only initialize if window is opened
+//    if (!preferencesWindowController) {
+//        preferencesWindowController = [[PreferencesWindowController alloc] initWithWindowNibName:@"PreferencesWindow"];
+//    }
+//    [preferencesWindowController showWindow:self];
+//}
 
-- (IBAction)showCommandingWindow:(id)sender{
-    
-    // lazy instantiation, only initialize if window is opened
-    if (!commandingWindowController) {
-        commandingWindowController = [[CommandingWindowController alloc] initWithWindowNibName:@"CommandingWindow"];
-    }
-    [commandingWindowController showWindow:self];
-}
+//- (IBAction)showCommandingWindow:(id)sender{
+//    
+//    // lazy instantiation, only initialize if window is opened
+//    if (!commandingWindowController) {
+//        commandingWindowController = [[CommandingWindowController alloc] initWithWindowNibName:@"CommandingWindow"];
+//    }
+//    [commandingWindowController showWindow:self];
+//}
 
 - (IBAction)sendCommandButtonAction:(id)sender{
     [commander send:[CommandKeyTextField integerValue] :[CommandValueTextField integerValue]];
@@ -146,8 +147,16 @@
     
     DataPacket *packet = [notifData valueForKey:@"packet"];
  
-    [FrameNumberLabel setIntegerValue:[packet frameNumber]];
- 
+    [self.FrameNumberLabel setIntegerValue:[packet frameNumber]];
+    [self.FrameTimeLabel setStringValue:[packet getframeTimeString]];
+    
+    int temp = 20;
+    NSRange tempRange = NSMakeRange(10, 20);
+    [self.PYASFCPUTemperatureLabel setIntegerValue:temp];
+    if (NSLocationInRange(temp, tempRange) == FALSE){
+        [self.PYASFCPUTemperatureLabel setBackgroundColor:[NSColor redColor]];
+    }
+    
 }
 
 

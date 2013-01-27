@@ -29,6 +29,7 @@
     uint8_t payload[PAYLOAD_SIZE];
     NSString *serverIP;
     uint16_t syncWord;
+    NSDictionary *listOfCommands;
 }
 
 - (uint16_t) calculateChecksum;
@@ -54,6 +55,19 @@
         serverPort = 7000;
         frame_sequence_number = 0;
         syncWord = 0xc39a;
+
+        NSArray *commandKeys = [NSArray arrayWithObjects:
+                                [NSNumber numberWithInteger:0x010],
+                                [NSNumber numberWithInteger:0x0101],
+                                [NSNumber numberWithInteger:0x0102], nil];
+                                
+        NSArray *commandDescriptionNSArray = [NSArray
+                                              arrayWithObjects:
+                                              @"Reset Camera",
+                                              @"Set new coordinate",
+                                              @"Set blah", nil];
+        
+        listOfCommands = [NSDictionary dictionaryWithObject:commandDescriptionNSArray forKey:commandKeys];
     }
     return self;
 }

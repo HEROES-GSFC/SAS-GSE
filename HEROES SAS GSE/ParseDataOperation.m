@@ -13,6 +13,7 @@
 #include <string.h>     /* for memset() */
 #include <unistd.h>     /* for close() */
 #include "lib_crc.h"
+#include "time.h"
 
 #import "ParseDataOperation.h"
 #import "DataPacket.h"
@@ -104,11 +105,20 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                 
                 NSLog(@"sync word is %u\n", sync);
                 
-                [dataPacket setFrameNumber:payload[5]];
-                NSLog(@"frame number is %u\n", (uint8_t) [dataPacket frameNumber]);
-
+                [self.dataPacket setFrameNumber:payload[5]];
+                NSLog(@"frame number is %u\n", (uint8_t) [self.dataPacket frameNumber]);
+                
+                uint32_t seconds;
+                seconds = 100000;
+                [self.dataPacket setFrameSeconds: seconds];
+                
+                uint32_t mmseconds;
+                mmseconds = 2;
+                [self.dataPacket setFrameMilliseconds: mmseconds];
+                
+                
                 NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:
-                                      dataPacket, @"packet",
+                                      self.dataPacket, @"packet",
                                       nil];
                 
                 NSLog(@"checksum is %x", crc_16_modbus_checksum);
