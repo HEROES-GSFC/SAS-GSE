@@ -34,6 +34,8 @@
 @property (weak) IBOutlet NSTextField *FrameTimeLabel;
 @property (weak) IBOutlet NSTextField *PYASFCPUTemperatureLabel;
 @property (weak) IBOutlet NSTextField *PYASRCameraTemperatureLabel;
+@property (weak) IBOutlet NSScrollView *ConsoleScrollView;
+@property (unsafe_unretained) IBOutlet NSTextView *ConsoleTextView;
 
 @property (strong) DataPacket *dataPacket;
 

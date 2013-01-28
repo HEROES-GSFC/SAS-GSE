@@ -7,8 +7,6 @@
 //
 
 #import "AppController.h"
-#import "PreferencesWindowController.h"
-#import "CommandingWindowController.h"
 #import "ParseDataOperation.h"
 #import "DataPacket.h"
 #import "lib_crc.h"
@@ -33,6 +31,8 @@
 @synthesize CommandKeyTextField;
 @synthesize CommandValueTextField;
 @synthesize StartStopSegmentedControl;
+@synthesize ConsoleScrollView;
+@synthesize ConsoleTextView;
 
 @synthesize timer;
 
@@ -83,7 +83,9 @@
     // calculate the checksum
     [self.PYASFCPUTemperatureLabel setFloatValue:10.0f];
     [self.PYASFCPUTemperatureLabel setBackgroundColor:[NSColor redColor]];
-    //[ConsoleScrollView setString:@"hello"];
+    for (int i = 0; i < 100; i++) {
+        [self.ConsoleTextView insertText:@"hello"];
+    }
     
 }
 
