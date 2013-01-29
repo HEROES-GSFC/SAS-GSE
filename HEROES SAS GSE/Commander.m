@@ -11,9 +11,6 @@
 #include <arpa/inet.h>  /* for sockaddr_in and inet_addr() */
 #include "lib_crc.h"
 
-#define DEFAULT_PORT 7001 /* The default port to send on */
-#define PAYLOAD_SIZE 14    /* Longest string to echo */
-
 @interface Commander(){
 @private
     int sock;                       // Socket descriptor
@@ -26,7 +23,7 @@
     struct sockaddr_in ClntAddr; /* Client address */
     unsigned int cliAddrLen;         /* Length of incoming message */
     uint16_t frame_sequence_number;
-    uint8_t payload[PAYLOAD_SIZE];
+    uint8_t *payload;
     NSString *serverIP;
     uint16_t syncWord;
     NSDictionary *listOfCommands;
@@ -53,9 +50,12 @@
         // initialize our subclass here
         serverIP = @"192.168.2.221";
         serverPort = 7000;
+        payloadLen = 14;
         frame_sequence_number = 0;
         syncWord = 0xc39a;
 
+        payload=(uint8_t *) malloc(payloadLen*sizeof(uint8_t));
+        
         NSArray *commandKeys = [NSArray arrayWithObjects:
                                 [NSNumber numberWithInteger:0x010],
                                 [NSNumber numberWithInteger:0x0101],
@@ -150,7 +150,7 @@ bool testChecksum( void )
     payload[0] = (uint8_t) syncWord & 0xFF;
     payload[1] = (uint8_t) (syncWord>> 8);
     payload[2] = 0x30;              // destination SAS (Table 6-2)
-    payload[3] = PAYLOAD_SIZE;      // size of the packet in bytes
+    payload[3] = payloadLen;      // size of the packet in bytes
     payload[4] = (uint8_t) (frame_sequence_number >> 8);                 // packet sequence number2
     payload[5] = (uint8_t) frame_sequence_number & 0xFF;                 // packet sequence number1
     payload[6] = 0;                 // checksum1
@@ -167,7 +167,6 @@ bool testChecksum( void )
 }
 
 - (void) initSocket{
-    serverPort = DEFAULT_PORT;
     
     /* Create socket for sending/receiving datagrams */
     if ((sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0)
@@ -185,7 +184,7 @@ bool testChecksum( void )
 }
 
 - (void) printPacket{
-    for(int i = 0; i <= PAYLOAD_SIZE-1; i++)
+    for(int i = 0; i <= payloadLen-1; i++)
     {
         NSLog(@"%i:%x", i, payload[i]);
     }
