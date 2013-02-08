@@ -12,12 +12,14 @@
 #include <arpa/inet.h>  /* for sockaddr_in and inet_ntoa() */
 #include <string.h>     /* for memset() */
 #include <unistd.h>     /* for close() */
+#include "lib_crc.h"
+#include "time.h"
 
 #import "ParseDataOperation.h"
 #import "DataPacket.h"
 
-#define PAYLOAD_SIZE 9
-#define DEFAULT_PORT 7000 /* The default port to send on */
+#define PAYLOAD_SIZE 20
+#define DEFAULT_PORT 5003 /* The default port to send on */
 
 // NSNotification name to tell the Window controller an image file as found
 NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
@@ -25,7 +27,7 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
 @interface ParseDataOperation(){
     DataPacket *dataPacket;
 }
-
+    
 @property (retain) DataPacket *dataPacket;
 
 @end
@@ -89,8 +91,12 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                 NSLog(@"Receiving Packet.");
                 NSLog(@"Handling client %s\n", inet_ntoa(echoClntAddr.sin_addr));
 
+                // initialize checksum
+                unsigned short crc_16_modbus_checksum  = 0xffff;
+                
                 for(int i = 0; i < sizeof(payload)-1; i++){
                     NSLog(@"Received message %u\n", (uint8_t) payload[i]);
+                    crc_16_modbus_checksum  = update_crc_16( crc_16_modbus_checksum, payload[i]);
                 }
 
                 uint16_t sync;
@@ -99,13 +105,23 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                 
                 NSLog(@"sync word is %u\n", sync);
                 
-                [dataPacket setFrameNumber:payload[0]];
-                NSLog(@"frame number is %u\n", (uint8_t) [dataPacket frameNumber]);
-
+                [self.dataPacket setFrameNumber:payload[5]];
+                NSLog(@"frame number is %u\n", (uint8_t) [self.dataPacket frameNumber]);
+                
+                uint32_t seconds;
+                seconds = 100000;
+                [self.dataPacket setFrameSeconds: seconds];
+                
+                uint32_t mmseconds;
+                mmseconds = 2;
+                [self.dataPacket setFrameMilliseconds: mmseconds];
+                
+                
                 NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:
-                                      dataPacket, @"packet",
+                                      self.dataPacket, @"packet",
                                       nil];
                 
+                NSLog(@"checksum is %x", crc_16_modbus_checksum);
                 if (![self isCancelled])
                 {
                     // for the purposes of this sample, we're just going to post the information

@@ -10,31 +10,37 @@
 #import "CameraView.h"
 #import "TemperatureFormatter.h"
 #import "DataPacket.h"
+#import "Commander.h"
 
 @class PreferencesWindowController;
+@class CommandingWindowController;
 @class TemperatureFormatter;
 @class DataPacket;
+@class Commander;
 
 @interface AppController : NSObject{
 @private
     PreferencesWindowController *preferencesWindowController;
+    CommandingWindowController *commandingWindowController;
     TemperatureFormatter *temperatureFormatter;
+    Commander *commander;
 }
+@property (weak) IBOutlet NSSegmentedControl *StartStopSegmentedControl;
 
-@property (weak) IBOutlet NSFormCell *PYASFTemperatureTextField;
-@property (weak) IBOutlet NSFormCell *PYASRTemperatureTextField;
-@property (weak) IBOutlet NSFormCell *RASTemperatureTextField;
-@property (weak) IBOutlet NSFormCell *PYASCPUTemperatureTextField;
-@property (weak) IBOutlet NSButton *StartButton;
-@property (weak) IBOutlet NSButton *StopButton;
 @property (weak) IBOutlet NSProgressIndicator *RunningIndicator;
+@property (weak) IBOutlet NSTextField *CommandKeyTextField;
+@property (weak) IBOutlet NSTextField *CommandValueTextField;
+@property (weak) IBOutlet NSTextField *FrameNumberLabel;
+@property (weak) IBOutlet NSTextField *FrameTimeLabel;
+@property (weak) IBOutlet NSTextField *PYASFCPUTemperatureLabel;
+@property (weak) IBOutlet NSTextField *PYASRCameraTemperatureLabel;
+@property (weak) IBOutlet NSScrollView *ConsoleScrollView;
+@property (unsafe_unretained) IBOutlet NSTextView *ConsoleTextView;
 
 @property (strong) DataPacket *dataPacket;
 
-- (IBAction)StartButtonAction:(id)sender;
-- (IBAction)StopButtonAction:(id)sender;
+- (IBAction)StartStopButtonAction:(id)sender;
 - (IBAction)RunTest:(id)sender;
-
-- (IBAction)showPreferences:(id)sender;
+- (IBAction)sendCommandButtonAction:(id)sender;
 
 @end

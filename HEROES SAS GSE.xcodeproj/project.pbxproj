@@ -19,13 +19,26 @@
 		860EF356163605D400B46E35 /* HEROES_SAS_GSETests.m in Sources */ = {isa = PBXBuildFile; fileRef = 860EF355163605D400B46E35 /* HEROES_SAS_GSETests.m */; };
 		860EF3611636060100B46E35 /* AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = 860EF3601636060100B46E35 /* AppController.m */; };
 		860EF3631636073000B46E35 /* PreferencesWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 860EF3621636073000B46E35 /* PreferencesWindow.xib */; };
-		860EF3661636079800B46E35 /* PreferencesWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 860EF3651636079800B46E35 /* PreferencesWindowController.m */; };
+		864BF79A16C49E7D00227491 /* Commander.m in Sources */ = {isa = PBXBuildFile; fileRef = 864BF79116C49E7C00227491 /* Commander.m */; };
+		864BF79B16C49E7D00227491 /* Packet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 864BF79216C49E7C00227491 /* Packet.cpp */; };
+		864BF79C16C49E7D00227491 /* Command.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 864BF79516C49E7D00227491 /* Command.cpp */; };
+		864BF79D16C49E7D00227491 /* UDPSender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 864BF79616C49E7D00227491 /* UDPSender.cpp */; };
+		864BF79E16C49E7D00227491 /* Telemetry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 864BF79716C49E7D00227491 /* Telemetry.cpp */; };
+		864BF79F16C49F6F00227491 /* Packet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 864BF79216C49E7C00227491 /* Packet.cpp */; };
+		864BF7A016C49F6F00227491 /* Command.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 864BF79516C49E7D00227491 /* Command.cpp */; };
+		864BF7A116C49F6F00227491 /* UDPSender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 864BF79616C49E7D00227491 /* UDPSender.cpp */; };
+		864BF7A216C49F6F00227491 /* Telemetry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 864BF79716C49E7D00227491 /* Telemetry.cpp */; };
+		8660983B16B398DD00BE26D1 /* icon.iconset in Resources */ = {isa = PBXBuildFile; fileRef = 8660983A16B398DD00BE26D1 /* icon.iconset */; };
+		8660986116B6D04100BE26D1 /* ConsoleTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8660986016B6D04100BE26D1 /* ConsoleTextView.m */; };
 		86669FFF1692344200B0DACE /* TemperatureFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 86669FFE1692344200B0DACE /* TemperatureFormatter.m */; };
 		8666A002169254AE00B0DACE /* DataPacket.m in Sources */ = {isa = PBXBuildFile; fileRef = 8666A001169254AE00B0DACE /* DataPacket.m */; };
 		8666A0081694874900B0DACE /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 8666A0071694874900B0DACE /* README.md */; };
+		8666E3C416A3BA6600A9DD85 /* Commander.m in Sources */ = {isa = PBXBuildFile; fileRef = 8666E3C316A3BA6600A9DD85 /* Commander.m */; };
 		86881A74163D9231003CC656 /* ParseDataOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 86881A73163D9231003CC656 /* ParseDataOperation.m */; };
 		86A62FE7164D7EE10049527C /* CameraView.m in Sources */ = {isa = PBXBuildFile; fileRef = 86A62FE6164D7EE10049527C /* CameraView.m */; };
 		86A62FEA164D80BF0049527C /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86A62FE9164D80BF0049527C /* OpenGL.framework */; };
+		86E1D84E1695ED1B0079303F /* lib_crc.c in Sources */ = {isa = PBXBuildFile; fileRef = 86E1D84A1695ED1B0079303F /* lib_crc.c */; };
+		86E1D84F1695ED1B0079303F /* lib_crc.txt in Resources */ = {isa = PBXBuildFile; fileRef = 86E1D84C1695ED1B0079303F /* lib_crc.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,18 +74,33 @@
 		860EF35F1636060100B46E35 /* AppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppController.h; sourceTree = "<group>"; };
 		860EF3601636060100B46E35 /* AppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppController.m; sourceTree = "<group>"; };
 		860EF3621636073000B46E35 /* PreferencesWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PreferencesWindow.xib; sourceTree = "<group>"; };
-		860EF3641636079800B46E35 /* PreferencesWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreferencesWindowController.h; sourceTree = "<group>"; };
-		860EF3651636079800B46E35 /* PreferencesWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreferencesWindowController.m; sourceTree = "<group>"; };
+		864BF79116C49E7C00227491 /* Commander.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Commander.m; sourceTree = "<group>"; };
+		864BF79216C49E7C00227491 /* Packet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Packet.cpp; sourceTree = "<group>"; };
+		864BF79316C49E7C00227491 /* Packet.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Packet.hpp; sourceTree = "<group>"; };
+		864BF79416C49E7D00227491 /* Command.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Command.hpp; sourceTree = "<group>"; };
+		864BF79516C49E7D00227491 /* Command.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Command.cpp; sourceTree = "<group>"; };
+		864BF79616C49E7D00227491 /* UDPSender.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UDPSender.cpp; sourceTree = "<group>"; };
+		864BF79716C49E7D00227491 /* Telemetry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Telemetry.cpp; sourceTree = "<group>"; };
+		864BF79816C49E7D00227491 /* Telemetry.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Telemetry.hpp; sourceTree = "<group>"; };
+		864BF79916C49E7D00227491 /* UDPSender.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = UDPSender.hpp; sourceTree = "<group>"; };
+		8660983A16B398DD00BE26D1 /* icon.iconset */ = {isa = PBXFileReference; lastKnownFileType = folder.iconset; path = icon.iconset; sourceTree = "<group>"; };
+		8660985F16B6D04100BE26D1 /* ConsoleTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConsoleTextView.h; sourceTree = "<group>"; };
+		8660986016B6D04100BE26D1 /* ConsoleTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConsoleTextView.m; sourceTree = "<group>"; };
 		86669FFD1692344200B0DACE /* TemperatureFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TemperatureFormatter.h; sourceTree = "<group>"; };
 		86669FFE1692344200B0DACE /* TemperatureFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TemperatureFormatter.m; sourceTree = "<group>"; };
 		8666A000169254AE00B0DACE /* DataPacket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataPacket.h; sourceTree = "<group>"; };
 		8666A001169254AE00B0DACE /* DataPacket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataPacket.m; sourceTree = "<group>"; };
 		8666A0071694874900B0DACE /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		8666E3C216A3BA6600A9DD85 /* Commander.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Commander.h; sourceTree = "<group>"; };
+		8666E3C316A3BA6600A9DD85 /* Commander.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Commander.m; sourceTree = "<group>"; };
 		86881A72163D9231003CC656 /* ParseDataOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParseDataOperation.h; sourceTree = "<group>"; };
 		86881A73163D9231003CC656 /* ParseDataOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParseDataOperation.m; sourceTree = "<group>"; };
 		86A62FE5164D7EE10049527C /* CameraView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraView.h; sourceTree = "<group>"; };
 		86A62FE6164D7EE10049527C /* CameraView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CameraView.m; sourceTree = "<group>"; };
 		86A62FE9164D80BF0049527C /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		86E1D84A1695ED1B0079303F /* lib_crc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lib_crc.c; sourceTree = "<group>"; };
+		86E1D84B1695ED1B0079303F /* lib_crc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lib_crc.h; sourceTree = "<group>"; };
+		86E1D84C1695ED1B0079303F /* lib_crc.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = lib_crc.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +128,7 @@
 		860EF31C163605D300B46E35 = {
 			isa = PBXGroup;
 			children = (
+				8660983A16B398DD00BE26D1 /* icon.iconset */,
 				860EF331163605D300B46E35 /* HEROES SAS GSE */,
 				860EF34E163605D400B46E35 /* HEROES SAS GSETests */,
 				860EF32A163605D300B46E35 /* Frameworks */,
@@ -148,14 +177,13 @@
 				86881A73163D9231003CC656 /* ParseDataOperation.m */,
 				8666A000169254AE00B0DACE /* DataPacket.h */,
 				8666A001169254AE00B0DACE /* DataPacket.m */,
-				860EF340163605D300B46E35 /* MainMenu.xib */,
 				86669FFD1692344200B0DACE /* TemperatureFormatter.h */,
 				86669FFE1692344200B0DACE /* TemperatureFormatter.m */,
 				86A62FE5164D7EE10049527C /* CameraView.h */,
 				86A62FE6164D7EE10049527C /* CameraView.m */,
-				860EF3621636073000B46E35 /* PreferencesWindow.xib */,
-				860EF3641636079800B46E35 /* PreferencesWindowController.h */,
-				860EF3651636079800B46E35 /* PreferencesWindowController.m */,
+				8666E3C216A3BA6600A9DD85 /* Commander.h */,
+				8666E3C316A3BA6600A9DD85 /* Commander.m */,
+				86E1D8481695ED1B0079303F /* lib */,
 				860EF332163605D300B46E35 /* Supporting Files */,
 			);
 			path = "HEROES SAS GSE";
@@ -164,6 +192,10 @@
 		860EF332163605D300B46E35 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				860EF340163605D300B46E35 /* MainMenu.xib */,
+				8660985F16B6D04100BE26D1 /* ConsoleTextView.h */,
+				8660986016B6D04100BE26D1 /* ConsoleTextView.m */,
+				860EF3621636073000B46E35 /* PreferencesWindow.xib */,
 				860EF333163605D300B46E35 /* HEROES SAS GSE-Info.plist */,
 				8666A0071694874900B0DACE /* README.md */,
 				860EF334163605D300B46E35 /* InfoPlist.strings */,
@@ -191,6 +223,33 @@
 				860EF351163605D400B46E35 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		86E1D8481695ED1B0079303F /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				864BF79116C49E7C00227491 /* Commander.m */,
+				864BF79216C49E7C00227491 /* Packet.cpp */,
+				864BF79316C49E7C00227491 /* Packet.hpp */,
+				864BF79416C49E7D00227491 /* Command.hpp */,
+				864BF79516C49E7D00227491 /* Command.cpp */,
+				864BF79616C49E7D00227491 /* UDPSender.cpp */,
+				864BF79716C49E7D00227491 /* Telemetry.cpp */,
+				864BF79816C49E7D00227491 /* Telemetry.hpp */,
+				864BF79916C49E7D00227491 /* UDPSender.hpp */,
+				86E1D8491695ED1B0079303F /* lib_crc */,
+			);
+			path = lib;
+			sourceTree = "<group>";
+		};
+		86E1D8491695ED1B0079303F /* lib_crc */ = {
+			isa = PBXGroup;
+			children = (
+				86E1D84A1695ED1B0079303F /* lib_crc.c */,
+				86E1D84B1695ED1B0079303F /* lib_crc.h */,
+				86E1D84C1695ED1B0079303F /* lib_crc.txt */,
+			);
+			path = lib_crc;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -269,6 +328,8 @@
 				860EF342163605D300B46E35 /* MainMenu.xib in Resources */,
 				860EF3631636073000B46E35 /* PreferencesWindow.xib in Resources */,
 				8666A0081694874900B0DACE /* README.md in Resources */,
+				86E1D84F1695ED1B0079303F /* lib_crc.txt in Resources */,
+				8660983B16B398DD00BE26D1 /* icon.iconset in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -303,14 +364,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				864BF79F16C49F6F00227491 /* Packet.cpp in Sources */,
+				864BF7A016C49F6F00227491 /* Command.cpp in Sources */,
+				864BF7A116C49F6F00227491 /* UDPSender.cpp in Sources */,
+				864BF7A216C49F6F00227491 /* Telemetry.cpp in Sources */,
 				860EF338163605D300B46E35 /* main.m in Sources */,
 				860EF33F163605D300B46E35 /* AppDelegate.m in Sources */,
 				860EF3611636060100B46E35 /* AppController.m in Sources */,
-				860EF3661636079800B46E35 /* PreferencesWindowController.m in Sources */,
 				86881A74163D9231003CC656 /* ParseDataOperation.m in Sources */,
 				86A62FE7164D7EE10049527C /* CameraView.m in Sources */,
 				86669FFF1692344200B0DACE /* TemperatureFormatter.m in Sources */,
 				8666A002169254AE00B0DACE /* DataPacket.m in Sources */,
+				86E1D84E1695ED1B0079303F /* lib_crc.c in Sources */,
+				8666E3C416A3BA6600A9DD85 /* Commander.m in Sources */,
+				8660986116B6D04100BE26D1 /* ConsoleTextView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -319,6 +386,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				860EF356163605D400B46E35 /* HEROES_SAS_GSETests.m in Sources */,
+				864BF79A16C49E7D00227491 /* Commander.m in Sources */,
+				864BF79B16C49E7D00227491 /* Packet.cpp in Sources */,
+				864BF79C16C49E7D00227491 /* Command.cpp in Sources */,
+				864BF79D16C49E7D00227491 /* UDPSender.cpp in Sources */,
+				864BF79E16C49E7D00227491 /* Telemetry.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -424,11 +496,15 @@
 		860EF35A163605D400B46E35 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				CLANG_CXX_LIBRARY = "libc++";
 				COMBINE_HIDPI_IMAGES = YES;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HEROES SAS GSE/HEROES SAS GSE-Prefix.pch";
 				INFOPLIST_FILE = "HEROES SAS GSE/HEROES SAS GSE-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -436,11 +512,15 @@
 		860EF35B163605D400B46E35 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				CLANG_CXX_LIBRARY = "libc++";
 				COMBINE_HIDPI_IMAGES = YES;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HEROES SAS GSE/HEROES SAS GSE-Prefix.pch";
 				INFOPLIST_FILE = "HEROES SAS GSE/HEROES SAS GSE-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

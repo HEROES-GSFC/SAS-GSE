@@ -12,7 +12,11 @@
 #include <math.h>
 #include <stdlib.h>
 
-@interface CameraView()
+@interface CameraView(){
+    @private
+    int numberXPixels;
+    int numberYPixels;
+}
 // declaration of private methods as needed
 - (void) prepareOpenGL;
 - (void) drawObjects;
@@ -21,9 +25,9 @@
 - (void) drawAFewPoints: (NSMutableArray *)points;
 - (void) doSomething;
 - (void) drawRect: (NSRect) dirtyRect;
+- (void) drawALine: (NSPoint) center: (float) length: (float) angleInDegrees;
 - (void) cleanUp;
 - (NSPoint) calculateCentroid:(NSMutableArray *)points;
-
 
 @end
 
@@ -37,6 +41,8 @@
     if (self) {
         //initialization
         _myNumber = 5;
+        numberXPixels = 1392;
+        numberYPixels = 1040;
     }
     return self;
 }
@@ -77,7 +83,7 @@
     glLoadIdentity();
     glPushMatrix();
     
-    gluOrtho2D(0,10, 0, 10);
+    gluOrtho2D(0,numberXPixels, 0, numberYPixels);
     glMatrixMode(GL_MODELVIEW);
     
     glDisable(GL_DEPTH_TEST);
@@ -94,26 +100,28 @@
     NSDictionary *circleFitResult = [[NSDictionary alloc] init];
     
     [points addObject:[NSValue valueWithPoint:
-                       NSMakePoint(4.0f + (arc4random_uniform(100)/1000.0f), 5.0f + (arc4random_uniform(100)/1000.0f))]];
+                       NSMakePoint(100.0f + numberXPixels/2.0f + 3*(arc4random_uniform(100)/100.0f), numberYPixels/2.0f + 3*(arc4random_uniform(100)/100.0f))]];
     [points addObject:[NSValue valueWithPoint:
-                       NSMakePoint(6.0f + (arc4random_uniform(100)/1000.0f), 5.0f + (arc4random_uniform(100)/1000.0f))]];
+                       NSMakePoint(-100.0f + numberXPixels/2.0f + 3*(arc4random_uniform(100)/100.0f), numberYPixels/2.0f + 3*(arc4random_uniform(100)/100.0f))]];
     [points addObject:[NSValue valueWithPoint:
-                       NSMakePoint(5.0f + (arc4random_uniform(100)/1000.0f), 6.0f + (arc4random_uniform(100)/1000.0f))]];
+                       NSMakePoint(numberXPixels/2.0f + 3*(arc4random_uniform(100)/100.0f), 100.0f + numberYPixels/2.0f + 3*(arc4random_uniform(100)/100.0f))]];
     [points addObject:[NSValue valueWithPoint:
-                       NSMakePoint(5.0f + (arc4random_uniform(100)/1000.0f), 4.0f + (arc4random_uniform(100)/1000.0f))]];
+                       NSMakePoint(numberXPixels/2.0f + 3*(arc4random_uniform(100)/100.0f), -100.0f + numberYPixels/2.0f + 3*(arc4random_uniform(100)/100.0f))]];
 
     circleFitResult = [self fitCircle:points];
     
     [self drawACross:[[circleFitResult objectForKey:@"centroid"] pointValue]];
     
     [self drawACircle:[[circleFitResult objectForKey:@"centroid"] pointValue]:[[circleFitResult objectForKey:@"radius"] floatValue]];
-    
+    glColor3f(0.0f, 1.0f, 0.0f);
+    [self drawALine:[[circleFitResult objectForKey:@"centroid"] pointValue] :210.0 :20.0];
+    glColor3f(1.0f, 1.0f, 1.0f);
     [self drawAFewPoints:points];
 }
 
 - (void) drawACross: (NSPoint) center
 {
-    float width = 0.2;
+    float width = 0.02 * (numberXPixels + numberYPixels)/2.0f;
     
     glColor3f(1.0f, 0.0f, 0.0f);
     glBegin(GL_LINES);
@@ -155,6 +163,16 @@
 		y = s * t + c * y;
 	}
 	glEnd();
+}
+
+-(void) drawALine: (NSPoint) center: (float) length: (float) angleInDegrees
+{
+    glBegin(GL_LINES);
+    {
+        glVertex2d(center.x, center.y);
+        glVertex2d(center.x + length * sinf(angleInDegrees * M_PI/180.0), center.y + length * cosf(angleInDegrees * M_PI/180.0));
+    }
+    glEnd();
 }
 
 - (void) drawAFewPoints: (NSMutableArray *)points
