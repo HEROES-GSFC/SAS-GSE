@@ -14,6 +14,7 @@
 @interface AppController (){
     NSOperationQueue *queue;
     NSTimer	*timer;
+    NSDictionary *listOfCommands;
 }
 
 @property (retain) NSTimer *timer;
@@ -45,6 +46,21 @@
     {
         queue = [[NSOperationQueue alloc] init];
         commander = [[Commander alloc] init];
+        
+        NSArray *commandKeys = [NSArray arrayWithObjects:
+                                [NSNumber numberWithInteger:0x0100],
+                                [NSNumber numberWithInteger:0x0101],
+                                [NSNumber numberWithInteger:0x0102], nil];
+        
+        NSArray *commandDescriptionNSArray = [NSArray
+                                              arrayWithObjects:
+                                              @"Reset Camera",
+                                              @"Set new coordinate",
+                                              @"Set blah", nil];
+        
+        listOfCommands = [NSDictionary
+                          dictionaryWithObject:commandDescriptionNSArray
+                          forKey:commandKeys];
 	}
 	return self;
 }
@@ -108,7 +124,21 @@
 //}
 
 - (IBAction)sendCommandButtonAction:(id)sender{
-    [commander send:[CommandKeyTextField integerValue] :[CommandValueTextField integerValue]];
+    
+    NSScanner *scanner = [[NSScanner alloc] initWithString:[CommandKeyTextField stringValue]];
+    unsigned int retval;
+    if (![scanner scanHexInt:&retval]) {
+        NSLog(@"Invalid hex string");
+    }
+
+    NSScanner *scanner2 = [[NSScanner alloc] initWithString:[CommandKeyTextField stringValue]];
+    unsigned int retval2;
+    if (![scanner2 scanHexInt:&retval2]) {
+        NSLog(@"Invalid hex string");
+    }
+
+    [commander send:retval :retval2];
+
 }
 
 

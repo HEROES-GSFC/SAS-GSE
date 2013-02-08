@@ -63,9 +63,6 @@
     
     CommandPacket cp(0x30, frame_sequence_number);
     cp << cm1;
-    
-    comSender->send( &cp );
-    comSender->close_connection();
 }
 
 - (void) updateSequenceNumber{
