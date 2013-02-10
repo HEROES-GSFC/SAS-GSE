@@ -10,6 +10,6 @@
 
 @interface Commander : NSObject
 
-- (void)send:(uint16_t) command_key: (uint16_t) command_value;
+-(void)send:(uint16_t)command_key :(uint16_t) command_value :(NSString *) ip_address;
 
 @end

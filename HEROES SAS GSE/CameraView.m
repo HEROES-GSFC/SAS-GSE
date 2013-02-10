@@ -21,11 +21,11 @@
 - (void) prepareOpenGL;
 - (void) drawObjects;
 - (void) drawACross: (NSPoint) center;
-- (void) drawACircle: (NSPoint) center: (float) radius;
+- (void) drawACircle: (NSPoint) center :(float) radius;
 - (void) drawAFewPoints: (NSMutableArray *)points;
 - (void) doSomething;
 - (void) drawRect: (NSRect) dirtyRect;
-- (void) drawALine: (NSPoint) center: (float) length: (float) angleInDegrees;
+- (void) drawALine: (NSPoint) center :(float) length :(float) angleInDegrees;
 - (void) cleanUp;
 - (NSPoint) calculateCentroid:(NSMutableArray *)points;
 
@@ -137,7 +137,7 @@
     glEnd();
 }
 
-- (void) drawACircle: (NSPoint) center: (float) radius
+- (void) drawACircle: (NSPoint) center :(float) radius
 {
     //
     // algorithm from http://slabode.exofire.net/circle_draw.shtml
@@ -165,7 +165,7 @@
 	glEnd();
 }
 
--(void) drawALine: (NSPoint) center: (float) length: (float) angleInDegrees
+-(void) drawALine: (NSPoint) center :(float) length :(float) angleInDegrees
 {
     glBegin(GL_LINES);
     {
@@ -217,7 +217,7 @@
     return centroid;
 }
 
-- (float) calculateRadius:(NSMutableArray *)points: (NSPoint) centroid
+- (float) calculateRadius:(NSMutableArray *)points :(NSPoint) centroid
 {
     float radius = 0, ri = 0;
     for (NSValue *value in points){

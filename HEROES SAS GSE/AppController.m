@@ -17,7 +17,7 @@
     NSDictionary *listOfCommands;
 }
 
-@property (retain) NSTimer *timer;
+    @property (retain) NSTimer *timer;
 
 @end
 
@@ -34,6 +34,9 @@
 @synthesize StartStopSegmentedControl;
 @synthesize ConsoleScrollView;
 @synthesize ConsoleTextView;
+@synthesize CommandIPTextField;
+@synthesize SAS1CmdCountTextField;
+@synthesize SAS1CmdKeyTextField;
 
 @synthesize timer;
 
@@ -126,18 +129,18 @@
 - (IBAction)sendCommandButtonAction:(id)sender{
     
     NSScanner *scanner = [[NSScanner alloc] initWithString:[CommandKeyTextField stringValue]];
-    unsigned int retval;
-    if (![scanner scanHexInt:&retval]) {
+    unsigned int command_key;
+    if (![scanner scanHexInt:&command_key]) {
         NSLog(@"Invalid hex string");
     }
 
     NSScanner *scanner2 = [[NSScanner alloc] initWithString:[CommandKeyTextField stringValue]];
-    unsigned int retval2;
-    if (![scanner2 scanHexInt:&retval2]) {
+    unsigned int command_var;
+    if (![scanner2 scanHexInt:&command_var]) {
         NSLog(@"Invalid hex string");
     }
 
-    [commander send:retval :retval2];
+    [commander send:command_key :command_var: [CommandIPTextField stringValue]];
 
 }
 
@@ -181,6 +184,8 @@
  
     [self.FrameNumberLabel setIntegerValue:[packet frameNumber]];
     [self.FrameTimeLabel setStringValue:[packet getframeTimeString]];
+    [self.SAS1CmdCountTextField setIntegerValue:[packet commandCount]];
+    [self.SAS1CmdKeyTextField setIntegerValue:[packet commandKey]];
     
     int temp = 20;
     NSRange tempRange = NSMakeRange(10, 20);

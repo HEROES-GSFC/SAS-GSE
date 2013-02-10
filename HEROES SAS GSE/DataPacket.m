@@ -14,16 +14,18 @@
 @synthesize frameNumber = _frameNumber;
 @synthesize frameSeconds = _frameSeconds;
 @synthesize frameMilliseconds = _frameMilliseconds;
+@synthesize commandCount = _commandCount;
+@synthesize commandKey = _commandKey;
 
-- (id)init{
+-(id)init{
     self = [super init]; // call our super’s designated initializer
     if (self) {
-                         // initialize our subclass here
+        [self setFrameMilliseconds:0];
     }
     return self;
 }
 
--(void) setFrameNumber:(uint8_t)frameNumber{
+-(void) setFrameNumber:(uint32_t)frameNumber{
     _frameNumber = frameNumber;
     
 }
@@ -36,8 +38,15 @@
     _frameMilliseconds = frameMilliseconds;
 }
 
--(NSString *) getFrameTimeString{
-    
+-(void) setCommandKey:(uint16_t)commandKey{
+    _commandKey = commandKey;
+}
+
+-(void) setCommandCount:(uint16_t)commandCount{
+    _commandCount = commandCount;
+}
+
+-(NSString *) getframeTimeString{
     NSDate *date = [NSDate dateWithTimeIntervalSince1970:self.frameSeconds];
     NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"D HH:mm:ss"];

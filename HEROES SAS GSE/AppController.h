@@ -36,6 +36,9 @@
 @property (weak) IBOutlet NSTextField *PYASRCameraTemperatureLabel;
 @property (weak) IBOutlet NSScrollView *ConsoleScrollView;
 @property (unsafe_unretained) IBOutlet NSTextView *ConsoleTextView;
+@property (weak) IBOutlet NSTextField *CommandIPTextField;
+@property (weak) IBOutlet NSTextField *SAS1CmdCountTextField;
+@property (weak) IBOutlet NSTextField *SAS1CmdKeyTextField;
 
 @property (strong) DataPacket *dataPacket;
 

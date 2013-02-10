@@ -13,7 +13,15 @@
 @property (nonatomic) uint8_t frameNumber;
 @property (nonatomic) uint32_t frameSeconds;
 @property (nonatomic) uint32_t frameMilliseconds;
+@property (nonatomic) uint16_t commandCount;
+@property (nonatomic) uint16_t commandKey;
 
 -(NSString *) getframeTimeString;
+-(void) setFrameNumber:(uint32_t)frameNumber;
+-(void) setFrameSeconds:(uint32_t)frameSeconds;
+-(void) setFrameMilliseconds:(uint32_t) frameMilliseconds;
+-(void) setcommandKey:(uint16_t)commandKey;
+-(void) setcommandCount:(uint16_t)commandCount;
+
 
 @end
