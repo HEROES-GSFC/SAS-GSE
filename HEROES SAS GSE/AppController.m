@@ -185,7 +185,7 @@
     [self.FrameNumberLabel setIntegerValue:[packet frameNumber]];
     [self.FrameTimeLabel setStringValue:[packet getframeTimeString]];
     [self.SAS1CmdCountTextField setIntegerValue:[packet commandCount]];
-    [self.SAS1CmdKeyTextField setIntegerValue:[packet commandKey]];
+    [self.SAS1CmdKeyTextField setStringValue:[NSString stringWithFormat:@"0x%04x", [packet commandKey]]];
     
     int temp = 20;
     NSRange tempRange = NSMakeRange(10, 20);

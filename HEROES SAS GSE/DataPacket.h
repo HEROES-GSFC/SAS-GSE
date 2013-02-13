@@ -10,7 +10,7 @@
 
 @interface DataPacket : NSObject
 
-@property (nonatomic) uint8_t frameNumber;
+@property (nonatomic) uint32_t frameNumber;
 @property (nonatomic) uint32_t frameSeconds;
 @property (nonatomic) uint32_t frameMilliseconds;
 @property (nonatomic) uint16_t commandCount;

@@ -23,6 +23,12 @@
 #define PAYLOAD_SIZE 20
 #define DEFAULT_PORT 5003 /* The default port to send on */
 
+#define SAS_TARGET_ID 0x30
+#define SAS_TM_TYPE 0x70
+#define SAS_IMAGE_TYPE 0x82
+#define SAS_SYNC_WORD 0xEB90
+#define SAS_CM_ACK_TYPE 0x01
+
 // NSNotification name to tell the Window controller an image file as found
 NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
 
@@ -87,29 +93,39 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                     NSLog(@"%i %x %i %d", tm_packet->getSeconds(), packet_length, tm_packet->getSync(), tm_packet->getSourceID(), tm_packet->getTypeID());
                     std::cout << "tm_packet:" << tm_packet << std::endl;
 
-                    [dataPacket setFrameSeconds: tm_packet->getSeconds()];
-
-                    uint16_t sas_sync;
-                    *(tm_packet) >> sas_sync;
-                    NSLog(@"%x", sas_sync);
-                    uint32_t frame_number;
-                    *(tm_packet) >> frame_number;
-                    uint16_t command_count;
-                    *(tm_packet) >> command_count;
-                    uint16_t command_key;
-                    *(tm_packet) >> command_key;
-                    
-                    [dataPacket setFrameNumber: frame_number];
-                    [dataPacket setCommandCount: command_count];
-                    [dataPacket setCommandKey: command_key];
-
-                    
-                    for(int i = 0; i < packet_length-1; i++){
-                        printf("%x", (uint8_t) packet[i]);
+                    if (tm_packet->getSourceID() == SAS_TARGET_ID){
+                        
+                        if (tm_packet->getTypeID() == SAS_TM_TYPE) {
+                            [dataPacket setFrameSeconds: tm_packet->getSeconds()];
+                            
+                            uint16_t sas_sync;
+                            *(tm_packet) >> sas_sync;
+                            NSLog(@"%x", sas_sync);
+                            uint32_t frame_number;
+                            *(tm_packet) >> frame_number;
+                            uint16_t command_count;
+                            *(tm_packet) >> command_count;
+                            uint16_t command_key;
+                            *(tm_packet) >> command_key;
+                            
+                            [dataPacket setFrameNumber: frame_number];
+                            [dataPacket setCommandCount: command_count];
+                            [dataPacket setCommandKey: command_key];
+                            
+                            for(int i = 0; i < packet_length-1; i++){
+                                printf("%x", (uint8_t) packet[i]);
+                            }
+                            printf("\n");
+                            free(buffer);
+                        }
+                        
+                        if (tm_packet->getTypeID() == SAS_CM_ACK_TYPE) {
+                            uint16_t sequence_number = 0;
+                            *tm_packet >> sequence_number;
+                            NSLog(@"Received ACK for %u", sequence_number);
+                        }
                     }
-                    printf("\n");
-                    free(buffer);
-
+                    
                 }
                 
                 free(packet);
