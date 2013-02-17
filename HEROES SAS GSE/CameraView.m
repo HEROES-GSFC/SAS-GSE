@@ -28,7 +28,6 @@
 - (void) drawALine: (NSPoint) center :(float) length :(float) angleInDegrees;
 - (void) cleanUp;
 - (NSPoint) calculateCentroid:(NSMutableArray *)points;
-
 @end
 
 @implementation CameraView

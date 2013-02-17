@@ -12,14 +12,14 @@
 #import "lib_crc.h"
 #import "CameraView.h"
 
-@interface AppController (){
-    NSOperationQueue *queue;
-    NSTimer	*timer;
-    NSDictionary *listOfCommands;
-}
-
-    @property (retain) NSTimer *timer;
-
+@interface AppController ()
+@property (nonatomic, strong) NSOperationQueue *queue;
+@property (nonatomic, strong) NSTimer *timer;
+@property (nonatomic, strong) NSDictionary *listOfCommands;
+@property (nonatomic, strong) CameraView *PYASF_cameraview;
+@property (nonatomic, strong) CameraView *PYASR_cameraview;
+@property (nonatomic, strong) Commander *commander;
+@property (nonatomic, strong) DataPacket *packet;
 @end
 
 @implementation AppController
@@ -40,20 +40,21 @@
 @synthesize SAS1CmdKeyTextField;
 @synthesize CommandSequenceNumber;
 @synthesize PYASFcameraView;
-@synthesize PYASRcameraView;
 
-@synthesize timer;
-
-@class DataPacket;
+@synthesize timer = _timer;
+@synthesize PYASF_cameraview = _PYASF_cameraview;
+@synthesize PYASR_cameraview = _PYASR_cameraview;
+@synthesize listOfCommands = _listOfCommands;
+@synthesize queue = _queue;
+@synthesize commander = _commander;
+@synthesize packet = _packet;
 
 - (id)init
 {
 	self = [super init];
 	if (self)
     {
-        queue = [[NSOperationQueue alloc] init];
-        commander = [[Commander alloc] init];
-        
+                
         NSArray *commandKeys = [NSArray arrayWithObjects:
                                 [NSNumber numberWithInteger:0x0100],
                                 [NSNumber numberWithInteger:0x0101],
@@ -65,7 +66,7 @@
                                               @"Set new coordinate",
                                               @"Set blah", nil];
         
-        listOfCommands = [NSDictionary
+        self.listOfCommands = [NSDictionary
                           dictionaryWithObject:commandDescriptionNSArray
                           forKey:commandKeys];
         
@@ -73,18 +74,65 @@
 	return self;
 }
 
+- (NSOperationQueue *)queue
+{
+    if (_queue == nil) {
+        _queue = [[NSOperationQueue alloc] init];
+    }
+    return _queue;
+}
+
+- (NSDictionary *)listOfCommands
+{
+    if (_listOfCommands == nil) {
+        _listOfCommands = [[NSDictionary alloc] init];
+    }
+    return _listOfCommands;
+}
+
+- (Commander *)commander
+{
+    if (_commander == nil) {
+        _commander = [[Commander alloc] init];
+    }
+    return _commander;
+}
+
+- (CameraView *)PYASR_cameraview
+{
+    if (_PYASR_cameraview == nil) {
+        _PYASR_cameraview = [[CameraView alloc] init];
+    }
+    return _PYASR_cameraview;
+}
+
+- (CameraView *)PYASF_cameraView
+{
+    if (_PYASF_cameraview == nil) {
+        _PYASF_cameraview = [[CameraView alloc] init];
+    }
+    return _PYASF_cameraview;
+}
+
+- (DataPacket *)packet
+{
+    if (_packet == nil) {
+        _packet = [[DataPacket alloc] init];
+    }
+    return _packet;
+}
 
 - (IBAction)StartStopButtonAction:(id)sender {
     if ([StartStopSegmentedControl selectedSegment] == 0) {
         
-        [queue cancelAllOperations];
+        [self.queue cancelAllOperations];
         
         // start the GetPathsOperation with the root path to start the search
         ParseDataOperation *parseOp = [[ParseDataOperation alloc] init];
         
-        [queue addOperation:parseOp];	// this will start the "TestOperation"
+        [self.queue addOperation:parseOp];	// this will start the "TestOperation"
         
-        if([[queue operations] containsObject:parseOp]){
+        if([[self.queue operations] containsObject:parseOp]){
             [[NSNotificationCenter defaultCenter] addObserver:self
                                                      selector:@selector(anyThread_handleData:)
                                                          name:kReceiveAndParseDataDidFinish
@@ -95,7 +143,7 @@
         }
     }
     if ([StartStopSegmentedControl selectedSegment] == 1) {
-        [queue cancelAllOperations];
+        [self.queue cancelAllOperations];
         [RunningIndicator setHidden:YES];
         [RunningIndicator stopAnimation:self];
     }
@@ -186,12 +234,12 @@
 	//
 	NSDictionary *notifData = [note userInfo];
     
-    DataPacket *packet = [notifData valueForKey:@"packet"];
+    self.packet = [notifData valueForKey:@"packet"];
  
-    [self.FrameNumberLabel setIntegerValue:[packet frameNumber]];
-    [self.FrameTimeLabel setStringValue:[packet getframeTimeString]];
-    [self.SAS1CmdCountTextField setIntegerValue:[packet commandCount]];
-    [self.SAS1CmdKeyTextField setStringValue:[NSString stringWithFormat:@"0x%04x", [packet commandKey]]];
+    [self.FrameNumberLabel setIntegerValue:[self.packet frameNumber]];
+    [self.FrameTimeLabel setStringValue:[self.packet getframeTimeString]];
+    [self.SAS1CmdCountTextField setIntegerValue:[self.packet commandCount]];
+    [self.SAS1CmdKeyTextField setStringValue:[NSString stringWithFormat:@"0x%04x", [self.packet commandKey]]];
     
     int temp = 20;
     NSRange tempRange = NSMakeRange(10, 20);
@@ -200,8 +248,8 @@
         [self.PYASFCPUTemperatureLabel setBackgroundColor:[NSColor redColor]];
     }
 
-    [self.PYASRcameraView setCircleCenter:packet.sunCenter];
-    NSLog(@"%@", packet.sunCenter);
+    [self.PYASFcameraView setCircleCenter:self.packet.sunCenter];
+    NSLog(@"%@", self.packet.sunCenter);
     [self.PYASFcameraView draw];
     //for (id point in packet.chordPoints){
     //    NSLog(@"%@", point);
