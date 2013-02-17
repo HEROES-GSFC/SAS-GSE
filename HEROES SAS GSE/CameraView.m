@@ -43,6 +43,7 @@
     self = [super initWithFrame:frameRect];
     if (self) {
         //initialization
+        self.circleCenter = [NSValue valueWithPoint:NSMakePoint(0, 10)];
     }
     return self;
 }
@@ -69,6 +70,27 @@
         _numberYPixels = [[NSNumber alloc] initWithInt:1040];
     }
     return _numberYPixels;
+}
+
+- (NSValue *)circleCenter
+{
+    if (_circleCenter == nil){
+        _circleCenter = [NSValue valueWithPoint:NSMakePoint(0, 10)];
+    }
+    return _circleCenter;
+}
+
+- (void) doSomething
+{
+    NSLog(@"drawing..%@", self.circleCenter);
+    //[self drawACross:[suncenter pointValue]];
+    glColor3f(1.0f, 0.0f, 0.0f);
+    glBegin(GL_LINES);
+    glVertex2d(0.0f, 0.0f);
+    glVertex2d([self.circleCenter pointValue].x, [self.circleCenter pointValue].y);
+    glEnd();
+    
+    [self drawObjects];
 }
 
 - (void)awakeFromNib
@@ -201,25 +223,6 @@
         glVertex2d(currentPoint.x, currentPoint.y);
     }
     glEnd();
-}
-
-- (void) doSomething
-{
-    //_myNumber+=0.01;
-    //if (_myNumber > 10) {
-    //    _myNumber = 0;
-    // }
-    
-    //[self doSomething];
-    NSLog(@"drawing..%@", self.circleCenter);
-    //[self drawACross:[suncenter pointValue]];
-    glColor3f(1.0f, 0.0f, 0.0f);
-    glBegin(GL_LINES);
-    glVertex2d(0.0f, 0.0f);
-    glVertex2d([self.circleCenter pointValue].x, [self.circleCenter pointValue].y);
-    glEnd();
-    
-    [self drawObjects];
 }
 
 - (NSPoint) calculateCentroid:(NSMutableArray *)points

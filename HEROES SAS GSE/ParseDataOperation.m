@@ -32,28 +32,32 @@
 // NSNotification name to tell the Window controller an image file as found
 NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
 
-
-
 @interface ParseDataOperation(){
-@private    
     UDPReceiver *tmReceiver;
 }
 
-@property (retain) DataPacket *dataPacket;
+@property (nonatomic, strong) DataPacket *dataPacket;
 
 @end
 
 @implementation ParseDataOperation
 
-@synthesize dataPacket;
+@synthesize dataPacket = _dataPacket;
 
 - (id)init{
     self = [super init]; // call our super’s designated initializer
     if (self) {
         tmReceiver = new TelemetryReceiver( 5002 );
-        self.dataPacket = [[DataPacket alloc] init];
     }
     return self;
+}
+
+- (DataPacket *)dataPacket
+{
+    if (_dataPacket == nil) {
+        _dataPacket = [[DataPacket alloc] init];
+    }
+    return _dataPacket;
 }
 
 // -------------------------------------------------------------------------------
@@ -94,7 +98,7 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                     if (tm_packet->getSourceID() == SAS_TARGET_ID){
                         
                         if (tm_packet->getTypeID() == SAS_TM_TYPE) {
-                            [dataPacket setFrameSeconds: tm_packet->getSeconds()];
+                            [self.dataPacket setFrameSeconds: tm_packet->getSeconds()];
                             
                             uint16_t sas_sync;
                             *(tm_packet) >> sas_sync;
@@ -112,19 +116,19 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                             uint16_t sunCenterY;
                             *(tm_packet) >> sunCenterY;
                             
-                            [dataPacket setSunCenter:[NSValue valueWithPoint:NSMakePoint(sunCenterX,sunCenterY)]];
+                            [self.dataPacket setSunCenter:[NSValue valueWithPoint:NSMakePoint(sunCenterX, sunCenterY)]];
                             
                             for (int i = 0; i < 14; i++) {
                                 uint16_t x = 0;
                                 uint16_t y = 0;
                                 *(tm_packet) >> x;
                                 *(tm_packet) >> y;
-                                [dataPacket addChordPoints:[NSValue valueWithPoint:NSMakePoint(x,y)] :i];
+                                [self.dataPacket addChordPoint:NSMakePoint(x,y) :i];
                             }
                             
-                            [dataPacket setFrameNumber: frame_number];
-                            [dataPacket setCommandCount: command_count];
-                            [dataPacket setCommandKey: command_key];
+                            [self.dataPacket setFrameNumber: frame_number];
+                            [self.dataPacket setCommandCount: command_count];
+                            [self.dataPacket setCommandKey: command_key];
                             
                             //for(int i = 0; i < packet_length-1; i++){
                             //    printf("%x", (uint8_t) packet[i]);
@@ -170,7 +174,7 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
 //                [self.dataPacket setFrameMilliseconds: mmseconds];
 //                
                 NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:
-                                      dataPacket, @"packet",
+                                      self.dataPacket, @"packet",
                                       nil];
                 if (![self isCancelled])
 //              {

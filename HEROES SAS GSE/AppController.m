@@ -16,8 +16,6 @@
 @property (nonatomic, strong) NSOperationQueue *queue;
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, strong) NSDictionary *listOfCommands;
-@property (nonatomic, strong) CameraView *PYASF_cameraview;
-@property (nonatomic, strong) CameraView *PYASR_cameraview;
 @property (nonatomic, strong) Commander *commander;
 @property (nonatomic, strong) DataPacket *packet;
 @end
@@ -39,11 +37,10 @@
 @synthesize SAS1CmdCountTextField;
 @synthesize SAS1CmdKeyTextField;
 @synthesize CommandSequenceNumber;
-@synthesize PYASFcameraView;
+@synthesize PYASFcameraView = _PYASFcameraView;
+@synthesize PYASRcameraView = _PYASRcameraView;
 
 @synthesize timer = _timer;
-@synthesize PYASF_cameraview = _PYASF_cameraview;
-@synthesize PYASR_cameraview = _PYASR_cameraview;
 @synthesize listOfCommands = _listOfCommands;
 @synthesize queue = _queue;
 @synthesize commander = _commander;
@@ -98,20 +95,20 @@
     return _commander;
 }
 
-- (CameraView *)PYASR_cameraview
+- (CameraView *)PYASRcameraView
 {
-    if (_PYASR_cameraview == nil) {
-        _PYASR_cameraview = [[CameraView alloc] init];
+    if (_PYASRcameraView == nil) {
+        _PYASRcameraView = [[CameraView alloc] init];
     }
-    return _PYASR_cameraview;
+    return _PYASRcameraView;
 }
 
-- (CameraView *)PYASF_cameraView
+- (CameraView *)PYASFcameraView
 {
-    if (_PYASF_cameraview == nil) {
-        _PYASF_cameraview = [[CameraView alloc] init];
+    if (_PYASFcameraView == nil) {
+        _PYASFcameraView = [[CameraView alloc] init];
     }
-    return _PYASF_cameraview;
+    return _PYASFcameraView;
 }
 
 - (DataPacket *)packet
@@ -138,14 +135,14 @@
                                                          name:kReceiveAndParseDataDidFinish
                                                        object:nil];
 
-            [RunningIndicator setHidden:NO];
-            [RunningIndicator startAnimation:self];
+            [self.RunningIndicator setHidden:NO];
+            [self.RunningIndicator startAnimation:self];
         }
     }
     if ([StartStopSegmentedControl selectedSegment] == 1) {
         [self.queue cancelAllOperations];
-        [RunningIndicator setHidden:YES];
-        [RunningIndicator stopAnimation:self];
+        [self.RunningIndicator setHidden:YES];
+        [self.RunningIndicator stopAnimation:self];
     }
 
 }
@@ -158,6 +155,7 @@
     for (int i = 0; i < 100; i++) {
         [self.ConsoleTextView insertText:@"hello"];
     }
+    self.PYASFcameraView.circleCenter = [NSValue valueWithPoint:NSMakePoint(0,0)];
     
 }
 
@@ -194,7 +192,7 @@
         NSLog(@"Invalid hex string");
     }
 
-    command_sequence_number = [commander send:command_key :command_var: [CommandIPTextField stringValue]];
+    command_sequence_number = [self.commander send:command_key :command_var: [CommandIPTextField stringValue]];
 
     [CommandSequenceNumber setIntegerValue:command_sequence_number];
 }
@@ -248,9 +246,11 @@
         [self.PYASFCPUTemperatureLabel setBackgroundColor:[NSColor redColor]];
     }
 
-    [self.PYASFcameraView setCircleCenter:self.packet.sunCenter];
-    NSLog(@"%@", self.packet.sunCenter);
+    self.PYASFcameraView.circleCenter = self.packet.sunCenter;
+    NSLog(@"mainThread_handleData: %@", self.packet.sunCenter);
+    NSLog(@"mainThread_handleData: %@", self.PYASFcameraView.circleCenter);
     [self.PYASFcameraView draw];
+    [self.PYASRcameraView draw];
     //for (id point in packet.chordPoints){
     //    NSLog(@"%@", point);
     //}

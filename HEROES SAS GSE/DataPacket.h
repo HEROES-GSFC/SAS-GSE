@@ -15,16 +15,9 @@
 @property (nonatomic) uint32_t frameMilliseconds;
 @property (nonatomic) uint16_t commandCount;
 @property (nonatomic) uint16_t commandKey;
-@property (nonatomic) NSMutableArray *chordPoints;
 @property (nonatomic) NSValue *sunCenter;
 
 -(NSString *) getframeTimeString;
--(void) setFrameNumber: (uint32_t)frameNumber;
--(void) setFrameSeconds: (uint32_t)frameSeconds;
--(void) setFrameMilliseconds: (uint32_t) frameMilliseconds;
--(void) setcommandKey: (uint16_t)commandKey;
--(void) setcommandCount: (uint16_t)commandCount;
--(void) addChordPoints: (NSValue*)point :(int) index;
--(void) setSunCenter: (uint16_t) x :(uint16_t) y;
+-(void) addChordPoint: (NSPoint) point :(int) index;
 
 @end

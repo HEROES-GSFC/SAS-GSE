@@ -2,7 +2,7 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">1080</int>
-		<string key="IBDocument.SystemVersion">12C3006</string>
+		<string key="IBDocument.SystemVersion">12C60</string>
 		<string key="IBDocument.InterfaceBuilderVersion">3084</string>
 		<string key="IBDocument.AppKitVersion">1187.34</string>
 		<string key="IBDocument.HIToolboxVersion">625.00</string>
@@ -2495,7 +2495,7 @@
 											<string key="NSFrameSize">{455, 160}</string>
 											<reference key="NSSuperview" ref="55646242"/>
 											<reference key="NSWindow"/>
-											<reference key="NSNextKeyView" ref="86191481"/>
+											<reference key="NSNextKeyView" ref="345294702"/>
 											<string key="NSReuseIdentifierKey">_NS:13</string>
 											<object class="NSTextContainer" key="NSTextContainer" id="491007561">
 												<object class="NSLayoutManager" key="NSLayoutManager">
@@ -2723,6 +2723,7 @@ wGw</bytes>
 									<string key="NSFrame">{{440, 1}, {16, 160}}</string>
 									<reference key="NSSuperview" ref="929328498"/>
 									<reference key="NSWindow"/>
+									<reference key="NSNextKeyView"/>
 									<string key="NSReuseIdentifierKey">_NS:83</string>
 									<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
 									<reference key="NSTarget" ref="929328498"/>
@@ -2749,7 +2750,7 @@ wGw</bytes>
 							<string key="NSFrame">{{354, 109}, {457, 162}}</string>
 							<reference key="NSSuperview" ref="439893737"/>
 							<reference key="NSWindow"/>
-							<reference key="NSNextKeyView" ref="55646242"/>
+							<reference key="NSNextKeyView" ref="86191481"/>
 							<string key="NSReuseIdentifierKey">_NS:9</string>
 							<int key="NSsFlags">133138</int>
 							<reference key="NSVScroller" ref="345294702"/>
@@ -2765,7 +2766,7 @@ wGw</bytes>
 					<reference key="NSWindow"/>
 					<reference key="NSNextKeyView" ref="736799031"/>
 				</object>
-				<string key="NSScreenRect">{{0, 0}, {1280, 778}}</string>
+				<string key="NSScreenRect">{{0, 0}, {2560, 1440}}</string>
 				<string key="NSMaxSize">{10000000000000, 10000000000000}</string>
 				<bool key="NSWindowIsRestorable">NO</bool>
 			</object>
@@ -3603,7 +3604,7 @@ wGw</bytes>
 						<reference key="source" ref="1011726000"/>
 						<reference key="destination" ref="700155117"/>
 					</object>
-					<int key="connectionID">1675</int>
+					<int key="connectionID">1677</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
@@ -3611,7 +3612,7 @@ wGw</bytes>
 						<reference key="source" ref="1011726000"/>
 						<reference key="destination" ref="510635835"/>
 					</object>
-					<int key="connectionID">1676</int>
+					<int key="connectionID">1678</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -9108,7 +9109,7 @@ wGw</bytes>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">1676</int>
+			<int key="maxID">1678</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
