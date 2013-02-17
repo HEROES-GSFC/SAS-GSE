@@ -12,11 +12,10 @@
 #include <math.h>
 #include <stdlib.h>
 
-@interface CameraView(){
-    int numberXPixels;
-    int numberYPixels;
-    NSMutableArray *Chordpoints;
-}
+@interface CameraView()
+@property (nonatomic, strong) NSMutableArray *chordPoints;
+@property (nonatomic, strong) NSNumber *numberXPixels;
+@property (nonatomic, strong) NSNumber *numberYPixels;
 
 // declaration of private methods as needed
 - (void) prepareOpenGL;
@@ -35,18 +34,42 @@
 @implementation CameraView
 
 @synthesize circleCenter = _circleCenter;
+@synthesize chordPoints = _chordPoints;
+@synthesize numberYPixels = _numberYPixels;
+@synthesize numberXPixels = _numberXPixels;
+
 
 -(id) initWithFrame:(NSRect)frameRect
 {
     self = [super initWithFrame:frameRect];
     if (self) {
         //initialization
-        numberXPixels = 1392;
-        numberYPixels = 1040;
-        NSMutableArray *Chordpoints = [[NSMutableArray alloc] initWithCapacity:14];
-        //self.circleCenter = [NSValue valueWithPoint:NSMakePoint(numberXPixels, numberYPixels)];
     }
     return self;
+}
+
+- (NSMutableArray *)chordPoints
+{
+    if (_chordPoints == nil) {
+        _chordPoints = [[NSMutableArray alloc] init];
+    }
+    return _chordPoints;
+}
+
+- (NSNumber *)numberXPixels
+{
+    if (_numberXPixels == nil){
+        _numberXPixels = [[NSNumber alloc] initWithInt:1392];
+    }
+    return _numberXPixels;
+}
+
+- (NSNumber *)numberYPixels
+{
+    if (_numberYPixels == nil){
+        _numberYPixels = [[NSNumber alloc] initWithInt:1040];
+    }
+    return _numberYPixels;
 }
 
 - (void)awakeFromNib
@@ -86,7 +109,7 @@
     glLoadIdentity();
     glPushMatrix();
     
-    gluOrtho2D(0,numberXPixels, 0, numberYPixels);
+    gluOrtho2D(0,self.numberXPixels.integerValue, 0, self.numberYPixels.integerValue);
     glMatrixMode(GL_MODELVIEW);
     
     glDisable(GL_DEPTH_TEST);
@@ -101,7 +124,7 @@
 {
     //NSDictionary *circleFitResult = [[NSDictionary alloc] init];
 
-    NSDictionary *circleFitResult = [self fitCircle:Chordpoints];
+    NSDictionary *circleFitResult = [self fitCircle:self.chordPoints];
     //NSLog(@"%@", Chordpoints);
     
     [self drawACross:[[circleFitResult objectForKey:@"centroid"] pointValue]];
@@ -110,12 +133,12 @@
     glColor3f(0.0f, 1.0f, 0.0f);
     [self drawALine:[[circleFitResult objectForKey:@"centroid"] pointValue] :210.0 :20.0];
     glColor3f(1.0f, 1.0f, 1.0f);
-    [self drawAFewPoints:Chordpoints];
+    [self drawAFewPoints:self.chordPoints];
 }
 
 - (void) drawACross: (NSPoint) center
 {
-    float width = 0.02 * (numberXPixels + numberYPixels)/2.0f;
+    float width = 0.02 * (self.numberXPixels.integerValue + self.numberYPixels.integerValue)/2.0f;
     
     glColor3f(1.0f, 0.0f, 0.0f);
     glBegin(GL_LINES);
