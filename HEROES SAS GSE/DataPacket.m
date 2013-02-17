@@ -16,11 +16,29 @@
 @synthesize frameMilliseconds = _frameMilliseconds;
 @synthesize commandCount = _commandCount;
 @synthesize commandKey = _commandKey;
+@synthesize chordPoints = _chordPoints;
+@synthesize sunCenter = _sunCenter;
 
 -(id)init{
     self = [super init]; // call our super’s designated initializer
     if (self) {
         [self setFrameMilliseconds:0];
+        self.chordPoints = [[NSMutableArray alloc] initWithCapacity:1];
+        self.sunCenter = [NSValue valueWithPoint:NSMakePoint(0, 0)];
+        [self.chordPoints addObject:[NSValue valueWithPoint:NSMakePoint(0,0)]];
+        [self.chordPoints addObject:[NSValue valueWithPoint:NSMakePoint(0,0)]];
+        [self.chordPoints addObject:[NSValue valueWithPoint:NSMakePoint(0,0)]];
+        [self.chordPoints addObject:[NSValue valueWithPoint:NSMakePoint(0,0)]];
+        [self.chordPoints addObject:[NSValue valueWithPoint:NSMakePoint(0,0)]];
+        [self.chordPoints addObject:[NSValue valueWithPoint:NSMakePoint(0,0)]];
+        [self.chordPoints addObject:[NSValue valueWithPoint:NSMakePoint(0,0)]];
+        [self.chordPoints addObject:[NSValue valueWithPoint:NSMakePoint(0,0)]];
+        [self.chordPoints addObject:[NSValue valueWithPoint:NSMakePoint(0,0)]];
+        [self.chordPoints addObject:[NSValue valueWithPoint:NSMakePoint(0,0)]];
+        [self.chordPoints addObject:[NSValue valueWithPoint:NSMakePoint(0,0)]];
+        [self.chordPoints addObject:[NSValue valueWithPoint:NSMakePoint(0,0)]];
+        [self.chordPoints addObject:[NSValue valueWithPoint:NSMakePoint(0,0)]];
+        [self.chordPoints addObject:[NSValue valueWithPoint:NSMakePoint(0,0)]];
     }
     return self;
 }
@@ -53,6 +71,18 @@
     NSString *dateString = [dateFormatter stringFromDate: date];
     
     return dateString;
+}
+
+-(void) addChordPoints:(NSValue*)point :(int) index{
+    [self.chordPoints replaceObjectAtIndex:index withObject:point];
+}
+
+-(void) setSunCenter: (uint16_t) x :(uint16_t) y{
+    if (self.sunCenter == nil) {
+        self.sunCenter = [NSValue valueWithPoint:NSMakePoint(x,y)];
+        NSLog(@"it's me %@", self.sunCenter);
+    }
+
 }
 
 

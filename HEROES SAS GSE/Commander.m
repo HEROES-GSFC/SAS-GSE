@@ -53,7 +53,7 @@
     return self;
 }
 
--(void)send:(uint16_t)command_key :(uint16_t)command_value :(NSString *)ip_address{
+-(uint16_t)send:(uint16_t)command_key :(uint16_t)command_value :(NSString *)ip_address{
 
     // update the frame number every time we send out a packet
     [self updateSequenceNumber];
@@ -66,6 +66,8 @@
     comSender = new CommandSender( [ip_address UTF8String], port );
     comSender->send( &cp );
     comSender->close_connection();
+    
+    return frame_sequence_number;
 }
 
 - (void) updateSequenceNumber{

@@ -39,6 +39,9 @@
 @property (weak) IBOutlet NSTextField *CommandIPTextField;
 @property (weak) IBOutlet NSTextField *SAS1CmdCountTextField;
 @property (weak) IBOutlet NSTextField *SAS1CmdKeyTextField;
+@property (weak) IBOutlet NSTextField *CommandSequenceNumber;
+@property (weak) IBOutlet CameraView *PYASFcameraView;
+@property (weak) IBOutlet CameraView *PYASRcameraView;
 
 @property (strong) DataPacket *dataPacket;
 

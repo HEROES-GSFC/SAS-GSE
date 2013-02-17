@@ -10,6 +10,7 @@
 #import "ParseDataOperation.h"
 #import "DataPacket.h"
 #import "lib_crc.h"
+#import "CameraView.h"
 
 @interface AppController (){
     NSOperationQueue *queue;
@@ -37,6 +38,9 @@
 @synthesize CommandIPTextField;
 @synthesize SAS1CmdCountTextField;
 @synthesize SAS1CmdKeyTextField;
+@synthesize CommandSequenceNumber;
+@synthesize PYASFcameraView;
+@synthesize PYASRcameraView;
 
 @synthesize timer;
 
@@ -64,6 +68,7 @@
         listOfCommands = [NSDictionary
                           dictionaryWithObject:commandDescriptionNSArray
                           forKey:commandKeys];
+        
 	}
 	return self;
 }
@@ -127,6 +132,7 @@
 //}
 
 - (IBAction)sendCommandButtonAction:(id)sender{
+    uint16_t command_sequence_number = 0;
     
     NSScanner *scanner = [[NSScanner alloc] initWithString:[CommandKeyTextField stringValue]];
     unsigned int command_key;
@@ -140,8 +146,9 @@
         NSLog(@"Invalid hex string");
     }
 
-    [commander send:command_key :command_var: [CommandIPTextField stringValue]];
+    command_sequence_number = [commander send:command_key :command_var: [CommandIPTextField stringValue]];
 
+    [CommandSequenceNumber setIntegerValue:command_sequence_number];
 }
 
 
@@ -155,7 +162,6 @@
 // -------------------------------------------------------------------------------
 - (void)anyThread_handleData:(NSNotification *)note
 {
-	// update our table view on the main thread
 	[self performSelectorOnMainThread:@selector(mainThread_handleData:) withObject:note waitUntilDone:NO];
 }
 
@@ -193,7 +199,13 @@
     if (NSLocationInRange(temp, tempRange) == FALSE){
         [self.PYASFCPUTemperatureLabel setBackgroundColor:[NSColor redColor]];
     }
-    
+
+    [self.PYASRcameraView setCircleCenter:packet.sunCenter];
+    NSLog(@"%@", packet.sunCenter);
+    [self.PYASFcameraView draw];
+    //for (id point in packet.chordPoints){
+    //    NSLog(@"%@", point);
+    //}
 }
 
 

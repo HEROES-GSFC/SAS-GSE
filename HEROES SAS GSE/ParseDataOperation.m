@@ -87,11 +87,9 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                 
                 if (tm_packet->valid())
                 {
-                    uint8_t *buffer;
-                    buffer = new uint8_t;
                     //tm_packet->readNextTo_bytes(buffer, 1);
-                    NSLog(@"%i %x %i %d", tm_packet->getSeconds(), packet_length, tm_packet->getSync(), tm_packet->getSourceID(), tm_packet->getTypeID());
-                    std::cout << "tm_packet:" << tm_packet << std::endl;
+                    //NSLog(@"%i %x %i %d, %i", tm_packet->getSeconds(), packet_length, tm_packet->getSync(), tm_packet->getSourceID(), tm_packet->getTypeID());
+                    //std::cout << "tm_packet:" << tm_packet << std::endl;
 
                     if (tm_packet->getSourceID() == SAS_TARGET_ID){
                         
@@ -100,7 +98,7 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                             
                             uint16_t sas_sync;
                             *(tm_packet) >> sas_sync;
-                            NSLog(@"%x", sas_sync);
+                            //NSLog(@"%x", sas_sync);
                             uint32_t frame_number;
                             *(tm_packet) >> frame_number;
                             uint16_t command_count;
@@ -108,15 +106,30 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                             uint16_t command_key;
                             *(tm_packet) >> command_key;
                             
+                            uint16_t sunCenterX;
+                            *(tm_packet) >> sunCenterX;
+                            
+                            uint16_t sunCenterY;
+                            *(tm_packet) >> sunCenterY;
+                            
+                            [dataPacket setSunCenter:[NSValue valueWithPoint:NSMakePoint(sunCenterX,sunCenterY)]];
+                            
+                            for (int i = 0; i < 14; i++) {
+                                uint16_t x = 0;
+                                uint16_t y = 0;
+                                *(tm_packet) >> x;
+                                *(tm_packet) >> y;
+                                [dataPacket addChordPoints:[NSValue valueWithPoint:NSMakePoint(x,y)] :i];
+                            }
+                            
                             [dataPacket setFrameNumber: frame_number];
                             [dataPacket setCommandCount: command_count];
                             [dataPacket setCommandKey: command_key];
                             
-                            for(int i = 0; i < packet_length-1; i++){
-                                printf("%x", (uint8_t) packet[i]);
-                            }
-                            printf("\n");
-                            free(buffer);
+                            //for(int i = 0; i < packet_length-1; i++){
+                            //    printf("%x", (uint8_t) packet[i]);
+                            //}
+                            //printf("\n");
                         }
                         
                         if (tm_packet->getTypeID() == SAS_CM_ACK_TYPE) {

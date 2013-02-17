@@ -13,10 +13,11 @@
 #include <stdlib.h>
 
 @interface CameraView(){
-    @private
     int numberXPixels;
     int numberYPixels;
+    NSMutableArray *Chordpoints;
 }
+
 // declaration of private methods as needed
 - (void) prepareOpenGL;
 - (void) drawObjects;
@@ -33,23 +34,25 @@
 
 @implementation CameraView
 
-@synthesize myNumber = _myNumber;
+@synthesize circleCenter = _circleCenter;
 
 -(id) initWithFrame:(NSRect)frameRect
 {
     self = [super initWithFrame:frameRect];
     if (self) {
         //initialization
-        _myNumber = 5;
         numberXPixels = 1392;
         numberYPixels = 1040;
+        NSMutableArray *Chordpoints = [[NSMutableArray alloc] initWithCapacity:14];
+        //self.circleCenter = [NSValue valueWithPoint:NSMakePoint(numberXPixels, numberYPixels)];
     }
     return self;
 }
 
 - (void)awakeFromNib
 {
-    [NSTimer scheduledTimerWithTimeInterval:0.0 target:self selector:@selector(draw) userInfo:nil repeats:true];
+    //[NSTimer scheduledTimerWithTimeInterval:0.0 target:self selector:@selector(draw) userInfo:nil repeats:true];
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(draw) name:@"ReceiveAndParseDataDidFinish" object:nil];
 }
 
 - (void)draw
@@ -96,19 +99,10 @@
 
 - (void) drawObjects
 {
-    NSMutableArray *points = [[NSMutableArray alloc] initWithCapacity:1];
-    NSDictionary *circleFitResult = [[NSDictionary alloc] init];
-    
-    [points addObject:[NSValue valueWithPoint:
-                       NSMakePoint(100.0f + numberXPixels/2.0f + 3*(arc4random_uniform(100)/100.0f), numberYPixels/2.0f + 3*(arc4random_uniform(100)/100.0f))]];
-    [points addObject:[NSValue valueWithPoint:
-                       NSMakePoint(-100.0f + numberXPixels/2.0f + 3*(arc4random_uniform(100)/100.0f), numberYPixels/2.0f + 3*(arc4random_uniform(100)/100.0f))]];
-    [points addObject:[NSValue valueWithPoint:
-                       NSMakePoint(numberXPixels/2.0f + 3*(arc4random_uniform(100)/100.0f), 100.0f + numberYPixels/2.0f + 3*(arc4random_uniform(100)/100.0f))]];
-    [points addObject:[NSValue valueWithPoint:
-                       NSMakePoint(numberXPixels/2.0f + 3*(arc4random_uniform(100)/100.0f), -100.0f + numberYPixels/2.0f + 3*(arc4random_uniform(100)/100.0f))]];
+    //NSDictionary *circleFitResult = [[NSDictionary alloc] init];
 
-    circleFitResult = [self fitCircle:points];
+    NSDictionary *circleFitResult = [self fitCircle:Chordpoints];
+    //NSLog(@"%@", Chordpoints);
     
     [self drawACross:[[circleFitResult objectForKey:@"centroid"] pointValue]];
     
@@ -116,7 +110,7 @@
     glColor3f(0.0f, 1.0f, 0.0f);
     [self drawALine:[[circleFitResult objectForKey:@"centroid"] pointValue] :210.0 :20.0];
     glColor3f(1.0f, 1.0f, 1.0f);
-    [self drawAFewPoints:points];
+    [self drawAFewPoints:Chordpoints];
 }
 
 - (void) drawACross: (NSPoint) center
@@ -194,7 +188,14 @@
     //    _myNumber = 0;
     // }
     
-    
+    //[self doSomething];
+    NSLog(@"drawing..%@", self.circleCenter);
+    //[self drawACross:[suncenter pointValue]];
+    glColor3f(1.0f, 0.0f, 0.0f);
+    glBegin(GL_LINES);
+    glVertex2d(0.0f, 0.0f);
+    glVertex2d([self.circleCenter pointValue].x, [self.circleCenter pointValue].y);
+    glEnd();
     
     [self drawObjects];
 }
@@ -248,6 +249,10 @@
 - (void) CameraViewWillTerminate:(NSNotification *)notification
 {
 	[self cleanUp];
+}
+
+- (void) setCircleCenter:(NSValue *)center{
+    NSLog(@"%@", [NSValue valueWithPoint:NSMakePoint([center pointValue].x, [center pointValue].y)]);
 }
 
 - (void) cleanUp
