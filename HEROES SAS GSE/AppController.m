@@ -10,15 +10,14 @@
 #import "ParseDataOperation.h"
 #import "DataPacket.h"
 #import "lib_crc.h"
+#import "CameraView.h"
 
-@interface AppController (){
-    NSOperationQueue *queue;
-    NSTimer	*timer;
-    NSDictionary *listOfCommands;
-}
-
-@property (retain) NSTimer *timer;
-
+@interface AppController ()
+@property (nonatomic, strong) NSOperationQueue *queue;
+@property (nonatomic, strong) NSTimer *timer;
+@property (nonatomic, strong) NSDictionary *listOfCommands;
+@property (nonatomic, strong) Commander *commander;
+@property (nonatomic, strong) DataPacket *packet;
 @end
 
 @implementation AppController
@@ -34,19 +33,25 @@
 @synthesize StartStopSegmentedControl;
 @synthesize ConsoleScrollView;
 @synthesize ConsoleTextView;
+@synthesize CommandIPTextField;
+@synthesize SAS1CmdCountTextField;
+@synthesize SAS1CmdKeyTextField;
+@synthesize CommandSequenceNumber;
+@synthesize PYASFcameraView = _PYASFcameraView;
+@synthesize PYASRcameraView = _PYASRcameraView;
 
-@synthesize timer;
-
-@class DataPacket;
+@synthesize timer = _timer;
+@synthesize listOfCommands = _listOfCommands;
+@synthesize queue = _queue;
+@synthesize commander = _commander;
+@synthesize packet = _packet;
 
 - (id)init
 {
 	self = [super init];
 	if (self)
     {
-        queue = [[NSOperationQueue alloc] init];
-        commander = [[Commander alloc] init];
-        
+                
         NSArray *commandKeys = [NSArray arrayWithObjects:
                                 [NSNumber numberWithInteger:0x0100],
                                 [NSNumber numberWithInteger:0x0101],
@@ -58,38 +63,86 @@
                                               @"Set new coordinate",
                                               @"Set blah", nil];
         
-        listOfCommands = [NSDictionary
+        self.listOfCommands = [NSDictionary
                           dictionaryWithObject:commandDescriptionNSArray
                           forKey:commandKeys];
+        
 	}
 	return self;
 }
 
+- (NSOperationQueue *)queue
+{
+    if (_queue == nil) {
+        _queue = [[NSOperationQueue alloc] init];
+    }
+    return _queue;
+}
+
+- (NSDictionary *)listOfCommands
+{
+    if (_listOfCommands == nil) {
+        _listOfCommands = [[NSDictionary alloc] init];
+    }
+    return _listOfCommands;
+}
+
+- (Commander *)commander
+{
+    if (_commander == nil) {
+        _commander = [[Commander alloc] init];
+    }
+    return _commander;
+}
+
+- (CameraView *)PYASRcameraView
+{
+    if (_PYASRcameraView == nil) {
+        _PYASRcameraView = [[CameraView alloc] init];
+    }
+    return _PYASRcameraView;
+}
+
+- (CameraView *)PYASFcameraView
+{
+    if (_PYASFcameraView == nil) {
+        _PYASFcameraView = [[CameraView alloc] init];
+    }
+    return _PYASFcameraView;
+}
+
+- (DataPacket *)packet
+{
+    if (_packet == nil) {
+        _packet = [[DataPacket alloc] init];
+    }
+    return _packet;
+}
 
 - (IBAction)StartStopButtonAction:(id)sender {
     if ([StartStopSegmentedControl selectedSegment] == 0) {
         
-        [queue cancelAllOperations];
+        [self.queue cancelAllOperations];
         
         // start the GetPathsOperation with the root path to start the search
         ParseDataOperation *parseOp = [[ParseDataOperation alloc] init];
         
-        [queue addOperation:parseOp];	// this will start the "TestOperation"
+        [self.queue addOperation:parseOp];	// this will start the "TestOperation"
         
-        if([[queue operations] containsObject:parseOp]){
+        if([[self.queue operations] containsObject:parseOp]){
             [[NSNotificationCenter defaultCenter] addObserver:self
                                                      selector:@selector(anyThread_handleData:)
                                                          name:kReceiveAndParseDataDidFinish
                                                        object:nil];
 
-            [RunningIndicator setHidden:NO];
-            [RunningIndicator startAnimation:self];
+            [self.RunningIndicator setHidden:NO];
+            [self.RunningIndicator startAnimation:self];
         }
     }
     if ([StartStopSegmentedControl selectedSegment] == 1) {
-        [queue cancelAllOperations];
-        [RunningIndicator setHidden:YES];
-        [RunningIndicator stopAnimation:self];
+        [self.queue cancelAllOperations];
+        [self.RunningIndicator setHidden:YES];
+        [self.RunningIndicator stopAnimation:self];
     }
 
 }
@@ -124,21 +177,23 @@
 //}
 
 - (IBAction)sendCommandButtonAction:(id)sender{
+    uint16_t command_sequence_number = 0;
     
     NSScanner *scanner = [[NSScanner alloc] initWithString:[CommandKeyTextField stringValue]];
-    unsigned int retval;
-    if (![scanner scanHexInt:&retval]) {
+    unsigned int command_key;
+    if (![scanner scanHexInt:&command_key]) {
         NSLog(@"Invalid hex string");
     }
 
     NSScanner *scanner2 = [[NSScanner alloc] initWithString:[CommandKeyTextField stringValue]];
-    unsigned int retval2;
-    if (![scanner2 scanHexInt:&retval2]) {
+    unsigned int command_var;
+    if (![scanner2 scanHexInt:&command_var]) {
         NSLog(@"Invalid hex string");
     }
 
-    [commander send:retval :retval2];
+    command_sequence_number = [self.commander send:command_key :command_var: [CommandIPTextField stringValue]];
 
+    [CommandSequenceNumber setIntegerValue:command_sequence_number];
 }
 
 
@@ -152,7 +207,6 @@
 // -------------------------------------------------------------------------------
 - (void)anyThread_handleData:(NSNotification *)note
 {
-	// update our table view on the main thread
 	[self performSelectorOnMainThread:@selector(mainThread_handleData:) withObject:note waitUntilDone:NO];
 }
 
@@ -177,17 +231,25 @@
 	//
 	NSDictionary *notifData = [note userInfo];
     
-    DataPacket *packet = [notifData valueForKey:@"packet"];
+    self.packet = [notifData valueForKey:@"packet"];
  
-    [self.FrameNumberLabel setIntegerValue:[packet frameNumber]];
-    [self.FrameTimeLabel setStringValue:[packet getframeTimeString]];
+    [self.FrameNumberLabel setIntegerValue:[self.packet frameNumber]];
+    [self.FrameTimeLabel setStringValue:[self.packet getframeTimeString]];
+    [self.SAS1CmdCountTextField setIntegerValue:[self.packet commandCount]];
+    [self.SAS1CmdKeyTextField setStringValue:[NSString stringWithFormat:@"0x%04x", [self.packet commandKey]]];
     
-    int temp = 20;
     NSRange tempRange = NSMakeRange(10, 20);
-    [self.PYASFCPUTemperatureLabel setIntegerValue:temp];
-    if (NSLocationInRange(temp, tempRange) == FALSE){
-        [self.PYASFCPUTemperatureLabel setBackgroundColor:[NSColor redColor]];
+    [self.PYASRCameraTemperatureLabel setIntegerValue:self.packet.cameraTemperature];
+    if (NSLocationInRange(self.packet.cameraTemperature, tempRange) == FALSE){
+        [self.PYASRCameraTemperatureLabel setBackgroundColor:[NSColor redColor]];
     }
+
+    [self.PYASFcameraView setCircleCenter:[self.packet.sunCenter pointValue].x :[self.packet.sunCenter pointValue].y];
+    self.PYASFcameraView.chordCrossingPoints = self.packet.chordPoints;
+    self.PYASFcameraView.fiducialPoints = self.packet.fiducialPoints;
+    [self.PYASFcameraView draw];
+    [self.PYASRcameraView draw];
+    
     
 }
 

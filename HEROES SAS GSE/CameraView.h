@@ -10,8 +10,11 @@
 
 @interface CameraView : NSOpenGLView
 
-@property (nonatomic) float myNumber;
+@property (nonatomic, strong) NSMutableArray *fiducialPoints;
+@property (nonatomic, strong) NSMutableArray *chordCrossingPoints;
 
 - (void) CameraViewWillTerminate:(NSNotification *)notification;
+- (void) draw;
+- (void) setCircleCenter: (float)x :(float)y;
 
 @end

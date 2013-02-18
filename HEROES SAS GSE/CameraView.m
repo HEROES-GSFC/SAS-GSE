@@ -13,43 +13,107 @@
 #include <stdlib.h>
 
 @interface CameraView(){
-    @private
-    int numberXPixels;
-    int numberYPixels;
+    float circleX;
+    float circleY;
 }
+@property (nonatomic, strong) NSNumber *numberXPixels;
+@property (nonatomic, strong) NSNumber *numberYPixels;
+
 // declaration of private methods as needed
 - (void) prepareOpenGL;
-- (void) drawObjects;
-- (void) drawACross: (NSPoint) center;
-- (void) drawACircle: (NSPoint) center: (float) radius;
+- (void) drawACross: (NSPoint) center :(float) widthAsPercentOfScreen;
+- (void) drawACircle: (NSPoint) center :(float) radius;
 - (void) drawAFewPoints: (NSMutableArray *)points;
+- (void) drawAFewCrosses: (NSMutableArray *)centers;
 - (void) doSomething;
 - (void) drawRect: (NSRect) dirtyRect;
-- (void) drawALine: (NSPoint) center: (float) length: (float) angleInDegrees;
+- (void) drawALine: (NSPoint) center :(float) length :(float) angleInDegrees;
 - (void) cleanUp;
 - (NSPoint) calculateCentroid:(NSMutableArray *)points;
-
 @end
 
 @implementation CameraView
 
-@synthesize myNumber = _myNumber;
+@synthesize fiducialPoints = _fiducialPoints;
+@synthesize chordCrossingPoints = _chordCrossingPoints;
+@synthesize numberYPixels = _numberYPixels;
+@synthesize numberXPixels = _numberXPixels;
+
 
 -(id) initWithFrame:(NSRect)frameRect
 {
     self = [super initWithFrame:frameRect];
     if (self) {
         //initialization
-        _myNumber = 5;
-        numberXPixels = 1392;
-        numberYPixels = 1040;
+        circleX = 0.0;
+        circleY = 0.0;
     }
     return self;
 }
 
+- (NSMutableArray *)fiducialPoints
+{
+    if (_fiducialPoints == nil) {
+        _fiducialPoints = [[NSMutableArray alloc] init];
+    }
+    return _fiducialPoints;
+}
+
+- (NSMutableArray *)chordCrossingPoints
+{
+    if (_chordCrossingPoints == nil) {
+        _chordCrossingPoints = [[NSMutableArray alloc] init];
+    }
+    return _chordCrossingPoints;
+}
+
+- (NSNumber *)numberXPixels
+{
+    if (_numberXPixels == nil){
+        _numberXPixels = [[NSNumber alloc] initWithInt:1392];
+    }
+    return _numberXPixels;
+}
+
+- (NSNumber *)numberYPixels
+{
+    if (_numberYPixels == nil){
+        _numberYPixels = [[NSNumber alloc] initWithInt:1040];
+    }
+    return _numberYPixels;
+}
+
+- (void) doSomething
+{
+    NSPoint sunCenter = NSMakePoint(circleX, circleY);
+    
+    glColor3f(1.0f, 0.0f, 0.0f);
+    [self drawACross:sunCenter:0.02];
+    [self drawACircle: sunCenter: 92];
+    glColor3f(0.0f, 1.0f, 0.0f);
+    [self drawALine:sunCenter :213.0 :20.0];
+    
+    // fit the chord crossing to the chord crossing and show that
+    //NSDictionary *circleFitResult = [[NSDictionary alloc] init];
+    //circleFitResult = [self fitCircle:self.chordCrossingPoints];
+    //[self drawACross:[[circleFitResult objectForKey:@"centroid"] pointValue]];
+    //[self drawACircle:[[circleFitResult objectForKey:@"centroid"] pointValue]:[[circleFitResult objectForKey:@"radius"] floatValue]];
+    
+    glColor3f(1.0f, 1.0f, 1.0f);
+    [self drawAFewPoints:self.chordCrossingPoints];
+    glColor3f(0.0f, 1.0f, 1.0f);
+    [self drawAFewCrosses:self.fiducialPoints];
+}
+
+- (void) setCircleCenter: (float)x :(float)y{
+    circleX = x;
+    circleY = y;
+}
+
 - (void)awakeFromNib
 {
-    [NSTimer scheduledTimerWithTimeInterval:0.0 target:self selector:@selector(draw) userInfo:nil repeats:true];
+    //[NSTimer scheduledTimerWithTimeInterval:0.0 target:self selector:@selector(draw) userInfo:nil repeats:true];
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(draw) name:@"ReceiveAndParseDataDidFinish" object:nil];
 }
 
 - (void)draw
@@ -83,7 +147,7 @@
     glLoadIdentity();
     glPushMatrix();
     
-    gluOrtho2D(0,numberXPixels, 0, numberYPixels);
+    gluOrtho2D(0,self.numberXPixels.integerValue, 0, self.numberYPixels.integerValue);
     glMatrixMode(GL_MODELVIEW);
     
     glDisable(GL_DEPTH_TEST);
@@ -94,36 +158,10 @@
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
-- (void) drawObjects
+- (void) drawACross: (NSPoint) center :(float) widthAsPercentOfScreen
 {
-    NSMutableArray *points = [[NSMutableArray alloc] initWithCapacity:1];
-    NSDictionary *circleFitResult = [[NSDictionary alloc] init];
+    float width = widthAsPercentOfScreen * (self.numberXPixels.integerValue + self.numberYPixels.integerValue)/2.0f;
     
-    [points addObject:[NSValue valueWithPoint:
-                       NSMakePoint(100.0f + numberXPixels/2.0f + 3*(arc4random_uniform(100)/100.0f), numberYPixels/2.0f + 3*(arc4random_uniform(100)/100.0f))]];
-    [points addObject:[NSValue valueWithPoint:
-                       NSMakePoint(-100.0f + numberXPixels/2.0f + 3*(arc4random_uniform(100)/100.0f), numberYPixels/2.0f + 3*(arc4random_uniform(100)/100.0f))]];
-    [points addObject:[NSValue valueWithPoint:
-                       NSMakePoint(numberXPixels/2.0f + 3*(arc4random_uniform(100)/100.0f), 100.0f + numberYPixels/2.0f + 3*(arc4random_uniform(100)/100.0f))]];
-    [points addObject:[NSValue valueWithPoint:
-                       NSMakePoint(numberXPixels/2.0f + 3*(arc4random_uniform(100)/100.0f), -100.0f + numberYPixels/2.0f + 3*(arc4random_uniform(100)/100.0f))]];
-
-    circleFitResult = [self fitCircle:points];
-    
-    [self drawACross:[[circleFitResult objectForKey:@"centroid"] pointValue]];
-    
-    [self drawACircle:[[circleFitResult objectForKey:@"centroid"] pointValue]:[[circleFitResult objectForKey:@"radius"] floatValue]];
-    glColor3f(0.0f, 1.0f, 0.0f);
-    [self drawALine:[[circleFitResult objectForKey:@"centroid"] pointValue] :210.0 :20.0];
-    glColor3f(1.0f, 1.0f, 1.0f);
-    [self drawAFewPoints:points];
-}
-
-- (void) drawACross: (NSPoint) center
-{
-    float width = 0.02 * (numberXPixels + numberYPixels)/2.0f;
-    
-    glColor3f(1.0f, 0.0f, 0.0f);
     glBegin(GL_LINES);
     {
         glVertex2d(center.x - width, center.y);
@@ -137,7 +175,7 @@
     glEnd();
 }
 
-- (void) drawACircle: (NSPoint) center: (float) radius
+- (void) drawACircle: (NSPoint) center :(float) radius
 {
     //
     // algorithm from http://slabode.exofire.net/circle_draw.shtml
@@ -165,7 +203,7 @@
 	glEnd();
 }
 
--(void) drawALine: (NSPoint) center: (float) length: (float) angleInDegrees
+-(void) drawALine: (NSPoint) center :(float) length :(float) angleInDegrees
 {
     glBegin(GL_LINES);
     {
@@ -177,7 +215,6 @@
 
 - (void) drawAFewPoints: (NSMutableArray *)points
 {
-    glColor3f(1.0f, 1.0f, 1.0f);
     glBegin(GL_POINTS);
     
     for (NSValue *value in points){
@@ -187,16 +224,12 @@
     glEnd();
 }
 
-- (void) doSomething
-{
-    //_myNumber+=0.01;
-    //if (_myNumber > 10) {
-    //    _myNumber = 0;
-    // }
-    
-    
-    
-    [self drawObjects];
+- (void) drawAFewCrosses: (NSMutableArray *)centers{    
+    for (NSValue *value in centers){
+        NSPoint currentPoint = [value pointValue];
+        [self drawACross:currentPoint :0.01];
+    }
+    glEnd();
 }
 
 - (NSPoint) calculateCentroid:(NSMutableArray *)points
@@ -205,27 +238,34 @@
     // Calculate the centroid given an array of NSPoints
     //
     NSPoint centroid = NSMakePoint(0.0f, 0.0f);
+    int number_of_zeros = 0;
     
     for (NSValue *value in points){
         NSPoint currentPoint = [value pointValue];
-        centroid.x += currentPoint.x;
-        centroid.y += currentPoint.y;
+        if (currentPoint.x != 0 && currentPoint.y != 0) {
+            centroid.x += currentPoint.x;
+            centroid.y += currentPoint.y;
+        } else { number_of_zeros++; }
     }
-    centroid.x = centroid.x/[points count];
-    centroid.y = centroid.y/[points count];
+    centroid.x = centroid.x/([points count] - number_of_zeros);
+    centroid.y = centroid.y/([points count] - number_of_zeros);
     
     return centroid;
 }
 
-- (float) calculateRadius:(NSMutableArray *)points: (NSPoint) centroid
+- (float) calculateRadius:(NSMutableArray *)points :(NSPoint) centroid
 {
-    float radius = 0, ri = 0;
+    float radius = 0.0f, ri = 0.0f;
+    int number_of_zeros = 0;
+
     for (NSValue *value in points){
         NSPoint currentPoint = [value pointValue];
-        ri = sqrtf(powf(currentPoint.x - centroid.x, 2.0f) + powf(currentPoint.y - centroid.y, 2.0f));
-        radius += ri;
+        if (currentPoint.x != 0 && currentPoint.y != 0) {
+            ri = sqrtf(powf(currentPoint.x - centroid.x, 2.0f) + powf(currentPoint.y - centroid.y, 2.0f));
+            radius += ri;
+        } else { number_of_zeros++; }
     }
-    radius = radius / [points count];
+    radius = radius / ([points count] - number_of_zeros);
     return radius;
 }
 

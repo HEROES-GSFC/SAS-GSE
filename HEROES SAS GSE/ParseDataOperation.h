@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "DataPacket.h"
 // NSNotification name to tell the Window controller an image file as found
 extern NSString *kReceiveAndParseDataDidFinish;
 

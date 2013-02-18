@@ -32,7 +32,7 @@
     if (self) {
         // initialize our subclass here
         serverIP = @"192.168.1.114";
-        port = 5000;
+        port = 5001;
         frame_sequence_number = 0;
         
         NSArray *commandKeys = [NSArray arrayWithObjects:
@@ -49,23 +49,25 @@
         listOfCommands = [NSDictionary
                           dictionaryWithObject:commandDescriptionNSArray
                           forKey:commandKeys];
-        comSender = new CommandSender( [serverIP UTF8String], port );
     }
     return self;
 }
 
--(void)send:(uint16_t)command_key :(uint16_t)command_value{
+-(uint16_t)send:(uint16_t)command_key :(uint16_t)command_value :(NSString *)ip_address{
 
     // update the frame number every time we send out a packet
     [self updateSequenceNumber];
-
+    
     Command cm1(0x10ff, command_key);
     
     CommandPacket cp(0x30, frame_sequence_number);
     cp << cm1;
     
+    comSender = new CommandSender( [ip_address UTF8String], port );
     comSender->send( &cp );
     comSender->close_connection();
+    
+    return frame_sequence_number;
 }
 
 - (void) updateSequenceNumber{
