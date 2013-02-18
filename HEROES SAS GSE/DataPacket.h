@@ -21,6 +21,8 @@
 
 -(NSString *) getframeTimeString;
 -(void) addChordPoint: (NSPoint) point :(int) index;
+-(void) addFiducialPoint: (NSPoint) point :(int) index;
 -(NSMutableArray *) chordPoints;
+-(NSMutableArray *) fiducialPoints;
 
 @end

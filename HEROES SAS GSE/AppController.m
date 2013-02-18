@@ -245,7 +245,8 @@
     }
 
     [self.PYASFcameraView setCircleCenter:[self.packet.sunCenter pointValue].x :[self.packet.sunCenter pointValue].y];
-    self.PYASFcameraView.points = self.packet.chordPoints;
+    self.PYASFcameraView.chordCrossingPoints = self.packet.chordPoints;
+    self.PYASFcameraView.fiducialPoints = self.packet.fiducialPoints;
     [self.PYASFcameraView draw];
     //[self.PYASRcameraView draw];
     

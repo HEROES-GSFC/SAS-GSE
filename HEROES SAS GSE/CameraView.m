@@ -228,14 +228,17 @@
     // Calculate the centroid given an array of NSPoints
     //
     NSPoint centroid = NSMakePoint(0.0f, 0.0f);
+    int number_of_zeros = 0;
     
     for (NSValue *value in points){
         NSPoint currentPoint = [value pointValue];
-        centroid.x += currentPoint.x;
-        centroid.y += currentPoint.y;
+        if (currentPoint.x != 0 && currentPoint.y != 0) {
+            centroid.x += currentPoint.x;
+            centroid.y += currentPoint.y;
+        } else { number_of_zeros++; }
     }
-    centroid.x = centroid.x/[points count];
-    centroid.y = centroid.y/[points count];
+    centroid.x = centroid.x/([points count] - number_of_zeros);
+    centroid.y = centroid.y/([points count] - number_of_zeros);
     
     return centroid;
 }
@@ -243,12 +246,16 @@
 - (float) calculateRadius:(NSMutableArray *)points :(NSPoint) centroid
 {
     float radius = 0, ri = 0;
+    int number_of_zeros = 0;
+
     for (NSValue *value in points){
         NSPoint currentPoint = [value pointValue];
-        ri = sqrtf(powf(currentPoint.x - centroid.x, 2.0f) + powf(currentPoint.y - centroid.y, 2.0f));
-        radius += ri;
+        if (currentPoint.x != 0 && currentPoint.y != 0) {
+            ri = sqrtf(powf(currentPoint.x - centroid.x, 2.0f) + powf(currentPoint.y - centroid.y, 2.0f));
+            radius += ri;
+        } else { number_of_zeros++; }
     }
-    radius = radius / [points count];
+    radius = radius / ([points count] - number_of_zeros);
     return radius;
 }
 

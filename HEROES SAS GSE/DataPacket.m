@@ -8,8 +8,13 @@
 
 #import "DataPacket.h"
 #include <time.h>
+
+#define MAX_CHORDS 20
+#define MAX_FIDUCIALS 20
+
 @interface DataPacket()
 @property (nonatomic, strong) NSMutableArray *chordPoints;
+@property (nonatomic, strong) NSMutableArray *fiducialPoints;
 @end
 
 @implementation DataPacket
@@ -20,6 +25,7 @@
 @synthesize commandCount = _commandCount;
 @synthesize commandKey = _commandKey;
 @synthesize chordPoints = _chordPoints;
+@synthesize fiducialPoints = _fiducialPoints;
 @synthesize sunCenter = _sunCenter;
 @synthesize cameraTemperature = _cameraTemperature;
 @synthesize cpuTemperature = _cpuTemperature;
@@ -29,8 +35,11 @@
     if (self) {
         self.frameMilliseconds = 0;
         self.sunCenter = [NSValue valueWithPoint:NSMakePoint(0.0f, 0.0f)];
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < MAX_CHORDS; i++) {
             [self.chordPoints addObject:[NSValue valueWithPoint:NSMakePoint(0,0)]];
+        }
+        for (int i = 0; i < MAX_FIDUCIALS; i++) {
+            [self.fiducialPoints addObject:[NSValue valueWithPoint:NSMakePoint(0,0)]];
         }
     }
     return self;
@@ -42,6 +51,14 @@
         _chordPoints = [[NSMutableArray alloc] init];
     }
     return _chordPoints;
+}
+
+- (NSMutableArray *)fiducialPoints
+{
+    if (_fiducialPoints == nil) {
+        _fiducialPoints = [[NSMutableArray alloc] init];
+    }
+    return _fiducialPoints;
 }
 
 - (NSValue *)sunCenter
@@ -63,6 +80,10 @@
 
 -(void) addChordPoint:(NSPoint)point :(int) index{
     [self.chordPoints replaceObjectAtIndex:index withObject:[NSValue valueWithPoint:point]];
+}
+
+-(void) addFiducialPoint:(NSPoint)point :(int) index{
+    [self.fiducialPoints replaceObjectAtIndex:index withObject:[NSValue valueWithPoint:point]];
 }
 
 @end

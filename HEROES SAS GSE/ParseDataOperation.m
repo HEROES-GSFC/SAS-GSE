@@ -125,6 +125,14 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                                 float y = 0;
                                 *(tm_packet) >> x;
                                 *(tm_packet) >> y;
+                                [self.dataPacket addFiducialPoint:NSMakePoint(x,y) :i];
+                            }
+                            
+                            for (int i = 0; i < 20; i++) {
+                                float x = 0;
+                                float y = 0;
+                                *(tm_packet) >> x;
+                                *(tm_packet) >> y;
                                 [self.dataPacket addChordPoint:NSMakePoint(x,y) :i];
                             }
                             
