@@ -248,7 +248,7 @@
     self.PYASFcameraView.chordCrossingPoints = self.packet.chordPoints;
     self.PYASFcameraView.fiducialPoints = self.packet.fiducialPoints;
     [self.PYASFcameraView draw];
-    //[self.PYASRcameraView draw];
+    [self.PYASRcameraView draw];
     
     
 }

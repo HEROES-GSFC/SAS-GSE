@@ -21,9 +21,10 @@
 
 // declaration of private methods as needed
 - (void) prepareOpenGL;
-- (void) drawACross: (NSPoint) center;
+- (void) drawACross: (NSPoint) center :(float) widthAsPercentOfScreen;
 - (void) drawACircle: (NSPoint) center :(float) radius;
 - (void) drawAFewPoints: (NSMutableArray *)points;
+- (void) drawAFewCrosses: (NSMutableArray *)centers;
 - (void) doSomething;
 - (void) drawRect: (NSRect) dirtyRect;
 - (void) drawALine: (NSPoint) center :(float) length :(float) angleInDegrees;
@@ -87,20 +88,21 @@
     NSPoint sunCenter = NSMakePoint(circleX, circleY);
     
     glColor3f(1.0f, 0.0f, 0.0f);
-    [self drawACross:sunCenter];
+    [self drawACross:sunCenter:0.02];
     [self drawACircle: sunCenter: 92];
     glColor3f(0.0f, 1.0f, 0.0f);
-    [self drawALine:sunCenter :210.0 :20.0];
+    [self drawALine:sunCenter :213.0 :20.0];
     
     // fit the chord crossing to the chord crossing and show that
-    NSDictionary *circleFitResult = [[NSDictionary alloc] init];
-    circleFitResult = [self fitCircle:self.chordCrossingPoints];
-    [self drawACross:[[circleFitResult objectForKey:@"centroid"] pointValue]];
-    [self drawACircle:[[circleFitResult objectForKey:@"centroid"] pointValue]:[[circleFitResult objectForKey:@"radius"] floatValue]];
+    //NSDictionary *circleFitResult = [[NSDictionary alloc] init];
+    //circleFitResult = [self fitCircle:self.chordCrossingPoints];
+    //[self drawACross:[[circleFitResult objectForKey:@"centroid"] pointValue]];
+    //[self drawACircle:[[circleFitResult objectForKey:@"centroid"] pointValue]:[[circleFitResult objectForKey:@"radius"] floatValue]];
     
     glColor3f(1.0f, 1.0f, 1.0f);
     [self drawAFewPoints:self.chordCrossingPoints];
-    [self drawAFewPoints:self.fiducialPoints];
+    glColor3f(0.0f, 1.0f, 1.0f);
+    [self drawAFewCrosses:self.fiducialPoints];
 }
 
 - (void) setCircleCenter: (float)x :(float)y{
@@ -156,9 +158,9 @@
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
-- (void) drawACross: (NSPoint) center
+- (void) drawACross: (NSPoint) center :(float) widthAsPercentOfScreen
 {
-    float width = 0.02 * (self.numberXPixels.integerValue + self.numberYPixels.integerValue)/2.0f;
+    float width = widthAsPercentOfScreen * (self.numberXPixels.integerValue + self.numberYPixels.integerValue)/2.0f;
     
     glBegin(GL_LINES);
     {
@@ -222,6 +224,14 @@
     glEnd();
 }
 
+- (void) drawAFewCrosses: (NSMutableArray *)centers{    
+    for (NSValue *value in centers){
+        NSPoint currentPoint = [value pointValue];
+        [self drawACross:currentPoint :0.01];
+    }
+    glEnd();
+}
+
 - (NSPoint) calculateCentroid:(NSMutableArray *)points
 {
     //
@@ -245,7 +255,7 @@
 
 - (float) calculateRadius:(NSMutableArray *)points :(NSPoint) centroid
 {
-    float radius = 0, ri = 0;
+    float radius = 0.0f, ri = 0.0f;
     int number_of_zeros = 0;
 
     for (NSValue *value in points){
