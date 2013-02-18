@@ -155,7 +155,6 @@
     for (int i = 0; i < 100; i++) {
         [self.ConsoleTextView insertText:@"hello"];
     }
-    self.PYASFcameraView.circleCenter = [NSValue valueWithPoint:NSMakePoint(0,0)];
     
 }
 
@@ -246,14 +245,12 @@
         [self.PYASFCPUTemperatureLabel setBackgroundColor:[NSColor redColor]];
     }
 
-    self.PYASFcameraView.circleCenter = self.packet.sunCenter;
-    NSLog(@"mainThread_handleData: %@", self.packet.sunCenter);
-    NSLog(@"mainThread_handleData: %@", self.PYASFcameraView.circleCenter);
+    [self.PYASFcameraView setCircleCenter:[self.packet.sunCenter pointValue].x :[self.packet.sunCenter pointValue].y];
+    //self.PYASFcameraView.points = self.packet.chordPoints;
     [self.PYASFcameraView draw];
-    [self.PYASRcameraView draw];
-    //for (id point in packet.chordPoints){
-    //    NSLog(@"%@", point);
-    //}
+    //[self.PYASRcameraView draw];
+    
+    
 }
 
 

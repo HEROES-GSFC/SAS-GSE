@@ -19,5 +19,6 @@
 
 -(NSString *) getframeTimeString;
 -(void) addChordPoint: (NSPoint) point :(int) index;
+-(NSMutableArray *) chordPoints;
 
 @end

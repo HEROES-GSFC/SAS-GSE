@@ -10,9 +10,10 @@
 
 @interface CameraView : NSOpenGLView
 
-@property (nonatomic, strong) NSValue *circleCenter;
+@property (nonatomic, strong) NSMutableArray *points;
 
 - (void) CameraViewWillTerminate:(NSNotification *)notification;
 - (void) draw;
+- (void) setCircleCenter: (float)x :(float)y;
 
 @end

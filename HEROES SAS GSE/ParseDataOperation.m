@@ -110,21 +110,21 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                             uint16_t command_key;
                             *(tm_packet) >> command_key;
                             
-                            uint16_t sunCenterX;
+                            double sunCenterX;
                             *(tm_packet) >> sunCenterX;
                             
-                            uint16_t sunCenterY;
+                            double sunCenterY;
                             *(tm_packet) >> sunCenterY;
                             
                             [self.dataPacket setSunCenter:[NSValue valueWithPoint:NSMakePoint(sunCenterX, sunCenterY)]];
                             
-                            for (int i = 0; i < 14; i++) {
-                                uint16_t x = 0;
-                                uint16_t y = 0;
-                                *(tm_packet) >> x;
-                                *(tm_packet) >> y;
-                                [self.dataPacket addChordPoint:NSMakePoint(x,y) :i];
-                            }
+                            //for (int i = 0; i < 14; i++) {
+                            //    uint16_t x = 0;
+                            //    uint16_t y = 0;
+                            //    *(tm_packet) >> x;
+                            //    *(tm_packet) >> y;
+                            //    [self.dataPacket addChordPoint:NSMakePoint(x,y) :i];
+                            //}
                             
                             [self.dataPacket setFrameNumber: frame_number];
                             [self.dataPacket setCommandCount: command_count];
@@ -148,31 +148,7 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                 free(packet);
                 free(tm_packet);
             }
-                    //
-//                // initialize checksum
-//                unsigned short crc_16_modbus_checksum  = 0xffff;
-//                
-//                for(int i = 0; i < sizeof(payload)-1; i++){
-//                    NSLog(@"Received message %u\n", (uint8_t) payload[i]);
-//                    crc_16_modbus_checksum  = update_crc_16( crc_16_modbus_checksum, payload[i]);
-//                }
-//
-//                uint16_t sync;
-//                sync = (((uint16_t) payload[1] << 8) & 0xFF00) + ((uint8_t) payload[0]);
-//                NSLog(@"payload[0] %u\n", (uint8_t) payload[0]);
-//                
-//                NSLog(@"sync word is %u\n", sync);
-//                
-//                [self.dataPacket setFrameNumber:payload[5]];
-//                NSLog(@"frame number is %u\n", (uint8_t) [self.dataPacket frameNumber]);
-//                
-//                uint32_t seconds;
-//                seconds = 100000;
-//                
-//                uint32_t mmseconds;
-//                mmseconds = 2;
-//                [self.dataPacket setFrameMilliseconds: mmseconds];
-//                
+
                 NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:
                                       self.dataPacket, @"packet",
                                       nil];

@@ -26,7 +26,7 @@
     self = [super init]; // call our super’s designated initializer
     if (self) {
         self.frameMilliseconds = 0;
-        self.sunCenter = [NSValue valueWithPoint:NSMakePoint(0, 0)];
+        self.sunCenter = [NSValue valueWithPoint:NSMakePoint(0.0f, 0.0f)];
         [self.chordPoints addObject:[NSValue valueWithPoint:NSMakePoint(0,0)]];
         [self.chordPoints addObject:[NSValue valueWithPoint:NSMakePoint(0,0)]];
         [self.chordPoints addObject:[NSValue valueWithPoint:NSMakePoint(0,0)]];

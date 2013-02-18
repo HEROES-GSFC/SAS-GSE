@@ -12,8 +12,10 @@
 #include <math.h>
 #include <stdlib.h>
 
-@interface CameraView()
-@property (nonatomic, strong) NSMutableArray *chordPoints;
+@interface CameraView(){
+    float circleX;
+    float circleY;
+}
 @property (nonatomic, strong) NSNumber *numberXPixels;
 @property (nonatomic, strong) NSNumber *numberYPixels;
 
@@ -32,8 +34,7 @@
 
 @implementation CameraView
 
-@synthesize circleCenter = _circleCenter;
-@synthesize chordPoints = _chordPoints;
+@synthesize points = _points;
 @synthesize numberYPixels = _numberYPixels;
 @synthesize numberXPixels = _numberXPixels;
 
@@ -43,17 +44,18 @@
     self = [super initWithFrame:frameRect];
     if (self) {
         //initialization
-        self.circleCenter = [NSValue valueWithPoint:NSMakePoint(0, 10)];
+        circleX = 0.0;
+        circleY = 0.0;
     }
     return self;
 }
 
-- (NSMutableArray *)chordPoints
+- (NSMutableArray *)points
 {
-    if (_chordPoints == nil) {
-        _chordPoints = [[NSMutableArray alloc] init];
+    if (_points == nil) {
+        _points = [[NSMutableArray alloc] init];
     }
-    return _chordPoints;
+    return _points;
 }
 
 - (NSNumber *)numberXPixels
@@ -72,25 +74,18 @@
     return _numberYPixels;
 }
 
-- (NSValue *)circleCenter
-{
-    if (_circleCenter == nil){
-        _circleCenter = [NSValue valueWithPoint:NSMakePoint(0, 10)];
-    }
-    return _circleCenter;
-}
-
 - (void) doSomething
 {
-    NSLog(@"drawing..%@", self.circleCenter);
-    //[self drawACross:[suncenter pointValue]];
-    glColor3f(1.0f, 0.0f, 0.0f);
-    glBegin(GL_LINES);
-    glVertex2d(0.0f, 0.0f);
-    glVertex2d([self.circleCenter pointValue].x, [self.circleCenter pointValue].y);
-    glEnd();
+    NSPoint sunCenter = NSMakePoint(circleX, circleY);
     
+    [self drawACross:sunCenter];
+    [self drawACircle: sunCenter: 200];
+        
     [self drawObjects];
+}
+- (void) setCircleCenter: (float)x :(float)y{
+    circleX = x;
+    circleY = y;
 }
 
 - (void)awakeFromNib
@@ -145,7 +140,7 @@
 {
     //NSDictionary *circleFitResult = [[NSDictionary alloc] init];
 
-    NSDictionary *circleFitResult = [self fitCircle:self.chordPoints];
+    NSDictionary *circleFitResult = [self fitCircle:self.points];
     //NSLog(@"%@", Chordpoints);
     
     [self drawACross:[[circleFitResult objectForKey:@"centroid"] pointValue]];
@@ -154,7 +149,7 @@
     glColor3f(0.0f, 1.0f, 0.0f);
     [self drawALine:[[circleFitResult objectForKey:@"centroid"] pointValue] :210.0 :20.0];
     glColor3f(1.0f, 1.0f, 1.0f);
-    [self drawAFewPoints:self.chordPoints];
+    [self drawAFewPoints:self.points];
 }
 
 - (void) drawACross: (NSPoint) center
