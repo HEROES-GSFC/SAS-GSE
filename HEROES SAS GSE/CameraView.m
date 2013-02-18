@@ -21,7 +21,6 @@
 
 // declaration of private methods as needed
 - (void) prepareOpenGL;
-- (void) drawObjects;
 - (void) drawACross: (NSPoint) center;
 - (void) drawACircle: (NSPoint) center :(float) radius;
 - (void) drawAFewPoints: (NSMutableArray *)points;
@@ -34,7 +33,8 @@
 
 @implementation CameraView
 
-@synthesize points = _points;
+@synthesize fiducialPoints = _fiducialPoints;
+@synthesize chordCrossingPoints = _chordCrossingPoints;
 @synthesize numberYPixels = _numberYPixels;
 @synthesize numberXPixels = _numberXPixels;
 
@@ -50,12 +50,20 @@
     return self;
 }
 
-- (NSMutableArray *)points
+- (NSMutableArray *)fiducialPoints
 {
-    if (_points == nil) {
-        _points = [[NSMutableArray alloc] init];
+    if (_fiducialPoints == nil) {
+        _fiducialPoints = [[NSMutableArray alloc] init];
     }
-    return _points;
+    return _fiducialPoints;
+}
+
+- (NSMutableArray *)chordCrossingPoints
+{
+    if (_chordCrossingPoints == nil) {
+        _chordCrossingPoints = [[NSMutableArray alloc] init];
+    }
+    return _chordCrossingPoints;
 }
 
 - (NSNumber *)numberXPixels
@@ -78,11 +86,23 @@
 {
     NSPoint sunCenter = NSMakePoint(circleX, circleY);
     
+    glColor3f(1.0f, 0.0f, 0.0f);
     [self drawACross:sunCenter];
-    [self drawACircle: sunCenter: 200];
-        
-    [self drawObjects];
+    [self drawACircle: sunCenter: 92];
+    glColor3f(0.0f, 1.0f, 0.0f);
+    [self drawALine:sunCenter :210.0 :20.0];
+    
+    // fit the chord crossing to the chord crossing and show that
+    NSDictionary *circleFitResult = [[NSDictionary alloc] init];
+    circleFitResult = [self fitCircle:self.chordCrossingPoints];
+    [self drawACross:[[circleFitResult objectForKey:@"centroid"] pointValue]];
+    [self drawACircle:[[circleFitResult objectForKey:@"centroid"] pointValue]:[[circleFitResult objectForKey:@"radius"] floatValue]];
+    
+    glColor3f(1.0f, 1.0f, 1.0f);
+    [self drawAFewPoints:self.chordCrossingPoints];
+    [self drawAFewPoints:self.fiducialPoints];
 }
+
 - (void) setCircleCenter: (float)x :(float)y{
     circleX = x;
     circleY = y;
@@ -136,27 +156,10 @@
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
-- (void) drawObjects
-{
-    //NSDictionary *circleFitResult = [[NSDictionary alloc] init];
-
-    NSDictionary *circleFitResult = [self fitCircle:self.points];
-    //NSLog(@"%@", Chordpoints);
-    
-    [self drawACross:[[circleFitResult objectForKey:@"centroid"] pointValue]];
-    
-    [self drawACircle:[[circleFitResult objectForKey:@"centroid"] pointValue]:[[circleFitResult objectForKey:@"radius"] floatValue]];
-    glColor3f(0.0f, 1.0f, 0.0f);
-    [self drawALine:[[circleFitResult objectForKey:@"centroid"] pointValue] :210.0 :20.0];
-    glColor3f(1.0f, 1.0f, 1.0f);
-    [self drawAFewPoints:self.points];
-}
-
 - (void) drawACross: (NSPoint) center
 {
     float width = 0.02 * (self.numberXPixels.integerValue + self.numberYPixels.integerValue)/2.0f;
     
-    glColor3f(1.0f, 0.0f, 0.0f);
     glBegin(GL_LINES);
     {
         glVertex2d(center.x - width, center.y);
@@ -210,7 +213,6 @@
 
 - (void) drawAFewPoints: (NSMutableArray *)points
 {
-    glColor3f(1.0f, 1.0f, 1.0f);
     glBegin(GL_POINTS);
     
     for (NSValue *value in points){
@@ -269,10 +271,6 @@
 - (void) CameraViewWillTerminate:(NSNotification *)notification
 {
 	[self cleanUp];
-}
-
-- (void) setCircleCenter:(NSValue *)center{
-    NSLog(@"%@", [NSValue valueWithPoint:NSMakePoint([center pointValue].x, [center pointValue].y)]);
 }
 
 - (void) cleanUp

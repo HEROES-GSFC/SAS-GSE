@@ -238,15 +238,14 @@
     [self.SAS1CmdCountTextField setIntegerValue:[self.packet commandCount]];
     [self.SAS1CmdKeyTextField setStringValue:[NSString stringWithFormat:@"0x%04x", [self.packet commandKey]]];
     
-    int temp = 20;
     NSRange tempRange = NSMakeRange(10, 20);
-    [self.PYASFCPUTemperatureLabel setIntegerValue:temp];
-    if (NSLocationInRange(temp, tempRange) == FALSE){
-        [self.PYASFCPUTemperatureLabel setBackgroundColor:[NSColor redColor]];
+    [self.PYASRCameraTemperatureLabel setIntegerValue:self.packet.cameraTemperature];
+    if (NSLocationInRange(self.packet.cameraTemperature, tempRange) == FALSE){
+        [self.PYASRCameraTemperatureLabel setBackgroundColor:[NSColor redColor]];
     }
 
     [self.PYASFcameraView setCircleCenter:[self.packet.sunCenter pointValue].x :[self.packet.sunCenter pointValue].y];
-    //self.PYASFcameraView.points = self.packet.chordPoints;
+    self.PYASFcameraView.points = self.packet.chordPoints;
     [self.PYASFcameraView draw];
     //[self.PYASRcameraView draw];
     

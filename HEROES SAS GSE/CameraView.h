@@ -10,7 +10,8 @@
 
 @interface CameraView : NSOpenGLView
 
-@property (nonatomic, strong) NSMutableArray *points;
+@property (nonatomic, strong) NSMutableArray *fiducialPoints;
+@property (nonatomic, strong) NSMutableArray *chordCrossingPoints;
 
 - (void) CameraViewWillTerminate:(NSNotification *)notification;
 - (void) draw;

@@ -29,6 +29,8 @@
 #define SAS_SYNC_WORD 0xEB90
 #define SAS_CM_ACK_TYPE 0x01
 
+#define NUM_FIDUCIALS 20
+
 // NSNotification name to tell the Window controller an image file as found
 NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
 
@@ -118,13 +120,17 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                             
                             [self.dataPacket setSunCenter:[NSValue valueWithPoint:NSMakePoint(sunCenterX, sunCenterY)]];
                             
-                            //for (int i = 0; i < 14; i++) {
-                            //    uint16_t x = 0;
-                            //    uint16_t y = 0;
-                            //    *(tm_packet) >> x;
-                            //    *(tm_packet) >> y;
-                            //    [self.dataPacket addChordPoint:NSMakePoint(x,y) :i];
-                            //}
+                            for (int i = 0; i < NUM_FIDUCIALS; i++) {
+                                float x = 0;
+                                float y = 0;
+                                *(tm_packet) >> x;
+                                *(tm_packet) >> y;
+                                [self.dataPacket addChordPoint:NSMakePoint(x,y) :i];
+                            }
+                            
+                            int camera_temperature;
+                            *(tm_packet) >>  camera_temperature;
+                            self.dataPacket.cameraTemperature = camera_temperature;
                             
                             [self.dataPacket setFrameNumber: frame_number];
                             [self.dataPacket setCommandCount: command_count];

@@ -21,26 +21,17 @@
 @synthesize commandKey = _commandKey;
 @synthesize chordPoints = _chordPoints;
 @synthesize sunCenter = _sunCenter;
+@synthesize cameraTemperature = _cameraTemperature;
+@synthesize cpuTemperature = _cpuTemperature;
 
 -(id)init{
     self = [super init]; // call our super’s designated initializer
     if (self) {
         self.frameMilliseconds = 0;
         self.sunCenter = [NSValue valueWithPoint:NSMakePoint(0.0f, 0.0f)];
-        [self.chordPoints addObject:[NSValue valueWithPoint:NSMakePoint(0,0)]];
-        [self.chordPoints addObject:[NSValue valueWithPoint:NSMakePoint(0,0)]];
-        [self.chordPoints addObject:[NSValue valueWithPoint:NSMakePoint(0,0)]];
-        [self.chordPoints addObject:[NSValue valueWithPoint:NSMakePoint(0,0)]];
-        [self.chordPoints addObject:[NSValue valueWithPoint:NSMakePoint(0,0)]];
-        [self.chordPoints addObject:[NSValue valueWithPoint:NSMakePoint(0,0)]];
-        [self.chordPoints addObject:[NSValue valueWithPoint:NSMakePoint(0,0)]];
-        [self.chordPoints addObject:[NSValue valueWithPoint:NSMakePoint(0,0)]];
-        [self.chordPoints addObject:[NSValue valueWithPoint:NSMakePoint(0,0)]];
-        [self.chordPoints addObject:[NSValue valueWithPoint:NSMakePoint(0,0)]];
-        [self.chordPoints addObject:[NSValue valueWithPoint:NSMakePoint(0,0)]];
-        [self.chordPoints addObject:[NSValue valueWithPoint:NSMakePoint(0,0)]];
-        [self.chordPoints addObject:[NSValue valueWithPoint:NSMakePoint(0,0)]];
-        [self.chordPoints addObject:[NSValue valueWithPoint:NSMakePoint(0,0)]];
+        for (int i = 0; i < 20; i++) {
+            [self.chordPoints addObject:[NSValue valueWithPoint:NSMakePoint(0,0)]];
+        }
     }
     return self;
 }

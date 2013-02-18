@@ -16,6 +16,8 @@
 @property (nonatomic) uint16_t commandCount;
 @property (nonatomic) uint16_t commandKey;
 @property (nonatomic) NSValue *sunCenter;
+@property (nonatomic) int cameraTemperature;
+@property (nonatomic) int cpuTemperature;
 
 -(NSString *) getframeTimeString;
 -(void) addChordPoint: (NSPoint) point :(int) index;
