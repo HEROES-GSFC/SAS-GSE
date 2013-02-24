@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8609D8C716D57CD2007D1FA6 /* CommandList.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8609D8C516D57CD2007D1FA6 /* CommandList.plist */; };
 		860EF32C163605D300B46E35 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 860EF32B163605D300B46E35 /* Cocoa.framework */; };
 		860EF336163605D300B46E35 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 860EF334163605D300B46E35 /* InfoPlist.strings */; };
 		860EF338163605D300B46E35 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 860EF337163605D300B46E35 /* main.m */; };
@@ -48,6 +49,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8609D8C616D57CD2007D1FA6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = en; path = en.lproj/CommandList.plist; sourceTree = "<group>"; };
 		860EF327163605D300B46E35 /* HEROES SAS GSE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "HEROES SAS GSE.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		860EF32B163605D300B46E35 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		860EF32E163605D300B46E35 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -191,6 +193,7 @@
 			isa = PBXGroup;
 			children = (
 				860EF340163605D300B46E35 /* MainMenu.xib */,
+				8609D8C516D57CD2007D1FA6 /* CommandList.plist */,
 				8660985F16B6D04100BE26D1 /* ConsoleTextView.h */,
 				8660986016B6D04100BE26D1 /* ConsoleTextView.m */,
 				860EF3621636073000B46E35 /* PreferencesWindow.xib */,
@@ -336,6 +339,7 @@
 				8666A0081694874900B0DACE /* README.md in Resources */,
 				86E1D84F1695ED1B0079303F /* lib_crc.txt in Resources */,
 				8660983B16B398DD00BE26D1 /* icon.iconset in Resources */,
+				8609D8C716D57CD2007D1FA6 /* CommandList.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -407,6 +411,14 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		8609D8C516D57CD2007D1FA6 /* CommandList.plist */ = {
+			isa = PBXVariantGroup;
+			children = (
+				8609D8C616D57CD2007D1FA6 /* en */,
+			);
+			name = CommandList.plist;
+			sourceTree = "<group>";
+		};
 		860EF334163605D300B46E35 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (

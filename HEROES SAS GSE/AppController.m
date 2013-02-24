@@ -39,6 +39,7 @@
 @synthesize CommandSequenceNumber;
 @synthesize PYASFcameraView = _PYASFcameraView;
 @synthesize PYASRcameraView = _PYASRcameraView;
+@synthesize CommanderHelperWindow;
 
 @synthesize timer = _timer;
 @synthesize listOfCommands = _listOfCommands;
@@ -55,17 +56,36 @@
         NSArray *commandKeys = [NSArray arrayWithObjects:
                                 [NSNumber numberWithInteger:0x0100],
                                 [NSNumber numberWithInteger:0x0101],
-                                [NSNumber numberWithInteger:0x0102], nil];
+                                [NSNumber numberWithInteger:0x0102],
+                                [NSNumber numberWithInteger:0x0103], nil];
         
-        NSArray *commandDescriptionNSArray = [NSArray
-                                              arrayWithObjects:
-                                              @"Reset Camera",
-                                              @"Set new coordinate",
-                                              @"Set blah", nil];
+        NSArray *commandDescription = [NSArray arrayWithObjects:
+                                            @"Test",
+                                            @"Kill all threads",
+                                            @"Restart threads",
+                                            @"Set solar target", nil];
         
-        self.listOfCommands = [NSDictionary
-                          dictionaryWithObject:commandDescriptionNSArray
-                          forKey:commandKeys];
+        //self.listOfCommands = [NSDictionary dictionaryWithObjects:commandKeys forKeys:commandDescription];
+        
+        // read command list dictionary from the CommandList.plist resource file
+        NSString *errorDesc = nil;
+        NSPropertyListFormat format;
+        
+        NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"CommandList" ofType:@"plist"];
+        NSLog(@"%@", plistPath);
+        
+        NSData *plistXML = [[NSFileManager defaultManager] contentsAtPath:plistPath];
+        
+        NSDictionary *plistDict = (NSDictionary *)[NSPropertyListSerialization
+                                              propertyListFromData:plistXML
+                                              mutabilityOption:NSPropertyListMutableContainersAndLeaves
+                                              format:&format
+                                              errorDescription:&errorDesc];
+        
+        if (!plistDict) {
+            NSLog(@"Error reading plist: %@, format: %d", errorDesc, format);
+        }
+        self.listOfCommands = plistDict;
         
 	}
 	return self;
@@ -148,13 +168,14 @@
 }
 
 - (IBAction)RunTest:(id)sender {
-    // register for the notification when an image file has been loaded by the NSOperation: "LoadOperation"
-    // calculate the checksum
-    [self.PYASFCPUTemperatureLabel setFloatValue:10.0f];
-    [self.PYASFCPUTemperatureLabel setBackgroundColor:[NSColor redColor]];
-    for (int i = 0; i < 100; i++) {
-        [self.ConsoleTextView insertText:@"hello"];
-    }
+
+    //for (int i = 0; i < 100; i++) {
+    //    [self.ConsoleTextView insertText:@"hello"];
+    //}
+    //[self.ConsoleScrollView insertText:[NSString stringWithFormat:@"hidden? = %i", [self.CommanderHelperWindow isHidden]]];
+    //NSLog(@"hidden? = %b", [self.CommanderHelperWindow isHidden]);
+    //[self.CommanderHelperWindow setHidden:YES];
+
     
 }
 
@@ -194,6 +215,57 @@
     command_sequence_number = [self.commander send:command_key :command_var: [CommandIPTextField stringValue]];
 
     [CommandSequenceNumber setIntegerValue:command_sequence_number];
+}
+
+- (IBAction)FillCommand_ButtonAction:(NSButton *)sender {
+    long command_key;
+    command_key = [[self.listOfCommands objectForKey:[sender title]] integerValue];
+    [self.CommandKeyTextField setStringValue:[NSString stringWithFormat:@"0x%04lx", command_key]];
+
+}
+
+- (IBAction)saveImage_ButtonAction:(NSButton *)sender {
+    
+    unsigned char buffer[100];
+    for (int j = 0; j < 100; j++) {
+        buffer[j] = j;
+    }
+    
+    NSData *imagedata = [NSData dataWithBytes:buffer length:sizeof(buffer)];
+    
+    NSBitmapImageRep *greyRep = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:nil pixelsWide:10 pixelsHigh:10 bitsPerSample:8 samplesPerPixel:1 hasAlpha:NO isPlanar:NO colorSpaceName:NSCalibratedWhiteColorSpace bitmapFormat:0 bytesPerRow:0 bitsPerPixel:8];
+    
+    NSInteger rowBytes = [greyRep bytesPerRow];
+    unsigned char *pix = [greyRep bitmapData];
+    
+    //memcpy(pix, buffer, 100);
+    
+    for (int i = 0; i < 10; i++) {
+        for (int j = 0; j < 10; j++) {
+            pix[i * rowBytes + j] = (unsigned char)(255 * buffer[i * 10 + j]);
+        }
+    }
+    
+    NSImage *greyscale = [[NSImage alloc] initWithSize:NSMakeSize(10, 10)];
+    [greyscale addRepresentation:greyRep];
+    
+    NSData *temp = [greyscale TIFFRepresentation];
+    NSBitmapImageRep *imageRep = [NSBitmapImageRep imageRepWithData:temp];
+    NSDictionary *imageProps = [NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:1.0] forKey:NSImageCompressionFactor];
+    imagedata = [imageRep representationUsingType:NSPNGFileType properties:imageProps];
+    
+    NSSavePanel* panel = [NSSavePanel savePanel];
+    // This method displays the panel and returns immediately.
+    // The completion handler is called when the user selects an
+    // item or cancels the panel.
+    [panel setNameFieldStringValue:@"boo.png"];
+    [panel beginWithCompletionHandler:^(NSInteger result){
+        if (result == NSFileHandlingPanelOKButton) {
+            NSURL *theFile = [panel URL];
+            [imagedata writeToFile:[theFile path] atomically:YES];
+        }
+    }];
+
 }
 
 

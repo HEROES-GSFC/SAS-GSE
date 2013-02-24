@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Command 1</key>
+	<dict>
+		<key>numvars</key>
+		<string>0</string>
+		<key>key</key>
+		<string>0x0101</string>
+		<key>description</key>
+		<string>send a test command (does nothing)</string>
+		<key>name</key>
+		<string>Test</string>
+	</dict>
+	<key>Command 2</key>
+	<dict>
+		<key>name</key>
+		<string>Test 1</string>
+		<key>description</key>
+		<string>second test</string>
+		<key>key</key>
+		<string>0x0102</string>
+		<key>numvars</key>
+		<string>1</string>
+	</dict>
+</dict>
+</plist>
