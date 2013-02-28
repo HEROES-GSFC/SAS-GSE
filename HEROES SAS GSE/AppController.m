@@ -60,7 +60,6 @@
         NSPropertyListFormat format;
         
         NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"CommandList" ofType:@"plist"];
-        NSLog(@"%@", plistPath);
         
         NSData *plistXML = [[NSFileManager defaultManager] contentsAtPath:plistPath];
         
@@ -184,24 +183,6 @@
     //[self.CommanderHelperWindow setHidden:YES];
     [self.CommanderWindowController showWindow:nil];
 }
-
-//- (IBAction)showPreferencesWindow:(id)sender{
-//    
-//    // lazy instantiation, only initialize if window is opened
-//    if (!preferencesWindowController) {
-//        preferencesWindowController = [[PreferencesWindowController alloc] initWithWindowNibName:@"PreferencesWindow"];
-//    }
-//    [preferencesWindowController showWindow:self];
-//}
-
-//- (IBAction)showCommandingWindow:(id)sender{
-//    
-//    // lazy instantiation, only initialize if window is opened
-//    if (!commandingWindowController) {
-//        commandingWindowController = [[CommandingWindowController alloc] initWithWindowNibName:@"CommandingWindow"];
-//    }
-//    [commandingWindowController showWindow:self];
-//}
 
 - (IBAction)sendCommandButtonAction:(id)sender{
     uint16_t command_sequence_number = 0;

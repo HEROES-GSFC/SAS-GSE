@@ -7,6 +7,7 @@
 //
 
 #import "CommanderWindowController.h"
+#import "AppController.h"
 
 @interface CommanderWindowController ()
 @property (nonatomic,retain) NSDictionary *plistDict;
@@ -94,6 +95,18 @@
 }
 
 - (IBAction)send_Button:(NSButton *)sender {
+    uint16_t command_sequence_number = 0;
     
+    // check to see if 
+    NSScanner *scanner = [[NSScanner alloc] initWithString:[self.commandKey_textField stringValue]];
+    unsigned int command_key;
+    if (![scanner scanHexInt:&command_key]) {
+        NSLog(@"Invalid hex string");
+    }
+        
+    command_sequence_number = [super.commander send:command_key :command_var: [CommandIPTextField stringValue]];
+    
+    [CommandSequenceNumber setIntegerValue:command_sequence_number];
+
 }
 @end
