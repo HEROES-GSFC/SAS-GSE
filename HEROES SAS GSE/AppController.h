@@ -37,7 +37,6 @@
 
 - (IBAction)StartStopButtonAction:(NSButton *)sender;
 - (IBAction)RunTest:(NSButton *)sender;
-- (IBAction)sendCommandButtonAction:(NSButton *)sender;
 - (IBAction)saveImage_ButtonAction:(NSButton *)sender;
 
 @end

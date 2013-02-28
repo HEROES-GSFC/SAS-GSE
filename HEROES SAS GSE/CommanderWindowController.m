@@ -19,8 +19,10 @@
 @synthesize commandListcomboBox;
 @synthesize commandKey_textField;
 @synthesize Variables_Form;
+@synthesize destinationIP_textField;
 @synthesize plistDict = _plistDict;
 @synthesize commander = _commander;
+@synthesize send_Button;
 
 - (id)init{
     return [super initWithWindowNibName:@"CommanderWindowController"];
@@ -73,6 +75,9 @@
     [self.commandListcomboBox addItemsWithObjectValues:[self.plistDict allKeys]];
     [self.commandListcomboBox setCompletes:YES];
     [self.Variables_Form setHidden:YES];
+    [self.send_Button setEnabled:NO];
+
+    [self.destinationIP_textField setStringValue:@"192.168.1.4"];
     // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
     
 }
@@ -87,11 +92,11 @@
 
     // clear the form of all elements
     for (int i = 0; i < numberOfVariablesCurrentlyDisplayed; i++) {
-        [self.Variables_Form removeEntryAtIndex:0];
+        [self.Variables_Form removeRow:0];
     }
-
+    NSLog(@"%ld", (long)[self.Variables_Form numberOfRows]);
     if (numberOfVariablesNeeded == 0) {
-        [self.Variables_Form setHidden:YES];
+        [self.Variables_Form setHidden:NO];
     } else {
         for (NSString *name in variable_names) {
             [self.Variables_Form addEntry:name];
@@ -101,14 +106,24 @@
     
     NSString *toolTip = (NSString *)[[self.plistDict valueForKey:user_choice] valueForKey:@"description"];
     [self.commandListcomboBox setToolTip:toolTip];
-    
+    [self.send_Button setEnabled:YES];
 }
 
 - (IBAction)send_Button:(NSButton *)sender {
     uint16_t command_sequence_number = 0;
     
-    command_sequence_number = [self.commander send:[self.commandKey_textField stringValue] :command_var: [CommandIPTextField stringValue]];
+    NSInteger numberOfVariables = [self.Variables_Form numberOfRows];
+    if (numberOfVariables == 0) {
+        command_sequence_number = [self.commander send:(uint16_t)[self.commandKey_textField intValue] :nil :[self.destinationIP_textField stringValue]];
+    } else {
+        NSMutableArray *variables = [[NSMutableArray alloc] init];
+        for (NSInteger i = 0; i < numberOfVariables; i++) {
+            [variables addObject:[NSNumber numberWithInt:[[self.Variables_Form cellAtIndex:i] intValue]]];
+        }
+        //command_sequence_number = [self.commander send:[self.commandKey_textField integerValue] :variables: [self.destinationIP_textField stringValue]];
+    }
     
     [self.commandCount_textField setIntegerValue:command_sequence_number];
+    [self.send_Button setEnabled:NO];
 }
 @end
