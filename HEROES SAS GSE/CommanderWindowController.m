@@ -61,7 +61,7 @@
     
     [self.commandListcomboBox addItemsWithObjectValues:[self.plistDict allKeys]];
     [self.commandListcomboBox setCompletes:YES];
-    [self.commandListcomboBox setHidden:YES];
+    [self.Variables_Form setHidden:YES];
     // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
     
 }
@@ -88,7 +88,7 @@
         [self.Variables_Form setHidden:NO];
     }
     
-    NSString *toolTip = [[self.plistDict valueForKey:user_choice] valueForKey:@"description"];
+    NSString *toolTip = (NSString *)[[self.plistDict valueForKey:user_choice] valueForKey:@"description"];
     [self.commandListcomboBox setToolTip:toolTip];
     
 }
