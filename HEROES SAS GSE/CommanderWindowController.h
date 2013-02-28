@@ -9,7 +9,8 @@
 #import <Cocoa/Cocoa.h>
 
 @interface CommanderWindowController : NSWindowController
-@property (weak) IBOutlet NSComboBox *comboBox;
+@property (weak) IBOutlet NSComboBox *commandListcomboBox;
 @property (weak) IBOutlet NSTextField *commandKey_textField;
+- (IBAction)commandList_action:(NSComboBox *)sender;
 
 @end
