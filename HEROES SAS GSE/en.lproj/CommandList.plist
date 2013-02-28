@@ -19,7 +19,7 @@
 	<dict>
 		<key>var_names</key>
 		<array>
-			<string>var 1</string>
+			<string>long variable name</string>
 		</array>
 		<key>name</key>
 		<string>Test 1</string>
