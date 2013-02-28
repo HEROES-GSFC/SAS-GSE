@@ -13,5 +13,6 @@
 @property (weak) IBOutlet NSTextField *commandKey_textField;
 @property (weak) IBOutlet NSForm *Variables_Form;
 - (IBAction)commandList_action:(NSComboBox *)sender;
+- (IBAction)send_Button:(NSButton *)sender;
 
 @end

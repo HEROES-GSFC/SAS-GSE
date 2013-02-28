@@ -2,33 +2,43 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>Command 1</key>
+	<key>Send image</key>
 	<dict>
-		<key>numvars</key>
-		<integer>0</integer>
+		<key>var_names</key>
+		<array/>
+		<key>description</key>
+		<string>Ask for a full frame to be sent over TCP</string>
+		<key>key</key>
+		<string>0x103</string>
+	</dict>
+	<key>Restart all Workers</key>
+	<dict>
+		<key>var_names</key>
+		<array/>
+		<key>description</key>
+		<string>Kill and then restart all workers</string>
+		<key>key</key>
+		<string>0x0102</string>
+	</dict>
+	<key>Test</key>
+	<dict>
 		<key>var_names</key>
 		<array/>
 		<key>key</key>
-		<string>0x0101</string>
+		<string>0x0100</string>
 		<key>description</key>
 		<string>send a test command (does nothing)</string>
-		<key>name</key>
-		<string>Test</string>
 	</dict>
-	<key>Command 2</key>
+	<key>Kill all Workers</key>
 	<dict>
 		<key>var_names</key>
 		<array>
 			<string>long variable name</string>
 		</array>
-		<key>name</key>
-		<string>Test 1</string>
 		<key>description</key>
 		<string>second test</string>
 		<key>key</key>
-		<string>0x0102</string>
-		<key>numvars</key>
-		<integer>1</integer>
+		<string>0x0101</string>
 	</dict>
 </dict>
 </plist>

@@ -92,4 +92,8 @@
     [self.commandListcomboBox setToolTip:toolTip];
     
 }
+
+- (IBAction)send_Button:(NSButton *)sender {
+    
+}
 @end
