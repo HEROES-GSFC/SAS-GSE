@@ -53,7 +53,7 @@
     return self;
 }
 
--(uint16_t)send:(uint16_t)command_key :(uint16_t)command_value :(NSString *)ip_address{
+-(uint16_t)send:(uint16_t)command_key :(NSArray *)command_variables :(NSString *)ip_address{
 
     // update the frame number every time we send out a packet
     [self updateSequenceNumber];

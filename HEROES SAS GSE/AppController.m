@@ -19,7 +19,6 @@
 @property (nonatomic, strong) NSOperationQueue *queue;
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, strong) NSDictionary *listOfCommands;
-@property (nonatomic, strong) Commander *commander;
 @property (nonatomic, strong) DataPacket *packet;
 @end
 
@@ -48,7 +47,6 @@
 @synthesize timer = _timer;
 @synthesize listOfCommands = _listOfCommands;
 @synthesize queue = _queue;
-@synthesize commander = _commander;
 @synthesize packet = _packet;
 
 - (id)init
@@ -112,14 +110,6 @@
         _listOfCommands = [[NSDictionary alloc] init];
     }
     return _listOfCommands;
-}
-
-- (Commander *)commander
-{
-    if (_commander == nil) {
-        _commander = [[Commander alloc] init];
-    }
-    return _commander;
 }
 
 - (CameraView *)PYASRcameraView
@@ -192,33 +182,6 @@
     //[self.ConsoleScrollView insertText:[NSString stringWithFormat:@"hidden? = %i", [self.CommanderHelperWindow isHidden]]];
     //NSLog(@"hidden? = %b", [self.CommanderHelperWindow isHidden]);
     //[self.CommanderHelperWindow setHidden:YES];
-}
-
-- (IBAction)sendCommandButtonAction:(id)sender{
-    uint16_t command_sequence_number = 0;
-    
-    NSScanner *scanner = [[NSScanner alloc] initWithString:[CommandKeyTextField stringValue]];
-    unsigned int command_key;
-    if (![scanner scanHexInt:&command_key]) {
-        NSLog(@"Invalid hex string");
-    }
-
-    NSScanner *scanner2 = [[NSScanner alloc] initWithString:[CommandKeyTextField stringValue]];
-    unsigned int command_var;
-    if (![scanner2 scanHexInt:&command_var]) {
-        NSLog(@"Invalid hex string");
-    }
-
-    command_sequence_number = [self.commander send:command_key :command_var: [CommandIPTextField stringValue]];
-
-    [CommandSequenceNumber setIntegerValue:command_sequence_number];
-}
-
-- (IBAction)FillCommand_ButtonAction:(NSButton *)sender {
-    long command_key;
-    command_key = [[self.listOfCommands objectForKey:[sender title]] integerValue];
-    [self.CommandKeyTextField setStringValue:[NSString stringWithFormat:@"0x%04lx", command_key]];
-
 }
 
 - (IBAction)saveImage_ButtonAction:(NSButton *)sender {

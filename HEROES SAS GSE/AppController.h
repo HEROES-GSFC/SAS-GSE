@@ -10,7 +10,6 @@
 #import "CameraView.h"
 #import "TemperatureFormatter.h"
 #import "DataPacket.h"
-#import "Commander.h"
 
 @interface AppController : NSObject
 - (IBAction)OpenWindow_WindowMenuItemAction:(NSMenuItem *)sender;

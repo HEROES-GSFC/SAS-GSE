@@ -7,9 +7,11 @@
 //
 
 #import "CommanderWindowController.h"
+#import "Commander.h"
 
 @interface CommanderWindowController ()
 @property (nonatomic,retain) NSDictionary *plistDict;
+@property (nonatomic, strong) Commander *commander;
 @end
 
 @implementation CommanderWindowController
@@ -18,9 +20,18 @@
 @synthesize commandKey_textField;
 @synthesize Variables_Form;
 @synthesize plistDict = _plistDict;
+@synthesize commander = _commander;
 
 - (id)init{
     return [super initWithWindowNibName:@"CommanderWindowController"];
+}
+
+- (Commander *)commander
+{
+    if (_commander == nil) {
+        _commander = [[Commander alloc] init];
+    }
+    return _commander;
 }
 
 - (id)initWithWindow:(NSWindow *)window
@@ -96,8 +107,8 @@
 - (IBAction)send_Button:(NSButton *)sender {
     uint16_t command_sequence_number = 0;
     
-    //command_sequence_number = [.commander send:command_key :command_var: [CommandIPTextField stringValue]];
+    command_sequence_number = [self.commander send:[self.commandKey_textField stringValue] :command_var: [CommandIPTextField stringValue]];
     
-    //[self.commandCount_textField setIntegerValue:command_sequence_number];
+    [self.commandCount_textField setIntegerValue:command_sequence_number];
 }
 @end
