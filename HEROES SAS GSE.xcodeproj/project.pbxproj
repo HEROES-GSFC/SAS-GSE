@@ -27,6 +27,8 @@
 		86159E7216DC2E6800E79C27 /* TCPSender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 86159E7016DC2E6800E79C27 /* TCPSender.cpp */; };
 		86159E7E16DED4FB00E79C27 /* CommanderWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 86159E7C16DED4FB00E79C27 /* CommanderWindowController.m */; };
 		86159E7F16DED4FB00E79C27 /* CommanderWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 86159E7D16DED4FB00E79C27 /* CommanderWindowController.xib */; };
+		86159E8316DEFA7A00E79C27 /* ConsoleWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 86159E8116DEFA7A00E79C27 /* ConsoleWindowController.m */; };
+		86159E8416DEFA7A00E79C27 /* ConsoleWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 86159E8216DEFA7A00E79C27 /* ConsoleWindowController.xib */; };
 		8660983B16B398DD00BE26D1 /* icon.iconset in Resources */ = {isa = PBXBuildFile; fileRef = 8660983A16B398DD00BE26D1 /* icon.iconset */; };
 		8660986116B6D04100BE26D1 /* ConsoleTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8660986016B6D04100BE26D1 /* ConsoleTextView.m */; };
 		86669FFF1692344200B0DACE /* TemperatureFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 86669FFE1692344200B0DACE /* TemperatureFormatter.m */; };
@@ -88,6 +90,9 @@
 		86159E7B16DED4FA00E79C27 /* CommanderWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommanderWindowController.h; sourceTree = "<group>"; };
 		86159E7C16DED4FB00E79C27 /* CommanderWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommanderWindowController.m; sourceTree = "<group>"; };
 		86159E7D16DED4FB00E79C27 /* CommanderWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CommanderWindowController.xib; sourceTree = "<group>"; };
+		86159E8016DEFA7A00E79C27 /* ConsoleWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConsoleWindowController.h; sourceTree = "<group>"; };
+		86159E8116DEFA7A00E79C27 /* ConsoleWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConsoleWindowController.m; sourceTree = "<group>"; };
+		86159E8216DEFA7A00E79C27 /* ConsoleWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ConsoleWindowController.xib; sourceTree = "<group>"; };
 		8660983A16B398DD00BE26D1 /* icon.iconset */ = {isa = PBXFileReference; lastKnownFileType = folder.iconset; path = icon.iconset; sourceTree = "<group>"; };
 		8660985F16B6D04100BE26D1 /* ConsoleTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConsoleTextView.h; sourceTree = "<group>"; };
 		8660986016B6D04100BE26D1 /* ConsoleTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConsoleTextView.m; sourceTree = "<group>"; };
@@ -251,6 +256,9 @@
 			children = (
 				860EF3621636073000B46E35 /* PreferencesWindow.xib */,
 				860EF340163605D300B46E35 /* MainMenu.xib */,
+				86159E8016DEFA7A00E79C27 /* ConsoleWindowController.h */,
+				86159E8116DEFA7A00E79C27 /* ConsoleWindowController.m */,
+				86159E8216DEFA7A00E79C27 /* ConsoleWindowController.xib */,
 			);
 			name = "Nib Files";
 			sourceTree = "<group>";
@@ -374,6 +382,7 @@
 				8660983B16B398DD00BE26D1 /* icon.iconset in Resources */,
 				8609D8C716D57CD2007D1FA6 /* CommandList.plist in Resources */,
 				86159E7F16DED4FB00E79C27 /* CommanderWindowController.xib in Resources */,
+				86159E8416DEFA7A00E79C27 /* ConsoleWindowController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -427,6 +436,7 @@
 				8693D5F316C5BB1A00985DDB /* UDPSender.cpp in Sources */,
 				86159E6A16DB1D7B00E79C27 /* ParseTCPOperation.m in Sources */,
 				86159E7E16DED4FB00E79C27 /* CommanderWindowController.m in Sources */,
+				86159E8316DEFA7A00E79C27 /* ConsoleWindowController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

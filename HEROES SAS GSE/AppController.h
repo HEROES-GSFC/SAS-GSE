@@ -13,7 +13,7 @@
 #import "Commander.h"
 
 @interface AppController : NSObject
-- (IBAction)Commander_WindowMenuItemAction:(NSMenuItem *)sender;
+- (IBAction)OpenWindow_WindowMenuItemAction:(NSMenuItem *)sender;
 
 @property (weak) IBOutlet NSSegmentedControl *StartStopSegmentedControl;
 
@@ -34,6 +34,7 @@
 @property (nonatomic, strong) IBOutlet CameraView *PYASFcameraView;
 
 @property (nonatomic, readonly) NSWindowController *CommanderWindowController;
+@property (nonatomic, readonly) NSWindowController *ConsoleWindowController;
 
 - (IBAction)StartStopButtonAction:(NSButton *)sender;
 - (IBAction)RunTest:(NSButton *)sender;

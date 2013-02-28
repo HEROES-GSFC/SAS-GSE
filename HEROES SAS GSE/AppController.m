@@ -13,6 +13,7 @@
 #import "lib_crc.h"
 #import "CameraView.h"
 #import "CommanderWindowController.h"
+#import "ConsoleWindowController.h"
 
 @interface AppController ()
 @property (nonatomic, strong) NSOperationQueue *queue;
@@ -42,6 +43,7 @@
 @synthesize PYASFcameraView = _PYASFcameraView;
 @synthesize PYASRcameraView = _PYASRcameraView;
 @synthesize CommanderWindowController = _CommanderWindowController;
+@synthesize ConsoleWindowController = _ConsoleWindowController;
 
 @synthesize timer = _timer;
 @synthesize listOfCommands = _listOfCommands;
@@ -85,6 +87,15 @@
         _CommanderWindowController = [[CommanderWindowController alloc] init];
     }
     return _CommanderWindowController;
+}
+
+- (NSWindowController *)ConsoleWindowController
+{
+    if (_ConsoleWindowController == nil)
+    {
+        _ConsoleWindowController = [[ConsoleWindowController alloc] init];
+    }
+    return _ConsoleWindowController;
 }
 
 - (NSOperationQueue *)queue
@@ -320,7 +331,14 @@
     
 }
 
-- (IBAction)Commander_WindowMenuItemAction:(NSMenuItem *)sender {
-    [self.CommanderWindowController showWindow:nil];
+- (IBAction)OpenWindow_WindowMenuItemAction:(NSMenuItem *)sender {
+    NSString *userChoice = [sender title];
+    
+    if ([userChoice isEqual: @"Commander"]) {
+        [self.CommanderWindowController showWindow:nil];
+    }
+    if ([userChoice isEqual: @"Console"]) {
+        [self.ConsoleWindowController showWindow:nil];
+    }
 }
 @end
