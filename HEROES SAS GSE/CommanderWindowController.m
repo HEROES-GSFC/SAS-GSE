@@ -16,6 +16,7 @@
 
 @synthesize commandListcomboBox;
 @synthesize commandKey_textField;
+@synthesize Variables_Form;
 @synthesize plistDict = _plistDict;
 
 - (id)init{
@@ -67,5 +68,24 @@
 - (IBAction)commandList_action:(NSComboBox *)sender {
     NSString *user_choice = [self.commandListcomboBox stringValue];
     [self.commandKey_textField setStringValue: [[self.plistDict valueForKey:user_choice] valueForKey:@"key"]];
+    
+    NSArray *variable_names = [[self.plistDict valueForKey:user_choice] valueForKey:@"var_names"];
+    NSInteger numberOfVariablesNeeded = [variable_names count];
+    NSInteger numberOfVariablesCurrentlyDisplayed = (long)[self.Variables_Form numberOfRows];
+
+    
+    for (int i = 0; i < numberOfVariablesCurrentlyDisplayed; i++) {
+        [self.Variables_Form removeEntryAtIndex:0];
+    }
+
+    if (numberOfVariablesNeeded == 0) {
+        [self.Variables_Form setHidden:YES];
+    } else {
+        for (NSString *name in variable_names) {
+            [self.Variables_Form addEntry:name];
+        }
+        [self.Variables_Form setHidden:NO];
+    }
+    
 }
 @end

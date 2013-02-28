@@ -5,7 +5,9 @@
 	<key>Command 1</key>
 	<dict>
 		<key>numvars</key>
-		<string>0</string>
+		<integer>0</integer>
+		<key>var_names</key>
+		<array/>
 		<key>key</key>
 		<string>0x0101</string>
 		<key>description</key>
@@ -15,6 +17,10 @@
 	</dict>
 	<key>Command 2</key>
 	<dict>
+		<key>var_names</key>
+		<array>
+			<string>var 1</string>
+		</array>
 		<key>name</key>
 		<string>Test 1</string>
 		<key>description</key>
@@ -22,7 +28,7 @@
 		<key>key</key>
 		<string>0x0102</string>
 		<key>numvars</key>
-		<string>1</string>
+		<integer>1</integer>
 	</dict>
 </dict>
 </plist>

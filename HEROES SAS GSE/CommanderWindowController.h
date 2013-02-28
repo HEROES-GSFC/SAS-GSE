@@ -11,6 +11,7 @@
 @interface CommanderWindowController : NSWindowController
 @property (weak) IBOutlet NSComboBox *commandListcomboBox;
 @property (weak) IBOutlet NSTextField *commandKey_textField;
+@property (weak) IBOutlet NSForm *Variables_Form;
 - (IBAction)commandList_action:(NSComboBox *)sender;
 
 @end
