@@ -13,6 +13,7 @@
 #import "Commander.h"
 
 @interface AppController : NSObject
+- (IBAction)Commander_WindowMenuItemAction:(NSMenuItem *)sender;
 
 @property (weak) IBOutlet NSSegmentedControl *StartStopSegmentedControl;
 
@@ -37,9 +38,6 @@
 - (IBAction)StartStopButtonAction:(NSButton *)sender;
 - (IBAction)RunTest:(NSButton *)sender;
 - (IBAction)sendCommandButtonAction:(NSButton *)sender;
-- (IBAction)FillCommand_ButtonAction:(NSButton *)sender;
 - (IBAction)saveImage_ButtonAction:(NSButton *)sender;
-- (IBAction)openCommanderHelper_ButtonAction:(NSButton *)sender;
-
 
 @end

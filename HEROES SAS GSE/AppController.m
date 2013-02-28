@@ -181,7 +181,6 @@
     //[self.ConsoleScrollView insertText:[NSString stringWithFormat:@"hidden? = %i", [self.CommanderHelperWindow isHidden]]];
     //NSLog(@"hidden? = %b", [self.CommanderHelperWindow isHidden]);
     //[self.CommanderHelperWindow setHidden:YES];
-    [self.CommanderWindowController showWindow:nil];
 }
 
 - (IBAction)sendCommandButtonAction:(id)sender{
@@ -255,11 +254,6 @@
 
 }
 
-- (IBAction)openCommanderHelper_ButtonAction:(NSButton *)sender {
-
-}
-
-
 // -------------------------------------------------------------------------------
 //	anyThread_handleData:note
 //
@@ -326,5 +320,7 @@
     
 }
 
-
+- (IBAction)Commander_WindowMenuItemAction:(NSMenuItem *)sender {
+    [self.CommanderWindowController showWindow:nil];
+}
 @end
