@@ -31,13 +31,15 @@
 @property (weak) IBOutlet NSTextField *CommandSequenceNumber;
 @property (nonatomic, strong) IBOutlet CameraView *PYASRcameraView;
 @property (nonatomic, strong) IBOutlet CameraView *PYASFcameraView;
-@property (assign) IBOutlet NSView *CommanderHelperWindow;
+
+@property (nonatomic, readonly) NSWindowController *CommanderWindowController;
 
 - (IBAction)StartStopButtonAction:(NSButton *)sender;
 - (IBAction)RunTest:(NSButton *)sender;
 - (IBAction)sendCommandButtonAction:(NSButton *)sender;
 - (IBAction)FillCommand_ButtonAction:(NSButton *)sender;
 - (IBAction)saveImage_ButtonAction:(NSButton *)sender;
+- (IBAction)openCommanderHelper_ButtonAction:(NSButton *)sender;
 
 
 @end

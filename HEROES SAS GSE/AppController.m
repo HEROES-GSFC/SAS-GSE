@@ -8,9 +8,11 @@
 
 #import "AppController.h"
 #import "ParseDataOperation.h"
+#import "ParseTCPOperation.h"
 #import "DataPacket.h"
 #import "lib_crc.h"
 #import "CameraView.h"
+#import "CommanderWindowController.h"
 
 @interface AppController ()
 @property (nonatomic, strong) NSOperationQueue *queue;
@@ -39,7 +41,7 @@
 @synthesize CommandSequenceNumber;
 @synthesize PYASFcameraView = _PYASFcameraView;
 @synthesize PYASRcameraView = _PYASRcameraView;
-@synthesize CommanderHelperWindow;
+@synthesize CommanderWindowController = _CommanderWindowController;
 
 @synthesize timer = _timer;
 @synthesize listOfCommands = _listOfCommands;
@@ -52,20 +54,6 @@
 	self = [super init];
 	if (self)
     {
-                
-        NSArray *commandKeys = [NSArray arrayWithObjects:
-                                [NSNumber numberWithInteger:0x0100],
-                                [NSNumber numberWithInteger:0x0101],
-                                [NSNumber numberWithInteger:0x0102],
-                                [NSNumber numberWithInteger:0x0103], nil];
-        
-        NSArray *commandDescription = [NSArray arrayWithObjects:
-                                            @"Test",
-                                            @"Kill all threads",
-                                            @"Restart threads",
-                                            @"Set solar target", nil];
-        
-        //self.listOfCommands = [NSDictionary dictionaryWithObjects:commandKeys forKeys:commandDescription];
         
         // read command list dictionary from the CommandList.plist resource file
         NSString *errorDesc = nil;
@@ -89,6 +77,15 @@
         
 	}
 	return self;
+}
+
+- (NSWindowController *)CommanderWindowController
+{
+    if (_CommanderWindowController == nil)
+    {
+        _CommanderWindowController = [[CommanderWindowController alloc] init];
+    }
+    return _CommanderWindowController;
 }
 
 - (NSOperationQueue *)queue
@@ -146,8 +143,10 @@
         
         // start the GetPathsOperation with the root path to start the search
         ParseDataOperation *parseOp = [[ParseDataOperation alloc] init];
+        ParseTCPOperation *parseTCP = [[ParseTCPOperation alloc] init];
         
         [self.queue addOperation:parseOp];	// this will start the "TestOperation"
+        [self.queue addOperation:parseTCP];
         
         if([[self.queue operations] containsObject:parseOp]){
             [[NSNotificationCenter defaultCenter] addObserver:self
@@ -157,6 +156,14 @@
 
             [self.RunningIndicator setHidden:NO];
             [self.RunningIndicator startAnimation:self];
+        }
+        
+        if([[self.queue operations] containsObject:parseTCP]){
+            [[NSNotificationCenter defaultCenter] addObserver:self
+                                                     selector:@selector(anyThread_handleData:)
+                                                         name:kReceiveAndParseDataDidFinish
+                                                       object:nil];
+            
         }
     }
     if ([StartStopSegmentedControl selectedSegment] == 1) {
@@ -175,8 +182,7 @@
     //[self.ConsoleScrollView insertText:[NSString stringWithFormat:@"hidden? = %i", [self.CommanderHelperWindow isHidden]]];
     //NSLog(@"hidden? = %b", [self.CommanderHelperWindow isHidden]);
     //[self.CommanderHelperWindow setHidden:YES];
-
-    
+    [self.CommanderWindowController showWindow:nil];
 }
 
 //- (IBAction)showPreferencesWindow:(id)sender{
@@ -268,6 +274,10 @@
 
 }
 
+- (IBAction)openCommanderHelper_ButtonAction:(NSButton *)sender {
+
+}
+
 
 // -------------------------------------------------------------------------------
 //	anyThread_handleData:note
@@ -280,6 +290,16 @@
 - (void)anyThread_handleData:(NSNotification *)note
 {
 	[self performSelectorOnMainThread:@selector(mainThread_handleData:) withObject:note waitUntilDone:NO];
+}
+
+- (void)anyThread_handleImage:(NSNotification *)image
+{
+    [self performSelectorOnMainThread:@selector(mainThread_handleImage:) withObject:image waitUntilDone:NO];
+}
+
+- (void)mainThread_handleImage:(NSNotification *)image
+{
+    NSLog(@"got it");
 }
 
 // -------------------------------------------------------------------------------

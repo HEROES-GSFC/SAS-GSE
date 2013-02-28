@@ -78,9 +78,6 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                 break;	// user cancelled this operation
             }
             
-            //sleep(1);
-            //NSLog(@"Listening...");
-            
             uint16_t packet_length = tmReceiver->listen();
             if( packet_length != 0){
                 uint8_t *packet;
@@ -89,14 +86,10 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
             
                 TelemetryPacket *tm_packet;
                 tm_packet = new TelemetryPacket( packet, packet_length);
-                //tm_packet->setReadIndex(0);
                 
                 if (tm_packet->valid())
                 {
-                    //tm_packet->readNextTo_bytes(buffer, 1);
-                    //NSLog(@"%i %x %i %d, %i", tm_packet->getSeconds(), packet_length, tm_packet->getSync(), tm_packet->getSourceID(), tm_packet->getTypeID());
-                    //std::cout << "tm_packet:" << tm_packet << std::endl;
-
+                    
                     if (tm_packet->getSourceID() == SAS_TARGET_ID){
                         
                         if (tm_packet->getTypeID() == SAS_TM_TYPE) {
