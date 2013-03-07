@@ -194,9 +194,6 @@
 				860EF33E163605D300B46E35 /* AppDelegate.m */,
 				860EF35F1636060100B46E35 /* AppController.h */,
 				860EF3601636060100B46E35 /* AppController.m */,
-				86159E7B16DED4FA00E79C27 /* CommanderWindowController.h */,
-				86159E7C16DED4FB00E79C27 /* CommanderWindowController.m */,
-				86159E7D16DED4FB00E79C27 /* CommanderWindowController.xib */,
 				86881A72163D9231003CC656 /* ParseDataOperation.h */,
 				86881A73163D9231003CC656 /* ParseDataOperation.m */,
 				86159E6816DB1D7B00E79C27 /* ParseTCPOperation.h */,
@@ -204,7 +201,7 @@
 				8666A000169254AE00B0DACE /* DataPacket.h */,
 				8666A001169254AE00B0DACE /* DataPacket.m */,
 				86669FFD1692344200B0DACE /* TemperatureFormatter.h */,
-				86159E7516DED0D400E79C27 /* Nib Files */,
+				86159E7516DED0D400E79C27 /* Windows */,
 				86669FFE1692344200B0DACE /* TemperatureFormatter.m */,
 				86A62FE5164D7EE10049527C /* CameraView.h */,
 				86A62FE6164D7EE10049527C /* CameraView.m */,
@@ -251,16 +248,19 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		86159E7516DED0D400E79C27 /* Nib Files */ = {
+		86159E7516DED0D400E79C27 /* Windows */ = {
 			isa = PBXGroup;
 			children = (
+				86159E7B16DED4FA00E79C27 /* CommanderWindowController.h */,
+				86159E7C16DED4FB00E79C27 /* CommanderWindowController.m */,
+				86159E7D16DED4FB00E79C27 /* CommanderWindowController.xib */,
 				860EF3621636073000B46E35 /* PreferencesWindow.xib */,
 				860EF340163605D300B46E35 /* MainMenu.xib */,
 				86159E8016DEFA7A00E79C27 /* ConsoleWindowController.h */,
 				86159E8116DEFA7A00E79C27 /* ConsoleWindowController.m */,
 				86159E8216DEFA7A00E79C27 /* ConsoleWindowController.xib */,
 			);
-			name = "Nib Files";
+			name = Windows;
 			sourceTree = "<group>";
 		};
 		8693D5E416C5BAC500985DDB /* Externals */ = {

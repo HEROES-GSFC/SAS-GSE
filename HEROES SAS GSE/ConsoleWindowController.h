@@ -7,7 +7,15 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "ConsoleTextView.h"
 
-@interface ConsoleWindowController : NSWindowController
+@interface ConsoleWindowController : NSWindowController{
+IBOutlet NSTextView *Console_TextView;
+    int lineNumber;
+}
+
+
+
+- (void) log:(NSString*) msg;
 
 @end

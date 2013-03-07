@@ -30,19 +30,13 @@
 @synthesize PYASRCameraTemperatureLabel;
 @synthesize FrameNumberLabel;
 @synthesize FrameTimeLabel;
-@synthesize CommandKeyTextField;
-@synthesize CommandValueTextField;
 @synthesize StartStopSegmentedControl;
-@synthesize ConsoleScrollView;
-@synthesize ConsoleTextView;
-@synthesize CommandIPTextField;
 @synthesize SAS1CmdCountTextField;
 @synthesize SAS1CmdKeyTextField;
-@synthesize CommandSequenceNumber;
 @synthesize PYASFcameraView = _PYASFcameraView;
 @synthesize PYASRcameraView = _PYASRcameraView;
-@synthesize CommanderWindowController = _CommanderWindowController;
-@synthesize ConsoleWindowController = _ConsoleWindowController;
+@synthesize Commander_window = _Commander_window;
+@synthesize Console_window = _Console_window;
 
 @synthesize timer = _timer;
 @synthesize listOfCommands = _listOfCommands;
@@ -78,22 +72,22 @@
 	return self;
 }
 
-- (NSWindowController *)CommanderWindowController
+- (CommanderWindowController *)Commander_window
 {
-    if (_CommanderWindowController == nil)
+    if (_Commander_window == nil)
     {
-        _CommanderWindowController = [[CommanderWindowController alloc] init];
+        _Commander_window = [[CommanderWindowController alloc] init];
     }
-    return _CommanderWindowController;
+    return _Commander_window;
 }
 
-- (NSWindowController *)ConsoleWindowController
+- (ConsoleWindowController *)Console_window
 {
-    if (_ConsoleWindowController == nil)
+    if (_Console_window == nil)
     {
-        _ConsoleWindowController = [[ConsoleWindowController alloc] init];
+        _Console_window = [[ConsoleWindowController alloc] init];
     }
-    return _ConsoleWindowController;
+    return _Console_window;
 }
 
 - (NSOperationQueue *)queue
@@ -172,16 +166,6 @@
         [self.RunningIndicator stopAnimation:self];
     }
 
-}
-
-- (IBAction)RunTest:(id)sender {
-
-    //for (int i = 0; i < 100; i++) {
-    //    [self.ConsoleTextView insertText:@"hello"];
-    //}
-    //[self.ConsoleScrollView insertText:[NSString stringWithFormat:@"hidden? = %i", [self.CommanderHelperWindow isHidden]]];
-    //NSLog(@"hidden? = %b", [self.CommanderHelperWindow isHidden]);
-    //[self.CommanderHelperWindow setHidden:YES];
 }
 
 - (IBAction)saveImage_ButtonAction:(NSButton *)sender {
@@ -298,10 +282,22 @@
     NSString *userChoice = [sender title];
     
     if ([userChoice isEqual: @"Commander"]) {
-        [self.CommanderWindowController showWindow:nil];
+        [self.Commander_window showWindow:nil];
     }
     if ([userChoice isEqual: @"Console"]) {
-        [self.ConsoleWindowController showWindow:nil];
+        [self.Console_window showWindow:nil];
     }
 }
+
+- (IBAction)RunTest:(id)sender {
+    
+    //for (int i = 0; i < 100; i++) {
+    //    [self.ConsoleTextView insertText:@"hello"];
+    //}
+    //[self.ConsoleScrollView insertText:[NSString stringWithFormat:@"hidden? = %i", [self.CommanderHelperWindow isHidden]]];
+    //NSLog(@"hidden? = %b", [self.CommanderHelperWindow isHidden]);
+    //[self.CommanderHelperWindow setHidden:YES];
+    [self.Console_window log:@"hello"];
+}
+
 @end

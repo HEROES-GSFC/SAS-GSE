@@ -2,6 +2,18 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>Set new pointing</key>
+	<dict>
+		<key>key</key>
+		<string>0x0104</string>
+		<key>description</key>
+		<string>Set new solar target, x and y in arcseconds</string>
+		<key>var_names</key>
+		<array>
+			<string>x</string>
+			<string>y</string>
+		</array>
+	</dict>
 	<key>Send image</key>
 	<dict>
 		<key>var_names</key>
@@ -32,11 +44,9 @@
 	<key>Kill all Workers</key>
 	<dict>
 		<key>var_names</key>
-		<array>
-			<string>long variable name</string>
-		</array>
+		<array/>
 		<key>description</key>
-		<string>second test</string>
+		<string>Kill all worker thread (except command listening thread)</string>
 		<key>key</key>
 		<string>0x0101</string>
 	</dict>
