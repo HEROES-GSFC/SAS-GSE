@@ -7,9 +7,9 @@
 //
 
 #import "ConsoleWindowController.h"
-#import "ConsoleTextView.h"
 
 @interface ConsoleWindowController()
+-(void)copyToClipboard:(NSString*)str;
 @end
 
 @implementation ConsoleWindowController
@@ -35,9 +35,22 @@
     // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
 }
 
-- (IBAction)button_action:(NSButton *)sender {
-    [self log:@"boo"];
-    [Console_TextView insertText:@"boo2"];
+- (IBAction)clear_button:(id)sender {
+    lineNumber = 0;
+
+    // scroll to bottom
+    NSRange endRange;
+	endRange.location = 0;
+	endRange.length = [[Console_TextView textStorage] length];
+	[Console_TextView setString:@""];
+}
+
+- (IBAction)copy_button:(id)sender {
+    [self copyToClipboard:[Console_TextView string]];
+}
+
+- (IBAction)test_button:(NSButton *)sender {
+    [self log:@"My test button pushed."];
 }
 
 - (void) log:(NSString*) msg
@@ -62,12 +75,18 @@
     [[Console_TextView textStorage] insertAttributedString:string atIndex:[[Console_TextView string] length]];
     
     // scroll to bottom
-    NSRange endRange;
-	endRange.location = [[Console_TextView textStorage] length];
-	endRange.length = 0;
-	endRange.length = [text length];
-	[Console_TextView scrollRangeToVisible:endRange];
+    NSRange range;
+    range = NSMakeRange ([[Console_TextView textStorage] length], 0);
+	[Console_TextView scrollRangeToVisible:range];
     lineNumber++;
+}
+
+-(void)copyToClipboard:(NSString*)str
+{
+    NSPasteboard *pb = [NSPasteboard generalPasteboard];
+    NSArray *types = [NSArray     arrayWithObjects:NSStringPboardType, nil];
+    [pb declareTypes:types owner:self];
+    [pb setString: str forType:NSStringPboardType];
 }
 
 @end
