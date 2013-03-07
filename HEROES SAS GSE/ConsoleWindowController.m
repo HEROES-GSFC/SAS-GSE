@@ -48,15 +48,26 @@
     
     NSString *lineHeader = [NSString stringWithFormat:@"[%03i %@] ",lineNumber,[dateFormatter stringFromDate:now]];
     
-	NSRange endRange;
+    NSString *text = [lineHeader stringByAppendingString:[msg stringByAppendingString:@"\n"]];
+    
+    NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:text];
+    NSRange selectedRange = NSMakeRange(0, [lineHeader length]); // 4 characters, starting at index 22
+    
+    [string beginEditing];
+    [string addAttribute:NSFontAttributeName
+                   value:[NSFont fontWithName:@"Helvetica-Bold" size:12.0]
+                   range:selectedRange];
+    [string endEditing];
+    
+    [[Console_TextView textStorage] insertAttributedString:string atIndex:[[Console_TextView string] length]];
+    
+    // scroll to bottom
+    NSRange endRange;
 	endRange.location = [[Console_TextView textStorage] length];
 	endRange.length = 0;
-    NSString *text = [msg stringByAppendingString:@"\n"];
-	[Console_TextView replaceCharactersInRange:endRange withString:[lineHeader stringByAppendingString:text]];
-	endRange.length = [msg length];
+	endRange.length = [text length];
 	[Console_TextView scrollRangeToVisible:endRange];
     lineNumber++;
-
 }
 
 @end
