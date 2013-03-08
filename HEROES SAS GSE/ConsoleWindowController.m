@@ -23,7 +23,7 @@
 {
     self = [super initWithWindow:window];
     if (self) {
-        // Initialization code here.
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(test) name:@"LogMessage" object:nil];
     }
     
     return self;
@@ -37,11 +37,6 @@
 
 - (IBAction)clear_button:(id)sender {
     lineNumber = 0;
-
-    // scroll to bottom
-    NSRange endRange;
-	endRange.location = 0;
-	endRange.length = [[Console_TextView textStorage] length];
 	[Console_TextView setString:@""];
 }
 
@@ -81,6 +76,10 @@
     lineNumber++;
 }
 
+- (void) test{
+    [self log:@"boo"];
+}
+
 -(void)copyToClipboard:(NSString*)str
 {
     NSPasteboard *pb = [NSPasteboard generalPasteboard];
@@ -89,4 +88,8 @@
     [pb setString: str forType:NSStringPboardType];
 }
 
+-(void)dealloc{
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:@"LogMessage" object:nil];
+}
+         
 @end

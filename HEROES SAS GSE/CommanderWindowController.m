@@ -8,6 +8,7 @@
 
 #import "CommanderWindowController.h"
 #import "Commander.h"
+#import "AppController.h"
 
 @interface CommanderWindowController ()
 @property (nonatomic,retain) NSDictionary *plistDict;
@@ -40,7 +41,7 @@
 {
     self = [super initWithWindow:window];
     if (self) {
-        // Initialization code here.
+
     }
     
     return self;
@@ -77,9 +78,7 @@
     [self.Variables_Form setHidden:YES];
     [self.send_Button setEnabled:NO];
 
-    [self.destinationIP_textField setStringValue:@"192.168.1.4"];
-    // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
-    
+    [self.destinationIP_textField setStringValue:@"192.168.1.4"];    
 }
 
 - (IBAction)commandList_action:(NSComboBox *)sender {
@@ -123,6 +122,7 @@
         //command_sequence_number = [self.commander send:[self.commandKey_textField integerValue] :variables: [self.destinationIP_textField stringValue]];
     }
     
+    //[super.Console_window log:@"sending command"];
     [self.commandCount_textField setIntegerValue:command_sequence_number];
     [self.send_Button setEnabled:NO];
 }

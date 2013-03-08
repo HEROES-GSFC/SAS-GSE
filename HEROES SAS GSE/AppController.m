@@ -297,7 +297,8 @@
     //[self.ConsoleScrollView insertText:[NSString stringWithFormat:@"hidden? = %i", [self.CommanderHelperWindow isHidden]]];
     //NSLog(@"hidden? = %b", [self.CommanderHelperWindow isHidden]);
     //[self.CommanderHelperWindow setHidden:YES];
-    [self.Console_window log:@"hello"];
+    //[self.Console_window log:@"hello"];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"LogMessage" object:nil userInfo:[NSDictionary dictionaryWithObject:@"test string" forKey:@"message"]];
 }
 
 @end
