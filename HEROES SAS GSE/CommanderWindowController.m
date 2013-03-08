@@ -110,10 +110,13 @@
 
 - (IBAction)send_Button:(NSButton *)sender {
     uint16_t command_sequence_number = 0;
-    
+    unsigned command_key;
+    NSScanner *scanner = [NSScanner scannerWithString:[self.commandKey_textField stringValue]];
+    [scanner scanHexInt:&command_key];
+        
     NSInteger numberOfVariables = [self.Variables_Form numberOfRows];
     if (numberOfVariables == 0) {
-        command_sequence_number = [self.commander send:(uint16_t)[self.commandKey_textField intValue] :nil :[self.destinationIP_textField stringValue]];
+        command_sequence_number = [self.commander send:(uint16_t)command_key :nil :[self.destinationIP_textField stringValue]];
     } else {
         NSMutableArray *variables = [[NSMutableArray alloc] init];
         for (NSInteger i = 0; i < numberOfVariables; i++) {
@@ -121,8 +124,10 @@
         }
         //command_sequence_number = [self.commander send:[self.commandKey_textField integerValue] :variables: [self.destinationIP_textField stringValue]];
     }
+
+    NSString *msg = [NSString stringWithFormat:@"sending (0x%04x, %@) command", (uint16_t)command_key, [self.commandListcomboBox stringValue]];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"LogMessage" object:nil userInfo:[NSDictionary dictionaryWithObject:msg forKey:@"message"]];
     
-    //[super.Console_window log:@"sending command"];
     [self.commandCount_textField setIntegerValue:command_sequence_number];
     [self.send_Button setEnabled:NO];
 }
