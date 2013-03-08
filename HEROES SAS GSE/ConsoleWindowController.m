@@ -23,7 +23,7 @@
 {
     self = [super initWithWindow:window];
     if (self) {
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(test) name:@"LogMessage" object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(print_notification:) name:@"LogMessage" object:nil];
     }
     
     return self;
@@ -45,7 +45,7 @@
 }
 
 - (IBAction)test_button:(NSButton *)sender {
-    [self log:@"My test button pushed."];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"LogMessage" object:nil userInfo:[NSDictionary dictionaryWithObject:@"My Test button was pushed" forKey:@"message"]];
 }
 
 - (void) log:(NSString*) msg
@@ -76,8 +76,11 @@
     lineNumber++;
 }
 
-- (void) test{
-    [self log:@"boo"];
+- (void) print_notification:(NSNotification *)note{
+    NSDictionary *notifData = [note userInfo];
+    NSString *message;
+    message = [notifData valueForKey:@"message"];
+    [self log:message];
 }
 
 -(void)copyToClipboard:(NSString*)str
