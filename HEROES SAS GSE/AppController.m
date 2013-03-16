@@ -33,6 +33,7 @@
 @synthesize StartStopSegmentedControl;
 @synthesize SAS1CmdCountTextField;
 @synthesize SAS1CmdKeyTextField;
+@synthesize drawBkgImage_checkbox;
 @synthesize PYASFcameraView = _PYASFcameraView;
 @synthesize PYASRcameraView = _PYASRcameraView;
 @synthesize Commander_window = _Commander_window;
@@ -88,6 +89,13 @@
         _Console_window = [[ConsoleWindowController alloc] init];
     }
     return _Console_window;
+}
+
+- (IBAction)bkgImageIsClicked:(NSButton *)sender {
+    if ([sender state] == NSOnState) {
+        self.PYASFcameraView.turnOnBkgImage = YES;}
+    if ([sender state] == NSOffState){
+        self.PYASFcameraView.turnOnBkgImage = NO;}
 }
 
 - (NSOperationQueue *)queue

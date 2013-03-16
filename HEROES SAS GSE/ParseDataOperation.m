@@ -146,7 +146,10 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                         if (tm_packet->getTypeID() == SAS_CM_ACK_TYPE) {
                             uint16_t sequence_number = 0;
                             *tm_packet >> sequence_number;
-                            NSLog(@"Received ACK for %u", sequence_number);
+                            
+                            NSString *msg = [NSString stringWithFormat:@"Received ACK for %u", sequence_number];
+                            [[NSNotificationCenter defaultCenter] postNotificationName:@"LogMessage" object:nil userInfo:[NSDictionary dictionaryWithObject:msg forKey:@"message"]];
+
                         }
                     }
                     

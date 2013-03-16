@@ -27,9 +27,11 @@
 @property (weak) IBOutlet NSTextField *SAS1CmdKeyTextField;
 @property (nonatomic, strong) IBOutlet CameraView *PYASRcameraView;
 @property (nonatomic, strong) IBOutlet CameraView *PYASFcameraView;
+@property (weak) IBOutlet NSButton *drawBkgImage_checkbox;
 
 @property (nonatomic, readonly) CommanderWindowController *Commander_window;
 @property (nonatomic, readonly) ConsoleWindowController *Console_window;
+- (IBAction)bkgImageIsClicked:(NSButton *)sender;
 
 - (IBAction)StartStopButtonAction:(NSButton *)sender;
 - (IBAction)RunTest:(NSButton *)sender;

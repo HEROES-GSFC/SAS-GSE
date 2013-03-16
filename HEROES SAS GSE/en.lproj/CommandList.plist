@@ -2,6 +2,15 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>New Command</key>
+	<dict>
+		<key>var_names</key>
+		<array/>
+		<key>description</key>
+		<string>new command</string>
+		<key>key</key>
+		<string>0x0105</string>
+	</dict>
 	<key>Set new pointing</key>
 	<dict>
 		<key>key</key>

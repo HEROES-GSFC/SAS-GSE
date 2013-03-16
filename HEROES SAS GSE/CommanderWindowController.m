@@ -93,7 +93,7 @@
     for (int i = 0; i < numberOfVariablesCurrentlyDisplayed; i++) {
         [self.Variables_Form removeRow:0];
     }
-    NSLog(@"%ld", (long)[self.Variables_Form numberOfRows]);
+    //NSLog(@"%ld", (long)[self.Variables_Form numberOfRows]);
     if (numberOfVariablesNeeded == 0) {
         [self.Variables_Form setHidden:NO];
     } else {
@@ -122,7 +122,6 @@
         for (NSInteger i = 0; i < numberOfVariables; i++) {
             [variables addObject:[NSNumber numberWithInt:[[self.Variables_Form cellAtIndex:i] intValue]]];
         }
-        //command_sequence_number = [self.commander send:[self.commandKey_textField integerValue] :variables: [self.destinationIP_textField stringValue]];
     }
 
     NSString *msg = [NSString stringWithFormat:@"sending (0x%04x, %@) command", (uint16_t)command_key, [self.commandListcomboBox stringValue]];
