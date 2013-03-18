@@ -19,6 +19,7 @@
 #import "DataPacket.h"
 #import "UDPReceiver.hpp"
 #import "Telemetry.hpp"
+#import "types.hpp"
 
 #define PAYLOAD_SIZE 20
 #define DEFAULT_PORT 5003 /* The default port to send on */
@@ -29,7 +30,8 @@
 #define SAS_SYNC_WORD 0xEB90
 #define SAS_CM_ACK_TYPE 0x01
 
-#define NUM_FIDUCIALS 20
+#define NUM_LIMBS 8
+#define NUM_FIDUCIALS 6
 
 // NSNotification name to tell the Window controller an image file as found
 NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
@@ -104,35 +106,48 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                             *(tm_packet) >> command_count;
                             uint16_t command_key;
                             *(tm_packet) >> command_key;
-                            
-                            double sunCenterX;
-                            *(tm_packet) >> sunCenterX;
-                            
-                            double sunCenterY;
-                            *(tm_packet) >> sunCenterY;
-                            
-                            [self.dataPacket setSunCenter:[NSValue valueWithPoint:NSMakePoint(sunCenterX, sunCenterY)]];
-                            
+
+                            uint16_t housekeeping1, housekeeping2;
+                            *(tm_packet) >> housekeeping1 >> housekeeping2;
+
+                            //For now, housekeeping1 is always camera temperature
+                            self.dataPacket.cameraTemperature = (int)housekeeping1;
+
+                            Pair3B sunCenter, sunCenterError;
+                            *(tm_packet) >> sunCenter >> sunCenterError;
+
+                            [self.dataPacket setSunCenter:[NSValue valueWithPoint:NSMakePoint(sunCenter.x(), sunCenter.y())]];
+
+                            Pair3B predictCenter, predictCenterError;
+                            *(tm_packet) >> predictCenter >> predictCenterError;
+
+                            uint16_t nLimbs;
+                            *(tm_packet) >> nLimbs;
+
+                            for (int i = 0; i < NUM_LIMBS; i++) {
+                                Pair3B limb;
+                                *(tm_packet) >> limb;
+                                [self.dataPacket addChordPoint:NSMakePoint(limb.x(),limb.y()) :i];
+                            }
+
+                            uint16_t nFiducials;
+                            *(tm_packet) >> nFiducials;
+
                             for (int i = 0; i < NUM_FIDUCIALS; i++) {
-                                float x = 0;
-                                float y = 0;
-                                *(tm_packet) >> x;
-                                *(tm_packet) >> y;
-                                [self.dataPacket addFiducialPoint:NSMakePoint(x,y) :i];
+                                Pair3B fiducial;
+                                *(tm_packet) >> fiducial;
+                                [self.dataPacket addFiducialPoint:NSMakePoint(fiducial.x(),fiducial.y()) :i];
                             }
-                            
-                            for (int i = 0; i < 20; i++) {
-                                float x = 0;
-                                float y = 0;
-                                *(tm_packet) >> x;
-                                *(tm_packet) >> y;
-                                [self.dataPacket addChordPoint:NSMakePoint(x,y) :i];
-                            }
-                            
-                            int camera_temperature;
-                            *(tm_packet) >>  camera_temperature;
-                            self.dataPacket.cameraTemperature = camera_temperature;
-                            
+
+                            float x_intercept, x_slope;
+                            *(tm_packet) >> x_intercept >> x_slope;
+
+                            float y_intercept, y_slope;
+                            *(tm_packet) >> y_intercept >> y_slope;
+
+                            uint8_t image_max, image_min;
+                            *(tm_packet) >> image_max >> image_min;
+
                             [self.dataPacket setFrameNumber: frame_number];
                             [self.dataPacket setCommandCount: command_count];
                             [self.dataPacket setCommandKey: command_key];
