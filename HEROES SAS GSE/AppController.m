@@ -162,8 +162,8 @@
         
         if([[self.queue operations] containsObject:parseTCP]){
             [[NSNotificationCenter defaultCenter] addObserver:self
-                                                     selector:@selector(anyThread_handleData:)
-                                                         name:kReceiveAndParseDataDidFinish
+                                                     selector:@selector(anyThread_handleImage:)
+                                                         name:kReceiveAndParseImageDidFinish
                                                        object:nil];
             
         }
@@ -233,14 +233,17 @@
 	[self performSelectorOnMainThread:@selector(mainThread_handleData:) withObject:note waitUntilDone:NO];
 }
 
-- (void)anyThread_handleImage:(NSNotification *)image
+- (void)anyThread_handleImage:(NSNotification *)note
 {
-    [self performSelectorOnMainThread:@selector(mainThread_handleImage:) withObject:image waitUntilDone:NO];
+    [self performSelectorOnMainThread:@selector(mainThread_handleImage:) withObject:note waitUntilDone:NO];
 }
 
-- (void)mainThread_handleImage:(NSNotification *)image
+- (void)mainThread_handleImage:(NSNotification *)note
 {
     NSLog(@"got it");
+    NSDictionary *notifData = [note userInfo];
+    NSLog(@"tcp stream filename is %@", [notifData valueForKey:@"filename"]);
+    
 }
 
 // -------------------------------------------------------------------------------

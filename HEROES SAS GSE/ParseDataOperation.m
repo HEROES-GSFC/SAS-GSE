@@ -91,9 +91,7 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                 
                 if (tm_packet->valid())
                 {
-                    
                     if (tm_packet->getSourceID() == SAS_TARGET_ID){
-                        
                         if (tm_packet->getTypeID() == SAS_TM_TYPE) {
                             [self.dataPacket setFrameSeconds: tm_packet->getSeconds()];
                             

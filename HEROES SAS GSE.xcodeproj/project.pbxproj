@@ -34,6 +34,10 @@
 		8666A002169254AE00B0DACE /* DataPacket.m in Sources */ = {isa = PBXBuildFile; fileRef = 8666A001169254AE00B0DACE /* DataPacket.m */; };
 		8666A0081694874900B0DACE /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 8666A0071694874900B0DACE /* README.md */; };
 		8666E3C416A3BA6600A9DD85 /* Commander.m in Sources */ = {isa = PBXBuildFile; fileRef = 8666E3C316A3BA6600A9DD85 /* Commander.m */; };
+		86672DF516F7AB4700F36110 /* types.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 86672DF316F7AB4700F36110 /* types.cpp */; };
+		86672DF616F7AB4E00F36110 /* types.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 86672DF316F7AB4700F36110 /* types.cpp */; };
+		86672DF716F7AB5000F36110 /* types.hpp in Sources */ = {isa = PBXBuildFile; fileRef = 86672DF416F7AB4700F36110 /* types.hpp */; };
+		86672DF916F7D2BD00F36110 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86672DF816F7D2BD00F36110 /* GLUT.framework */; };
 		86881A74163D9231003CC656 /* ParseDataOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 86881A73163D9231003CC656 /* ParseDataOperation.m */; };
 		8693D5EF16C5BB1A00985DDB /* Command.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8693D5E516C5BB1A00985DDB /* Command.cpp */; };
 		8693D5F016C5BB1A00985DDB /* Packet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8693D5E716C5BB1A00985DDB /* Packet.cpp */; };
@@ -100,6 +104,9 @@
 		8666A0071694874900B0DACE /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		8666E3C216A3BA6600A9DD85 /* Commander.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Commander.h; sourceTree = "<group>"; };
 		8666E3C316A3BA6600A9DD85 /* Commander.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Commander.m; sourceTree = "<group>"; };
+		86672DF316F7AB4700F36110 /* types.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = types.cpp; path = "lib/SAS-aspect/PYAS-core/aspect/types.cpp"; sourceTree = "<group>"; };
+		86672DF416F7AB4700F36110 /* types.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = types.hpp; path = "lib/SAS-aspect/PYAS-core/aspect/types.hpp"; sourceTree = "<group>"; };
+		86672DF816F7D2BD00F36110 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
 		86881A72163D9231003CC656 /* ParseDataOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParseDataOperation.h; sourceTree = "<group>"; };
 		86881A73163D9231003CC656 /* ParseDataOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParseDataOperation.m; sourceTree = "<group>"; };
 		8693D5E516C5BB1A00985DDB /* Command.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = Command.cpp; path = "lib/SAS-aspect/PYAS-core/aspect/Command.cpp"; sourceTree = "<group>"; };
@@ -125,6 +132,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				86672DF916F7D2BD00F36110 /* GLUT.framework in Frameworks */,
 				86A62FEA164D80BF0049527C /* OpenGL.framework in Frameworks */,
 				860EF32C163605D300B46E35 /* Cocoa.framework in Frameworks */,
 			);
@@ -145,6 +153,7 @@
 		860EF31C163605D300B46E35 = {
 			isa = PBXGroup;
 			children = (
+				86672DF816F7D2BD00F36110 /* GLUT.framework */,
 				8660983A16B398DD00BE26D1 /* icon.iconset */,
 				860EF331163605D300B46E35 /* HEROES SAS GSE */,
 				860EF34E163605D400B46E35 /* HEROES SAS GSETests */,
@@ -263,6 +272,8 @@
 			children = (
 				8693D5E516C5BB1A00985DDB /* Command.cpp */,
 				8693D5E616C5BB1A00985DDB /* Command.hpp */,
+				86672DF316F7AB4700F36110 /* types.cpp */,
+				86672DF416F7AB4700F36110 /* types.hpp */,
 				8693D5E716C5BB1A00985DDB /* Packet.cpp */,
 				8693D5E816C5BB1A00985DDB /* Packet.hpp */,
 				8693D5E916C5BB1A00985DDB /* Telemetry.cpp */,
@@ -417,6 +428,8 @@
 				860EF338163605D300B46E35 /* main.m in Sources */,
 				860EF33F163605D300B46E35 /* AppDelegate.m in Sources */,
 				860EF3611636060100B46E35 /* AppController.m in Sources */,
+				86672DF716F7AB5000F36110 /* types.hpp in Sources */,
+				86672DF616F7AB4E00F36110 /* types.cpp in Sources */,
 				86881A74163D9231003CC656 /* ParseDataOperation.m in Sources */,
 				86A62FE7164D7EE10049527C /* CameraView.m in Sources */,
 				86669FFF1692344200B0DACE /* TemperatureFormatter.m in Sources */,
@@ -441,6 +454,7 @@
 				860EF356163605D400B46E35 /* HEROES_SAS_GSETests.m in Sources */,
 				86159E6D16DB210F00E79C27 /* TCPReceiver.cpp in Sources */,
 				86159E7216DC2E6800E79C27 /* TCPSender.cpp in Sources */,
+				86672DF516F7AB4700F36110 /* types.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -10,6 +10,7 @@
 #import "DataPacket.h"
 #import "TCPReceiver.hpp"
 #import "Telemetry.hpp"
+#include <unistd.h>
 
 #define PAYLOAD_SIZE 
 #define DEFAULT_PORT 5010 /* The default port to send on */
@@ -58,59 +59,91 @@ NSString *kReceiveAndParseImageDidFinish = @"ReceiveAndParseImageDidFinish";
         
         tcpReceiver->init_connection();
         
+        NSString *tempFileTemplate = [NSTemporaryDirectory() stringByAppendingPathComponent:@"myapptempfile.XXXXXX"];
+        const char *tempFileTemplateCString = [tempFileTemplate fileSystemRepresentation];
+        char *tempFileNameCString = (char *)malloc(strlen(tempFileTemplateCString) + 1);
+        strcpy(tempFileNameCString, tempFileTemplateCString);
+        int fileDescriptor = mkstemp(tempFileNameCString);
+        
+        NSString *tempFileName =
+        [[NSFileManager defaultManager]
+         stringWithFileSystemRepresentation:tempFileNameCString
+         length:strlen(tempFileNameCString)];
+        NSLog(@"%@", tempFileName);
+        free(tempFileNameCString);
+        
         while (1) {
             
             if ([self isCancelled])
             {
                 break;	// user cancelled this operation
             }
-            int sock = tcpReceiver->accept_packet();
             NSLog(@"client connected!");
-            while(sock > 0){
+            int sock;
+            if((sock = tcpReceiver->accept_packet()) > 0){
                 int packet_length;
-                packet_length = tcpReceiver->handle_tcpclient(sock);
                 NSLog(@"got it %i", packet_length);
-                if( packet_length > 0){
+                while ((packet_length = tcpReceiver->handle_tcpclient(sock)) > 0) {
                     uint8_t *packet;
                     packet = new uint8_t[packet_length];
                     tcpReceiver->get_packet( packet );
-                
-                    TelemetryPacket *tm_packet;
-                    tm_packet = new TelemetryPacket( packet, packet_length);
-                    NSLog(@"%x %x %i", tm_packet->getSourceID(), tm_packet->getTypeID(), tm_packet->valid());
-                    //if (tm_packet->valid())
-                    //{
-                        if (tm_packet->getSourceID() == SAS_TARGET_ID){
-                            
-                            if (tm_packet->getTypeID() == SAS_TM_TYPE) {
-                                //for(int i = 0; i < packet_length-1; i++){
-                                //    printf("%x", (uint8_t) tm_packet->[i]);
-                                //}
-                                //printf("\n");
-                                uint8_t tp;
-                                while (tm_packet->remainingBytes() > 0){
-                                    tm_packet->readNextTo(tp);
-                                    NSLog(@"%d", tp);
-                                }
-                            }
-                            
-                        }
-                    
-                    //} else {NSLog(@"not tm packet");}
-                
-                free(packet);
-                free(tm_packet);
+                    write(fileDescriptor, packet, packet_length);
+                    free(packet);
                 }
-            }
-            
-            //NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:
-            //                      self.image, @"image", nil];
-            if (![self isCancelled]){}
-                //    [[NSNotificationCenter defaultCenter] postNotificationName:kReceiveAndParseImageDidFinish object:nil userInfo:info];
+                NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys: tempFileName, @"filename", nil];
                 
+                TelemetryPacketQueue tpq;
+                tpq.filterSourceID(0x30);
+                tpq.add_file([tempFileName UTF8String]);
+                TelemetryPacket tp(NULL);
+                if( !tpq.empty() )
+                {
+                    tpq >> tp;
+                    uint8_t pixel;
+                    while (tp.remainingBytes() != 0) {
+                        tp.readNextTo(pixel);
+                        NSLog(@"%d", pixel);
+                    }
+                }
+                
+                if (![self isCancelled]){
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kReceiveAndParseImageDidFinish object:nil userInfo:info];
+                }
+                close(fileDescriptor);
+                tcpReceiver->close_connection();
+            }
         }
     }
 }
+//
+//                    TelemetryPacket *tm_packet;
+//                    tm_packet = new TelemetryPacket( packet, packet_length);
+//                    NSLog(@"got %x %x %i", tm_packet->getSourceID(), tm_packet->getTypeID(), tm_packet->valid());
+//                    if (tm_packet->valid())
+//                    {
+//                        if (tm_packet->getSourceID() == SAS_TARGET_ID){
+//                            
+//                            if (tm_packet->getTypeID() == SAS_TM_TYPE) {
+//                                //for(int i = 0; i < packet_length-1; i++){
+//                                //    printf("%x", (uint8_t) tm_packet->[i]);
+//                                //}
+//                                //printf("\n");
+//                                uint8_t tp;
+//                                while (tm_packet->remainingBytes() > 0){
+//                                    tm_packet->readNextTo(tp);
+//                                    NSLog(@"%d", tp);
+//                                }
+//                            }
+//                            
+//                        }
+//                    
+//                    //} else {NSLog(@"not tm packet");}
+                
+            //NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:
+            //                      self.image, @"image", nil];
+        
+    
+
 
 @end
 

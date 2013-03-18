@@ -8,6 +8,7 @@
 
 #import "CameraView.h"
 #include <OpenGL/gl.h>
+#include <OpenGL/glext.h>
 #import <GLUT/GLUT.h>
 #include <math.h>
 #include <stdlib.h>
@@ -85,19 +86,59 @@
 }
 
 - (void) drawImage{
-    float grey;
-    for (int i = 0; i < [self.numberXPixels floatValue]; i++) {
-        for (int j = 0; j < [self.numberYPixels floatValue]; j++) {
-            if (self.turnOnBkgImage == true) {
-                grey = (float) i*j / ([self.numberYPixels floatValue] * [self.numberXPixels floatValue]);
-            } else { grey = 0.0; }
-            glColor3f(grey, grey, grey);
-            glBegin(GL_QUADS);
-            glVertex2f(i, j); glVertex2f(i+1, j);
-            glVertex2f(i+1, j+1); glVertex2f(i, j+1);
-            glEnd();
-        }
+    GLuint texture;
+    unsigned char data[] = { 255,0,0, 0,255,0, 0,0,255, 255,255,255 };
+
+    const int size = [self.numberXPixels intValue] * [self.numberYPixels intValue];
+    float *pixels = (float *)malloc(size * sizeof(float));
+    for(long i = 0; i < size; i++) {
+        pixels[i] = i;
     }
+    
+    glGenTextures( 1, &texture );
+    glBindTexture( GL_TEXTURE_2D, texture );
+    glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
+    glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
+    //even better quality, but this will do for now.
+    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    
+    //to the edge of our shape.
+    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
+    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+    
+    //Generate the texture
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0,GL_RGB, GL_UNSIGNED_BYTE, data);
+    
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+    glMatrixMode(GL_MODELVIEW);
+    
+    glPushMatrix();
+    const int iw = [self.numberXPixels intValue];
+    const int ih = [self.numberXPixels intValue];
+    glTranslatef( -iw/2.0, -ih/2.0, 0 );
+    glBegin(GL_QUADS);
+    glTexCoord2i(0,0); glVertex2i(0, 0);
+    glTexCoord2i(1,0); glVertex2i(iw, 0);
+    glTexCoord2i(1,1); glVertex2i(iw, ih);
+    glTexCoord2i(0,1); glVertex2i(0, ih);
+    glEnd();
+    glPopMatrix();
+    
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    //for (int i = 0; i < [self.numberXPixels floatValue]; i++) {
+    //    for (int j = 0; j < [self.numberYPixels floatValue]; j++) {
+    //        if (self.turnOnBkgImage == true) {
+    //            grey = (float) i*j / ([self.numberYPixels floatValue] * [self.numberXPixels floatValue]);
+    //        } else { grey = 0.0; }
+    //        glColor3f(grey, grey, grey);
+    //        glVertex2f(i, j); glVertex2f(i+1, j);
+    //        glVertex2f(i+1, j+1); glVertex2f(i, j+1);
+    //        glEnd();
+    //    }
+   // }
 }
 
 - (NSMutableArray *)fiducialPoints
@@ -175,6 +216,9 @@
 - (void)draw
 {
     [self doSomething];
+    gluLookAt (0.0, 0.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+    
+    glutSwapBuffers();
     [self setNeedsDisplay:YES];
 }
 
@@ -199,7 +243,6 @@
     //    [[self openGLContext] setValues:&swapInt forParameter:NSOpenGLCPSwapInterval]; // set to vbl sync
     
 	// init GL stuff here
-	glEnable(GL_DEPTH_TEST);
     glLoadIdentity();
     glPushMatrix();
     
@@ -209,7 +252,6 @@
     glDisable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 }
