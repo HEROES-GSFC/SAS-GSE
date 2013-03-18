@@ -93,9 +93,9 @@
 
 - (IBAction)bkgImageIsClicked:(NSButton *)sender {
     if ([sender state] == NSOnState) {
-        self.PYASFcameraView.turnOnBkgImage = YES;}
+        self.PYASFcameraView.turnOnBkgImage = true;}
     if ([sender state] == NSOffState){
-        self.PYASFcameraView.turnOnBkgImage = NO;}
+        self.PYASFcameraView.turnOnBkgImage = false;}
 }
 
 - (NSOperationQueue *)queue
@@ -299,6 +299,10 @@
 
 - (IBAction)RunTest:(id)sender {
     
+    NSMutableArray *image;
+    image = [[NSMutableArray alloc] init];
+    
+    [self.PYASFcameraView setBkgImage:image];
     //for (int i = 0; i < 100; i++) {
     //    [self.ConsoleTextView insertText:@"hello"];
     //}

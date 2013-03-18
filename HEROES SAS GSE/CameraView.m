@@ -59,7 +59,6 @@
 }
 
 -(void)setTurnOnBkgImage:(BOOL)turnOnBkgImage{
-    NSLog(@"boo");
     _turnOnBkgImage = turnOnBkgImage;
     [self needsDisplay];
 }
@@ -89,7 +88,9 @@
     float grey;
     for (int i = 0; i < [self.numberXPixels floatValue]; i++) {
         for (int j = 0; j < [self.numberYPixels floatValue]; j++) {
-            grey = (float) i*j / ([self.numberYPixels floatValue] * [self.numberXPixels floatValue]);
+            if (self.turnOnBkgImage == true) {
+                grey = (float) i*j / ([self.numberYPixels floatValue] * [self.numberXPixels floatValue]);
+            } else { grey = 0.0; }
             glColor3f(grey, grey, grey);
             glBegin(GL_QUADS);
             glVertex2f(i, j); glVertex2f(i+1, j);
@@ -136,12 +137,10 @@
     NSPoint sunCenter = NSMakePoint(circleX, circleY);
     NSPoint screenCenter = NSMakePoint(screenX, screenY);
     
-    if (self.turnOnBkgImage == YES) {
-        [self drawImage];
-    }
+    [self drawImage];
     
     glColor3f(1.0f, 0.0f, 0.0f);
-    [self drawACross:sunCenter:0.02];
+    [self drawACross: sunCenter:0.02];
     [self drawACircle: sunCenter: 92];
     
     glColor3f(0.7f, 0.7f, 0.7f);

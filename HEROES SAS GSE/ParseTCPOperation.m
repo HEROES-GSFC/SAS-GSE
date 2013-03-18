@@ -27,7 +27,6 @@ NSString *kReceiveAndParseImageDidFinish = @"ReceiveAndParseImageDidFinish";
 @interface ParseTCPOperation(){
     TCPReceiver *tcpReceiver;
 }
-@property (nonatomic, retain) NSImage *image;
 
 @end
 
@@ -43,9 +42,9 @@ NSString *kReceiveAndParseImageDidFinish = @"ReceiveAndParseImageDidFinish";
     return self;
 }
 
-- (NSImage *)image{
-    if (_image == nil) {
-        _image = [[NSImage alloc] init];
+- (uint16_t *)image{
+    if (_image == NULL) {
+        _image = (uint16_t *)malloc(1000*1000 * sizeof(uint16_t));
     }
     return _image;
 }
@@ -78,21 +77,26 @@ NSString *kReceiveAndParseImageDidFinish = @"ReceiveAndParseImageDidFinish";
                 
                     TelemetryPacket *tm_packet;
                     tm_packet = new TelemetryPacket( packet, packet_length);
-                
-                    if (tm_packet->valid())
-                    {
+                    NSLog(@"%x %x %i", tm_packet->getSourceID(), tm_packet->getTypeID(), tm_packet->valid());
+                    //if (tm_packet->valid())
+                    //{
                         if (tm_packet->getSourceID() == SAS_TARGET_ID){
                             
                             if (tm_packet->getTypeID() == SAS_TM_TYPE) {
-                                                            //for(int i = 0; i < packet_length-1; i++){
-                                //    printf("%x", (uint8_t) packet[i]);
+                                //for(int i = 0; i < packet_length-1; i++){
+                                //    printf("%x", (uint8_t) tm_packet->[i]);
                                 //}
                                 //printf("\n");
+                                uint8_t tp;
+                                while (tm_packet->remainingBytes() > 0){
+                                    tm_packet->readNextTo(tp);
+                                    NSLog(@"%d", tp);
+                                }
                             }
                             
                         }
                     
-                    } else {NSLog(@"not tm packet");}
+                    //} else {NSLog(@"not tm packet");}
                 
                 free(packet);
                 free(tm_packet);
