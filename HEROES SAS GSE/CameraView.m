@@ -15,6 +15,8 @@
 @interface CameraView(){
     float circleX;
     float circleY;
+    float screenX;
+    float screenY;
 }
 @property (nonatomic, strong) NSNumber *numberXPixels;
 @property (nonatomic, strong) NSNumber *numberYPixels;
@@ -27,6 +29,7 @@
 - (void) drawAFewCrosses: (NSMutableArray *)centers;
 - (void) doSomething;
 - (void) drawRect: (NSRect) dirtyRect;
+- (void) drawImage;
 - (void) drawALine: (NSPoint) center :(float) length :(float) angleInDegrees;
 - (void) cleanUp;
 - (NSPoint) calculateCentroid:(NSMutableArray *)points;
@@ -38,7 +41,8 @@
 @synthesize chordCrossingPoints = _chordCrossingPoints;
 @synthesize numberYPixels = _numberYPixels;
 @synthesize numberXPixels = _numberXPixels;
-
+@synthesize bkgImage = _bkgImage;
+@synthesize turnOnBkgImage = _turnOnBkgImage;
 
 -(id) initWithFrame:(NSRect)frameRect
 {
@@ -47,8 +51,52 @@
         //initialization
         circleX = 0.0;
         circleY = 0.0;
+        screenX = 500.0;
+        screenY = 500.0;
+        self.turnOnBkgImage = YES;
     }
     return self;
+}
+
+-(void)setTurnOnBkgImage:(BOOL)turnOnBkgImage{
+    NSLog(@"boo");
+    _turnOnBkgImage = turnOnBkgImage;
+    [self needsDisplay];
+}
+
+- (void) setBkgImage:(NSMutableArray *)bkgImage{
+    bkgImage = _bkgImage;
+}
+
+- (NSMutableArray *)bkgImage
+{
+    if (_bkgImage == nil) {
+        _bkgImage = [[NSMutableArray alloc] init];
+    }
+    return _bkgImage;
+}
+
+- (void) setScreenCenter: (float)x :(float)y{
+    if ((x < [self.numberXPixels floatValue]) && (x > 0)) {
+        screenX = x;
+    }
+    if ((y > [self.numberYPixels floatValue]) && (y > 0)) {
+        screenY = y;
+    }
+}
+
+- (void) drawImage{
+    float grey;
+    for (int i = 0; i < [self.numberXPixels floatValue]; i++) {
+        for (int j = 0; j < [self.numberYPixels floatValue]; j++) {
+            grey = (float) i*j / ([self.numberYPixels floatValue] * [self.numberXPixels floatValue]);
+            glColor3f(grey, grey, grey);
+            glBegin(GL_QUADS);
+            glVertex2f(i, j); glVertex2f(i+1, j);
+            glVertex2f(i+1, j+1); glVertex2f(i, j+1);
+            glEnd();
+        }
+    }
 }
 
 - (NSMutableArray *)fiducialPoints
@@ -86,10 +134,19 @@
 - (void) doSomething
 {
     NSPoint sunCenter = NSMakePoint(circleX, circleY);
+    NSPoint screenCenter = NSMakePoint(screenX, screenY);
+    
+    if (self.turnOnBkgImage == YES) {
+        [self drawImage];
+    }
     
     glColor3f(1.0f, 0.0f, 0.0f);
     [self drawACross:sunCenter:0.02];
     [self drawACircle: sunCenter: 92];
+    
+    glColor3f(0.7f, 0.7f, 0.7f);
+    [self drawACross:screenCenter :1.00];
+    
     glColor3f(0.0f, 1.0f, 0.0f);
     [self drawALine:sunCenter :213.0 :20.0];
     
