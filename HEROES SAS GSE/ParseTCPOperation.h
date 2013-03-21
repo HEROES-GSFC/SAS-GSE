@@ -12,6 +12,4 @@ extern NSString *kReceiveAndParseImageDidFinish;
 
 @interface ParseTCPOperation : NSOperation
 
-@property (nonatomic) uint16_t *image;
-
 @end

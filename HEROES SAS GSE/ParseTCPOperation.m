@@ -29,11 +29,14 @@ NSString *kReceiveAndParseImageDidFinish = @"ReceiveAndParseImageDidFinish";
     TCPReceiver *tcpReceiver;
 }
 
+@property (nonatomic, strong) NSData *data;
+
 @end
+
 
 @implementation ParseTCPOperation
 
-@synthesize image = _image;
+@synthesize data = _data;
 
 - (id)init{
     self = [super init]; // call our super’s designated initializer
@@ -43,11 +46,11 @@ NSString *kReceiveAndParseImageDidFinish = @"ReceiveAndParseImageDidFinish";
     return self;
 }
 
-- (uint16_t *)image{
-    if (_image == NULL) {
-        _image = (uint16_t *)malloc(1000*1000 * sizeof(uint16_t));
+- (NSData *)data{
+    if (_data == nil) {
+        _data = [[NSData alloc] init];
     }
-    return _image;
+    return _data;
 }
 
 // -------------------------------------------------------------------------------
@@ -59,56 +62,71 @@ NSString *kReceiveAndParseImageDidFinish = @"ReceiveAndParseImageDidFinish";
         
         tcpReceiver->init_connection();
         
-        NSString *tempFileTemplate = [NSTemporaryDirectory() stringByAppendingPathComponent:@"myapptempfile.XXXXXX"];
-        const char *tempFileTemplateCString = [tempFileTemplate fileSystemRepresentation];
-        char *tempFileNameCString = (char *)malloc(strlen(tempFileTemplateCString) + 1);
-        strcpy(tempFileNameCString, tempFileTemplateCString);
-        int fileDescriptor = mkstemp(tempFileNameCString);
-        
-        NSString *tempFileName =
-        [[NSFileManager defaultManager]
-         stringWithFileSystemRepresentation:tempFileNameCString
-         length:strlen(tempFileNameCString)];
-        NSLog(@"%@", tempFileName);
-        free(tempFileNameCString);
-        
+               int sock;
         while (1) {
             
             if ([self isCancelled])
             {
                 break;	// user cancelled this operation
             }
-            NSLog(@"client connected!");
-            int sock;
             if((sock = tcpReceiver->accept_packet()) > 0){
+                NSString *tempFileTemplate = [NSTemporaryDirectory() stringByAppendingPathComponent:@"myapptempfile.XXXXXX"];
+                const char *tempFileTemplateCString = [tempFileTemplate fileSystemRepresentation];
+                char *tempFileNameCString = (char *)malloc(strlen(tempFileTemplateCString) + 1);
+                strcpy(tempFileNameCString, tempFileTemplateCString);
+                int fileDescriptor = mkstemp(tempFileNameCString);
+                
+                NSString *tempFileName =
+                [[NSFileManager defaultManager]
+                 stringWithFileSystemRepresentation:tempFileNameCString
+                 length:strlen(tempFileNameCString)];
+                NSLog(@"%@", tempFileName);
+                free(tempFileNameCString);
+                int packet_count = 0;               
                 int packet_length;
-                NSLog(@"got it %i", packet_length);
+                //NSLog(@"got it %i", packet_length);
                 while ((packet_length = tcpReceiver->handle_tcpclient(sock)) > 0) {
                     uint8_t *packet;
                     packet = new uint8_t[packet_length];
                     tcpReceiver->get_packet( packet );
                     write(fileDescriptor, packet, packet_length);
                     free(packet);
+                    packet_count++;
+                    NSLog(@"received %d packets", packet_count);
                 }
-                NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys: tempFileName, @"filename", nil];
-                
+                NSLog(@"received %d packets", packet_count);
                 TelemetryPacketQueue tpq;
                 tpq.filterSourceID(0x30);
                 tpq.add_file([tempFileName UTF8String]);
                 TelemetryPacket tp(NULL);
-                if( !tpq.empty() )
+                uint16_t xpixels;
+                uint16_t ypixels;
+                
+                tpq >> tp;
+                tp.readNextTo(xpixels);
+                tp.readNextTo(ypixels);
+                packet_count = 0;
+                uint8_t *image = (uint8_t *)malloc(xpixels * ypixels);
+                long i = 0;
+                while( !tpq.empty() )
                 {
                     tpq >> tp;
-                    uint8_t pixel;
                     while (tp.remainingBytes() != 0) {
+                        uint8_t pixel;
                         tp.readNextTo(pixel);
-                        NSLog(@"%d", pixel);
+                        image[i] = pixel;
+                        i++;
                     }
+                    packet_count++;
                 }
-                
+                NSLog(@"received %d packets", packet_count);
+                self.data = [NSData dataWithBytes:image length:sizeof(uint8_t) * xpixels * ypixels];
+                NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys: self.data, @"image", [NSNumber numberWithInt:xpixels], @"xsize", [NSNumber numberWithInt:ypixels], @"ysize", nil];
+
                 if (![self isCancelled]){
                     [[NSNotificationCenter defaultCenter] postNotificationName:kReceiveAndParseImageDidFinish object:nil userInfo:info];
                 }
+                free(image);
                 close(fileDescriptor);
                 tcpReceiver->close_connection();
             }

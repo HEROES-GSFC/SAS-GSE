@@ -23,14 +23,14 @@
 			<string>y</string>
 		</array>
 	</dict>
-	<key>Send image</key>
+	<key>Request PYAS RAW Image</key>
 	<dict>
 		<key>var_names</key>
 		<array/>
 		<key>description</key>
 		<string>Ask for a full frame to be sent over TCP</string>
 		<key>key</key>
-		<string>0x103</string>
+		<string>0x1210</string>
 	</dict>
 	<key>Restart all Workers</key>
 	<dict>
@@ -46,7 +46,7 @@
 		<key>var_names</key>
 		<array/>
 		<key>key</key>
-		<string>0x0100</string>
+		<string>0x1000</string>
 		<key>description</key>
 		<string>send a test command (does nothing)</string>
 	</dict>
@@ -57,7 +57,7 @@
 		<key>description</key>
 		<string>Kill all worker thread (except command listening thread)</string>
 		<key>key</key>
-		<string>0x0101</string>
+		<string>0x1010</string>
 	</dict>
 </dict>
 </plist>

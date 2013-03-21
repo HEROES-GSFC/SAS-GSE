@@ -240,10 +240,25 @@
 
 - (void)mainThread_handleImage:(NSNotification *)note
 {
-    NSLog(@"got it");
     NSDictionary *notifData = [note userInfo];
-    NSLog(@"tcp stream filename is %@", [notifData valueForKey:@"filename"]);
+    NSData *data = [notifData valueForKey:@"image"];
+    //NSLog(@"%@", data);
+    self.PYASFcameraView.bkgImage = data;
+
+    self.PYASFcameraView.imageXSize = [[notifData valueForKey:@"xsize"] intValue];
+    self.PYASFcameraView.imageYSize = [[notifData valueForKey:@"ysize"] intValue];
+    self.PYASFcameraView.imageExists = YES;
+    self.PYASFcameraView.turnOnBkgImage = YES;
+    NSLog(@"got it image size is %dx%d = %ld", self.PYASFcameraView.imageXSize, self.PYASFcameraView.imageYSize, (unsigned long)[data length]);
+
+    [self.PYASFcameraView draw];
+    NSUInteger len = [self.PYASFcameraView.bkgImage length];
+    Byte *pixels = (Byte *)malloc(len);
+    memcpy(pixels, [self.PYASFcameraView.bkgImage bytes], len);
     
+    for (int i = 0; i < 10; i++) {
+        NSLog(@"%d", pixels[i]);
+    }
 }
 
 // -------------------------------------------------------------------------------
@@ -302,10 +317,6 @@
 
 - (IBAction)RunTest:(id)sender {
     
-    NSMutableArray *image;
-    image = [[NSMutableArray alloc] init];
-    
-    [self.PYASFcameraView setBkgImage:image];
     //for (int i = 0; i < 100; i++) {
     //    [self.ConsoleTextView insertText:@"hello"];
     //}

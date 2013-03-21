@@ -153,7 +153,6 @@
 		860EF31C163605D300B46E35 = {
 			isa = PBXGroup;
 			children = (
-				86672DF816F7D2BD00F36110 /* GLUT.framework */,
 				8660983A16B398DD00BE26D1 /* icon.iconset */,
 				860EF331163605D300B46E35 /* HEROES SAS GSE */,
 				860EF34E163605D400B46E35 /* HEROES SAS GSETests */,
@@ -174,6 +173,7 @@
 		860EF32A163605D300B46E35 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				86672DF816F7D2BD00F36110 /* GLUT.framework */,
 				86A62FE9164D80BF0049527C /* OpenGL.framework */,
 				860EF32B163605D300B46E35 /* Cocoa.framework */,
 				860EF349163605D400B46E35 /* SenTestingKit.framework */,
