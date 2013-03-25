@@ -283,9 +283,9 @@
     
         [self.bkgImage getBytes:pixels length:(self.imageXSize*self.imageYSize)];
         //NSLog(@"%@", self.bkgImage);
-        //for (int i = 0; i < 5; i++) {
-        //    NSLog(@"%d", pixels[i]);
-        //}
+        for (int i = 0; i < 5; i++) {
+            NSLog(@"%d", pixels[i]);
+        }
         //for (long j = 0; j < (self.imageXSize * imageYSize); j++) {
         //    pixels[j] = j;
         //}
@@ -302,10 +302,9 @@
         glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
         
         //Generate the texture
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, self.imageXSize, self.imageYSize, 0, GL_RED, GL_BYTE, pixels);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, self.imageXSize, self.imageYSize, 0, GL_RED, GL_UNSIGNED_BYTE, pixels);
         
         glBindTexture(GL_TEXTURE_2D, texture);
-        glColor4f(1.0, 1.0, 1.0, 1.0);
         // Draw a textured quad
         glBegin(GL_QUADS);
         glTexCoord2f(0, 0); glVertex3f(0, 0, 0);
@@ -313,11 +312,9 @@
         glTexCoord2f(1, 1); glVertex3f(self.numberXPixels.intValue, self.numberYPixels.intValue, 0);
         glTexCoord2f(1, 0); glVertex3f(self.numberXPixels.intValue  , 0, 0);
         glEnd();
-        
-        
+                
         glDisable(GL_TEXTURE_2D);
         glPopMatrix();
-        
         
         glMatrixMode(GL_PROJECTION);
         glPopMatrix();

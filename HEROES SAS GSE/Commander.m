@@ -11,10 +11,12 @@
 #include "Command.hpp"
 #include "UDPSender.hpp"
 
+#define SAS_CMD_PORT 2001
+
+
 @interface Commander(){
 @private
     uint16_t frame_sequence_number;
-    NSString *serverIP;
     unsigned int port;
     CommandSender *comSender;
 }
@@ -29,8 +31,7 @@
     self = [super init]; // call our super’s designated initializer
     if (self) {
         // initialize our subclass here
-        serverIP = @"192.168.1.114";
-        port = 5001;
+        port = SAS_CMD_PORT;
         frame_sequence_number = 0;
         
     }

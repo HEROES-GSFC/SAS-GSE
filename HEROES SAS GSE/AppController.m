@@ -177,27 +177,20 @@
 }
 
 - (IBAction)saveImage_ButtonAction:(NSButton *)sender {
+        
+    NSData *imagedata = self.PYASFcameraView.bkgImage;
     
-    unsigned char buffer[100];
-    for (int j = 0; j < 100; j++) {
-        buffer[j] = j;
-    }
+    NSUInteger len = [self.PYASFcameraView.bkgImage length];
     
-    NSData *imagedata = [NSData dataWithBytes:buffer length:sizeof(buffer)];
+    long xpixels = self.PYASFcameraView.imageXSize;
+    long ypixels = self.PYASFcameraView.imageYSize;
     
-    NSBitmapImageRep *greyRep = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:nil pixelsWide:10 pixelsHigh:10 bitsPerSample:8 samplesPerPixel:1 hasAlpha:NO isPlanar:NO colorSpaceName:NSCalibratedWhiteColorSpace bitmapFormat:0 bytesPerRow:0 bitsPerPixel:8];
+    NSBitmapImageRep *greyRep = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:nil pixelsWide:xpixels pixelsHigh:ypixels bitsPerSample:8 samplesPerPixel:1 hasAlpha:NO isPlanar:NO colorSpaceName:NSCalibratedWhiteColorSpace bitmapFormat:0 bytesPerRow:0 bitsPerPixel:8];
     
-    NSInteger rowBytes = [greyRep bytesPerRow];
     unsigned char *pix = [greyRep bitmapData];
     
-    //memcpy(pix, buffer, 100);
-    
-    for (int i = 0; i < 10; i++) {
-        for (int j = 0; j < 10; j++) {
-            pix[i * rowBytes + j] = (unsigned char)(255 * buffer[i * 10 + j]);
-        }
-    }
-    
+    memcpy(pix, [self.PYASFcameraView.bkgImage bytes], len);
+
     NSImage *greyscale = [[NSImage alloc] initWithSize:NSMakeSize(10, 10)];
     [greyscale addRepresentation:greyRep];
     
@@ -252,13 +245,6 @@
     NSLog(@"got it image size is %dx%d = %ld", self.PYASFcameraView.imageXSize, self.PYASFcameraView.imageYSize, (unsigned long)[data length]);
 
     [self.PYASFcameraView draw];
-    NSUInteger len = [self.PYASFcameraView.bkgImage length];
-    Byte *pixels = (Byte *)malloc(len);
-    memcpy(pixels, [self.PYASFcameraView.bkgImage bytes], len);
-    
-    for (int i = 0; i < 10; i++) {
-        NSLog(@"%d", pixels[i]);
-    }
 }
 
 // -------------------------------------------------------------------------------
