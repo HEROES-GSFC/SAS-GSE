@@ -207,12 +207,12 @@
 				8666A000169254AE00B0DACE /* DataPacket.h */,
 				8666A001169254AE00B0DACE /* DataPacket.m */,
 				86669FFD1692344200B0DACE /* TemperatureFormatter.h */,
-				86159E7516DED0D400E79C27 /* Windows */,
 				86669FFE1692344200B0DACE /* TemperatureFormatter.m */,
 				86A62FE5164D7EE10049527C /* CameraView.h */,
 				86A62FE6164D7EE10049527C /* CameraView.m */,
 				8666E3C216A3BA6600A9DD85 /* Commander.h */,
 				8666E3C316A3BA6600A9DD85 /* Commander.m */,
+				86159E7516DED0D400E79C27 /* Windows */,
 				86E1D8481695ED1B0079303F /* lib */,
 				860EF332163605D300B46E35 /* Supporting Files */,
 			);

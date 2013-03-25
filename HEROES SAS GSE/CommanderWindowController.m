@@ -13,6 +13,7 @@
 @interface CommanderWindowController ()
 @property (nonatomic,retain) NSDictionary *plistDict;
 @property (nonatomic, strong) Commander *commander;
+- (void)updateCommandKeyBasedonTargetSystem:(NSString *)target_system;
 @end
 
 @implementation CommanderWindowController
@@ -24,6 +25,7 @@
 @synthesize plistDict = _plistDict;
 @synthesize commander = _commander;
 @synthesize send_Button;
+@synthesize targetListcomboBox;
 
 - (id)init{
     return [super initWithWindowNibName:@"CommanderWindowController"];
@@ -77,13 +79,21 @@
     [self.commandListcomboBox setCompletes:YES];
     [self.Variables_Form setHidden:YES];
     [self.send_Button setEnabled:NO];
+    [self.confirm_Button setEnabled:NO];
+    [self.targetListcomboBox selectItemAtIndex:0];
 
     [self.destinationIP_textField setStringValue:@"192.168.1.4"];    
+}
+- (IBAction)ConfirmButtonPushed:(NSButton *)sender {
+    [self.send_Button setEnabled:YES];
 }
 
 - (IBAction)commandList_action:(NSComboBox *)sender {
     NSString *user_choice = [self.commandListcomboBox stringValue];
-    [self.commandKey_textField setStringValue: [[self.plistDict valueForKey:user_choice] valueForKey:@"key"]];
+    NSString *command_key = [[self.plistDict valueForKey:user_choice] valueForKey:@"key"];
+    [self.commandKey_textField setStringValue: command_key];
+    
+    [self updateCommandKeyBasedonTargetSystem:[self.targetListcomboBox stringValue]];
     
     NSArray *variable_names = [[self.plistDict valueForKey:user_choice] valueForKey:@"var_names"];
     NSInteger numberOfVariablesNeeded = [variable_names count];
@@ -105,7 +115,27 @@
     
     NSString *toolTip = (NSString *)[[self.plistDict valueForKey:user_choice] valueForKey:@"description"];
     [self.commandListcomboBox setToolTip:toolTip];
-    [self.send_Button setEnabled:YES];
+    [self.confirm_Button setEnabled:YES];
+}
+
+- (IBAction)ChoseTargetSystem:(NSComboBox *)sender {
+    NSString *target_system = [sender stringValue];
+    [self updateCommandKeyBasedonTargetSystem:target_system];
+}
+
+- (void)updateCommandKeyBasedonTargetSystem:(NSString *)target_system {
+    NSString *command_key = [self.commandKey_textField stringValue];
+    if ([target_system isEqualToString:@"SAS 1"]) {
+        self.commandKey_textField.stringValue = [command_key stringByReplacingCharactersInRange:NSMakeRange(2, 1) withString:@"1"];
+    }
+    if ([target_system isEqualToString:@"SAS 2"]) {
+        NSLog(@"%@", target_system);
+
+        self.commandKey_textField.stringValue = [command_key stringByReplacingCharactersInRange:NSMakeRange(2, 1) withString:@"2"];
+    }
+    if ([target_system isEqualToString:@"Both"]) {
+        self.commandKey_textField.stringValue = [command_key stringByReplacingCharactersInRange:NSMakeRange(2, 1) withString:@"3"];
+    }
 }
 
 - (IBAction)send_Button:(NSButton *)sender {
@@ -129,5 +159,6 @@
     
     [self.commandCount_textField setIntegerValue:command_sequence_number];
     [self.send_Button setEnabled:NO];
+    [self.confirm_Button setEnabled:NO];
 }
 @end

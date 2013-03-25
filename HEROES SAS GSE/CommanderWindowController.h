@@ -17,5 +17,7 @@
 @property (weak) IBOutlet NSTextField *commandCount_textField;
 @property (weak) IBOutlet NSTextField *destinationIP_textField;
 @property (weak) IBOutlet NSButton *send_Button;
+@property (weak) IBOutlet NSComboBox *targetListcomboBox;
+@property (weak) IBOutlet NSButton *confirm_Button;
 
 @end
