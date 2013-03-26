@@ -12,9 +12,15 @@
 
 @property (nonatomic, strong) NSMutableArray *fiducialPoints;
 @property (nonatomic, strong) NSMutableArray *chordCrossingPoints;
+@property (nonatomic, strong) NSData *bkgImage;
+@property (nonatomic) BOOL turnOnBkgImage;
+@property (nonatomic) long imageXSize;
+@property (nonatomic) long imageYSize;
+@property (nonatomic) BOOL imageExists;
 
 - (void) CameraViewWillTerminate:(NSNotification *)notification;
 - (void) draw;
 - (void) setCircleCenter: (float)x :(float)y;
+- (void) setScreenCenter: (float)x :(float)y;
 
 @end

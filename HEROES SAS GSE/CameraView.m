@@ -8,6 +8,7 @@
 
 #import "CameraView.h"
 #include <OpenGL/gl.h>
+#include <OpenGL/glext.h>
 #import <GLUT/GLUT.h>
 #include <math.h>
 #include <stdlib.h>
@@ -15,6 +16,8 @@
 @interface CameraView(){
     float circleX;
     float circleY;
+    float screenX;
+    float screenY;
 }
 @property (nonatomic, strong) NSNumber *numberXPixels;
 @property (nonatomic, strong) NSNumber *numberYPixels;
@@ -27,6 +30,7 @@
 - (void) drawAFewCrosses: (NSMutableArray *)centers;
 - (void) doSomething;
 - (void) drawRect: (NSRect) dirtyRect;
+- (void) drawImage;
 - (void) drawALine: (NSPoint) center :(float) length :(float) angleInDegrees;
 - (void) cleanUp;
 - (NSPoint) calculateCentroid:(NSMutableArray *)points;
@@ -38,7 +42,11 @@
 @synthesize chordCrossingPoints = _chordCrossingPoints;
 @synthesize numberYPixels = _numberYPixels;
 @synthesize numberXPixels = _numberXPixels;
-
+@synthesize bkgImage = _bkgImage;
+@synthesize turnOnBkgImage = _turnOnBkgImage;
+@synthesize imageExists = _imageExists;
+@synthesize imageXSize;
+@synthesize imageYSize;
 
 -(id) initWithFrame:(NSRect)frameRect
 {
@@ -47,8 +55,105 @@
         //initialization
         circleX = 0.0;
         circleY = 0.0;
+        screenX = 500.0;
+        screenY = 500.0;
+        self.turnOnBkgImage = NO;
+        self.imageExists = NO;
     }
     return self;
+}
+
+-(void)setTurnOnBkgImage:(BOOL)turnOnBkgImage{
+    _turnOnBkgImage = turnOnBkgImage;
+    [self needsDisplay];
+}
+
+-(NSData *)bkgImage{
+    if (_bkgImage == nil) {
+        _bkgImage = [[NSData alloc] init];
+    }
+    return _bkgImage;
+}
+
+- (void) setScreenCenter: (float)x :(float)y{
+    if ((x < [self.numberXPixels floatValue]) && (x > 0)) {
+        screenX = x;
+    }
+    if ((y > [self.numberYPixels floatValue]) && (y > 0)) {
+        screenY = y;
+    }
+}
+
+- (void) drawImage{
+    GLuint texture;
+    //unsigned char data[] = { 255,0,0, 0,255,0, 0,0,255, 255,255,255 };
+
+    const int size = [self.numberXPixels intValue] * [self.numberYPixels intValue];
+    float *pixels = (float *)malloc(size * sizeof(float));
+    for(long i = 0; i < size; i++) {
+        pixels[i] = i;
+    }
+    
+    glGenTextures( 1, &texture );
+    glBindTexture( GL_TEXTURE_2D, texture );
+    glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
+    glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
+    //even better quality, but this will do for now.
+    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    
+    //to the edge of our shape.
+    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
+    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+    
+    //Generate the texture
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0,GL_RGB, GL_UNSIGNED_BYTE, pixels);
+    
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+    glMatrixMode(GL_MODELVIEW);
+    
+    glPushMatrix();
+    const int iw = [self.numberXPixels intValue];
+    const int ih = [self.numberXPixels intValue];
+    glTranslatef( -iw/2.0, -ih/2.0, 0 );
+    glBegin(GL_QUADS);
+    glTexCoord2i(0,0); glVertex2i(0, 0);
+    glTexCoord2i(1,0); glVertex2i(iw, 0);
+    glTexCoord2i(1,1); glVertex2i(iw, ih);
+    glTexCoord2i(0,1); glVertex2i(0, ih);
+    glEnd();
+    glPopMatrix();
+    
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    //for (int i = 0; i < [self.numberXPixels floatValue]; i++) {
+    //    for (int j = 0; j < [self.numberYPixels floatValue]; j++) {
+    //        if (self.turnOnBkgImage == true) {
+    //            grey = (float) i*j / ([self.numberYPixels floatValue] * [self.numberXPixels floatValue]);
+    //        } else { grey = 0.0; }
+    //        glColor3f(grey, grey, grey);
+    //        glVertex2f(i, j); glVertex2f(i+1, j);
+    //        glVertex2f(i+1, j+1); glVertex2f(i, j+1);
+    //        glEnd();
+    //    }
+   // }
+}
+
+-(void)setImageExists:(BOOL)imageExists{
+    _imageExists = imageExists;
+    //NSLog(@"%d, %d, %d %d", _imageExists, self.imageXSize, self.imageYSize, [self.bkgImage length]);
+    //NSUInteger len = [self.bkgImage length];
+    //Byte *pixels = (Byte *)malloc(len);
+    //memcpy(pixels, [self.bkgImage bytes], len);
+    
+    //for (int i = 0; i < 5; i++) {
+    //    NSLog(@"%d", pixels[i]);
+    //}
+}
+
+-(BOOL)imageExists{
+    return _imageExists;
 }
 
 - (NSMutableArray *)fiducialPoints
@@ -86,10 +191,17 @@
 - (void) doSomething
 {
     NSPoint sunCenter = NSMakePoint(circleX, circleY);
+    NSPoint screenCenter = NSMakePoint(screenX, screenY);
+    
+    //[self drawImage];
     
     glColor3f(1.0f, 0.0f, 0.0f);
-    [self drawACross:sunCenter:0.02];
+    [self drawACross: sunCenter:0.02];
     [self drawACircle: sunCenter: 92];
+    
+    glColor3f(0.7f, 0.7f, 0.7f);
+    [self drawACross:screenCenter :1.00];
+    
     glColor3f(0.0f, 1.0f, 0.0f);
     [self drawALine:sunCenter :213.0 :20.0];
     
@@ -118,7 +230,7 @@
 
 - (void)draw
 {
-    [self doSomething];
+    [self doSomething];    
     [self setNeedsDisplay:YES];
 }
 
@@ -127,8 +239,90 @@
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    [self doSomething];
+    //[self doSomething];
+    //
     
+    //glutSwapBuffers();
+      
+    //const long size = [self.numberXPixels intValue] * [self.numberYPixels intValue];
+    //const long size = 100;
+    //uint8_t *pixels = (uint8_t *)malloc(size * sizeof(uint8_t));
+    //uint8_t pixels[size];
+    //for (long j = 0; j < size; j++) {
+    //    pixels[j] = j;
+    //}
+    //for (long xi = 0; xi < 500; xi++)
+    //{
+    //    for (long yi = 0; yi < 500; yi++) {
+    //        pixels[xi + yi * 500] = arc4random() % 255;;
+    //    }
+    //}
+
+    //unsigned char data[] = { 255,255,255, 255,255,0, 0,0,255, 255,0,255 };
+    if (self.imageExists == YES) {
+        GLuint texture;
+        
+        glMatrixMode(GL_PROJECTION);
+        glPushMatrix();
+        glLoadIdentity();
+        //glOrtho(0.0, glutGet(GLUT_WINDOW_WIDTH), 0.0, glutGet(GLUT_WINDOW_HEIGHT), -1.0, 1.0);
+        gluOrtho2D(0, self.numberXPixels.intValue, self.numberYPixels.intValue, 0);
+        glMatrixMode(GL_MODELVIEW);
+        glPushMatrix();
+        
+        glLoadIdentity();
+        glDisable(GL_LIGHTING);
+        
+        glColor3f(1,1,1);
+        glEnable(GL_TEXTURE_2D);
+
+        //uint8_t *pixels = (uint8_t *)malloc(self.imageXSize * imageYSize);
+        NSUInteger len = [self.bkgImage length];
+        Byte *pixels = (Byte *)malloc(len);
+        memcpy(pixels, [self.bkgImage bytes], len);
+    
+        [self.bkgImage getBytes:pixels length:(self.imageXSize*self.imageYSize)];
+        //NSLog(@"%@", self.bkgImage);
+        for (int i = 0; i < 5; i++) {
+            NSLog(@"%d", pixels[i]);
+        }
+        //for (long j = 0; j < (self.imageXSize * imageYSize); j++) {
+        //    pixels[j] = j;
+        //}
+        glGenTextures( 1, &texture );
+        glBindTexture( GL_TEXTURE_2D, texture );
+        glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
+        glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
+        //even better quality, but this will do for now.
+        glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+        glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+        
+        //to the edge of our shape.
+        glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
+        glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+        
+        //Generate the texture
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, self.imageXSize, self.imageYSize, 0, GL_RED, GL_UNSIGNED_BYTE, pixels);
+        
+        glBindTexture(GL_TEXTURE_2D, texture);
+        // Draw a textured quad
+        glBegin(GL_QUADS);
+        glTexCoord2f(0, 0); glVertex3f(0, 0, 0);
+        glTexCoord2f(0, 1); glVertex3f(0, self.numberYPixels.intValue, 0);
+        glTexCoord2f(1, 1); glVertex3f(self.numberXPixels.intValue, self.numberYPixels.intValue, 0);
+        glTexCoord2f(1, 0); glVertex3f(self.numberXPixels.intValue  , 0, 0);
+        glEnd();
+                
+        glDisable(GL_TEXTURE_2D);
+        glPopMatrix();
+        
+        glMatrixMode(GL_PROJECTION);
+        glPopMatrix();
+        
+        glMatrixMode(GL_MODELVIEW);
+    }
+        
+    [self doSomething];
     glFlush();
     
     //[[self openGLContext] flushBuffer];
@@ -143,7 +337,6 @@
     //    [[self openGLContext] setValues:&swapInt forParameter:NSOpenGLCPSwapInterval]; // set to vbl sync
     
 	// init GL stuff here
-	glEnable(GL_DEPTH_TEST);
     glLoadIdentity();
     glPushMatrix();
     
@@ -153,7 +346,6 @@
     glDisable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 }

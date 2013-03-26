@@ -11,17 +11,17 @@
 #include "Command.hpp"
 #include "UDPSender.hpp"
 
+#define SAS_CMD_PORT 2001
+
+
 @interface Commander(){
 @private
     uint16_t frame_sequence_number;
-    NSString *serverIP;
     unsigned int port;
-    NSDictionary *listOfCommands;
     CommandSender *comSender;
 }
 
 - (void) printPacket;
-- (void) send;
 
 @end
 
@@ -31,41 +31,35 @@
     self = [super init]; // call our super’s designated initializer
     if (self) {
         // initialize our subclass here
-        serverIP = @"192.168.1.114";
-        port = 5001;
+        port = SAS_CMD_PORT;
         frame_sequence_number = 0;
         
-        NSArray *commandKeys = [NSArray arrayWithObjects:
-                                [NSNumber numberWithInteger:0x0100],
-                                [NSNumber numberWithInteger:0x0101],
-                                [NSNumber numberWithInteger:0x0102], nil];
-                                
-        NSArray *commandDescriptionNSArray = [NSArray
-                                              arrayWithObjects:
-                                              @"Reset Camera",
-                                              @"Set new coordinate",
-                                              @"Set blah", nil];
-        
-        listOfCommands = [NSDictionary
-                          dictionaryWithObject:commandDescriptionNSArray
-                          forKey:commandKeys];
     }
     return self;
 }
 
--(uint16_t)send:(uint16_t)command_key :(uint16_t)command_value :(NSString *)ip_address{
+-(uint16_t)send :(uint16_t)command_key :(NSMutableArray *)command_variables :(NSString *)ip_address{
+
+    comSender = new CommandSender( [ip_address UTF8String], port );
+    CommandPacket cp(0x30, frame_sequence_number);
+    Command cm(0x10ff, command_key);
+    if (!command_variables) {
+        try{
+        cp << cm; //should be this but does not seem to work
+        } catch (std::exception& e) {
+            std::cerr << e.what() << std::endl;
+        }
+        } else {
+        for (NSNumber *variable in command_variables) {
+            cp << (uint16_t)[variable intValue];
+        }
+    }
+    
+    comSender->send( &cp );
+    comSender->close_connection();
 
     // update the frame number every time we send out a packet
     [self updateSequenceNumber];
-    
-    Command cm1(0x10ff, command_key);
-    
-    CommandPacket cp(0x30, frame_sequence_number);
-    cp << cm1;
-    
-    comSender = new CommandSender( [ip_address UTF8String], port );
-    comSender->send( &cp );
-    comSender->close_connection();
     
     return frame_sequence_number;
 }

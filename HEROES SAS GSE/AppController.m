@@ -8,15 +8,17 @@
 
 #import "AppController.h"
 #import "ParseDataOperation.h"
+#import "ParseTCPOperation.h"
 #import "DataPacket.h"
 #import "lib_crc.h"
 #import "CameraView.h"
+#import "CommanderWindowController.h"
+#import "ConsoleWindowController.h"
 
 @interface AppController ()
 @property (nonatomic, strong) NSOperationQueue *queue;
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, strong) NSDictionary *listOfCommands;
-@property (nonatomic, strong) Commander *commander;
 @property (nonatomic, strong) DataPacket *packet;
 @end
 
@@ -28,22 +30,18 @@
 @synthesize PYASRCameraTemperatureLabel;
 @synthesize FrameNumberLabel;
 @synthesize FrameTimeLabel;
-@synthesize CommandKeyTextField;
-@synthesize CommandValueTextField;
 @synthesize StartStopSegmentedControl;
-@synthesize ConsoleScrollView;
-@synthesize ConsoleTextView;
-@synthesize CommandIPTextField;
 @synthesize SAS1CmdCountTextField;
 @synthesize SAS1CmdKeyTextField;
-@synthesize CommandSequenceNumber;
+@synthesize drawBkgImage_checkbox;
 @synthesize PYASFcameraView = _PYASFcameraView;
 @synthesize PYASRcameraView = _PYASRcameraView;
+@synthesize Commander_window = _Commander_window;
+@synthesize Console_window = _Console_window;
 
 @synthesize timer = _timer;
 @synthesize listOfCommands = _listOfCommands;
 @synthesize queue = _queue;
-@synthesize commander = _commander;
 @synthesize packet = _packet;
 
 - (id)init
@@ -51,24 +49,53 @@
 	self = [super init];
 	if (self)
     {
-                
-        NSArray *commandKeys = [NSArray arrayWithObjects:
-                                [NSNumber numberWithInteger:0x0100],
-                                [NSNumber numberWithInteger:0x0101],
-                                [NSNumber numberWithInteger:0x0102], nil];
         
-        NSArray *commandDescriptionNSArray = [NSArray
-                                              arrayWithObjects:
-                                              @"Reset Camera",
-                                              @"Set new coordinate",
-                                              @"Set blah", nil];
+        // read command list dictionary from the CommandList.plist resource file
+        NSString *errorDesc = nil;
+        NSPropertyListFormat format;
         
-        self.listOfCommands = [NSDictionary
-                          dictionaryWithObject:commandDescriptionNSArray
-                          forKey:commandKeys];
+        NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"CommandList" ofType:@"plist"];
+        
+        NSData *plistXML = [[NSFileManager defaultManager] contentsAtPath:plistPath];
+        
+        NSDictionary *plistDict = (NSDictionary *)[NSPropertyListSerialization
+                                              propertyListFromData:plistXML
+                                              mutabilityOption:NSPropertyListMutableContainersAndLeaves
+                                              format:&format
+                                              errorDescription:&errorDesc];
+        
+        if (!plistDict) {
+            NSLog(@"Error reading plist: %@, format: %d", errorDesc, format);
+        }
+        self.listOfCommands = plistDict;
         
 	}
 	return self;
+}
+
+- (CommanderWindowController *)Commander_window
+{
+    if (_Commander_window == nil)
+    {
+        _Commander_window = [[CommanderWindowController alloc] init];
+    }
+    return _Commander_window;
+}
+
+- (ConsoleWindowController *)Console_window
+{
+    if (_Console_window == nil)
+    {
+        _Console_window = [[ConsoleWindowController alloc] init];
+    }
+    return _Console_window;
+}
+
+- (IBAction)bkgImageIsClicked:(NSButton *)sender {
+    if ([sender state] == NSOnState) {
+        self.PYASFcameraView.turnOnBkgImage = true;}
+    if ([sender state] == NSOffState){
+        self.PYASFcameraView.turnOnBkgImage = false;}
 }
 
 - (NSOperationQueue *)queue
@@ -85,14 +112,6 @@
         _listOfCommands = [[NSDictionary alloc] init];
     }
     return _listOfCommands;
-}
-
-- (Commander *)commander
-{
-    if (_commander == nil) {
-        _commander = [[Commander alloc] init];
-    }
-    return _commander;
 }
 
 - (CameraView *)PYASRcameraView
@@ -126,8 +145,10 @@
         
         // start the GetPathsOperation with the root path to start the search
         ParseDataOperation *parseOp = [[ParseDataOperation alloc] init];
+        ParseTCPOperation *parseTCP = [[ParseTCPOperation alloc] init];
         
         [self.queue addOperation:parseOp];	// this will start the "TestOperation"
+        [self.queue addOperation:parseTCP];
         
         if([[self.queue operations] containsObject:parseOp]){
             [[NSNotificationCenter defaultCenter] addObserver:self
@@ -138,6 +159,14 @@
             [self.RunningIndicator setHidden:NO];
             [self.RunningIndicator startAnimation:self];
         }
+        
+        if([[self.queue operations] containsObject:parseTCP]){
+            [[NSNotificationCenter defaultCenter] addObserver:self
+                                                     selector:@selector(anyThread_handleImage:)
+                                                         name:kReceiveAndParseImageDidFinish
+                                                       object:nil];
+            
+        }
     }
     if ([StartStopSegmentedControl selectedSegment] == 1) {
         [self.queue cancelAllOperations];
@@ -147,55 +176,42 @@
 
 }
 
-- (IBAction)RunTest:(id)sender {
-    // register for the notification when an image file has been loaded by the NSOperation: "LoadOperation"
-    // calculate the checksum
-    [self.PYASFCPUTemperatureLabel setFloatValue:10.0f];
-    [self.PYASFCPUTemperatureLabel setBackgroundColor:[NSColor redColor]];
-    for (int i = 0; i < 100; i++) {
-        [self.ConsoleTextView insertText:@"hello"];
-    }
+- (IBAction)saveImage_ButtonAction:(NSButton *)sender {
+        
+    NSData *imagedata = self.PYASFcameraView.bkgImage;
     
-}
-
-//- (IBAction)showPreferencesWindow:(id)sender{
-//    
-//    // lazy instantiation, only initialize if window is opened
-//    if (!preferencesWindowController) {
-//        preferencesWindowController = [[PreferencesWindowController alloc] initWithWindowNibName:@"PreferencesWindow"];
-//    }
-//    [preferencesWindowController showWindow:self];
-//}
-
-//- (IBAction)showCommandingWindow:(id)sender{
-//    
-//    // lazy instantiation, only initialize if window is opened
-//    if (!commandingWindowController) {
-//        commandingWindowController = [[CommandingWindowController alloc] initWithWindowNibName:@"CommandingWindow"];
-//    }
-//    [commandingWindowController showWindow:self];
-//}
-
-- (IBAction)sendCommandButtonAction:(id)sender{
-    uint16_t command_sequence_number = 0;
+    NSUInteger len = [self.PYASFcameraView.bkgImage length];
     
-    NSScanner *scanner = [[NSScanner alloc] initWithString:[CommandKeyTextField stringValue]];
-    unsigned int command_key;
-    if (![scanner scanHexInt:&command_key]) {
-        NSLog(@"Invalid hex string");
-    }
+    long xpixels = self.PYASFcameraView.imageXSize;
+    long ypixels = self.PYASFcameraView.imageYSize;
+    
+    NSBitmapImageRep *greyRep = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:nil pixelsWide:xpixels pixelsHigh:ypixels bitsPerSample:8 samplesPerPixel:1 hasAlpha:NO isPlanar:NO colorSpaceName:NSCalibratedWhiteColorSpace bitmapFormat:0 bytesPerRow:0 bitsPerPixel:8];
+    
+    unsigned char *pix = [greyRep bitmapData];
+    
+    memcpy(pix, [self.PYASFcameraView.bkgImage bytes], len);
 
-    NSScanner *scanner2 = [[NSScanner alloc] initWithString:[CommandKeyTextField stringValue]];
-    unsigned int command_var;
-    if (![scanner2 scanHexInt:&command_var]) {
-        NSLog(@"Invalid hex string");
-    }
+    NSImage *greyscale = [[NSImage alloc] initWithSize:NSMakeSize(10, 10)];
+    [greyscale addRepresentation:greyRep];
+    
+    NSData *temp = [greyscale TIFFRepresentation];
+    NSBitmapImageRep *imageRep = [NSBitmapImageRep imageRepWithData:temp];
+    NSDictionary *imageProps = [NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:1.0] forKey:NSImageCompressionFactor];
+    imagedata = [imageRep representationUsingType:NSPNGFileType properties:imageProps];
+    
+    NSSavePanel* panel = [NSSavePanel savePanel];
+    // This method displays the panel and returns immediately.
+    // The completion handler is called when the user selects an
+    // item or cancels the panel.
+    [panel setNameFieldStringValue:@"boo.png"];
+    [panel beginWithCompletionHandler:^(NSInteger result){
+        if (result == NSFileHandlingPanelOKButton) {
+            NSURL *theFile = [panel URL];
+            [imagedata writeToFile:[theFile path] atomically:YES];
+        }
+    }];
 
-    command_sequence_number = [self.commander send:command_key :command_var: [CommandIPTextField stringValue]];
-
-    [CommandSequenceNumber setIntegerValue:command_sequence_number];
 }
-
 
 // -------------------------------------------------------------------------------
 //	anyThread_handleData:note
@@ -208,6 +224,27 @@
 - (void)anyThread_handleData:(NSNotification *)note
 {
 	[self performSelectorOnMainThread:@selector(mainThread_handleData:) withObject:note waitUntilDone:NO];
+}
+
+- (void)anyThread_handleImage:(NSNotification *)note
+{
+    [self performSelectorOnMainThread:@selector(mainThread_handleImage:) withObject:note waitUntilDone:NO];
+}
+
+- (void)mainThread_handleImage:(NSNotification *)note
+{
+    NSDictionary *notifData = [note userInfo];
+    NSData *data = [notifData valueForKey:@"image"];
+    //NSLog(@"%@", data);
+    self.PYASFcameraView.bkgImage = data;
+
+    self.PYASFcameraView.imageXSize = [[notifData valueForKey:@"xsize"] intValue];
+    self.PYASFcameraView.imageYSize = [[notifData valueForKey:@"ysize"] intValue];
+    self.PYASFcameraView.imageExists = YES;
+    self.PYASFcameraView.turnOnBkgImage = YES;
+    NSLog(@"got it image size is %dx%d = %ld", self.PYASFcameraView.imageXSize, self.PYASFcameraView.imageYSize, (unsigned long)[data length]);
+
+    [self.PYASFcameraView draw];
 }
 
 // -------------------------------------------------------------------------------
@@ -253,5 +290,27 @@
     
 }
 
+- (IBAction)OpenWindow_WindowMenuItemAction:(NSMenuItem *)sender {
+    NSString *userChoice = [sender title];
+    
+    if ([userChoice isEqual: @"Commander"]) {
+        [self.Commander_window showWindow:nil];
+    }
+    if ([userChoice isEqual: @"Console"]) {
+        [self.Console_window showWindow:nil];
+    }
+}
+
+- (IBAction)RunTest:(id)sender {
+    
+    //for (int i = 0; i < 100; i++) {
+    //    [self.ConsoleTextView insertText:@"hello"];
+    //}
+    //[self.ConsoleScrollView insertText:[NSString stringWithFormat:@"hidden? = %i", [self.CommanderHelperWindow isHidden]]];
+    //NSLog(@"hidden? = %b", [self.CommanderHelperWindow isHidden]);
+    //[self.CommanderHelperWindow setHidden:YES];
+    //[self.Console_window log:@"hello"];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"LogMessage" object:nil userInfo:[NSDictionary dictionaryWithObject:@"test string" forKey:@"message"]];
+}
 
 @end
