@@ -41,6 +41,7 @@
 @synthesize StartStopSegmentedControl;
 @synthesize SAS1CmdCountTextField;
 @synthesize SAS1CmdKeyTextField;
+@synthesize PYASFImageMaxMinTextField;
 @synthesize PYASFdrawBkgImage_checkbox;
 @synthesize PYASFcameraView = _PYASFcameraView;
 @synthesize PYASRcameraView = _PYASRcameraView;
@@ -225,13 +226,13 @@
     }
     //say to handle where's the file fo write
     [self.SAS1telemetrySaveFile truncateFileAtOffset:[self.SAS1telemetrySaveFile seekToEndOfFile]];
-    NSString *writeString = [@"HEROES SAS1 Telemetry Log File " stringByAppendingString:[self createDateTimeString:nil]];
+    NSString *writeString = [NSString stringWithFormat:@"HEROES SAS1 Telemetry Log File %@\n", [self createDateTimeString:nil]];
     //position handle cursor to the end of file
     [self.SAS1telemetrySaveFile writeData:[writeString dataUsingEncoding:NSUTF8StringEncoding]];
 }
 
 - (IBAction)saveImage_ButtonAction:(NSButton *)sender {
-        
+    
     NSData *imagedata = self.PYASFcameraView.bkgImage;
     
     NSUInteger len = [self.PYASFcameraView.bkgImage length];
@@ -239,13 +240,13 @@
     long xpixels = self.PYASFcameraView.imageXSize;
     long ypixels = self.PYASFcameraView.imageYSize;
     
-    NSBitmapImageRep *greyRep = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:nil pixelsWide:xpixels pixelsHigh:ypixels bitsPerSample:8 samplesPerPixel:1 hasAlpha:NO isPlanar:NO colorSpaceName:NSCalibratedWhiteColorSpace bitmapFormat:0 bytesPerRow:0 bitsPerPixel:8];
+    NSBitmapImageRep *greyRep = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:nil pixelsWide:xpixels pixelsHigh:ypixels bitsPerSample:8 samplesPerPixel:1 hasAlpha:NO isPlanar:NO colorSpaceName:NSCalibratedWhiteColorSpace bitmapFormat:0 bytesPerRow:8*xpixels bitsPerPixel:8];
     
     unsigned char *pix = [greyRep bitmapData];
     
     memcpy(pix, [self.PYASFcameraView.bkgImage bytes], len);
 
-    NSImage *greyscale = [[NSImage alloc] initWithSize:NSMakeSize(10, 10)];
+    NSImage *greyscale = [[NSImage alloc] initWithSize:NSMakeSize(xpixels, ypixels)];
     [greyscale addRepresentation:greyRep];
     
     NSData *temp = [greyscale TIFFRepresentation];
@@ -344,13 +345,13 @@
             [self.PYASFCameraTemperatureLabel setBackgroundColor:[NSColor redColor]];
         }
 
-        [self.PYASFCTLCmdEchoTextField setStringValue:[NSString stringWithFormat:@"%f, %f", [self.packet.CTLCommand pointValue].x, [self.packet.CTLCommand pointValue].y]];
+        [self.PYASFCTLCmdEchoTextField setStringValue:[NSString stringWithFormat:@"%5.3f, %5.3f", [self.packet.CTLCommand pointValue].x, [self.packet.CTLCommand pointValue].y]];
         [self.PYASFcameraView setCircleCenter:[self.packet.sunCenter pointValue].x :[self.packet.sunCenter pointValue].y];
         self.PYASFcameraView.chordCrossingPoints = self.packet.chordPoints;
         self.PYASFcameraView.fiducialPoints = self.packet.fiducialPoints;
+        self.PYASFImageMaxMinTextField.stringValue = [NSString stringWithFormat:@"%d, %d", self.packet.ImageRange.location, self.packet.ImageRange.length];
         [self.PYASFcameraView draw];
-        
-        NSString *writeString = [NSString stringWithFormat:@"%@, %@, %@, %@, %@",
+        NSString *writeString = [NSString stringWithFormat:@"%@, %@, %@, %@, %@\n",
                              self.SAS1FrameTimeLabel.stringValue,
                              self.SAS1FrameNumberLabel.stringValue,
                              self.PYASRCameraTemperatureLabel.stringValue,

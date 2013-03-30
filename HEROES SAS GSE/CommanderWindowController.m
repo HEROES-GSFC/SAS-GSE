@@ -152,6 +152,7 @@
         for (NSInteger i = 0; i < numberOfVariables; i++) {
             [variables addObject:[NSNumber numberWithInt:[[self.Variables_Form cellAtIndex:i] intValue]]];
         }
+        command_sequence_number = [self.commander send:(uint16_t)command_key :variables :[self.destinationIP_textField stringValue]];
     }
 
     NSString *msg = [NSString stringWithFormat:@"sending (0x%04x, %@) command", (uint16_t)command_key, [self.commandListcomboBox stringValue]];

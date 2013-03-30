@@ -32,6 +32,7 @@
 @synthesize cpuTemperature = _cpuTemperature;
 @synthesize isSAS1 = _isSAS1;
 @synthesize isSAS2 = _isSAS2;
+@synthesize ImageRange = _ImageRange;
 
 -(id)init{
     self = [super init]; // call our super’s designated initializer

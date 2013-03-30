@@ -37,6 +37,7 @@
 @property (weak) IBOutlet NSButton *PYASFdrawBkgImage_checkbox;
 @property (weak) IBOutlet NSTextField *PYASFCTLCmdEchoTextField;
 @property (weak) IBOutlet NSTextField *PYASRCTLCmdEchoTextField;
+@property (weak) IBOutlet NSTextField *PYASFImageMaxMinTextField;
 
 @property (nonatomic, strong) NSFileHandle *SAS1telemetrySaveFile;
 @property (nonatomic, strong) NSFileHandle *SAS2telemetrySaveFile;

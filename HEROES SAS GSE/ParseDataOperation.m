@@ -22,7 +22,7 @@
 #import "types.hpp"
 
 #define PAYLOAD_SIZE 20
-#define DEFAULT_PORT 5003 /* The default port to send on */
+#define DEFAULT_PORT 2002 /* The default port to send on */
 
 #define SAS_TARGET_ID 0x30
 #define SAS_TM_TYPE 0x70
@@ -52,7 +52,7 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
 - (id)init{
     self = [super init]; // call our super’s designated initializer
     if (self) {
-        tmReceiver = new TelemetryReceiver( 5002 );
+        tmReceiver = new TelemetryReceiver( DEFAULT_PORT );
     }
     return self;
 }
@@ -99,12 +99,12 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                     if (tm_packet->getSourceID() == SAS_TARGET_ID){
                         if (tm_packet->getTypeID() == SAS_TM_TYPE) {
                             
-                            if (tm_packet->getSync() == SAS1_SYNC_WORD) {
+                            //if (tm_packet->getSASSync() == SAS1_SYNC_WORD) {
                                 self.dataPacket.isSAS1=TRUE;
-                            }
-                            if (tm_packet->getSync() == SAS2_SYNC_WORD) {
-                                self.dataPacket.isSAS2=TRUE;
-                            }
+                            //}
+                            //if (tm_packet->getSASSync() == SAS2_SYNC_WORD) {
+                            //    self.dataPacket.isSAS2=TRUE;
+                            //}
                             
                             [self.dataPacket setFrameSeconds: tm_packet->getSeconds()];
                             
@@ -158,6 +158,8 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
 
                             uint8_t image_max, image_min;
                             *(tm_packet) >> image_max >> image_min;
+                            
+                            self.dataPacket.ImageRange = NSMakeRange(image_min, image_max);
 
                             [self.dataPacket setFrameNumber: frame_number];
                             [self.dataPacket setCommandCount: command_count];

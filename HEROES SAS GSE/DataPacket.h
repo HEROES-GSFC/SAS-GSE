@@ -17,6 +17,7 @@
 @property (nonatomic) uint16_t commandKey;
 @property (nonatomic) NSValue *sunCenter;
 @property (nonatomic) NSValue *CTLCommand;
+@property (nonatomic) NSRange ImageRange;
 @property (nonatomic) int cameraTemperature;
 @property (nonatomic) int cpuTemperature;
 @property (nonatomic) BOOL isSAS1;

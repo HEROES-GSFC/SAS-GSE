@@ -283,9 +283,9 @@
     
         [self.bkgImage getBytes:pixels length:(self.imageXSize*self.imageYSize)];
         //NSLog(@"%@", self.bkgImage);
-        for (int i = 0; i < 5; i++) {
-            NSLog(@"%d", pixels[i]);
-        }
+        //for (int i = 0; i < 5; i++) {
+        //    NSLog(@"%d", pixels[i]);
+        //}
         //for (long j = 0; j < (self.imageXSize * imageYSize); j++) {
         //    pixels[j] = j;
         //}

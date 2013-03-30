@@ -2,14 +2,16 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>New Command</key>
+	<key>Set exposure time</key>
 	<dict>
 		<key>var_names</key>
-		<array/>
+		<array>
+			<string>t</string>
+		</array>
 		<key>description</key>
-		<string>new command</string>
+		<string>Set exposure time, t in microseconds</string>
 		<key>key</key>
-		<string>0x0105</string>
+		<string>0x0151</string>
 	</dict>
 	<key>Set new pointing</key>
 	<dict>
