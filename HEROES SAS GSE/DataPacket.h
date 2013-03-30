@@ -16,8 +16,11 @@
 @property (nonatomic) uint16_t commandCount;
 @property (nonatomic) uint16_t commandKey;
 @property (nonatomic) NSValue *sunCenter;
+@property (nonatomic) NSValue *CTLCommand;
 @property (nonatomic) int cameraTemperature;
 @property (nonatomic) int cpuTemperature;
+@property (nonatomic) BOOL isSAS1;
+@property (nonatomic) BOOL isSAS2;
 
 -(NSString *) getframeTimeString;
 -(void) addChordPoint: (NSPoint) point :(int) index;

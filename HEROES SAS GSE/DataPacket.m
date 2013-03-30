@@ -27,8 +27,11 @@
 @synthesize chordPoints = _chordPoints;
 @synthesize fiducialPoints = _fiducialPoints;
 @synthesize sunCenter = _sunCenter;
+@synthesize CTLCommand = _CTLCommand;
 @synthesize cameraTemperature = _cameraTemperature;
 @synthesize cpuTemperature = _cpuTemperature;
+@synthesize isSAS1 = _isSAS1;
+@synthesize isSAS2 = _isSAS2;
 
 -(id)init{
     self = [super init]; // call our super’s designated initializer
@@ -69,6 +72,14 @@
     return _sunCenter;
 }
 
+- (NSValue *)CTLCommand
+{
+    if (_CTLCommand == nil) {
+        _CTLCommand = [[NSValue alloc] init];
+    }
+    return _CTLCommand;
+}
+
 - (NSString *) getframeTimeString{
     NSDate *date = [NSDate dateWithTimeIntervalSince1970:self.frameSeconds];
     NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
@@ -84,6 +95,16 @@
 
 -(void) addFiducialPoint:(NSPoint)point :(int) index{
     [self.fiducialPoints replaceObjectAtIndex:index withObject:[NSValue valueWithPoint:point]];
+}
+
+-(void)setIsSAS1:(BOOL)isSAS1{
+    _isSAS1 = isSAS1;
+    _isSAS2 = !isSAS1;
+}
+
+-(void)setIsSAS2:(BOOL)isSAS2{
+    _isSAS2 = isSAS2;
+    _isSAS1 = !isSAS2;
 }
 
 @end
