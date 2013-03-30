@@ -30,7 +30,6 @@
 		86159E8316DEFA7A00E79C27 /* ConsoleWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 86159E8116DEFA7A00E79C27 /* ConsoleWindowController.m */; };
 		86159E8416DEFA7A00E79C27 /* ConsoleWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 86159E8216DEFA7A00E79C27 /* ConsoleWindowController.xib */; };
 		8660983B16B398DD00BE26D1 /* icon.iconset in Resources */ = {isa = PBXBuildFile; fileRef = 8660983A16B398DD00BE26D1 /* icon.iconset */; };
-		86669FFF1692344200B0DACE /* TemperatureFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 86669FFE1692344200B0DACE /* TemperatureFormatter.m */; };
 		8666A002169254AE00B0DACE /* DataPacket.m in Sources */ = {isa = PBXBuildFile; fileRef = 8666A001169254AE00B0DACE /* DataPacket.m */; };
 		8666A0081694874900B0DACE /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 8666A0071694874900B0DACE /* README.md */; };
 		8666E3C416A3BA6600A9DD85 /* Commander.m in Sources */ = {isa = PBXBuildFile; fileRef = 8666E3C316A3BA6600A9DD85 /* Commander.m */; };
@@ -97,8 +96,6 @@
 		86159E8116DEFA7A00E79C27 /* ConsoleWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConsoleWindowController.m; sourceTree = "<group>"; };
 		86159E8216DEFA7A00E79C27 /* ConsoleWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ConsoleWindowController.xib; sourceTree = "<group>"; };
 		8660983A16B398DD00BE26D1 /* icon.iconset */ = {isa = PBXFileReference; lastKnownFileType = folder.iconset; path = icon.iconset; sourceTree = "<group>"; };
-		86669FFD1692344200B0DACE /* TemperatureFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TemperatureFormatter.h; sourceTree = "<group>"; };
-		86669FFE1692344200B0DACE /* TemperatureFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TemperatureFormatter.m; sourceTree = "<group>"; };
 		8666A000169254AE00B0DACE /* DataPacket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataPacket.h; sourceTree = "<group>"; };
 		8666A001169254AE00B0DACE /* DataPacket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataPacket.m; sourceTree = "<group>"; };
 		8666A0071694874900B0DACE /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
@@ -206,8 +203,6 @@
 				86159E6916DB1D7B00E79C27 /* ParseTCPOperation.m */,
 				8666A000169254AE00B0DACE /* DataPacket.h */,
 				8666A001169254AE00B0DACE /* DataPacket.m */,
-				86669FFD1692344200B0DACE /* TemperatureFormatter.h */,
-				86669FFE1692344200B0DACE /* TemperatureFormatter.m */,
 				86A62FE5164D7EE10049527C /* CameraView.h */,
 				86A62FE6164D7EE10049527C /* CameraView.m */,
 				8666E3C216A3BA6600A9DD85 /* Commander.h */,
@@ -432,7 +427,6 @@
 				86672DF616F7AB4E00F36110 /* types.cpp in Sources */,
 				86881A74163D9231003CC656 /* ParseDataOperation.m in Sources */,
 				86A62FE7164D7EE10049527C /* CameraView.m in Sources */,
-				86669FFF1692344200B0DACE /* TemperatureFormatter.m in Sources */,
 				8666A002169254AE00B0DACE /* DataPacket.m in Sources */,
 				86E1D84E1695ED1B0079303F /* lib_crc.c in Sources */,
 				8666E3C416A3BA6600A9DD85 /* Commander.m in Sources */,

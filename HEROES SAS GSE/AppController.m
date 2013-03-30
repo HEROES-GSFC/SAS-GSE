@@ -20,6 +20,7 @@
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, strong) NSDictionary *listOfCommands;
 @property (nonatomic, strong) DataPacket *packet;
+- (NSString *)createDateTimeString: (NSString *)type;
 @end
 
 @implementation AppController
@@ -43,6 +44,7 @@
 @synthesize listOfCommands = _listOfCommands;
 @synthesize queue = _queue;
 @synthesize packet = _packet;
+@synthesize telemetrySaveFile = _telemetrySaveFile;
 
 - (id)init
 {
@@ -89,6 +91,15 @@
         _Console_window = [[ConsoleWindowController alloc] init];
     }
     return _Console_window;
+}
+
+- (NSFileHandle *)telemetrySaveFile
+{
+    if (_telemetrySaveFile == nil)
+    {
+        _telemetrySaveFile = [[NSFileHandle alloc] init];
+    }
+    return _telemetrySaveFile;
 }
 
 - (IBAction)bkgImageIsClicked:(NSButton *)sender {
@@ -167,13 +178,37 @@
                                                        object:nil];
             
         }
+        
+        
+    [self OpenTelemetrySaveFile];
     }
     if ([StartStopSegmentedControl selectedSegment] == 1) {
         [self.queue cancelAllOperations];
         [self.RunningIndicator setHidden:YES];
         [self.RunningIndicator stopAnimation:self];
+        [self.telemetrySaveFile closeFile];
     }
+}
 
+- (void)OpenTelemetrySaveFile{
+    // Open a file to save the telemetry stream too
+    // The file is a csv file
+    //
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *filename = [[@"HEROES_SAS_tmlog_" stringByAppendingString:[self createDateTimeString:@"file"]] stringByAppendingString:@".txt"];
+    
+    NSString *filePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:filename];
+    // open file to save data stream
+    self.telemetrySaveFile = [NSFileHandle fileHandleForWritingAtPath: filePath ];
+    if (self.telemetrySaveFile == nil) {
+        [[NSFileManager defaultManager] createFileAtPath:filePath contents:nil attributes:nil];
+        self.telemetrySaveFile = [NSFileHandle fileHandleForWritingAtPath:filePath];
+    }
+    //say to handle where's the file fo write
+    [self.telemetrySaveFile truncateFileAtOffset:[self.telemetrySaveFile seekToEndOfFile]];
+    NSString *writeString = [@"HEROES SAS Telemetry Log File " stringByAppendingString:[self createDateTimeString:nil]];
+    //position handle cursor to the end of file
+    [self.telemetrySaveFile writeData:[writeString dataUsingEncoding:NSUTF8StringEncoding]];
 }
 
 - (IBAction)saveImage_ButtonAction:(NSButton *)sender {
@@ -210,7 +245,22 @@
             [imagedata writeToFile:[theFile path] atomically:YES];
         }
     }];
+}
 
+- (NSString *)createDateTimeString: (NSString *)type{
+    // Create a time string with the format YYYYMMdd_HHmmss
+    // This can be used in file names (for example)
+    //
+    NSDate *currDate = [NSDate date];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
+    if ([type isEqualToString:@"file"]) {
+        [dateFormatter setDateFormat:@"YYYYMMdd_HHmmss"];
+    } else {
+        [dateFormatter setDateFormat:@"YYYY/MM/dd HH:mm:ss"];
+    }
+    
+    NSString *dateString = [dateFormatter stringFromDate:currDate];
+    return dateString;
 }
 
 // -------------------------------------------------------------------------------
@@ -242,7 +292,7 @@
     self.PYASFcameraView.imageYSize = [[notifData valueForKey:@"ysize"] intValue];
     self.PYASFcameraView.imageExists = YES;
     self.PYASFcameraView.turnOnBkgImage = YES;
-    NSLog(@"got it image size is %dx%d = %ld", self.PYASFcameraView.imageXSize, self.PYASFcameraView.imageYSize, (unsigned long)[data length]);
+    NSLog(@"got it image size is %dx%ld = %ld", self.PYASFcameraView.imageXSize, self.PYASFcameraView.imageYSize, (unsigned long)[data length]);
 
     [self.PYASFcameraView draw];
 }
@@ -267,7 +317,6 @@
 	// Otherwise, we let any remaining notifications drain out.
 	//
 	NSDictionary *notifData = [note userInfo];
-    
     self.packet = [notifData valueForKey:@"packet"];
  
     [self.FrameNumberLabel setIntegerValue:[self.packet frameNumber]];
@@ -287,7 +336,8 @@
     [self.PYASFcameraView draw];
     [self.PYASRcameraView draw];
     
-    
+    NSString *writeString = [NSString stringWithFormat:@"%@, %@", self.FrameTimeLabel.stringValue, self.FrameNumberLabel.stringValue];
+    [self.telemetrySaveFile writeData:[writeString dataUsingEncoding:NSUTF8StringEncoding]];
 }
 
 - (IBAction)OpenWindow_WindowMenuItemAction:(NSMenuItem *)sender {

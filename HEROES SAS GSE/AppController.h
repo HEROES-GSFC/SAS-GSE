@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "CameraView.h"
-#import "TemperatureFormatter.h"
+
 #import "DataPacket.h"
 #import "ConsoleWindowController.h"
 #import "CommanderWindowController.h"
@@ -28,6 +28,7 @@
 @property (nonatomic, strong) IBOutlet CameraView *PYASRcameraView;
 @property (nonatomic, strong) IBOutlet CameraView *PYASFcameraView;
 @property (weak) IBOutlet NSButton *drawBkgImage_checkbox;
+@property (nonatomic, strong) NSFileHandle *telemetrySaveFile;
 
 @property (nonatomic, readonly) CommanderWindowController *Commander_window;
 @property (nonatomic, readonly) ConsoleWindowController *Console_window;
