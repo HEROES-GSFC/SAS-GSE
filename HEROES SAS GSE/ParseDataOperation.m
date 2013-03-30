@@ -100,10 +100,10 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                         if (tm_packet->getTypeID() == SAS_TM_TYPE) {
                             
                             if (tm_packet->getSync() == SAS1_SYNC_WORD) {
-                                self.dataPacket.isPYASFront=TRUE;
+                                self.dataPacket.isSAS1=TRUE;
                             }
                             if (tm_packet->getSync() == SAS2_SYNC_WORD) {
-                                self.dataPacket.isPYASRear=TRUE;
+                                self.dataPacket.isSAS2=TRUE;
                             }
                             
                             [self.dataPacket setFrameSeconds: tm_packet->getSeconds()];

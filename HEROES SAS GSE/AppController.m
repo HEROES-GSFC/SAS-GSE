@@ -344,23 +344,26 @@
             [self.PYASFCameraTemperatureLabel setBackgroundColor:[NSColor redColor]];
         }
 
+        [self.PYASFCTLCmdEchoTextField setStringValue:[NSString stringWithFormat:@"%f, %f", [self.packet.CTLCommand pointValue].x, [self.packet.CTLCommand pointValue].y]];
         [self.PYASFcameraView setCircleCenter:[self.packet.sunCenter pointValue].x :[self.packet.sunCenter pointValue].y];
         self.PYASFcameraView.chordCrossingPoints = self.packet.chordPoints;
         self.PYASFcameraView.fiducialPoints = self.packet.fiducialPoints;
         [self.PYASFcameraView draw];
         
-        NSString *writeString = [NSString stringWithFormat:@"%@, %@, %@, %@",
+        NSString *writeString = [NSString stringWithFormat:@"%@, %@, %@, %@, %@",
                              self.SAS1FrameTimeLabel.stringValue,
                              self.SAS1FrameNumberLabel.stringValue,
                              self.PYASRCameraTemperatureLabel.stringValue,
                              [NSString stringWithFormat:@"%f, %f", [self.packet.sunCenter pointValue].x,
-                                                                    [self.packet.sunCenter pointValue].y]
+                                                                    [self.packet.sunCenter pointValue].y],
+                             [NSString stringWithFormat:@"%f, %f", [self.packet.CTLCommand pointValue].x,
+                                                                    [self.packet.CTLCommand pointValue].y]
                              ];
         [self.SAS1telemetrySaveFile writeData:[writeString dataUsingEncoding:NSUTF8StringEncoding]];
     }
+    
     if (self.packet.isSAS2) {
         [self.PYASFCameraTemperatureLabel setIntegerValue:self.packet.cameraTemperature];
-        
         [self.PYASRcameraView draw];
     }
     
