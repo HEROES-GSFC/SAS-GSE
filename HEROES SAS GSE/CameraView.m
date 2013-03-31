@@ -175,7 +175,7 @@
 - (NSNumber *)numberXPixels
 {
     if (_numberXPixels == nil){
-        _numberXPixels = [[NSNumber alloc] initWithInt:1392];
+        _numberXPixels = [[NSNumber alloc] initWithInt:1296];
     }
     return _numberXPixels;
 }
@@ -183,7 +183,7 @@
 - (NSNumber *)numberYPixels
 {
     if (_numberYPixels == nil){
-        _numberYPixels = [[NSNumber alloc] initWithInt:1040];
+        _numberYPixels = [[NSNumber alloc] initWithInt:966];
     }
     return _numberYPixels;
 }
