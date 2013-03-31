@@ -343,6 +343,9 @@
     gluOrtho2D(0,self.numberXPixels.integerValue, 0, self.numberYPixels.integerValue);
     glMatrixMode(GL_MODELVIEW);
     
+    glScalef(1, -1, 1);
+    glTranslatef(0, -self.numberYPixels.integerValue, 0);
+
     glDisable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
