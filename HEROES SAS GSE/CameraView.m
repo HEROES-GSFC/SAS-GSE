@@ -175,7 +175,7 @@
 - (NSNumber *)numberXPixels
 {
     if (_numberXPixels == nil){
-        _numberXPixels = [[NSNumber alloc] initWithInt:1392];
+        _numberXPixels = [[NSNumber alloc] initWithInt:1296];
     }
     return _numberXPixels;
 }
@@ -183,7 +183,7 @@
 - (NSNumber *)numberYPixels
 {
     if (_numberYPixels == nil){
-        _numberYPixels = [[NSNumber alloc] initWithInt:1040];
+        _numberYPixels = [[NSNumber alloc] initWithInt:966];
     }
     return _numberYPixels;
 }
@@ -302,7 +302,7 @@
         glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
         
         //Generate the texture
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, self.imageXSize, self.imageYSize, 0, GL_RED, GL_UNSIGNED_BYTE, pixels);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, self.imageXSize, self.imageYSize, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, pixels);
         
         glBindTexture(GL_TEXTURE_2D, texture);
         // Draw a textured quad
@@ -343,6 +343,9 @@
     gluOrtho2D(0,self.numberXPixels.integerValue, 0, self.numberYPixels.integerValue);
     glMatrixMode(GL_MODELVIEW);
     
+    glScalef(1, -1, 1);
+    glTranslatef(0, -self.numberYPixels.integerValue, 0);
+
     glDisable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
