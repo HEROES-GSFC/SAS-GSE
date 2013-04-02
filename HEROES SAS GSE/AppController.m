@@ -20,20 +20,29 @@
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, strong) NSDictionary *listOfCommands;
 @property (nonatomic, strong) DataPacket *packet;
+- (NSString *)createDateTimeString: (NSString *)type;
+- (void)OpenTelemetrySaveFiles;
 @end
 
 @implementation AppController
 
 // GUI Elements
 @synthesize RunningIndicator;
-@synthesize PYASFCPUTemperatureLabel;
+@synthesize SAS2CPUTemperatureLabel;
+@synthesize PYASFCameraTemperatureLabel;
+@synthesize SAS1CPUTemperatureLabel;
 @synthesize PYASRCameraTemperatureLabel;
-@synthesize FrameNumberLabel;
-@synthesize FrameTimeLabel;
+
+@synthesize SAS1FrameNumberLabel;
+@synthesize SAS1FrameTimeLabel;
+@synthesize SAS2FrameNumberLabel;
+@synthesize SAS2FrameTimeLabel;
+
 @synthesize StartStopSegmentedControl;
 @synthesize SAS1CmdCountTextField;
 @synthesize SAS1CmdKeyTextField;
-@synthesize drawBkgImage_checkbox;
+@synthesize PYASFImageMaxMinTextField;
+@synthesize PYASFdrawBkgImage_checkbox;
 @synthesize PYASFcameraView = _PYASFcameraView;
 @synthesize PYASRcameraView = _PYASRcameraView;
 @synthesize Commander_window = _Commander_window;
@@ -43,6 +52,8 @@
 @synthesize listOfCommands = _listOfCommands;
 @synthesize queue = _queue;
 @synthesize packet = _packet;
+@synthesize SAS1telemetrySaveFile = _SAS1telemetrySaveFile;
+@synthesize SAS2telemetrySaveFile = _SAS2telemetrySaveFile;
 
 - (id)init
 {
@@ -65,10 +76,11 @@
                                               errorDescription:&errorDesc];
         
         if (!plistDict) {
-            NSLog(@"Error reading plist: %@, format: %d", errorDesc, format);
+            NSLog(@"Error reading plist: %@, format: %ld", errorDesc, format);
         }
         self.listOfCommands = plistDict;
-        
+        [self.Commander_window showWindow:nil];
+        [self.Console_window showWindow:nil];
 	}
 	return self;
 }
@@ -91,11 +103,30 @@
     return _Console_window;
 }
 
+- (NSFileHandle *)SAS1telemetrySaveFile
+{
+    if (_SAS1telemetrySaveFile == nil)
+    {
+        _SAS1telemetrySaveFile = [[NSFileHandle alloc] init];
+    }
+    return _SAS1telemetrySaveFile;
+}
+
+- (NSFileHandle *)SAS2telemetrySaveFile
+{
+    if (_SAS2telemetrySaveFile == nil)
+    {
+        _SAS2telemetrySaveFile = [[NSFileHandle alloc] init];
+    }
+    return _SAS2telemetrySaveFile;
+}
+
+
 - (IBAction)bkgImageIsClicked:(NSButton *)sender {
     if ([sender state] == NSOnState) {
-        self.PYASFcameraView.turnOnBkgImage = true;}
+        self.PYASFcameraView.turnOnBkgImage = TRUE;}
     if ([sender state] == NSOffState){
-        self.PYASFcameraView.turnOnBkgImage = false;}
+        self.PYASFcameraView.turnOnBkgImage = FALSE;}
 }
 
 - (NSOperationQueue *)queue
@@ -167,17 +198,22 @@
                                                        object:nil];
             
         }
+        
+        
+    [self OpenTelemetrySaveFiles];
     }
     if ([StartStopSegmentedControl selectedSegment] == 1) {
         [self.queue cancelAllOperations];
         [self.RunningIndicator setHidden:YES];
         [self.RunningIndicator stopAnimation:self];
+        [self.SAS1telemetrySaveFile closeFile];
+        [self.SAS2telemetrySaveFile closeFile];
     }
-
 }
 
+
 - (IBAction)saveImage_ButtonAction:(NSButton *)sender {
-        
+    
     NSData *imagedata = self.PYASFcameraView.bkgImage;
     
     NSUInteger len = [self.PYASFcameraView.bkgImage length];
@@ -185,13 +221,13 @@
     long xpixels = self.PYASFcameraView.imageXSize;
     long ypixels = self.PYASFcameraView.imageYSize;
     
-    NSBitmapImageRep *greyRep = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:nil pixelsWide:xpixels pixelsHigh:ypixels bitsPerSample:8 samplesPerPixel:1 hasAlpha:NO isPlanar:NO colorSpaceName:NSCalibratedWhiteColorSpace bitmapFormat:0 bytesPerRow:0 bitsPerPixel:8];
+    NSBitmapImageRep *greyRep = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:nil pixelsWide:xpixels pixelsHigh:ypixels bitsPerSample:8 samplesPerPixel:1 hasAlpha:NO isPlanar:NO colorSpaceName:NSCalibratedWhiteColorSpace bitmapFormat:0 bytesPerRow:xpixels bitsPerPixel:8];
     
     unsigned char *pix = [greyRep bitmapData];
     
     memcpy(pix, [self.PYASFcameraView.bkgImage bytes], len);
 
-    NSImage *greyscale = [[NSImage alloc] initWithSize:NSMakeSize(10, 10)];
+    NSImage *greyscale = [[NSImage alloc] initWithSize:NSMakeSize(xpixels, ypixels)];
     [greyscale addRepresentation:greyRep];
     
     NSData *temp = [greyscale TIFFRepresentation];
@@ -199,18 +235,31 @@
     NSDictionary *imageProps = [NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:1.0] forKey:NSImageCompressionFactor];
     imagedata = [imageRep representationUsingType:NSPNGFileType properties:imageProps];
     
+    //open a save panel
     NSSavePanel* panel = [NSSavePanel savePanel];
-    // This method displays the panel and returns immediately.
-    // The completion handler is called when the user selects an
-    // item or cancels the panel.
-    [panel setNameFieldStringValue:@"boo.png"];
+    [panel setNameFieldStringValue:[NSString stringWithFormat:@"PYASimage%@.png", [self createDateTimeString:@"file"]]];
     [panel beginWithCompletionHandler:^(NSInteger result){
         if (result == NSFileHandlingPanelOKButton) {
             NSURL *theFile = [panel URL];
             [imagedata writeToFile:[theFile path] atomically:YES];
         }
     }];
+}
 
+- (NSString *)createDateTimeString: (NSString *)type{
+    // Create a time string with the format YYYYMMdd_HHmmss
+    // This can be used in file names (for example)
+    //
+    NSDate *currDate = [NSDate date];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
+    if ([type isEqualToString:@"file"]) {
+        [dateFormatter setDateFormat:@"YYYYMMdd_HHmmss"];
+    } else {
+        [dateFormatter setDateFormat:@"YYYY/MM/dd HH:mm:ss"];
+    }
+    
+    NSString *dateString = [dateFormatter stringFromDate:currDate];
+    return dateString;
 }
 
 // -------------------------------------------------------------------------------
@@ -235,27 +284,46 @@
 {
     NSDictionary *notifData = [note userInfo];
     NSData *data = [notifData valueForKey:@"image"];
-    //NSLog(@"%@", data);
     self.PYASFcameraView.bkgImage = data;
 
     self.PYASFcameraView.imageXSize = [[notifData valueForKey:@"xsize"] intValue];
     self.PYASFcameraView.imageYSize = [[notifData valueForKey:@"ysize"] intValue];
     self.PYASFcameraView.imageExists = YES;
     self.PYASFcameraView.turnOnBkgImage = YES;
-    NSLog(@"got it image size is %dx%d = %ld", self.PYASFcameraView.imageXSize, self.PYASFcameraView.imageYSize, (unsigned long)[data length]);
-
+    
+    NSString *logMessage = [NSString stringWithFormat:@"Received image. Size is %ldx%ld = %ld", self.PYASFcameraView.imageXSize, self.PYASFcameraView.imageYSize, (unsigned long)[data length]];
+    [self postToLogWindow:logMessage];
+    
     [self.PYASFcameraView draw];
 }
 
-// -------------------------------------------------------------------------------
-//	mainThread_handleLoadedImages:note
-//
-//	The method used to modify the table's data source on the main thread.
-//	This will cause the table to update itself once the NSArrayController is changed.
-//
-//	The notification contains an NSDictionary containing the image file's info
-//	to add to the table view.
-// -------------------------------------------------------------------------------
+- (void)postToLogWindow: (NSString *)message{
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"LogMessage" object:nil userInfo:[NSDictionary dictionaryWithObject:message forKey:@"message"]];
+}
+
+- (void)OpenTelemetrySaveFiles{
+    // Open a file to save the telemetry stream to
+    // The file is a csv file
+    //
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *filename = [NSString stringWithFormat:@"HEROES_SAS1_tmlog_%@.txt", [self createDateTimeString:@"file"]];
+    
+    NSString *filePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:filename];
+    // open file to save data stream
+    self.SAS1telemetrySaveFile = [NSFileHandle fileHandleForWritingAtPath: filePath ];
+    if (self.SAS1telemetrySaveFile == nil) {
+        [[NSFileManager defaultManager] createFileAtPath:filePath contents:nil attributes:nil];
+        self.SAS1telemetrySaveFile = [NSFileHandle fileHandleForWritingAtPath:filePath];
+    }
+    //say to handle where's the file fo write
+    [self.SAS1telemetrySaveFile truncateFileAtOffset:[self.SAS1telemetrySaveFile seekToEndOfFile]];
+    NSString *writeString = [NSString stringWithFormat:@"HEROES SAS1 Telemetry Log File %@\n", [self createDateTimeString:nil]];
+    //position handle cursor to the end of file
+    [self.SAS1telemetrySaveFile writeData:[writeString dataUsingEncoding:NSUTF8StringEncoding]];
+    writeString = [NSString stringWithFormat:@"doy, time, frame number, camera temp, cpu temp, suncenter x, suncenter y, CTL x, CTL y\n", [self createDateTimeString:nil]];
+    [self.SAS1telemetrySaveFile writeData:[writeString dataUsingEncoding:NSUTF8StringEncoding]];
+}
+
 - (void)mainThread_handleData:(NSNotification *)note
 {
     // Pending NSNotifications can possibly back up while waiting to be executed,
@@ -267,26 +335,46 @@
 	// Otherwise, we let any remaining notifications drain out.
 	//
 	NSDictionary *notifData = [note userInfo];
-    
     self.packet = [notifData valueForKey:@"packet"];
- 
-    [self.FrameNumberLabel setIntegerValue:[self.packet frameNumber]];
-    [self.FrameTimeLabel setStringValue:[self.packet getframeTimeString]];
-    [self.SAS1CmdCountTextField setIntegerValue:[self.packet commandCount]];
-    [self.SAS1CmdKeyTextField setStringValue:[NSString stringWithFormat:@"0x%04x", [self.packet commandKey]]];
     
-    NSRange tempRange = NSMakeRange(10, 20);
-    [self.PYASRCameraTemperatureLabel setIntegerValue:self.packet.cameraTemperature];
-    if (NSLocationInRange(self.packet.cameraTemperature, tempRange) == FALSE){
-        [self.PYASRCameraTemperatureLabel setBackgroundColor:[NSColor redColor]];
-    }
+    if (self.packet.isSAS1) {
+     
+        [self.SAS1FrameNumberLabel setIntegerValue:[self.packet frameNumber]];
+        [self.SAS1FrameTimeLabel setStringValue:[self.packet getframeTimeString]];
+        [self.SAS1CmdCountTextField setIntegerValue:[self.packet commandCount]];
+        [self.SAS1CmdKeyTextField setStringValue:[NSString stringWithFormat:@"0x%04x", [self.packet commandKey]]];
+        
+        [self.PYASFCameraTemperatureLabel setIntegerValue:self.packet.cameraTemperature];
+        if (!NSLocationInRange(self.packet.cameraTemperature, NSMakeRange(10, 20))){
+            [self.PYASFCameraTemperatureLabel setBackgroundColor:[NSColor redColor]];
+        }
 
-    [self.PYASFcameraView setCircleCenter:[self.packet.sunCenter pointValue].x :[self.packet.sunCenter pointValue].y];
-    self.PYASFcameraView.chordCrossingPoints = self.packet.chordPoints;
-    self.PYASFcameraView.fiducialPoints = self.packet.fiducialPoints;
-    [self.PYASFcameraView draw];
-    [self.PYASRcameraView draw];
+        [self.SAS1CPUTemperatureLabel setIntegerValue:self.packet.cpuTemperature];
+        
+        [self.PYASFCTLCmdEchoTextField setStringValue:[NSString stringWithFormat:@"%5.3f, %5.3f", [self.packet.CTLCommand pointValue].x, [self.packet.CTLCommand pointValue].y]];
+        [self.PYASFcameraView setCircleCenter:[self.packet.sunCenter pointValue].x :[self.packet.sunCenter pointValue].y];
+        self.PYASFcameraView.chordCrossingPoints = self.packet.chordPoints;
+        self.PYASFcameraView.fiducialPoints = self.packet.fiducialPoints;
+        self.PYASFImageMaxMinTextField.stringValue = [NSString stringWithFormat:@"%d, %ld", self.packet.ImageRange.location, (unsigned long)self.packet.ImageRange.length];
+        [self.PYASFcameraView draw];
+        NSString *writeString = [NSString stringWithFormat:@"%@, %@, %@, %@, %@, %@\n",
+                             self.SAS1FrameTimeLabel.stringValue,
+                             self.SAS1FrameNumberLabel.stringValue,
+                             self.PYASFCameraTemperatureLabel.stringValue,
+                             self.SAS1CPUTemperatureLabel.stringValue,
+                             [NSString stringWithFormat:@"%f, %f", [self.packet.sunCenter pointValue].x,
+                                                                    [self.packet.sunCenter pointValue].y],
+                             [NSString stringWithFormat:@"%f, %f", [self.packet.CTLCommand pointValue].x,
+                                                                    [self.packet.CTLCommand pointValue].y]
+                             ];
+        [self.SAS1telemetrySaveFile writeData:[writeString dataUsingEncoding:NSUTF8StringEncoding]];
+    }
     
+    if (self.packet.isSAS2) {
+        [self.PYASFCameraTemperatureLabel setIntegerValue:self.packet.cameraTemperature];
+        [self.SAS2CPUTemperatureLabel setIntegerValue:self.packet.cpuTemperature];
+        [self.PYASRcameraView draw];
+    }
     
 }
 
@@ -303,14 +391,7 @@
 
 - (IBAction)RunTest:(id)sender {
     
-    //for (int i = 0; i < 100; i++) {
-    //    [self.ConsoleTextView insertText:@"hello"];
-    //}
-    //[self.ConsoleScrollView insertText:[NSString stringWithFormat:@"hidden? = %i", [self.CommanderHelperWindow isHidden]]];
-    //NSLog(@"hidden? = %b", [self.CommanderHelperWindow isHidden]);
-    //[self.CommanderHelperWindow setHidden:YES];
-    //[self.Console_window log:@"hello"];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"LogMessage" object:nil userInfo:[NSDictionary dictionaryWithObject:@"test string" forKey:@"message"]];
+    [self postToLogWindow:@"test string"];
 }
 
 @end

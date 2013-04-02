@@ -12,7 +12,6 @@
 		860EF336163605D300B46E35 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 860EF334163605D300B46E35 /* InfoPlist.strings */; };
 		860EF338163605D300B46E35 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 860EF337163605D300B46E35 /* main.m */; };
 		860EF33C163605D300B46E35 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 860EF33A163605D300B46E35 /* Credits.rtf */; };
-		860EF33F163605D300B46E35 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 860EF33E163605D300B46E35 /* AppDelegate.m */; };
 		860EF342163605D300B46E35 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 860EF340163605D300B46E35 /* MainMenu.xib */; };
 		860EF34A163605D400B46E35 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 860EF349163605D400B46E35 /* SenTestingKit.framework */; };
 		860EF34B163605D400B46E35 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 860EF32B163605D300B46E35 /* Cocoa.framework */; };
@@ -30,7 +29,6 @@
 		86159E8316DEFA7A00E79C27 /* ConsoleWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 86159E8116DEFA7A00E79C27 /* ConsoleWindowController.m */; };
 		86159E8416DEFA7A00E79C27 /* ConsoleWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 86159E8216DEFA7A00E79C27 /* ConsoleWindowController.xib */; };
 		8660983B16B398DD00BE26D1 /* icon.iconset in Resources */ = {isa = PBXBuildFile; fileRef = 8660983A16B398DD00BE26D1 /* icon.iconset */; };
-		86669FFF1692344200B0DACE /* TemperatureFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 86669FFE1692344200B0DACE /* TemperatureFormatter.m */; };
 		8666A002169254AE00B0DACE /* DataPacket.m in Sources */ = {isa = PBXBuildFile; fileRef = 8666A001169254AE00B0DACE /* DataPacket.m */; };
 		8666A0081694874900B0DACE /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 8666A0071694874900B0DACE /* README.md */; };
 		8666E3C416A3BA6600A9DD85 /* Commander.m in Sources */ = {isa = PBXBuildFile; fileRef = 8666E3C316A3BA6600A9DD85 /* Commander.m */; };
@@ -38,6 +36,7 @@
 		86672DF616F7AB4E00F36110 /* types.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 86672DF316F7AB4700F36110 /* types.cpp */; };
 		86672DF716F7AB5000F36110 /* types.hpp in Sources */ = {isa = PBXBuildFile; fileRef = 86672DF416F7AB4700F36110 /* types.hpp */; };
 		86672DF916F7D2BD00F36110 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86672DF816F7D2BD00F36110 /* GLUT.framework */; };
+		8670FBA717068B6100F9C2DC /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8670FBA917068B6100F9C2DC /* AppDelegate.m */; };
 		86881A74163D9231003CC656 /* ParseDataOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 86881A73163D9231003CC656 /* ParseDataOperation.m */; };
 		8693D5EF16C5BB1A00985DDB /* Command.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8693D5E516C5BB1A00985DDB /* Command.cpp */; };
 		8693D5F016C5BB1A00985DDB /* Packet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8693D5E716C5BB1A00985DDB /* Packet.cpp */; };
@@ -73,7 +72,6 @@
 		860EF339163605D300B46E35 /* HEROES SAS GSE-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HEROES SAS GSE-Prefix.pch"; sourceTree = "<group>"; };
 		860EF33B163605D300B46E35 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
 		860EF33D163605D300B46E35 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		860EF33E163605D300B46E35 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		860EF341163605D300B46E35 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		860EF348163605D400B46E35 /* HEROES SAS GSETests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "HEROES SAS GSETests.octest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		860EF349163605D400B46E35 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
@@ -97,8 +95,6 @@
 		86159E8116DEFA7A00E79C27 /* ConsoleWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConsoleWindowController.m; sourceTree = "<group>"; };
 		86159E8216DEFA7A00E79C27 /* ConsoleWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ConsoleWindowController.xib; sourceTree = "<group>"; };
 		8660983A16B398DD00BE26D1 /* icon.iconset */ = {isa = PBXFileReference; lastKnownFileType = folder.iconset; path = icon.iconset; sourceTree = "<group>"; };
-		86669FFD1692344200B0DACE /* TemperatureFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TemperatureFormatter.h; sourceTree = "<group>"; };
-		86669FFE1692344200B0DACE /* TemperatureFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TemperatureFormatter.m; sourceTree = "<group>"; };
 		8666A000169254AE00B0DACE /* DataPacket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataPacket.h; sourceTree = "<group>"; };
 		8666A001169254AE00B0DACE /* DataPacket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataPacket.m; sourceTree = "<group>"; };
 		8666A0071694874900B0DACE /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
@@ -107,6 +103,7 @@
 		86672DF316F7AB4700F36110 /* types.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = types.cpp; path = "lib/SAS-aspect/PYAS-core/aspect/types.cpp"; sourceTree = "<group>"; };
 		86672DF416F7AB4700F36110 /* types.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = types.hpp; path = "lib/SAS-aspect/PYAS-core/aspect/types.hpp"; sourceTree = "<group>"; };
 		86672DF816F7D2BD00F36110 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
+		8670FBA817068B6100F9C2DC /* en */ = {isa = PBXFileReference; lastKnownFileType = file; name = en; path = en.lproj/AppDelegate.m; sourceTree = "<group>"; };
 		86881A72163D9231003CC656 /* ParseDataOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParseDataOperation.h; sourceTree = "<group>"; };
 		86881A73163D9231003CC656 /* ParseDataOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParseDataOperation.m; sourceTree = "<group>"; };
 		8693D5E516C5BB1A00985DDB /* Command.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = Command.cpp; path = "lib/SAS-aspect/PYAS-core/aspect/Command.cpp"; sourceTree = "<group>"; };
@@ -197,7 +194,7 @@
 			children = (
 				8693D5E416C5BAC500985DDB /* Externals */,
 				860EF33D163605D300B46E35 /* AppDelegate.h */,
-				860EF33E163605D300B46E35 /* AppDelegate.m */,
+				8670FBA917068B6100F9C2DC /* AppDelegate.m */,
 				860EF35F1636060100B46E35 /* AppController.h */,
 				860EF3601636060100B46E35 /* AppController.m */,
 				86881A72163D9231003CC656 /* ParseDataOperation.h */,
@@ -206,8 +203,6 @@
 				86159E6916DB1D7B00E79C27 /* ParseTCPOperation.m */,
 				8666A000169254AE00B0DACE /* DataPacket.h */,
 				8666A001169254AE00B0DACE /* DataPacket.m */,
-				86669FFD1692344200B0DACE /* TemperatureFormatter.h */,
-				86669FFE1692344200B0DACE /* TemperatureFormatter.m */,
 				86A62FE5164D7EE10049527C /* CameraView.h */,
 				86A62FE6164D7EE10049527C /* CameraView.m */,
 				8666E3C216A3BA6600A9DD85 /* Commander.h */,
@@ -426,13 +421,12 @@
 				86159E6E16DB311200E79C27 /* TCPReceiver.cpp in Sources */,
 				86159E6F16DB311200E79C27 /* TCPReceiver.hpp in Sources */,
 				860EF338163605D300B46E35 /* main.m in Sources */,
-				860EF33F163605D300B46E35 /* AppDelegate.m in Sources */,
+				8670FBA717068B6100F9C2DC /* AppDelegate.m in Sources */,
 				860EF3611636060100B46E35 /* AppController.m in Sources */,
 				86672DF716F7AB5000F36110 /* types.hpp in Sources */,
 				86672DF616F7AB4E00F36110 /* types.cpp in Sources */,
 				86881A74163D9231003CC656 /* ParseDataOperation.m in Sources */,
 				86A62FE7164D7EE10049527C /* CameraView.m in Sources */,
-				86669FFF1692344200B0DACE /* TemperatureFormatter.m in Sources */,
 				8666A002169254AE00B0DACE /* DataPacket.m in Sources */,
 				86E1D84E1695ED1B0079303F /* lib_crc.c in Sources */,
 				8666E3C416A3BA6600A9DD85 /* Commander.m in Sources */,
@@ -507,6 +501,14 @@
 				860EF352163605D400B46E35 /* en */,
 			);
 			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		8670FBA917068B6100F9C2DC /* AppDelegate.m */ = {
+			isa = PBXVariantGroup;
+			children = (
+				8670FBA817068B6100F9C2DC /* en */,
+			);
+			name = AppDelegate.m;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

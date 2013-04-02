@@ -22,13 +22,15 @@
 #import "types.hpp"
 
 #define PAYLOAD_SIZE 20
-#define DEFAULT_PORT 5003 /* The default port to send on */
+#define DEFAULT_PORT 2002 /* The default port to send on */
 
 #define SAS_TARGET_ID 0x30
 #define SAS_TM_TYPE 0x70
 #define SAS_IMAGE_TYPE 0x82
-#define SAS_SYNC_WORD 0xEB90
+#define SAS1_SYNC_WORD 0xEB90
+#define SAS2_SYNC_WORD 0xF626
 #define SAS_CM_ACK_TYPE 0x01
+#define SAS_CM_PROC_ACK_TYPE 0xE1
 
 #define NUM_LIMBS 8
 #define NUM_FIDUCIALS 6
@@ -41,7 +43,7 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
 }
 
 @property (nonatomic, strong) DataPacket *dataPacket;
-
+- (void)postToLogWindow: (NSString *)message;
 @end
 
 @implementation ParseDataOperation
@@ -51,7 +53,7 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
 - (id)init{
     self = [super init]; // call our super’s designated initializer
     if (self) {
-        tmReceiver = new TelemetryReceiver( 5002 );
+        tmReceiver = new TelemetryReceiver( DEFAULT_PORT );
     }
     return self;
 }
@@ -62,6 +64,10 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
         _dataPacket = [[DataPacket alloc] init];
     }
     return _dataPacket;
+}
+
+- (void)postToLogWindow: (NSString *)message{
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"LogMessage" object:nil userInfo:[NSDictionary dictionaryWithObject:message forKey:@"message"]];
 }
 
 // -------------------------------------------------------------------------------
@@ -93,6 +99,14 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                 {
                     if (tm_packet->getSourceID() == SAS_TARGET_ID){
                         if (tm_packet->getTypeID() == SAS_TM_TYPE) {
+                            
+                            //if (tm_packet->getSASSync() == SAS1_SYNC_WORD) {
+                                self.dataPacket.isSAS1=TRUE;
+                            //}
+                            //if (tm_packet->getSASSync() == SAS2_SYNC_WORD) {
+                            //    self.dataPacket.isSAS2=TRUE;
+                            //}
+                            
                             [self.dataPacket setFrameSeconds: tm_packet->getSeconds()];
                             
                             uint16_t sas_sync;
@@ -105,11 +119,14 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                             uint16_t command_key;
                             *(tm_packet) >> command_key;
 
-                            uint16_t housekeeping1, housekeeping2;
+                            int16_t housekeeping1, housekeeping2;
                             *(tm_packet) >> housekeeping1 >> housekeeping2;
 
                             //For now, housekeeping1 is always camera temperature
                             self.dataPacket.cameraTemperature = (int)housekeeping1;
+                            
+                            //For now, housekeeping2 is always CPU temperature
+                            self.dataPacket.cpuTemperature = (int)housekeeping2;
 
                             Pair3B sunCenter, sunCenterError;
                             *(tm_packet) >> sunCenter >> sunCenterError;
@@ -145,25 +162,40 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
 
                             uint8_t image_max, image_min;
                             *(tm_packet) >> image_max >> image_min;
+                            
+                            self.dataPacket.ImageRange = NSMakeRange(image_min, image_max);
 
                             [self.dataPacket setFrameNumber: frame_number];
                             [self.dataPacket setCommandCount: command_count];
                             [self.dataPacket setCommandKey: command_key];
                             
-                            //for(int i = 0; i < packet_length-1; i++){
-                            //    printf("%x", (uint8_t) packet[i]);
-                            //}
-                            //printf("\n");
+                            double ctl_xvalue, ctl_yvalue;
+                            *(tm_packet) >> ctl_xvalue >> ctl_yvalue;
+                            [self.dataPacket setCTLCommand:[NSValue valueWithPoint:NSMakePoint(ctl_xvalue, ctl_yvalue)]];
                         }
                         
                         if (tm_packet->getTypeID() == SAS_CM_ACK_TYPE) {
                             uint16_t sequence_number = 0;
                             *tm_packet >> sequence_number;
                             
-                            NSString *msg = [NSString stringWithFormat:@"Received ACK for %u", sequence_number];
-                            [[NSNotificationCenter defaultCenter] postNotificationName:@"LogMessage" object:nil userInfo:[NSDictionary dictionaryWithObject:msg forKey:@"message"]];
-
+                            NSString *msg = [NSString stringWithFormat:@"Received ACK for command number %u", sequence_number];
+                            [self postToLogWindow:msg];
                         }
+                        
+                        if (tm_packet->getTypeID() == SAS_CM_PROC_ACK_TYPE) {
+                            uint16_t sequence_number = 0;
+                            *tm_packet >> sequence_number;
+                            
+                            uint16_t command_key = 0;
+                            *tm_packet >> command_key;
+                            
+                            uint16_t return_code;
+                            *tm_packet >> return_code;
+                            //
+                            NSString *msg = [NSString stringWithFormat:@"Received PROC ACK for command number %u, command key %u, return code %u", sequence_number, command_key, return_code];
+                            [self postToLogWindow:msg];
+                        }
+                        
                     }
                     
                 }

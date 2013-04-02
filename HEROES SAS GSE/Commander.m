@@ -43,17 +43,17 @@
     comSender = new CommandSender( [ip_address UTF8String], port );
     CommandPacket cp(0x30, frame_sequence_number);
     Command cm(0x10ff, command_key);
-    if (!command_variables) {
-        try{
-        cp << cm; //should be this but does not seem to work
-        } catch (std::exception& e) {
-            std::cerr << e.what() << std::endl;
-        }
-        } else {
+    if (command_variables) {
         for (NSNumber *variable in command_variables) {
-            cp << (uint16_t)[variable intValue];
+            cm << (uint16_t)[variable intValue];
         }
     }
+    try{
+        cp << cm;
+    } catch (std::exception& e) {
+        std::cerr << e.what() << std::endl;
+    }
+
     
     comSender->send( &cp );
     comSender->close_connection();

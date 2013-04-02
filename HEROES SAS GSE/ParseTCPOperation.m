@@ -110,6 +110,9 @@ NSString *kReceiveAndParseImageDidFinish = @"ReceiveAndParseImageDidFinish";
                     packet_count = 0;
                     uint8_t *image = (uint8_t *)malloc(xpixels * ypixels);
                     long i = 0;
+                    uint8_t imageMax, imageMin;
+                    imageMax = 0;
+                    imageMin = 255;
                     while( !tpq.empty() )
                     {
                         tpq >> tp;
@@ -117,6 +120,12 @@ NSString *kReceiveAndParseImageDidFinish = @"ReceiveAndParseImageDidFinish";
                             uint8_t pixel;
                             tp.readNextTo(pixel);
                             image[i] = pixel;
+                            if (imageMin > pixel) {
+                                imageMin = pixel;
+                            }
+                            if (imageMax < pixel) {
+                                imageMax = pixel;
+                            }
                             i++;
                         }
                         packet_count++;
@@ -127,8 +136,8 @@ NSString *kReceiveAndParseImageDidFinish = @"ReceiveAndParseImageDidFinish";
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"LogMessage" object:nil userInfo:[NSDictionary dictionaryWithObject:LogMessageNSLog forKey:@"message"]];
                     
                     self.data = [NSData dataWithBytes:image length:sizeof(uint8_t) * xpixels * ypixels];
-                    NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys: self.data, @"image", [NSNumber numberWithInt:xpixels], @"xsize", [NSNumber numberWithInt:ypixels], @"ysize", nil];
-
+                    NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys: self.data, @"image", [NSNumber numberWithInt:xpixels], @"xsize", [NSNumber numberWithInt:ypixels], @"ysize", [NSNumber numberWithInt:imageMin], @"min", [NSNumber numberWithInt:imageMax], @"max", nil];
+                    NSLog(@"Image min/max %d, %d", imageMin, imageMax);
                     if (![self isCancelled]){
                         [[NSNotificationCenter defaultCenter] postNotificationName:kReceiveAndParseImageDidFinish object:nil userInfo:info];
                     }
