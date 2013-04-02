@@ -33,7 +33,9 @@
 - (void) drawImage;
 - (void) drawALine: (NSPoint) center :(float) length :(float) angleInDegrees;
 - (void) cleanUp;
+- (void)mouseDown: (NSEvent *)theEvent;
 - (NSPoint) calculateCentroid:(NSMutableArray *)points;
+@property (nonatomic) NSPoint mouseLocation;
 @end
 
 @implementation CameraView
@@ -47,6 +49,7 @@
 @synthesize imageExists = _imageExists;
 @synthesize imageXSize;
 @synthesize imageYSize;
+@synthesize mouseLocation = _mouseLocation;
 
 -(id) initWithFrame:(NSRect)frameRect
 {
@@ -59,6 +62,7 @@
         screenY = 500.0;
         self.turnOnBkgImage = NO;
         self.imageExists = NO;
+        self.mouseLocation = NSMakePoint(-1, -1);
     }
     return self;
 }
@@ -86,7 +90,6 @@
 
 - (void) drawImage{
     GLuint texture;
-    //unsigned char data[] = { 255,0,0, 0,255,0, 0,0,255, 255,255,255 };
 
     const int size = [self.numberXPixels intValue] * [self.numberYPixels intValue];
     float *pixels = (float *)malloc(size * sizeof(float));
@@ -142,14 +145,6 @@
 
 -(void)setImageExists:(BOOL)imageExists{
     _imageExists = imageExists;
-    //NSLog(@"%d, %d, %d %d", _imageExists, self.imageXSize, self.imageYSize, [self.bkgImage length]);
-    //NSUInteger len = [self.bkgImage length];
-    //Byte *pixels = (Byte *)malloc(len);
-    //memcpy(pixels, [self.bkgImage bytes], len);
-    
-    //for (int i = 0; i < 5; i++) {
-    //    NSLog(@"%d", pixels[i]);
-    //}
 }
 
 -(BOOL)imageExists{
@@ -192,9 +187,7 @@
 {
     NSPoint sunCenter = NSMakePoint(circleX, circleY);
     NSPoint screenCenter = NSMakePoint(screenX, screenY);
-    
-    //[self drawImage];
-    
+        
     glColor3f(1.0f, 0.0f, 0.0f);
     [self drawACross: sunCenter:0.02];
     [self drawACircle: sunCenter: 92];
@@ -215,6 +208,14 @@
     [self drawAFewPoints:self.chordCrossingPoints];
     glColor3f(0.0f, 1.0f, 1.0f);
     [self drawAFewCrosses:self.fiducialPoints];
+    
+    if (self.mouseLocation.x != -1) {
+        //NSLog(@"mouse lcoation is %f, %f", self.mouseLocation.x, self.mouseLocation.y);
+        [self drawACross:self.mouseLocation :0.02];
+        unsigned char pixelValue[1];
+        [self.bkgImage getBytes:pixelValue range:NSMakeRange(self.mouseLocation.x + self.mouseLocation.y * self.imageXSize, 1)];
+        [self drawText:self.mouseLocation :[NSString stringWithFormat:@"%d", pixelValue]];
+    }
 }
 
 - (void) setCircleCenter: (float)x :(float)y{
@@ -234,31 +235,20 @@
     [self setNeedsDisplay:YES];
 }
 
+- (void)mouseDown:(NSEvent *)theEvent {
+    //[self setFrameColor:[NSColor redColor]];
+    //[self setNeedsDisplay:YES];
+    NSPoint curPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+    //mouseLoc = [NSEvent mouseLocation]; //get current mouse position
+    self.mouseLocation = NSMakePoint(curPoint.x / [self bounds].size.width * [self.numberXPixels intValue], [self.numberYPixels intValue] - curPoint.y / [self bounds].size.height * [self.numberYPixels intValue]);
+    [self setNeedsDisplay:YES];
+}
+
 -(void) drawRect: (NSRect)dirtyRect
 {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    //[self doSomething];
-    //
-    
-    //glutSwapBuffers();
-      
-    //const long size = [self.numberXPixels intValue] * [self.numberYPixels intValue];
-    //const long size = 100;
-    //uint8_t *pixels = (uint8_t *)malloc(size * sizeof(uint8_t));
-    //uint8_t pixels[size];
-    //for (long j = 0; j < size; j++) {
-    //    pixels[j] = j;
-    //}
-    //for (long xi = 0; xi < 500; xi++)
-    //{
-    //    for (long yi = 0; yi < 500; yi++) {
-    //        pixels[xi + yi * 500] = arc4random() % 255;;
-    //    }
-    //}
-
-    //unsigned char data[] = { 255,255,255, 255,255,0, 0,0,255, 255,0,255 };
     if (self.imageExists == YES) {
         GLuint texture;
         
@@ -282,13 +272,7 @@
         memcpy(pixels, [self.bkgImage bytes], len);
     
         [self.bkgImage getBytes:pixels length:(self.imageXSize*self.imageYSize)];
-        //NSLog(@"%@", self.bkgImage);
-        //for (int i = 0; i < 5; i++) {
-        //    NSLog(@"%d", pixels[i]);
-        //}
-        //for (long j = 0; j < (self.imageXSize * imageYSize); j++) {
-        //    pixels[j] = j;
-        //}
+
         glGenTextures( 1, &texture );
         glBindTexture( GL_TEXTURE_2D, texture );
         glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
@@ -312,7 +296,7 @@
         glTexCoord2f(1, 1); glVertex3f(self.numberXPixels.intValue, self.numberYPixels.intValue, 0);
         glTexCoord2f(1, 0); glVertex3f(self.numberXPixels.intValue  , 0, 0);
         glEnd();
-                
+        
         glDisable(GL_TEXTURE_2D);
         glPopMatrix();
         
@@ -396,6 +380,16 @@
 		y = s * t + c * y;
 	}
 	glEnd();
+}
+
+-(void) drawText: (NSPoint) origin :(NSString *)text
+{
+    glColor3f( 0, 0, 1 );
+    glRasterPos2f(origin.x, origin.y);
+    for (int i = 0; i < [text length]; i++) {
+        NSLog(@"%hu, %d, %d", [text characterAtIndex:i], i, [text length]);
+        glutBitmapCharacter(GLUT_BITMAP_8_BY_13, [text characterAtIndex:i]);
+    }
 }
 
 -(void) drawALine: (NSPoint) center :(float) length :(float) angleInDegrees
