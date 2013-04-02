@@ -76,6 +76,7 @@
     [super windowDidLoad];
     
     [self.commandListcomboBox addItemsWithObjectValues:[self.plistDict allKeys]];
+    [self.commandListcomboBox setNumberOfVisibleItems:10];
     [self.commandListcomboBox setCompletes:YES];
     [self.Variables_Form setHidden:YES];
     [self.send_Button setEnabled:NO];
