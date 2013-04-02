@@ -119,13 +119,12 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                             uint16_t command_key;
                             *(tm_packet) >> command_key;
 
-                            uint16_t housekeeping1, housekeeping2;
+                            int16_t housekeeping1, housekeeping2;
                             *(tm_packet) >> housekeeping1 >> housekeeping2;
 
                             //For now, housekeeping1 is always camera temperature
-                            if (housekeeping1 > 65000){
-                                self.dataPacket.cameraTemperature = (int)housekeeping1 - 65535;
-                            } else {self.dataPacket.cameraTemperature = (int)housekeeping1; }
+                            self.dataPacket.cameraTemperature = (int)housekeeping1;
+                            
                             //For now, housekeeping2 is always CPU temperature
                             self.dataPacket.cpuTemperature = (int)housekeeping2;
 
