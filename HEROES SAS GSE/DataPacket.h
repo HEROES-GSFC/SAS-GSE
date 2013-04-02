@@ -18,8 +18,8 @@
 @property (nonatomic) NSValue *sunCenter;
 @property (nonatomic) NSValue *CTLCommand;
 @property (nonatomic) NSRange ImageRange;
-@property (nonatomic) int cameraTemperature;
-@property (nonatomic) int cpuTemperature;
+@property (nonatomic) float cameraTemperature;
+@property (nonatomic) float cpuTemperature;
 @property (nonatomic) BOOL isSAS1;
 @property (nonatomic) BOOL isSAS2;
 

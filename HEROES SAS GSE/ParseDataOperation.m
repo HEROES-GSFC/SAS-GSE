@@ -30,6 +30,7 @@
 #define SAS1_SYNC_WORD 0xEB90
 #define SAS2_SYNC_WORD 0xF626
 #define SAS_CM_ACK_TYPE 0x01
+#define SAS_CM_PROC_ACK_TYPE 0xE1
 
 #define NUM_LIMBS 8
 #define NUM_FIDUCIALS 6
@@ -122,7 +123,9 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                             *(tm_packet) >> housekeeping1 >> housekeeping2;
 
                             //For now, housekeeping1 is always camera temperature
-                            self.dataPacket.cameraTemperature = (int)housekeeping1;
+                            if (housekeeping1 > 65000){
+                                self.dataPacket.cameraTemperature = (int)housekeeping1 - 65535;
+                            } else {self.dataPacket.cameraTemperature = (int)housekeeping1; }
                             //For now, housekeeping2 is always CPU temperature
                             self.dataPacket.cpuTemperature = (int)housekeeping2;
 
@@ -176,9 +179,24 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                             uint16_t sequence_number = 0;
                             *tm_packet >> sequence_number;
                             
-                            NSString *msg = [NSString stringWithFormat:@"Received ACK for %u", sequence_number];
+                            NSString *msg = [NSString stringWithFormat:@"Received ACK for command number %u", sequence_number];
                             [self postToLogWindow:msg];
                         }
+                        
+                        if (tm_packet->getTypeID() == SAS_CM_PROC_ACK_TYPE) {
+                            uint16_t sequence_number = 0;
+                            *tm_packet >> sequence_number;
+                            
+                            uint16_t command_key = 0;
+                            *tm_packet >> command_key;
+                            
+                            uint16_t return_code;
+                            *tm_packet >> return_code;
+                            
+                            NSString *msg = [NSString stringWithFormat:@"Received PROC ACK for command number %u, command key %u, return code %u", sequence_number, command_key, return_code];
+                            [self postToLogWindow:msg];
+                        }
+                        
                     }
                     
                 }

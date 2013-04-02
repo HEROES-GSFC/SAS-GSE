@@ -211,26 +211,6 @@
     }
 }
 
-- (void)OpenTelemetrySaveFiles{
-    // Open a file to save the telemetry stream to
-    // The file is a csv file
-    //
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *filename = [NSString stringWithFormat:@"HEROES_SAS1_tmlog_%@.txt", [self createDateTimeString:@"file"]];
-    
-    NSString *filePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:filename];
-    // open file to save data stream
-    self.SAS1telemetrySaveFile = [NSFileHandle fileHandleForWritingAtPath: filePath ];
-    if (self.SAS1telemetrySaveFile == nil) {
-        [[NSFileManager defaultManager] createFileAtPath:filePath contents:nil attributes:nil];
-        self.SAS1telemetrySaveFile = [NSFileHandle fileHandleForWritingAtPath:filePath];
-    }
-    //say to handle where's the file fo write
-    [self.SAS1telemetrySaveFile truncateFileAtOffset:[self.SAS1telemetrySaveFile seekToEndOfFile]];
-    NSString *writeString = [NSString stringWithFormat:@"HEROES SAS1 Telemetry Log File %@\n", [self createDateTimeString:nil]];
-    //position handle cursor to the end of file
-    [self.SAS1telemetrySaveFile writeData:[writeString dataUsingEncoding:NSUTF8StringEncoding]];
-}
 
 - (IBAction)saveImage_ButtonAction:(NSButton *)sender {
     
@@ -320,7 +300,30 @@
 - (void)postToLogWindow: (NSString *)message{
     [[NSNotificationCenter defaultCenter] postNotificationName:@"LogMessage" object:nil userInfo:[NSDictionary dictionaryWithObject:message forKey:@"message"]];
 }
-     
+
+- (void)OpenTelemetrySaveFiles{
+    // Open a file to save the telemetry stream to
+    // The file is a csv file
+    //
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *filename = [NSString stringWithFormat:@"HEROES_SAS1_tmlog_%@.txt", [self createDateTimeString:@"file"]];
+    
+    NSString *filePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:filename];
+    // open file to save data stream
+    self.SAS1telemetrySaveFile = [NSFileHandle fileHandleForWritingAtPath: filePath ];
+    if (self.SAS1telemetrySaveFile == nil) {
+        [[NSFileManager defaultManager] createFileAtPath:filePath contents:nil attributes:nil];
+        self.SAS1telemetrySaveFile = [NSFileHandle fileHandleForWritingAtPath:filePath];
+    }
+    //say to handle where's the file fo write
+    [self.SAS1telemetrySaveFile truncateFileAtOffset:[self.SAS1telemetrySaveFile seekToEndOfFile]];
+    NSString *writeString = [NSString stringWithFormat:@"HEROES SAS1 Telemetry Log File %@\n", [self createDateTimeString:nil]];
+    //position handle cursor to the end of file
+    [self.SAS1telemetrySaveFile writeData:[writeString dataUsingEncoding:NSUTF8StringEncoding]];
+    writeString = [NSString stringWithFormat:@"doy, time, frame number, camera temp, cpu temp, suncenter x, suncenter y, CTL x, CTL y\n", [self createDateTimeString:nil]];
+    [self.SAS1telemetrySaveFile writeData:[writeString dataUsingEncoding:NSUTF8StringEncoding]];
+}
+
 - (void)mainThread_handleData:(NSNotification *)note
 {
     // Pending NSNotifications can possibly back up while waiting to be executed,
@@ -352,12 +355,13 @@
         [self.PYASFcameraView setCircleCenter:[self.packet.sunCenter pointValue].x :[self.packet.sunCenter pointValue].y];
         self.PYASFcameraView.chordCrossingPoints = self.packet.chordPoints;
         self.PYASFcameraView.fiducialPoints = self.packet.fiducialPoints;
-        self.PYASFImageMaxMinTextField.stringValue = [NSString stringWithFormat:@"%d, %d", self.packet.ImageRange.location, self.packet.ImageRange.length];
+        self.PYASFImageMaxMinTextField.stringValue = [NSString stringWithFormat:@"%d, %ld", self.packet.ImageRange.location, (unsigned long)self.packet.ImageRange.length];
         [self.PYASFcameraView draw];
-        NSString *writeString = [NSString stringWithFormat:@"%@, %@, %@, %@, %@\n",
+        NSString *writeString = [NSString stringWithFormat:@"%@, %@, %@, %@, %@, %@\n",
                              self.SAS1FrameTimeLabel.stringValue,
                              self.SAS1FrameNumberLabel.stringValue,
-                             self.PYASRCameraTemperatureLabel.stringValue,
+                             self.PYASFCameraTemperatureLabel.stringValue,
+                             self.SAS1CPUTemperatureLabel.stringValue,
                              [NSString stringWithFormat:@"%f, %f", [self.packet.sunCenter pointValue].x,
                                                                     [self.packet.sunCenter pointValue].y],
                              [NSString stringWithFormat:@"%f, %f", [self.packet.CTLCommand pointValue].x,
