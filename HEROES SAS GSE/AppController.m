@@ -79,7 +79,8 @@
             NSLog(@"Error reading plist: %@, format: %ld", errorDesc, format);
         }
         self.listOfCommands = plistDict;
-        
+        [self.Commander_window showWindow:nil];
+        [self.Console_window showWindow:nil];
 	}
 	return self;
 }
@@ -345,6 +346,8 @@
             [self.PYASFCameraTemperatureLabel setBackgroundColor:[NSColor redColor]];
         }
 
+        [self.SAS1CPUTemperatureLabel setIntegerValue:self.packet.cpuTemperature];
+        
         [self.PYASFCTLCmdEchoTextField setStringValue:[NSString stringWithFormat:@"%5.3f, %5.3f", [self.packet.CTLCommand pointValue].x, [self.packet.CTLCommand pointValue].y]];
         [self.PYASFcameraView setCircleCenter:[self.packet.sunCenter pointValue].x :[self.packet.sunCenter pointValue].y];
         self.PYASFcameraView.chordCrossingPoints = self.packet.chordPoints;
@@ -365,6 +368,7 @@
     
     if (self.packet.isSAS2) {
         [self.PYASFCameraTemperatureLabel setIntegerValue:self.packet.cameraTemperature];
+        [self.SAS2CPUTemperatureLabel setIntegerValue:self.packet.cpuTemperature];
         [self.PYASRcameraView draw];
     }
     

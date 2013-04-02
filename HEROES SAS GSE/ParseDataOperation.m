@@ -123,6 +123,8 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
 
                             //For now, housekeeping1 is always camera temperature
                             self.dataPacket.cameraTemperature = (int)housekeeping1;
+                            //For now, housekeeping2 is always CPU temperature
+                            self.dataPacket.cpuTemperature = (int)housekeeping2;
 
                             Pair3B sunCenter, sunCenterError;
                             *(tm_packet) >> sunCenter >> sunCenterError;
