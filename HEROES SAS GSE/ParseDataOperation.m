@@ -100,17 +100,22 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                     if (tm_packet->getSourceID() == SAS_TARGET_ID){
                         if (tm_packet->getTypeID() == SAS_TM_TYPE) {
                             
-                            //if (tm_packet->getSASSync() == SAS1_SYNC_WORD) {
-                                self.dataPacket.isSAS1=TRUE;
-                            //}
-                            //if (tm_packet->getSASSync() == SAS2_SYNC_WORD) {
-                            //    self.dataPacket.isSAS2=TRUE;
-                            //}
+                            switch (tm_packet->getSAS()) {
+                                case 1:
+                                    self.dataPacket.isSAS1 = TRUE;
+                                    break;
+                                case 2:
+                                    self.dataPacket.isSAS2 = TRUE;
+                                    break;
+                                default:
+                                    self.dataPacket.isSAS1 = TRUE;
+                                    break;
+                            }
                             
                             [self.dataPacket setFrameSeconds: tm_packet->getSeconds()];
                             
-                            uint16_t sas_sync;
-                            *(tm_packet) >> sas_sync;
+                            //uint16_t sas_sync;
+                            //*(tm_packet) >> sas_sync;
                             //NSLog(@"%x", sas_sync);
                             uint32_t frame_number;
                             *(tm_packet) >> frame_number;
@@ -119,11 +124,11 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                             uint16_t command_key;
                             *(tm_packet) >> command_key;
 
-                            int16_t housekeeping1, housekeeping2;
+                            uint16_t housekeeping1, housekeeping2;
                             *(tm_packet) >> housekeeping1 >> housekeeping2;
 
                             //For now, housekeeping1 is always camera temperature
-                            self.dataPacket.cameraTemperature = (int)housekeeping1;
+                            self.dataPacket.cameraTemperature = (int16_t)housekeeping1;
                             
                             //For now, housekeeping2 is always CPU temperature
                             self.dataPacket.cpuTemperature = (int)housekeeping2;
