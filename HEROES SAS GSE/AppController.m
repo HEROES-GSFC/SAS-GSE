@@ -43,6 +43,7 @@
 @synthesize SAS1CmdKeyTextField;
 @synthesize PYASFImageMaxMinTextField;
 @synthesize PYASFdrawBkgImage_checkbox;
+@synthesize MainWindow;
 @synthesize PYASFcameraView = _PYASFcameraView;
 @synthesize PYASRcameraView = _PYASRcameraView;
 @synthesize Commander_window = _Commander_window;
@@ -80,7 +81,14 @@
         }
         self.listOfCommands = plistDict;
         [self.Commander_window showWindow:nil];
+        [self.Commander_window.window orderFront:self];
+
         [self.Console_window showWindow:nil];
+        [self.Console_window.window orderFront:self];
+
+        [NSApp activateIgnoringOtherApps:YES];
+        [self.MainWindow makeKeyAndOrderFront:self];
+        [self.MainWindow orderFrontRegardless];
 	}
 	return self;
 }
@@ -393,17 +401,17 @@
         
         [self.PYASRCameraTemperatureLabel setIntegerValue:self.packet.cameraTemperature];
         if (!NSLocationInRange(self.packet.cameraTemperature, CameraOKTempRange)){
-            [self.PYASFCameraTemperatureLabel setBackgroundColor:[NSColor redColor]];
-        } else { [self.PYASFCameraTemperatureLabel setBackgroundColor:[NSColor whiteColor]]; }
+            [self.PYASRCameraTemperatureLabel setBackgroundColor:[NSColor redColor]];
+        } else { [self.PYASRCameraTemperatureLabel setBackgroundColor:[NSColor whiteColor]]; }
 
         [self.SAS2CPUTemperatureLabel setIntegerValue:self.packet.cpuTemperature];
         if (!NSLocationInRange(self.packet.cpuTemperature, CPUOKTempRange)){
             [self.SAS2CPUTemperatureLabel setBackgroundColor:[NSColor redColor]];
         } else { [self.SAS2CPUTemperatureLabel setBackgroundColor:[NSColor whiteColor]]; }
         
-        [self.PYASFcameraView setCircleCenter:[self.packet.sunCenter pointValue].x :[self.packet.sunCenter pointValue].y];
-        self.PYASFcameraView.chordCrossingPoints = self.packet.chordPoints;
-        self.PYASFcameraView.fiducialPoints = self.packet.fiducialPoints;
+        [self.PYASRcameraView setCircleCenter:[self.packet.sunCenter pointValue].x :[self.packet.sunCenter pointValue].y];
+        self.PYASRcameraView.chordCrossingPoints = self.packet.chordPoints;
+        self.PYASRcameraView.fiducialPoints = self.packet.fiducialPoints;
         
         [self.PYASRcameraView draw];
     }
@@ -422,7 +430,7 @@
 }
 
 - (IBAction)RunTest:(id)sender {
-    
+
     [self postToLogWindow:@"test string"];
 }
 

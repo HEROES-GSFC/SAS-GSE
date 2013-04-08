@@ -159,7 +159,7 @@
         [self drawACross:self.mouseLocation :0.02];
         unsigned char pixelValue[1];
         [self.bkgImage getBytes:pixelValue range:NSMakeRange(self.mouseLocation.x + self.mouseLocation.y * self.imageXSize, 1)];
-        [self drawText:self.mouseLocation :[NSString stringWithFormat:@"%d", pixelValue]];
+        [self drawText:self.mouseLocation :[NSString stringWithFormat:@"%s", pixelValue]];
     }
 }
 
@@ -244,6 +244,7 @@
     glPopMatrix();
     
     glMatrixMode(GL_MODELVIEW);
+    free(pixels);
 }
 
 

@@ -44,8 +44,9 @@
 
 @property (nonatomic, readonly) CommanderWindowController *Commander_window;
 @property (nonatomic, readonly) ConsoleWindowController *Console_window;
-- (IBAction)bkgImageIsClicked:(NSButton *)sender;
+@property (unsafe_unretained) IBOutlet NSWindow *MainWindow;
 
+- (IBAction)bkgImageIsClicked:(NSButton *)sender;
 - (IBAction)StartStopButtonAction:(NSButton *)sender;
 - (IBAction)RunTest:(NSButton *)sender;
 - (IBAction)saveImage_ButtonAction:(NSButton *)sender;

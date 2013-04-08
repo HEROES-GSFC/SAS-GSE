@@ -13,7 +13,6 @@
 
 #define SAS_CMD_PORT 2001
 
-
 @interface Commander(){
 @private
     uint16_t frame_sequence_number;
@@ -54,7 +53,6 @@
         std::cerr << e.what() << std::endl;
     }
 
-    
     comSender->send( &cp );
     comSender->close_connection();
 

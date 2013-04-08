@@ -16,7 +16,7 @@
 	<key>Set new pointing</key>
 	<dict>
 		<key>key</key>
-		<string>0x0104</string>
+		<string>0x0112</string>
 		<key>description</key>
 		<string>Set new solar target, x and y in arcseconds</string>
 		<key>var_names</key>
@@ -32,7 +32,7 @@
 		<key>description</key>
 		<string>Ask for a full frame to be sent over TCP</string>
 		<key>key</key>
-		<string>0x1210</string>
+		<string>0x0210</string>
 	</dict>
 	<key>Restart all Workers</key>
 	<dict>
@@ -41,7 +41,7 @@
 		<key>description</key>
 		<string>Kill and then restart all workers</string>
 		<key>key</key>
-		<string>0x0102</string>
+		<string>0x0020</string>
 	</dict>
 	<key>Test</key>
 	<dict>
@@ -59,7 +59,7 @@
 		<key>description</key>
 		<string>Kill all worker thread (except command listening thread)</string>
 		<key>key</key>
-		<string>0x1010</string>
+		<string>0x0010</string>
 	</dict>
 </dict>
 </plist>
