@@ -12,7 +12,7 @@
 #import "Telemetry.hpp"
 #include <unistd.h>
 
-#define PAYLOAD_SIZE 
+#define PAYLOAD_SIZE
 #define DEFAULT_PORT 5010 /* The default port to send on */
 
 #define SAS_TARGET_ID 0x30
@@ -63,11 +63,12 @@ NSString *kReceiveAndParseImageDidFinish = @"ReceiveAndParseImageDidFinish";
         
         tcpReceiver->init_connection();
         
-               int sock;
+        int sock;
         while (1) {
             
             if ([self isCancelled])
             {
+                NSLog(@"I am stopping too");
                 break;	// user cancelled this operation
             }
             if((sock = tcpReceiver->accept_packet()) > 0){
@@ -83,7 +84,7 @@ NSString *kReceiveAndParseImageDidFinish = @"ReceiveAndParseImageDidFinish";
                  length:strlen(tempFileNameCString)];
                 //NSLog(@"%@", tempFileName);
                 free(tempFileNameCString);
-                int packet_count = 0;               
+                int packet_count = 0;
                 int packet_length;
                 //NSLog(@"got it %i", packet_length);
                 while ((packet_length = tcpReceiver->handle_tcpclient(sock)) > 0) {

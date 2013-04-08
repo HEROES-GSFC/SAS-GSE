@@ -103,7 +103,7 @@
 		86672DF316F7AB4700F36110 /* types.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = types.cpp; path = "lib/SAS-aspect/PYAS-core/aspect/types.cpp"; sourceTree = "<group>"; };
 		86672DF416F7AB4700F36110 /* types.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = types.hpp; path = "lib/SAS-aspect/PYAS-core/aspect/types.hpp"; sourceTree = "<group>"; };
 		86672DF816F7D2BD00F36110 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
-		8670FBA817068B6100F9C2DC /* en */ = {isa = PBXFileReference; lastKnownFileType = file; name = en; path = en.lproj/AppDelegate.m; sourceTree = "<group>"; };
+		8670FBA817068B6100F9C2DC /* en */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = en; path = en.lproj/AppDelegate.m; sourceTree = "<group>"; };
 		86881A72163D9231003CC656 /* ParseDataOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParseDataOperation.h; sourceTree = "<group>"; };
 		86881A73163D9231003CC656 /* ParseDataOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParseDataOperation.m; sourceTree = "<group>"; };
 		8693D5E516C5BB1A00985DDB /* Command.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = Command.cpp; path = "lib/SAS-aspect/PYAS-core/aspect/Command.cpp"; sourceTree = "<group>"; };
@@ -192,7 +192,6 @@
 		860EF331163605D300B46E35 /* HEROES SAS GSE */ = {
 			isa = PBXGroup;
 			children = (
-				8693D5E416C5BAC500985DDB /* Externals */,
 				860EF33D163605D300B46E35 /* AppDelegate.h */,
 				8670FBA917068B6100F9C2DC /* AppDelegate.m */,
 				860EF35F1636060100B46E35 /* AppController.h */,
@@ -208,6 +207,7 @@
 				8666E3C216A3BA6600A9DD85 /* Commander.h */,
 				8666E3C316A3BA6600A9DD85 /* Commander.m */,
 				86159E7516DED0D400E79C27 /* Windows */,
+				8693D5E416C5BAC500985DDB /* Externals */,
 				86E1D8481695ED1B0079303F /* lib */,
 				860EF332163605D300B46E35 /* Supporting Files */,
 			);

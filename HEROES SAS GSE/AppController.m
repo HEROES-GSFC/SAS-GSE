@@ -37,12 +37,15 @@
 @synthesize SAS1FrameTimeLabel;
 @synthesize SAS2FrameNumberLabel;
 @synthesize SAS2FrameTimeLabel;
+@synthesize PYASRImageMaxMinTextField;
+@synthesize PYASFdrawBkgImage_checkbox;
+@synthesize PYASRdrawBkgImage_checkbox;
+
 
 @synthesize StartStopSegmentedControl;
 @synthesize SAS1CmdCountTextField;
 @synthesize SAS1CmdKeyTextField;
 @synthesize PYASFImageMaxMinTextField;
-@synthesize PYASFdrawBkgImage_checkbox;
 @synthesize MainWindow;
 @synthesize PYASFcameraView = _PYASFcameraView;
 @synthesize PYASRcameraView = _PYASRcameraView;
@@ -130,11 +133,18 @@
 }
 
 
-- (IBAction)bkgImageIsClicked:(NSButton *)sender {
+- (IBAction)PYASRbkgImageIsClicked:(NSButton *)sender {
     if ([sender state] == NSOnState) {
         self.PYASFcameraView.turnOnBkgImage = TRUE;}
     if ([sender state] == NSOffState){
         self.PYASFcameraView.turnOnBkgImage = FALSE;}
+}
+
+- (IBAction)PYASFbkgImageIsClicked:(NSButton *)sender {
+    if ([sender state] == NSOnState) {
+        self.PYASRcameraView.turnOnBkgImage = TRUE;}
+    if ([sender state] == NSOffState){
+        self.PYASRcameraView.turnOnBkgImage = FALSE;}
 }
 
 - (NSOperationQueue *)queue
@@ -204,11 +214,9 @@
                                                      selector:@selector(anyThread_handleImage:)
                                                          name:kReceiveAndParseImageDidFinish
                                                        object:nil];
-            
         }
         
-        
-    [self OpenTelemetrySaveFiles];
+        [self OpenTelemetrySaveFiles];
     }
     if ([StartStopSegmentedControl selectedSegment] == 1) {
         [self.queue cancelAllOperations];
@@ -220,7 +228,41 @@
 }
 
 
-- (IBAction)saveImage_ButtonAction:(NSButton *)sender {
+- (IBAction)PYASRsaveImage_ButtonAction:(NSButton *)sender {
+    
+    NSData *imagedata = self.PYASRcameraView.bkgImage;
+    
+    NSUInteger len = [self.PYASRcameraView.bkgImage length];
+    
+    long xpixels = self.PYASRcameraView.imageXSize;
+    long ypixels = self.PYASRcameraView.imageYSize;
+    
+    NSBitmapImageRep *greyRep = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:nil pixelsWide:xpixels pixelsHigh:ypixels bitsPerSample:8 samplesPerPixel:1 hasAlpha:NO isPlanar:NO colorSpaceName:NSCalibratedWhiteColorSpace bitmapFormat:0 bytesPerRow:xpixels bitsPerPixel:8];
+    
+    unsigned char *pix = [greyRep bitmapData];
+    
+    memcpy(pix, [self.PYASRcameraView.bkgImage bytes], len);
+
+    NSImage *greyscale = [[NSImage alloc] initWithSize:NSMakeSize(xpixels, ypixels)];
+    [greyscale addRepresentation:greyRep];
+    
+    NSData *temp = [greyscale TIFFRepresentation];
+    NSBitmapImageRep *imageRep = [NSBitmapImageRep imageRepWithData:temp];
+    NSDictionary *imageProps = [NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:1.0] forKey:NSImageCompressionFactor];
+    imagedata = [imageRep representationUsingType:NSPNGFileType properties:imageProps];
+    
+    //open a save panel
+    NSSavePanel* panel = [NSSavePanel savePanel];
+    [panel setNameFieldStringValue:[NSString stringWithFormat:@"PYASimage%@.png", [self createDateTimeString:@"file"]]];
+    [panel beginWithCompletionHandler:^(NSInteger result){
+        if (result == NSFileHandlingPanelOKButton) {
+            NSURL *theFile = [panel URL];
+            [imagedata writeToFile:[theFile path] atomically:YES];
+        }
+    }];
+}
+
+- (IBAction)PYASFsaveImage_ButtonAction:(NSButton *)sender {
     
     NSData *imagedata = self.PYASFcameraView.bkgImage;
     
@@ -234,7 +276,7 @@
     unsigned char *pix = [greyRep bitmapData];
     
     memcpy(pix, [self.PYASFcameraView.bkgImage bytes], len);
-
+    
     NSImage *greyscale = [[NSImage alloc] initWithSize:NSMakeSize(xpixels, ypixels)];
     [greyscale addRepresentation:greyRep];
     

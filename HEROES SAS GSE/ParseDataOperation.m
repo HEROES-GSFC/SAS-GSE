@@ -76,22 +76,21 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
 - (void)main
 {
     @autoreleasepool {
-
         tmReceiver->init_connection();
-
+        
         while (1) {
-            
             if ([self isCancelled])
             {
+                NSLog(@"I am stopping");
                 break;	// user cancelled this operation
             }
-            
+            select(<#int#>, <#fd_set *#>, <#fd_set *#>, <#fd_set *#>, <#struct timeval *#>)
             uint16_t packet_length = tmReceiver->listen();
             if( packet_length != 0){
                 uint8_t *packet;
                 packet = new uint8_t[packet_length];
                 tmReceiver->get_packet( packet );
-            
+                
                 TelemetryPacket *tm_packet;
                 tm_packet = new TelemetryPacket( packet, packet_length);
                 
@@ -123,53 +122,53 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                             *(tm_packet) >> command_count;
                             uint16_t command_key;
                             *(tm_packet) >> command_key;
-
+                            
                             uint16_t housekeeping1, housekeeping2;
                             *(tm_packet) >> housekeeping1 >> housekeeping2;
-
+                            
                             //For now, housekeeping1 is always camera temperature
                             self.dataPacket.cameraTemperature = (int16_t)housekeeping1;
                             
                             //For now, housekeeping2 is always CPU temperature
                             self.dataPacket.cpuTemperature = (int)housekeeping2;
-
+                            
                             Pair3B sunCenter, sunCenterError;
                             *(tm_packet) >> sunCenter >> sunCenterError;
-
+                            
                             [self.dataPacket setSunCenter:[NSValue valueWithPoint:NSMakePoint(sunCenter.x(), sunCenter.y())]];
-
+                            
                             Pair3B predictCenter, predictCenterError;
                             *(tm_packet) >> predictCenter >> predictCenterError;
-
+                            
                             uint16_t nLimbs;
                             *(tm_packet) >> nLimbs;
-
+                            
                             for (int i = 0; i < NUM_LIMBS; i++) {
                                 Pair3B limb;
                                 *(tm_packet) >> limb;
                                 [self.dataPacket addChordPoint:NSMakePoint(limb.x(),limb.y()) :i];
                             }
-
+                            
                             uint16_t nFiducials;
                             *(tm_packet) >> nFiducials;
-
+                            
                             for (int i = 0; i < NUM_FIDUCIALS; i++) {
                                 Pair3B fiducial;
                                 *(tm_packet) >> fiducial;
                                 [self.dataPacket addFiducialPoint:NSMakePoint(fiducial.x(),fiducial.y()) :i];
                             }
-
+                            
                             float x_intercept, x_slope;
                             *(tm_packet) >> x_intercept >> x_slope;
-
+                            
                             float y_intercept, y_slope;
                             *(tm_packet) >> y_intercept >> y_slope;
-
+                            
                             uint8_t image_max, image_min;
                             *(tm_packet) >> image_max >> image_min;
                             
                             self.dataPacket.ImageRange = NSMakeRange(image_min, image_max);
-
+                            
                             [self.dataPacket setFrameNumber: frame_number];
                             [self.dataPacket setCommandCount: command_count];
                             [self.dataPacket setCommandKey: command_key];
@@ -200,29 +199,16 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                             NSString *msg = [NSString stringWithFormat:@"Received PROC ACK for command number %u, command key 0x%X, return code %u", sequence_number, command_key, return_code];
                             [self postToLogWindow:msg];
                         }
-                        
                     }
-                    
                 }
-                
                 free(packet);
                 free(tm_packet);
             }
-
-                NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:
-                                      self.dataPacket, @"packet",
-                                      nil];
-                if (![self isCancelled])
-//              {
-                    // for the purposes of this sample, we're just going to post the information
-                    // out there and let whoever might be interested receive it (in our case its MyWindowController).
-                    [[NSNotificationCenter defaultCenter] postNotificationName:kReceiveAndParseDataDidFinish object:nil userInfo:info];
-                }
-//}
-            //[self setQueuePriority:2.0];      // second priority
+            NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys: self.dataPacket, @"packet", nil];
+            if (![self isCancelled])
+                [[NSNotificationCenter defaultCenter] postNotificationName:kReceiveAndParseDataDidFinish object:nil userInfo:info];
+        }
     }
 }
-
-
 
 @end
