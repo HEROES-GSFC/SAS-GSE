@@ -35,20 +35,26 @@
 @property (nonatomic, strong) IBOutlet CameraView *PYASRcameraView;
 @property (nonatomic, strong) IBOutlet CameraView *PYASFcameraView;
 @property (weak) IBOutlet NSButton *PYASFdrawBkgImage_checkbox;
+@property (weak) IBOutlet NSButton *PYASRdrawBkgImage_checkbox;
 @property (weak) IBOutlet NSTextField *PYASFCTLCmdEchoTextField;
 @property (weak) IBOutlet NSTextField *PYASRCTLCmdEchoTextField;
 @property (weak) IBOutlet NSTextField *PYASFImageMaxMinTextField;
+@property (weak) IBOutlet NSTextField *PYASRImageMaxMinTextField;
+@property (weak) IBOutlet NSButton *SaveData_checkbox;
 
 @property (nonatomic, strong) NSFileHandle *SAS1telemetrySaveFile;
 @property (nonatomic, strong) NSFileHandle *SAS2telemetrySaveFile;
 
 @property (nonatomic, readonly) CommanderWindowController *Commander_window;
 @property (nonatomic, readonly) ConsoleWindowController *Console_window;
-- (IBAction)bkgImageIsClicked:(NSButton *)sender;
+@property (unsafe_unretained) IBOutlet NSWindow *MainWindow;
 
+- (IBAction)PYASRbkgImageIsClicked:(NSButton *)sender;
+- (IBAction)PYASFbkgImageIsClicked:(NSButton *)sender;
 - (IBAction)StartStopButtonAction:(NSButton *)sender;
 - (IBAction)RunTest:(NSButton *)sender;
-- (IBAction)saveImage_ButtonAction:(NSButton *)sender;
+- (IBAction)PYASFsaveImage_ButtonAction:(NSButton *)sender;
+- (IBAction)PYASRsaveImage_ButtonAction:(NSButton *)sender;
 - (void)postToLogWindow: (NSString *)message;
 
 @end

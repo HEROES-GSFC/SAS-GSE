@@ -43,12 +43,15 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
 }
 
 @property (nonatomic, strong) DataPacket *dataPacket;
+@property (nonatomic, strong) NSFileHandle *saveFile;
+
 - (void)postToLogWindow: (NSString *)message;
 @end
 
 @implementation ParseDataOperation
 
 @synthesize dataPacket = _dataPacket;
+@synthesize saveFile = _saveFile;
 
 - (id)init{
     self = [super init]; // call our super’s designated initializer
@@ -66,8 +69,38 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
     return _dataPacket;
 }
 
+- (NSFileHandle *)saveFile
+{
+    if (_saveFile == nil)
+    {
+        _saveFile = [[NSFileHandle alloc] init];
+    }
+    return _saveFile;
+}
+
 - (void)postToLogWindow: (NSString *)message{
     [[NSNotificationCenter defaultCenter] postNotificationName:@"LogMessage" object:nil userInfo:[NSDictionary dictionaryWithObject:message forKey:@"message"]];
+}
+
+- (void)OpenSaveFile{
+    // Open a file to save the telemetry stream to
+    
+    // Create a time string for the filename
+    NSDate *currDate = [NSDate date];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
+    [dateFormatter setDateFormat:@"YYYYMMdd_HHmmss"];
+    NSString *dateString = [dateFormatter stringFromDate:currDate];
+    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *filename = [NSString stringWithFormat:@"HEROES_SAS_tmlog_%@.dat", dateString];
+    NSString *filePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:filename];
+    self.saveFile = [NSFileHandle fileHandleForWritingAtPath: filePath ];
+    if (self.saveFile == nil) {
+        [[NSFileManager defaultManager] createFileAtPath:filePath contents:nil attributes:nil];
+        self.saveFile = [NSFileHandle fileHandleForWritingAtPath:filePath];
+    }
+    //say to handle where's the file fo write
+    [self.saveFile truncateFileAtOffset:[self.saveFile seekToEndOfFile]];
 }
 
 // -------------------------------------------------------------------------------
@@ -76,22 +109,25 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
 - (void)main
 {
     @autoreleasepool {
-
         tmReceiver->init_connection();
-
+        [self OpenSaveFile];
+        
         while (1) {
-            
             if ([self isCancelled])
             {
+                NSLog(@"I am stopping");
+                [self.saveFile closeFile];
                 break;	// user cancelled this operation
             }
             
             uint16_t packet_length = tmReceiver->listen();
             if( packet_length != 0){
-                uint8_t *packet;
-                packet = new uint8_t[packet_length];
+                uint8_t *packet = new uint8_t[packet_length];
                 tmReceiver->get_packet( packet );
-            
+                
+                //save to file
+                [self.saveFile writeData:[NSData dataWithBytes:packet length:packet_length]];
+                
                 TelemetryPacket *tm_packet;
                 tm_packet = new TelemetryPacket( packet, packet_length);
                 
@@ -100,71 +136,73 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                     if (tm_packet->getSourceID() == SAS_TARGET_ID){
                         if (tm_packet->getTypeID() == SAS_TM_TYPE) {
                             
-                            //if (tm_packet->getSASSync() == SAS1_SYNC_WORD) {
-                                self.dataPacket.isSAS1=TRUE;
-                            //}
-                            //if (tm_packet->getSASSync() == SAS2_SYNC_WORD) {
-                            //    self.dataPacket.isSAS2=TRUE;
-                            //}
+                            switch (tm_packet->getSAS()) {
+                                case 1:
+                                    self.dataPacket.isSAS1 = TRUE;
+                                    break;
+                                case 2:
+                                    self.dataPacket.isSAS2 = TRUE;
+                                    break;
+                                default:
+                                    self.dataPacket.isSAS1 = TRUE;
+                                    break;
+                            }
                             
                             [self.dataPacket setFrameSeconds: tm_packet->getSeconds()];
                             
-                            uint16_t sas_sync;
-                            *(tm_packet) >> sas_sync;
-                            //NSLog(@"%x", sas_sync);
                             uint32_t frame_number;
                             *(tm_packet) >> frame_number;
                             uint16_t command_count;
                             *(tm_packet) >> command_count;
                             uint16_t command_key;
                             *(tm_packet) >> command_key;
-
-                            int16_t housekeeping1, housekeeping2;
+                            
+                            uint16_t housekeeping1, housekeeping2;
                             *(tm_packet) >> housekeeping1 >> housekeeping2;
-
+                            
                             //For now, housekeeping1 is always camera temperature
-                            self.dataPacket.cameraTemperature = (int)housekeeping1;
+                            self.dataPacket.cameraTemperature = Float2B(housekeeping1).value();
                             
                             //For now, housekeeping2 is always CPU temperature
-                            self.dataPacket.cpuTemperature = (int)housekeeping2;
+                            self.dataPacket.cpuTemperature = (int16_t)housekeeping2;
 
                             Pair3B sunCenter, sunCenterError;
                             *(tm_packet) >> sunCenter >> sunCenterError;
-
+                            
                             [self.dataPacket setSunCenter:[NSValue valueWithPoint:NSMakePoint(sunCenter.x(), sunCenter.y())]];
-
+                            
                             Pair3B predictCenter, predictCenterError;
                             *(tm_packet) >> predictCenter >> predictCenterError;
-
+                            
                             uint16_t nLimbs;
                             *(tm_packet) >> nLimbs;
-
+                            
                             for (int i = 0; i < NUM_LIMBS; i++) {
                                 Pair3B limb;
                                 *(tm_packet) >> limb;
                                 [self.dataPacket addChordPoint:NSMakePoint(limb.x(),limb.y()) :i];
                             }
-
+                            
                             uint16_t nFiducials;
                             *(tm_packet) >> nFiducials;
-
+                            
                             for (int i = 0; i < NUM_FIDUCIALS; i++) {
                                 Pair3B fiducial;
                                 *(tm_packet) >> fiducial;
                                 [self.dataPacket addFiducialPoint:NSMakePoint(fiducial.x(),fiducial.y()) :i];
                             }
-
+                            
                             float x_intercept, x_slope;
                             *(tm_packet) >> x_intercept >> x_slope;
-
+                            
                             float y_intercept, y_slope;
                             *(tm_packet) >> y_intercept >> y_slope;
-
+                            
                             uint8_t image_max, image_min;
                             *(tm_packet) >> image_max >> image_min;
                             
                             self.dataPacket.ImageRange = NSMakeRange(image_min, image_max);
-
+                            
                             [self.dataPacket setFrameNumber: frame_number];
                             [self.dataPacket setCommandCount: command_count];
                             [self.dataPacket setCommandKey: command_key];
@@ -192,32 +230,19 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                             uint16_t return_code;
                             *tm_packet >> return_code;
                             //
-                            NSString *msg = [NSString stringWithFormat:@"Received PROC ACK for command number %u, command key %u, return code %u", sequence_number, command_key, return_code];
+                            NSString *msg = [NSString stringWithFormat:@"Received PROC ACK for command number %u, command key 0x%X, return code %u", sequence_number, command_key, return_code];
                             [self postToLogWindow:msg];
                         }
-                        
                     }
-                    
                 }
-                
                 free(packet);
                 free(tm_packet);
             }
-
-                NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:
-                                      self.dataPacket, @"packet",
-                                      nil];
-                if (![self isCancelled])
-//              {
-                    // for the purposes of this sample, we're just going to post the information
-                    // out there and let whoever might be interested receive it (in our case its MyWindowController).
-                    [[NSNotificationCenter defaultCenter] postNotificationName:kReceiveAndParseDataDidFinish object:nil userInfo:info];
-                }
-//}
-            //[self setQueuePriority:2.0];      // second priority
+            NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys: self.dataPacket, @"packet", nil];
+            if (![self isCancelled])
+                [[NSNotificationCenter defaultCenter] postNotificationName:kReceiveAndParseDataDidFinish object:nil userInfo:info];
+        }
     }
 }
-
-
 
 @end

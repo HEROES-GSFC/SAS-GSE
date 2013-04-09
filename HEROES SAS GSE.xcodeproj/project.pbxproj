@@ -45,6 +45,9 @@
 		8693D5F316C5BB1A00985DDB /* UDPSender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8693D5ED16C5BB1A00985DDB /* UDPSender.cpp */; };
 		86A62FE7164D7EE10049527C /* CameraView.m in Sources */ = {isa = PBXBuildFile; fileRef = 86A62FE6164D7EE10049527C /* CameraView.m */; };
 		86A62FEA164D80BF0049527C /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86A62FE9164D80BF0049527C /* OpenGL.framework */; };
+		86D27B6D1713A8C7004287F0 /* Image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 86D27B6B1713A8C7004287F0 /* Image.cpp */; };
+		86D27B6E1713A8E4004287F0 /* Image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 86D27B6B1713A8C7004287F0 /* Image.cpp */; };
+		86D27B6F1713A8E4004287F0 /* Image.hpp in Sources */ = {isa = PBXBuildFile; fileRef = 86D27B6C1713A8C7004287F0 /* Image.hpp */; };
 		86E1D84E1695ED1B0079303F /* lib_crc.c in Sources */ = {isa = PBXBuildFile; fileRef = 86E1D84A1695ED1B0079303F /* lib_crc.c */; };
 		86E1D84F1695ED1B0079303F /* lib_crc.txt in Resources */ = {isa = PBXBuildFile; fileRef = 86E1D84C1695ED1B0079303F /* lib_crc.txt */; };
 /* End PBXBuildFile section */
@@ -103,7 +106,7 @@
 		86672DF316F7AB4700F36110 /* types.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = types.cpp; path = "lib/SAS-aspect/PYAS-core/aspect/types.cpp"; sourceTree = "<group>"; };
 		86672DF416F7AB4700F36110 /* types.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = types.hpp; path = "lib/SAS-aspect/PYAS-core/aspect/types.hpp"; sourceTree = "<group>"; };
 		86672DF816F7D2BD00F36110 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
-		8670FBA817068B6100F9C2DC /* en */ = {isa = PBXFileReference; lastKnownFileType = file; name = en; path = en.lproj/AppDelegate.m; sourceTree = "<group>"; };
+		8670FBA817068B6100F9C2DC /* en */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = en; path = en.lproj/AppDelegate.m; sourceTree = "<group>"; };
 		86881A72163D9231003CC656 /* ParseDataOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParseDataOperation.h; sourceTree = "<group>"; };
 		86881A73163D9231003CC656 /* ParseDataOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParseDataOperation.m; sourceTree = "<group>"; };
 		8693D5E516C5BB1A00985DDB /* Command.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = Command.cpp; path = "lib/SAS-aspect/PYAS-core/aspect/Command.cpp"; sourceTree = "<group>"; };
@@ -119,6 +122,8 @@
 		86A62FE5164D7EE10049527C /* CameraView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraView.h; sourceTree = "<group>"; };
 		86A62FE6164D7EE10049527C /* CameraView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CameraView.m; sourceTree = "<group>"; };
 		86A62FE9164D80BF0049527C /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		86D27B6B1713A8C7004287F0 /* Image.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Image.cpp; path = "lib/SAS-aspect/PYAS-core/aspect/Image.cpp"; sourceTree = "<group>"; };
+		86D27B6C1713A8C7004287F0 /* Image.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Image.hpp; path = "lib/SAS-aspect/PYAS-core/aspect/Image.hpp"; sourceTree = "<group>"; };
 		86E1D84A1695ED1B0079303F /* lib_crc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lib_crc.c; sourceTree = "<group>"; };
 		86E1D84B1695ED1B0079303F /* lib_crc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lib_crc.h; sourceTree = "<group>"; };
 		86E1D84C1695ED1B0079303F /* lib_crc.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = lib_crc.txt; sourceTree = "<group>"; };
@@ -192,7 +197,6 @@
 		860EF331163605D300B46E35 /* HEROES SAS GSE */ = {
 			isa = PBXGroup;
 			children = (
-				8693D5E416C5BAC500985DDB /* Externals */,
 				860EF33D163605D300B46E35 /* AppDelegate.h */,
 				8670FBA917068B6100F9C2DC /* AppDelegate.m */,
 				860EF35F1636060100B46E35 /* AppController.h */,
@@ -208,6 +212,7 @@
 				8666E3C216A3BA6600A9DD85 /* Commander.h */,
 				8666E3C316A3BA6600A9DD85 /* Commander.m */,
 				86159E7516DED0D400E79C27 /* Windows */,
+				8693D5E416C5BAC500985DDB /* Externals */,
 				86E1D8481695ED1B0079303F /* lib */,
 				860EF332163605D300B46E35 /* Supporting Files */,
 			);
@@ -265,6 +270,8 @@
 		8693D5E416C5BAC500985DDB /* Externals */ = {
 			isa = PBXGroup;
 			children = (
+				86D27B6B1713A8C7004287F0 /* Image.cpp */,
+				86D27B6C1713A8C7004287F0 /* Image.hpp */,
 				8693D5E516C5BB1A00985DDB /* Command.cpp */,
 				8693D5E616C5BB1A00985DDB /* Command.hpp */,
 				86672DF316F7AB4700F36110 /* types.cpp */,
@@ -418,6 +425,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				86D27B6E1713A8E4004287F0 /* Image.cpp in Sources */,
+				86D27B6F1713A8E4004287F0 /* Image.hpp in Sources */,
 				86159E6E16DB311200E79C27 /* TCPReceiver.cpp in Sources */,
 				86159E6F16DB311200E79C27 /* TCPReceiver.hpp in Sources */,
 				860EF338163605D300B46E35 /* main.m in Sources */,
@@ -449,6 +458,7 @@
 				86159E6D16DB210F00E79C27 /* TCPReceiver.cpp in Sources */,
 				86159E7216DC2E6800E79C27 /* TCPSender.cpp in Sources */,
 				86672DF516F7AB4700F36110 /* types.cpp in Sources */,
+				86D27B6D1713A8C7004287F0 /* Image.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
