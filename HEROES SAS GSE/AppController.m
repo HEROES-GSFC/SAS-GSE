@@ -21,7 +21,7 @@
 @property (nonatomic, strong) NSDictionary *listOfCommands;
 @property (nonatomic, strong) DataPacket *packet;
 - (NSString *)createDateTimeString: (NSString *)type;
-- (void)OpenTelemetrySaveFiles;
+- (void)OpenTelemetrySaveTextFiles;
 @end
 
 @implementation AppController
@@ -40,7 +40,7 @@
 @synthesize PYASRImageMaxMinTextField;
 @synthesize PYASFdrawBkgImage_checkbox;
 @synthesize PYASRdrawBkgImage_checkbox;
-
+@synthesize SaveData_checkbox;
 
 @synthesize StartStopSegmentedControl;
 @synthesize SAS1CmdCountTextField;
@@ -216,7 +216,9 @@
                                                        object:nil];
         }
         
-        [self OpenTelemetrySaveFiles];
+        if ([self.SaveData_checkbox state] == NSOnState) {
+            [self OpenTelemetrySaveTextFiles];
+        }
     }
     if ([StartStopSegmentedControl selectedSegment] == 1) {
         [self.queue cancelAllOperations];
@@ -351,7 +353,7 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:@"LogMessage" object:nil userInfo:[NSDictionary dictionaryWithObject:message forKey:@"message"]];
 }
 
-- (void)OpenTelemetrySaveFiles{
+- (void)OpenTelemetrySaveTextFiles{
     // Open a file to save the telemetry stream to
     // The file is a csv file
     //

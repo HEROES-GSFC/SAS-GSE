@@ -87,6 +87,11 @@
 }
 - (IBAction)ConfirmButtonPushed:(NSButton *)sender {
     [self.send_Button setEnabled:YES];
+    [self.confirm_Button setEnabled:NO];
+    [self.commandListcomboBox setEnabled:NO];
+    [self.Variables_Form setEnabled:NO];
+    [self.destinationIP_textField setEnabled:NO];
+    [self.targetListcomboBox setEnabled:NO];
 }
 
 - (IBAction)commandList_action:(NSComboBox *)sender {
@@ -162,5 +167,17 @@
     [self.commandCount_textField setIntegerValue:command_sequence_number];
     [self.send_Button setEnabled:NO];
     [self.confirm_Button setEnabled:NO];
+    [self.Variables_Form setEnabled:YES];
+    [self.commandListcomboBox setEnabled:YES];
+    [self.targetListcomboBox setEnabled:YES];
+    [self.destinationIP_textField setEnabled:YES];
+}
+- (IBAction)cancel_Button:(NSButton *)sender {
+    [self.send_Button setEnabled:NO];
+    [self.confirm_Button setEnabled:NO];
+    [self.Variables_Form setEnabled:YES];
+    [self.commandListcomboBox setEnabled:YES];
+    [self.targetListcomboBox setEnabled:YES];
+    [self.destinationIP_textField setEnabled:YES];
 }
 @end

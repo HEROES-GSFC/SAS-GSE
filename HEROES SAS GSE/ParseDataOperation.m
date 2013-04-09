@@ -43,12 +43,15 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
 }
 
 @property (nonatomic, strong) DataPacket *dataPacket;
+@property (nonatomic, strong) NSFileHandle *saveFile;
+
 - (void)postToLogWindow: (NSString *)message;
 @end
 
 @implementation ParseDataOperation
 
 @synthesize dataPacket = _dataPacket;
+@synthesize saveFile = _saveFile;
 
 - (id)init{
     self = [super init]; // call our super’s designated initializer
@@ -66,8 +69,38 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
     return _dataPacket;
 }
 
+- (NSFileHandle *)saveFile
+{
+    if (_saveFile == nil)
+    {
+        _saveFile = [[NSFileHandle alloc] init];
+    }
+    return _saveFile;
+}
+
 - (void)postToLogWindow: (NSString *)message{
     [[NSNotificationCenter defaultCenter] postNotificationName:@"LogMessage" object:nil userInfo:[NSDictionary dictionaryWithObject:message forKey:@"message"]];
+}
+
+- (void)OpenSaveFile{
+    // Open a file to save the telemetry stream to
+    
+    // Create a time string for the filename
+    NSDate *currDate = [NSDate date];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
+    [dateFormatter setDateFormat:@"YYYYMMdd_HHmmss"];
+    NSString *dateString = [dateFormatter stringFromDate:currDate];
+    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *filename = [NSString stringWithFormat:@"HEROES_SAS_tmlog_%@.dat", dateString];
+    NSString *filePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:filename];
+    self.saveFile = [NSFileHandle fileHandleForWritingAtPath: filePath ];
+    if (self.saveFile == nil) {
+        [[NSFileManager defaultManager] createFileAtPath:filePath contents:nil attributes:nil];
+        self.saveFile = [NSFileHandle fileHandleForWritingAtPath:filePath];
+    }
+    //say to handle where's the file fo write
+    [self.saveFile truncateFileAtOffset:[self.saveFile seekToEndOfFile]];
 }
 
 // -------------------------------------------------------------------------------
@@ -77,25 +110,31 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
 {
     @autoreleasepool {
         tmReceiver->init_connection();
+        [self OpenSaveFile];
         
         while (1) {
             if ([self isCancelled])
             {
                 NSLog(@"I am stopping");
+                [self.saveFile closeFile];
                 break;	// user cancelled this operation
             }
-            select(<#int#>, <#fd_set *#>, <#fd_set *#>, <#fd_set *#>, <#struct timeval *#>)
+            
             uint16_t packet_length = tmReceiver->listen();
             if( packet_length != 0){
-                uint8_t *packet;
-                packet = new uint8_t[packet_length];
+                uint8_t *packet = new uint8_t[packet_length];
                 tmReceiver->get_packet( packet );
+                
+                //save to file
+                [self.saveFile writeData:[NSData dataWithBytes:packet length:packet_length]];
                 
                 TelemetryPacket *tm_packet;
                 tm_packet = new TelemetryPacket( packet, packet_length);
                 
                 if (tm_packet->valid())
                 {
+                    
+                    
                     if (tm_packet->getSourceID() == SAS_TARGET_ID){
                         if (tm_packet->getTypeID() == SAS_TM_TYPE) {
                             
@@ -113,9 +152,6 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                             
                             [self.dataPacket setFrameSeconds: tm_packet->getSeconds()];
                             
-                            //uint16_t sas_sync;
-                            //*(tm_packet) >> sas_sync;
-                            //NSLog(@"%x", sas_sync);
                             uint32_t frame_number;
                             *(tm_packet) >> frame_number;
                             uint16_t command_count;
