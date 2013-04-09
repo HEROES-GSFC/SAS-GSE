@@ -133,8 +133,6 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                 
                 if (tm_packet->valid())
                 {
-                    
-                    
                     if (tm_packet->getSourceID() == SAS_TARGET_ID){
                         if (tm_packet->getTypeID() == SAS_TM_TYPE) {
                             
@@ -163,11 +161,11 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                             *(tm_packet) >> housekeeping1 >> housekeeping2;
                             
                             //For now, housekeeping1 is always camera temperature
-                            self.dataPacket.cameraTemperature = (int16_t)housekeeping1;
+                            self.dataPacket.cameraTemperature = Float2B(housekeeping1).value();
                             
                             //For now, housekeeping2 is always CPU temperature
-                            self.dataPacket.cpuTemperature = (int)housekeeping2;
-                            
+                            self.dataPacket.cpuTemperature = (int16_t)housekeeping2;
+
                             Pair3B sunCenter, sunCenterError;
                             *(tm_packet) >> sunCenter >> sunCenterError;
                             

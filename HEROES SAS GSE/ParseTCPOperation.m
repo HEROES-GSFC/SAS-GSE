@@ -9,7 +9,7 @@
 
 #import "DataPacket.h"
 #import "TCPReceiver.hpp"
-#import "Telemetry.hpp"
+#import "Image.hpp"
 #include <unistd.h>
 
 #define PAYLOAD_SIZE
@@ -61,7 +61,7 @@ NSString *kReceiveAndParseImageDidFinish = @"ReceiveAndParseImageDidFinish";
 {
     @autoreleasepool {
         
-        tcpReceiver->init_connection();
+        tcpReceiver->init_listen();
         
         int sock;
         while (1) {
@@ -98,40 +98,28 @@ NSString *kReceiveAndParseImageDidFinish = @"ReceiveAndParseImageDidFinish";
                 }
                 if (packet_count > 0) {
                     //NSLog(@"received %d packets", packet_count);
-                    TelemetryPacketQueue tpq;
-                    tpq.filterSourceID(0x30);
-                    tpq.add_file([tempFileName UTF8String]);
-                    TelemetryPacket tp(NULL);
+                    ImagePacketQueue ipq;
+                    ipq.filterSourceID(0x30);
+                    ipq.add_file([tempFileName UTF8String]);
+                    packet_count = (int)ipq.size();
+
+                    uint8_t camera;
                     uint16_t xpixels;
                     uint16_t ypixels;
-                    
-                    tpq >> tp;
-                    tp.readNextTo(xpixels);
-                    tp.readNextTo(ypixels);
-                    packet_count = 0;
-                    uint8_t *image = (uint8_t *)malloc(xpixels * ypixels);
-                    long i = 0;
+                    std::vector<uint8_t> output;
+                    ipq.reassembleTo(camera, xpixels, ypixels, output);
+
+                    uint8_t *image = (uint8_t *)&output[0];
+
                     uint8_t imageMax, imageMin;
                     imageMax = 0;
                     imageMin = 255;
-                    while( !tpq.empty() )
-                    {
-                        tpq >> tp;
-                        while (tp.remainingBytes() != 0) {
-                            uint8_t pixel;
-                            tp.readNextTo(pixel);
-                            image[i] = pixel;
-                            if (imageMin > pixel) {
-                                imageMin = pixel;
-                            }
-                            if (imageMax < pixel) {
-                                imageMax = pixel;
-                            }
-                            i++;
-                        }
-                        packet_count++;
+
+                    for (long ii = 0; ii < xpixels*ypixels; ii++) {
+                        if (imageMax < *(image+ii)) imageMax = *(image+ii);
+                        if (imageMin > *(image+ii)) imageMin = *(image+ii);
                     }
-                    
+
                     NSString *LogMessageNSLog = [NSString stringWithFormat:@"received %d image packets, image size is %dx%d", packet_count, xpixels, ypixels];
                     
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"LogMessage" object:nil userInfo:[NSDictionary dictionaryWithObject:LogMessageNSLog forKey:@"message"]];
@@ -142,7 +130,6 @@ NSString *kReceiveAndParseImageDidFinish = @"ReceiveAndParseImageDidFinish";
                     if (![self isCancelled]){
                         [[NSNotificationCenter defaultCenter] postNotificationName:kReceiveAndParseImageDidFinish object:nil userInfo:info];
                     }
-                    free(image);
                     close(fileDescriptor);
                     tcpReceiver->close_connection();
                 }
