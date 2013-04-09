@@ -45,6 +45,9 @@
 		8693D5F316C5BB1A00985DDB /* UDPSender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8693D5ED16C5BB1A00985DDB /* UDPSender.cpp */; };
 		86A62FE7164D7EE10049527C /* CameraView.m in Sources */ = {isa = PBXBuildFile; fileRef = 86A62FE6164D7EE10049527C /* CameraView.m */; };
 		86A62FEA164D80BF0049527C /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86A62FE9164D80BF0049527C /* OpenGL.framework */; };
+		86D27B6D1713A8C7004287F0 /* Image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 86D27B6B1713A8C7004287F0 /* Image.cpp */; };
+		86D27B6E1713A8E4004287F0 /* Image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 86D27B6B1713A8C7004287F0 /* Image.cpp */; };
+		86D27B6F1713A8E4004287F0 /* Image.hpp in Sources */ = {isa = PBXBuildFile; fileRef = 86D27B6C1713A8C7004287F0 /* Image.hpp */; };
 		86E1D84E1695ED1B0079303F /* lib_crc.c in Sources */ = {isa = PBXBuildFile; fileRef = 86E1D84A1695ED1B0079303F /* lib_crc.c */; };
 		86E1D84F1695ED1B0079303F /* lib_crc.txt in Resources */ = {isa = PBXBuildFile; fileRef = 86E1D84C1695ED1B0079303F /* lib_crc.txt */; };
 /* End PBXBuildFile section */
@@ -119,6 +122,8 @@
 		86A62FE5164D7EE10049527C /* CameraView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraView.h; sourceTree = "<group>"; };
 		86A62FE6164D7EE10049527C /* CameraView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CameraView.m; sourceTree = "<group>"; };
 		86A62FE9164D80BF0049527C /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		86D27B6B1713A8C7004287F0 /* Image.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Image.cpp; path = "lib/SAS-aspect/PYAS-core/aspect/Image.cpp"; sourceTree = "<group>"; };
+		86D27B6C1713A8C7004287F0 /* Image.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Image.hpp; path = "lib/SAS-aspect/PYAS-core/aspect/Image.hpp"; sourceTree = "<group>"; };
 		86E1D84A1695ED1B0079303F /* lib_crc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lib_crc.c; sourceTree = "<group>"; };
 		86E1D84B1695ED1B0079303F /* lib_crc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lib_crc.h; sourceTree = "<group>"; };
 		86E1D84C1695ED1B0079303F /* lib_crc.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = lib_crc.txt; sourceTree = "<group>"; };
@@ -265,6 +270,8 @@
 		8693D5E416C5BAC500985DDB /* Externals */ = {
 			isa = PBXGroup;
 			children = (
+				86D27B6B1713A8C7004287F0 /* Image.cpp */,
+				86D27B6C1713A8C7004287F0 /* Image.hpp */,
 				8693D5E516C5BB1A00985DDB /* Command.cpp */,
 				8693D5E616C5BB1A00985DDB /* Command.hpp */,
 				86672DF316F7AB4700F36110 /* types.cpp */,
@@ -418,6 +425,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				86D27B6E1713A8E4004287F0 /* Image.cpp in Sources */,
+				86D27B6F1713A8E4004287F0 /* Image.hpp in Sources */,
 				86159E6E16DB311200E79C27 /* TCPReceiver.cpp in Sources */,
 				86159E6F16DB311200E79C27 /* TCPReceiver.hpp in Sources */,
 				860EF338163605D300B46E35 /* main.m in Sources */,
@@ -449,6 +458,7 @@
 				86159E6D16DB210F00E79C27 /* TCPReceiver.cpp in Sources */,
 				86159E7216DC2E6800E79C27 /* TCPSender.cpp in Sources */,
 				86672DF516F7AB4700F36110 /* types.cpp in Sources */,
+				86D27B6D1713A8C7004287F0 /* Image.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -45,7 +45,6 @@
     if (self) {
 
     }
-    
     return self;
 }
 
