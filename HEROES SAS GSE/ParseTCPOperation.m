@@ -114,6 +114,9 @@ NSString *kReceiveAndParseImageDidFinish = @"ReceiveAndParseImageDidFinish";
                     if (camera == 2) {
                         cameraName = @"PYAS-R";
                     }
+                    if (camera == 6) {
+                        cameraName = @"RAS";
+                    }
                     
                     uint8_t *image = (uint8_t *)&output[0];
 
@@ -131,6 +134,7 @@ NSString *kReceiveAndParseImageDidFinish = @"ReceiveAndParseImageDidFinish";
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"LogMessage" object:nil userInfo:[NSDictionary dictionaryWithObject:LogMessageNSLog forKey:@"message"]];
                     
                     self.data = [NSData dataWithBytes:image length:sizeof(uint8_t) * xpixels * ypixels];
+                    
                     NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys: self.data, @"image", [NSNumber numberWithInt:xpixels], @"xsize", [NSNumber numberWithInt:ypixels], @"ysize", [NSNumber numberWithInt:imageMin], @"min", [NSNumber numberWithInt:imageMax], @"max", cameraName, @"camera", nil];
                     NSLog(@"Image min/max %d, %d", imageMin, imageMax);
                     if (![self isCancelled]){

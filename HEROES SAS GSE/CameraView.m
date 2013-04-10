@@ -158,7 +158,7 @@
         //NSLog(@"mouse lcoation is %f, %f", self.mouseLocation.x, self.mouseLocation.y);
         [self drawACross:self.mouseLocation :0.02];
         unsigned char pixelValue;
-        [self.bkgImage getBytes:&pixelValue range:NSMakeRange(self.mouseLocation.x + self.mouseLocation.y * self.imageXSize, 1)];
+        [self.bkgImage getBytes:&pixelValue range:NSMakeRange(self.mouseLocation.x + ((int) self.mouseLocation.y) * self.imageXSize, 1)];
         NSString *text = [NSString stringWithFormat:@"%u, %f, %f", pixelValue, self.mouseLocation.x, self.mouseLocation.y];
         [self drawText:self.mouseLocation :text];
     }

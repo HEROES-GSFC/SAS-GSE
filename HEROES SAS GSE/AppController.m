@@ -328,7 +328,7 @@
 {
     NSDictionary *notifData = [note userInfo];
     NSData *data = [notifData valueForKey:@"image"];
-    NSString *cameraName = [notifData valueForKey:@"cameraName"];
+    NSString *cameraName = [notifData valueForKey:@"camera"];
 
     if ([cameraName isEqualToString:@"PYAS-F"]) {
         self.PYASFcameraView.bkgImage = data;
@@ -448,7 +448,7 @@
         [self.PYASRcameraView setCircleCenter:[self.packet.sunCenter pointValue].x :[self.packet.sunCenter pointValue].y];
         self.PYASRcameraView.chordCrossingPoints = self.packet.chordPoints;
         self.PYASRcameraView.fiducialPoints = self.packet.fiducialPoints;
-        //self.PYASRImageMaxMinTextField.stringValue = [NSString stringWithFormat:@"%d, %ld", self.packet.ImageRange.location, (unsigned long)self.packet.ImageRange.length];
+        self.PYASRImageMaxMinTextField.stringValue = [NSString stringWithFormat:@"%ld, %ld", (unsigned long)self.packet.ImageRange.location, (unsigned long)self.packet.ImageRange.length];
         
         [self.PYASRCameraTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", self.packet.cameraTemperature]];
         if (!NSLocationInRange(self.packet.cameraTemperature, CameraOKTempRange)){
