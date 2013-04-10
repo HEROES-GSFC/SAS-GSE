@@ -379,7 +379,7 @@
     NSString *writeString = [NSString stringWithFormat:@"HEROES SAS1 Telemetry Log File %@\n", [self createDateTimeString:nil]];
     //position handle cursor to the end of file
     [self.SAS1telemetrySaveFile writeData:[writeString dataUsingEncoding:NSUTF8StringEncoding]];
-    writeString = [NSString stringWithFormat:@"doy time, frame number, camera temp, cpu temp, suncenter x, suncenter y, CTL x, CTL y\n", [self createDateTimeString:nil]];
+    writeString = [NSString stringWithFormat:@"doy time, frame number, camera temp, cpu temp, suncenter x, suncenter y, CTL x, CTL y\n"];
     [self.SAS1telemetrySaveFile writeData:[writeString dataUsingEncoding:NSUTF8StringEncoding]];
 }
 
@@ -481,8 +481,27 @@
 }
 
 - (IBAction)RunTest:(id)sender {
-
+    int xpixels = 1296;
+    int ypixels = 966;
+    NSUInteger len = xpixels * ypixels;
+    Byte *pixels = (Byte *)malloc(len);
+    for (int ix = 0; ix < xpixels; ix++) {
+        for (int iy = 0; iy < ypixels; iy++) {
+            pixels[ix + iy*xpixels] = pow(pow(ix - xpixels/2.0,2) + pow(iy - ypixels/2.0,2),0.5)/1616.0 * 255;
+        }
+    }
+    
+    NSData *data = [NSData dataWithBytes:pixels length:sizeof(uint8_t) * xpixels * ypixels];
+    
+    self.PYASFcameraView.bkgImage = data;
+    self.PYASFcameraView.imageXSize = xpixels;
+    self.PYASFcameraView.imageYSize = ypixels;
+    self.PYASFcameraView.imageExists = YES;
+    self.PYASFcameraView.turnOnBkgImage = YES;
+    [self.PYASFcameraView draw];
+    
     [self postToLogWindow:@"test string"];
+    free(pixels);
 }
 
 @end
