@@ -314,14 +314,6 @@
     return dateString;
 }
 
-// -------------------------------------------------------------------------------
-//	anyThread_handleData:note
-//
-//	This method is called from any possible thread (any NSOperation) used to
-//	update our table view and its data source.
-//
-//	The notification contains an NSDictionary
-// -------------------------------------------------------------------------------
 - (void)anyThread_handleData:(NSNotification *)note
 {
 	[self performSelectorOnMainThread:@selector(mainThread_handleData:) withObject:note waitUntilDone:NO];
@@ -336,17 +328,32 @@
 {
     NSDictionary *notifData = [note userInfo];
     NSData *data = [notifData valueForKey:@"image"];
-    self.PYASFcameraView.bkgImage = data;
+    NSString *cameraName = [notifData valueForKey:@"cameraName"];
 
-    self.PYASFcameraView.imageXSize = [[notifData valueForKey:@"xsize"] intValue];
-    self.PYASFcameraView.imageYSize = [[notifData valueForKey:@"ysize"] intValue];
-    self.PYASFcameraView.imageExists = YES;
-    self.PYASFcameraView.turnOnBkgImage = YES;
+    if ([cameraName isEqualToString:@"PYAS-F"]) {
+        self.PYASFcameraView.bkgImage = data;
+        self.PYASFcameraView.imageXSize = [[notifData valueForKey:@"xsize"] intValue];
+        self.PYASFcameraView.imageYSize = [[notifData valueForKey:@"ysize"] intValue];
+        self.PYASFcameraView.imageExists = YES;
+        self.PYASFcameraView.turnOnBkgImage = YES;
+        [self.PYASFcameraView draw];
+        
+        NSString *logMessage = [NSString stringWithFormat:@"Received %@ image. Size is %ldx%ld = %ld", cameraName, self.PYASFcameraView.imageXSize, self.PYASFcameraView.imageYSize, (unsigned long)[data length]];
+        [self postToLogWindow:logMessage];
+    }
     
-    NSString *logMessage = [NSString stringWithFormat:@"Received image. Size is %ldx%ld = %ld", self.PYASFcameraView.imageXSize, self.PYASFcameraView.imageYSize, (unsigned long)[data length]];
-    [self postToLogWindow:logMessage];
+    if ([cameraName isEqualToString:@"PYAS-R"]) {
+        self.PYASRcameraView.bkgImage = data;
+        self.PYASRcameraView.imageXSize = [[notifData valueForKey:@"xsize"] intValue];
+        self.PYASRcameraView.imageYSize = [[notifData valueForKey:@"ysize"] intValue];
+        self.PYASRcameraView.imageExists = YES;
+        self.PYASRcameraView.turnOnBkgImage = YES;
+        [self.PYASRcameraView draw];
+        
+        NSString *logMessage = [NSString stringWithFormat:@"Received %@ image. Size is %ldx%ld = %ld", cameraName, self.PYASFcameraView.imageXSize, self.PYASFcameraView.imageYSize, (unsigned long)[data length]];
+        [self postToLogWindow:logMessage];        
+    }
     
-    [self.PYASFcameraView draw];
 }
 
 - (void)postToLogWindow: (NSString *)message{
