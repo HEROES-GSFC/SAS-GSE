@@ -397,7 +397,7 @@
     self.packet = [notifData valueForKey:@"packet"];
     
     NSRange CameraOKTempRange = NSMakeRange(-20, 60);
-    NSRange CPUOKTempRange = NSMakeRange(-20, 100);
+    NSRange CPUOKTempRange = NSMakeRange(-20, 60);
     
     if (self.packet.isSAS1) {
      
@@ -409,12 +409,12 @@
         [self.PYASFCameraTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", self.packet.cameraTemperature]];
         if (!NSLocationInRange(self.packet.cameraTemperature, CameraOKTempRange)){
             [self.PYASFCameraTemperatureLabel setBackgroundColor:[NSColor redColor]];
-        }
+        } else {[self.PYASFCameraTemperatureLabel setBackgroundColor:[NSColor whiteColor]];}
         
         [self.SAS1CPUTemperatureLabel setIntegerValue:self.packet.cpuTemperature];
         if (!NSLocationInRange(self.packet.cpuTemperature, CPUOKTempRange)){
             [self.SAS1CPUTemperatureLabel setBackgroundColor:[NSColor redColor]];
-        }
+        } else {[self.SAS1CPUTemperatureLabel setBackgroundColor:[NSColor whiteColor]];}
         
         [self.PYASFCTLCmdEchoTextField setStringValue:[NSString stringWithFormat:@"%5.3f, %5.3f", [self.packet.CTLCommand pointValue].x, [self.packet.CTLCommand pointValue].y]];
         [self.PYASFcameraView setCircleCenter:[self.packet.sunCenter pointValue].x :[self.packet.sunCenter pointValue].y];
