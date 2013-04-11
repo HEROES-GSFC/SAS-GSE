@@ -82,11 +82,10 @@ NSString *kReceiveAndParseImageDidFinish = @"ReceiveAndParseImageDidFinish";
                 [[NSFileManager defaultManager]
                  stringWithFileSystemRepresentation:tempFileNameCString
                  length:strlen(tempFileNameCString)];
-                //NSLog(@"%@", tempFileName);
                 free(tempFileNameCString);
                 int packet_count = 0;
                 int packet_length;
-                //NSLog(@"got it %i", packet_length);
+
                 while ((packet_length = tcpReceiver->handle_tcpclient(sock)) > 0) {
                     uint8_t *packet;
                     packet = new uint8_t[packet_length];
@@ -94,10 +93,10 @@ NSString *kReceiveAndParseImageDidFinish = @"ReceiveAndParseImageDidFinish";
                     write(fileDescriptor, packet, packet_length);
                     free(packet);
                     packet_count++;
-                    //NSLog(@"received %d packets", packet_count);
                 }
                 if (packet_count > 0) {
-                    //NSLog(@"received %d packets", packet_count);
+                    NSString *cameraName;
+                    
                     ImagePacketQueue ipq;
                     ipq.filterSourceID(0x30);
                     ipq.add_file([tempFileName UTF8String]);
@@ -109,6 +108,16 @@ NSString *kReceiveAndParseImageDidFinish = @"ReceiveAndParseImageDidFinish";
                     std::vector<uint8_t> output;
                     ipq.reassembleTo(camera, xpixels, ypixels, output);
 
+                    if (camera == 1) {
+                        cameraName = @"PYAS-F";
+                    }
+                    if (camera == 2) {
+                        cameraName = @"PYAS-R";
+                    }
+                    if (camera == 6) {
+                        cameraName = @"RAS";
+                    }
+                    
                     uint8_t *image = (uint8_t *)&output[0];
 
                     uint8_t imageMax, imageMin;
@@ -125,7 +134,8 @@ NSString *kReceiveAndParseImageDidFinish = @"ReceiveAndParseImageDidFinish";
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"LogMessage" object:nil userInfo:[NSDictionary dictionaryWithObject:LogMessageNSLog forKey:@"message"]];
                     
                     self.data = [NSData dataWithBytes:image length:sizeof(uint8_t) * xpixels * ypixels];
-                    NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys: self.data, @"image", [NSNumber numberWithInt:xpixels], @"xsize", [NSNumber numberWithInt:ypixels], @"ysize", [NSNumber numberWithInt:imageMin], @"min", [NSNumber numberWithInt:imageMax], @"max", nil];
+                    
+                    NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys: self.data, @"image", [NSNumber numberWithInt:xpixels], @"xsize", [NSNumber numberWithInt:ypixels], @"ysize", [NSNumber numberWithInt:imageMin], @"min", [NSNumber numberWithInt:imageMax], @"max", cameraName, @"camera", nil];
                     NSLog(@"Image min/max %d, %d", imageMin, imageMax);
                     if (![self isCancelled]){
                         [[NSNotificationCenter defaultCenter] postNotificationName:kReceiveAndParseImageDidFinish object:nil userInfo:info];

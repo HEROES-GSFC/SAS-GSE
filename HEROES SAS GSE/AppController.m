@@ -314,14 +314,6 @@
     return dateString;
 }
 
-// -------------------------------------------------------------------------------
-//	anyThread_handleData:note
-//
-//	This method is called from any possible thread (any NSOperation) used to
-//	update our table view and its data source.
-//
-//	The notification contains an NSDictionary
-// -------------------------------------------------------------------------------
 - (void)anyThread_handleData:(NSNotification *)note
 {
 	[self performSelectorOnMainThread:@selector(mainThread_handleData:) withObject:note waitUntilDone:NO];
@@ -336,17 +328,32 @@
 {
     NSDictionary *notifData = [note userInfo];
     NSData *data = [notifData valueForKey:@"image"];
-    self.PYASFcameraView.bkgImage = data;
+    NSString *cameraName = [notifData valueForKey:@"camera"];
 
-    self.PYASFcameraView.imageXSize = [[notifData valueForKey:@"xsize"] intValue];
-    self.PYASFcameraView.imageYSize = [[notifData valueForKey:@"ysize"] intValue];
-    self.PYASFcameraView.imageExists = YES;
-    self.PYASFcameraView.turnOnBkgImage = YES;
+    if ([cameraName isEqualToString:@"PYAS-F"]) {
+        self.PYASFcameraView.bkgImage = data;
+        self.PYASFcameraView.imageXSize = [[notifData valueForKey:@"xsize"] intValue];
+        self.PYASFcameraView.imageYSize = [[notifData valueForKey:@"ysize"] intValue];
+        self.PYASFcameraView.imageExists = YES;
+        self.PYASFcameraView.turnOnBkgImage = YES;
+        [self.PYASFcameraView draw];
+        
+        NSString *logMessage = [NSString stringWithFormat:@"Received %@ image. Size is %ldx%ld = %ld", cameraName, self.PYASFcameraView.imageXSize, self.PYASFcameraView.imageYSize, (unsigned long)[data length]];
+        [self postToLogWindow:logMessage];
+    }
     
-    NSString *logMessage = [NSString stringWithFormat:@"Received image. Size is %ldx%ld = %ld", self.PYASFcameraView.imageXSize, self.PYASFcameraView.imageYSize, (unsigned long)[data length]];
-    [self postToLogWindow:logMessage];
+    if ([cameraName isEqualToString:@"PYAS-R"]) {
+        self.PYASRcameraView.bkgImage = data;
+        self.PYASRcameraView.imageXSize = [[notifData valueForKey:@"xsize"] intValue];
+        self.PYASRcameraView.imageYSize = [[notifData valueForKey:@"ysize"] intValue];
+        self.PYASRcameraView.imageExists = YES;
+        self.PYASRcameraView.turnOnBkgImage = YES;
+        [self.PYASRcameraView draw];
+        
+        NSString *logMessage = [NSString stringWithFormat:@"Received %@ image. Size is %ldx%ld = %ld", cameraName, self.PYASFcameraView.imageXSize, self.PYASFcameraView.imageYSize, (unsigned long)[data length]];
+        [self postToLogWindow:logMessage];        
+    }
     
-    [self.PYASFcameraView draw];
 }
 
 - (void)postToLogWindow: (NSString *)message{
@@ -372,7 +379,7 @@
     NSString *writeString = [NSString stringWithFormat:@"HEROES SAS1 Telemetry Log File %@\n", [self createDateTimeString:nil]];
     //position handle cursor to the end of file
     [self.SAS1telemetrySaveFile writeData:[writeString dataUsingEncoding:NSUTF8StringEncoding]];
-    writeString = [NSString stringWithFormat:@"doy time, frame number, camera temp, cpu temp, suncenter x, suncenter y, CTL x, CTL y\n", [self createDateTimeString:nil]];
+    writeString = [NSString stringWithFormat:@"doy time, frame number, camera temp, cpu temp, suncenter x, suncenter y, CTL x, CTL y\n"];
     [self.SAS1telemetrySaveFile writeData:[writeString dataUsingEncoding:NSUTF8StringEncoding]];
 }
 
@@ -441,7 +448,7 @@
         [self.PYASRcameraView setCircleCenter:[self.packet.sunCenter pointValue].x :[self.packet.sunCenter pointValue].y];
         self.PYASRcameraView.chordCrossingPoints = self.packet.chordPoints;
         self.PYASRcameraView.fiducialPoints = self.packet.fiducialPoints;
-        //self.PYASRImageMaxMinTextField.stringValue = [NSString stringWithFormat:@"%d, %ld", self.packet.ImageRange.location, (unsigned long)self.packet.ImageRange.length];
+        self.PYASRImageMaxMinTextField.stringValue = [NSString stringWithFormat:@"%ld, %ld", (unsigned long)self.packet.ImageRange.location, (unsigned long)self.packet.ImageRange.length];
         
         [self.PYASRCameraTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", self.packet.cameraTemperature]];
         if (!NSLocationInRange(self.packet.cameraTemperature, CameraOKTempRange)){
@@ -474,8 +481,27 @@
 }
 
 - (IBAction)RunTest:(id)sender {
-
+    int xpixels = 1296;
+    int ypixels = 966;
+    NSUInteger len = xpixels * ypixels;
+    Byte *pixels = (Byte *)malloc(len);
+    for (int ix = 0; ix < xpixels; ix++) {
+        for (int iy = 0; iy < ypixels; iy++) {
+            pixels[ix + iy*xpixels] = pow(pow(ix - xpixels/2.0,2) + pow(iy - ypixels/2.0,2),0.5)/1616.0 * 255;
+        }
+    }
+    
+    NSData *data = [NSData dataWithBytes:pixels length:sizeof(uint8_t) * xpixels * ypixels];
+    
+    self.PYASFcameraView.bkgImage = data;
+    self.PYASFcameraView.imageXSize = xpixels;
+    self.PYASFcameraView.imageYSize = ypixels;
+    self.PYASFcameraView.imageExists = YES;
+    self.PYASFcameraView.turnOnBkgImage = YES;
+    [self.PYASFcameraView draw];
+    
     [self postToLogWindow:@"test string"];
+    free(pixels);
 }
 
 @end

@@ -157,9 +157,10 @@
     if (self.mouseLocation.x != -1) {
         //NSLog(@"mouse lcoation is %f, %f", self.mouseLocation.x, self.mouseLocation.y);
         [self drawACross:self.mouseLocation :0.02];
-        unsigned char pixelValue[1];
-        [self.bkgImage getBytes:pixelValue range:NSMakeRange(self.mouseLocation.x + self.mouseLocation.y * self.imageXSize, 1)];
-        [self drawText:self.mouseLocation :[NSString stringWithFormat:@"%s", pixelValue]];
+        unsigned char pixelValue;
+        [self.bkgImage getBytes:&pixelValue range:NSMakeRange(self.mouseLocation.x + ((int) self.mouseLocation.y) * self.imageXSize, 1)];
+        NSString *text = [NSString stringWithFormat:@"%u, %f, %f", pixelValue, self.mouseLocation.x, self.mouseLocation.y];
+        [self drawText:self.mouseLocation :text];
     }
 }
 
@@ -336,7 +337,6 @@
     glColor3f( 1, 1, 1 );
     glRasterPos2f(origin.x, origin.y);
     for (int i = 0; i < [text length]; i++) {
-        NSLog(@"%hu, %d, %ld", [text characterAtIndex:i], i, (unsigned long)[text length]);
         glutBitmapCharacter(GLUT_BITMAP_8_BY_13, [text characterAtIndex:i]);
     }
 }
