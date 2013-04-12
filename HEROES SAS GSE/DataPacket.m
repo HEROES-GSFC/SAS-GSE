@@ -27,12 +27,14 @@
 @synthesize chordPoints = _chordPoints;
 @synthesize fiducialPoints = _fiducialPoints;
 @synthesize sunCenter = _sunCenter;
+@synthesize screenCenter = _screenCenter;
 @synthesize CTLCommand = _CTLCommand;
 @synthesize cameraTemperature = _cameraTemperature;
 @synthesize cpuTemperature = _cpuTemperature;
 @synthesize isSAS1 = _isSAS1;
 @synthesize isSAS2 = _isSAS2;
 @synthesize ImageRange = _ImageRange;
+@synthesize screenRadius;
 
 -(id)init{
     self = [super init]; // call our super’s designated initializer
@@ -71,6 +73,14 @@
         _sunCenter = [[NSValue alloc] init];
     }
     return _sunCenter;
+}
+
+- (NSValue *)screenCenter
+{
+    if (_screenCenter == nil) {
+        _screenCenter = [[NSValue alloc] init];
+    }
+    return _screenCenter;
 }
 
 - (NSValue *)CTLCommand

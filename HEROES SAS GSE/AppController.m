@@ -417,10 +417,12 @@
         } else {[self.SAS1CPUTemperatureLabel setBackgroundColor:[NSColor whiteColor]];}
         
         [self.PYASFCTLCmdEchoTextField setStringValue:[NSString stringWithFormat:@"%5.3f, %5.3f", [self.packet.CTLCommand pointValue].x, [self.packet.CTLCommand pointValue].y]];
+        self.PYASFImageMaxMinTextField.stringValue = [NSString stringWithFormat:@"%ld, %ld", (unsigned long)self.packet.ImageRange.location, (unsigned long)self.packet.ImageRange.length];
+        
         [self.PYASFcameraView setCircleCenter:[self.packet.sunCenter pointValue].x :[self.packet.sunCenter pointValue].y];
         self.PYASFcameraView.chordCrossingPoints = self.packet.chordPoints;
         self.PYASFcameraView.fiducialPoints = self.packet.fiducialPoints;
-        self.PYASFImageMaxMinTextField.stringValue = [NSString stringWithFormat:@"%ld, %ld", (unsigned long)self.packet.ImageRange.location, (unsigned long)self.packet.ImageRange.length];
+        [self.PYASFcameraView setScreenCenter:[self.packet.screenCenter pointValue].x :[self.packet.screenCenter pointValue].y];
         
         NSString *writeString = [NSString stringWithFormat:@"%@, %@, %@, %@, %@, %@\n",
                              self.SAS1FrameTimeLabel.stringValue,

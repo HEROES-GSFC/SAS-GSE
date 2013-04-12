@@ -22,6 +22,8 @@
 @property (nonatomic) float cpuTemperature;
 @property (nonatomic) BOOL isSAS1;
 @property (nonatomic) BOOL isSAS2;
+@property (nonatomic) NSValue *screenCenter;
+@property (nonatomic) float screenRadius;
 
 -(NSString *) getframeTimeString;
 -(void) addChordPoint: (NSPoint) point :(int) index;
