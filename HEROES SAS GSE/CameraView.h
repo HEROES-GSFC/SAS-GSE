@@ -17,6 +17,7 @@
 @property (nonatomic) long imageXSize;
 @property (nonatomic) long imageYSize;
 @property (nonatomic) BOOL imageExists;
+@property (nonatomic) float screenRadius;
 
 - (void) CameraViewWillTerminate:(NSNotification *)notification;
 - (void) draw;

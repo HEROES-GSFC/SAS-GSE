@@ -43,13 +43,6 @@
 {
     self = [super initWithWindow:window];
     if (self) {
-
-    }
-    return self;
-}
-
-- (NSDictionary *)plistDict{
-    if (_plistDict == nil) {
         // read command list dictionary from the CommandList.plist resource file
         NSString *errorDesc = nil;
         NSPropertyListFormat format;
@@ -58,14 +51,18 @@
         
         NSData *plistXML = [[NSFileManager defaultManager] contentsAtPath:plistPath];
         
-        _plistDict = (NSDictionary *)[NSPropertyListSerialization
-                                                   propertyListFromData:plistXML
-                                                   mutabilityOption:NSPropertyListMutableContainersAndLeaves
-                                                   format:&format
-                                                   errorDescription:&errorDesc];
-        if (!_plistDict) {
-            NSLog(@"Error reading CommandList.plist");
-        }
+        self.plistDict = (NSDictionary *)[NSPropertyListSerialization
+                                      propertyListFromData:plistXML
+                                      mutabilityOption:NSPropertyListMutableContainersAndLeaves
+                                      format:&format
+                                      errorDescription:&errorDesc];
+    }
+    return self;
+}
+
+- (NSDictionary *)plistDict{
+    if (_plistDict == nil) {
+        _plistDict = [[NSDictionary alloc] init];
     }
     return _plistDict;
 }
@@ -82,7 +79,7 @@
     [self.confirm_Button setEnabled:NO];
     [self.targetListcomboBox selectItemAtIndex:0];
 
-    [self.destinationIP_textField setStringValue:@"192.168.2.21"];    
+    [self.destinationIP_textField setStringValue:@"192.168.2.221"];    
 }
 - (IBAction)ConfirmButtonPushed:(NSButton *)sender {
     [self.send_Button setEnabled:YES];
@@ -91,10 +88,10 @@
 
     NSInteger numberOfVariablesCurrentlyDisplayed = (long)[self.Variables_Form numberOfRows];
     // clear the form of all elements
-    for (int i = 0; i < numberOfVariablesCurrentlyDisplayed; i++) {
-        [[self.Variables_Form cellAtIndex:i] setEditable:NO];
-    }
-    [self.destinationIP_textField setEditable:NO];
+    //for (int i = 0; i < numberOfVariablesCurrentlyDisplayed; i++) {
+     //   [[self.Variables_Form cellAtIndex:i] setEditable:NO];
+    //}
+    //[self.destinationIP_textField setEditable:NO];
     [self.targetListcomboBox setEnabled:NO];
 }
 

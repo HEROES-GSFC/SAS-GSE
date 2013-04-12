@@ -50,6 +50,7 @@
 @synthesize imageXSize;
 @synthesize imageYSize;
 @synthesize mouseLocation = _mouseLocation;
+@synthesize screenRadius;
 
 -(id) initWithFrame:(NSRect)frameRect
 {
@@ -138,7 +139,10 @@
     [self drawACircle: sunCenter: 92];
     
     glColor3f(0.7f, 0.7f, 0.7f);
-    [self drawACross:screenCenter :1.00];
+    [self drawACross:screenCenter :0.02];
+
+    glColor3f(0.7f, 0.7f, 0.7f);
+    [self drawACircle:screenCenter :self.screenRadius];
     
     glColor3f(0.0f, 1.0f, 0.0f);
     [self drawALine:sunCenter :213.0 :20.0];

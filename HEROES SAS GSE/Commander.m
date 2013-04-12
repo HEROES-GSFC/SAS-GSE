@@ -11,7 +11,7 @@
 #include "Command.hpp"
 #include "UDPSender.hpp"
 
-#define SAS_CMD_PORT 2001
+#define SAS_CMD_PORT 2000
 
 @interface Commander(){
 @private
@@ -60,6 +60,7 @@
     [self updateSequenceNumber];
     
     return frame_sequence_number;
+    free(comSender);
 }
 
 - (void) updateSequenceNumber{
