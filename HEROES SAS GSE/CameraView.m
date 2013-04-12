@@ -84,7 +84,7 @@
     if ((x < [self.numberXPixels floatValue]) && (x > 0)) {
         screenX = x;
     }
-    if ((y > [self.numberYPixels floatValue]) && (y > 0)) {
+    if ((y < [self.numberYPixels floatValue]) && (y > 0)) {
         screenY = y;
     }
 }

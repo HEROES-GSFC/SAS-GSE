@@ -45,6 +45,7 @@
 		8693D5F316C5BB1A00985DDB /* UDPSender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8693D5ED16C5BB1A00985DDB /* UDPSender.cpp */; };
 		86A62FE7164D7EE10049527C /* CameraView.m in Sources */ = {isa = PBXBuildFile; fileRef = 86A62FE6164D7EE10049527C /* CameraView.m */; };
 		86A62FEA164D80BF0049527C /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86A62FE9164D80BF0049527C /* OpenGL.framework */; };
+		86A9642B171869BC00C16663 /* TimeSeries.m in Sources */ = {isa = PBXBuildFile; fileRef = 86A9642A171869BC00C16663 /* TimeSeries.m */; };
 		86D27B6D1713A8C7004287F0 /* Image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 86D27B6B1713A8C7004287F0 /* Image.cpp */; };
 		86D27B6E1713A8E4004287F0 /* Image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 86D27B6B1713A8C7004287F0 /* Image.cpp */; };
 		86D27B6F1713A8E4004287F0 /* Image.hpp in Sources */ = {isa = PBXBuildFile; fileRef = 86D27B6C1713A8C7004287F0 /* Image.hpp */; };
@@ -122,6 +123,8 @@
 		86A62FE5164D7EE10049527C /* CameraView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraView.h; sourceTree = "<group>"; };
 		86A62FE6164D7EE10049527C /* CameraView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CameraView.m; sourceTree = "<group>"; };
 		86A62FE9164D80BF0049527C /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		86A96429171869BC00C16663 /* TimeSeries.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimeSeries.h; sourceTree = "<group>"; };
+		86A9642A171869BC00C16663 /* TimeSeries.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimeSeries.m; sourceTree = "<group>"; };
 		86D27B6B1713A8C7004287F0 /* Image.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Image.cpp; path = "lib/SAS-aspect/PYAS-core/aspect/Image.cpp"; sourceTree = "<group>"; };
 		86D27B6C1713A8C7004287F0 /* Image.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Image.hpp; path = "lib/SAS-aspect/PYAS-core/aspect/Image.hpp"; sourceTree = "<group>"; };
 		86E1D84A1695ED1B0079303F /* lib_crc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lib_crc.c; sourceTree = "<group>"; };
@@ -209,6 +212,8 @@
 				8666A001169254AE00B0DACE /* DataPacket.m */,
 				86A62FE5164D7EE10049527C /* CameraView.h */,
 				86A62FE6164D7EE10049527C /* CameraView.m */,
+				86A96429171869BC00C16663 /* TimeSeries.h */,
+				86A9642A171869BC00C16663 /* TimeSeries.m */,
 				8666E3C216A3BA6600A9DD85 /* Commander.h */,
 				8666E3C316A3BA6600A9DD85 /* Commander.m */,
 				86159E7516DED0D400E79C27 /* Windows */,
@@ -447,6 +452,7 @@
 				86159E6A16DB1D7B00E79C27 /* ParseTCPOperation.m in Sources */,
 				86159E7E16DED4FB00E79C27 /* CommanderWindowController.m in Sources */,
 				86159E8316DEFA7A00E79C27 /* ConsoleWindowController.m in Sources */,
+				86A9642B171869BC00C16663 /* TimeSeries.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
