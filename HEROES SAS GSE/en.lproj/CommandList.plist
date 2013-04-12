@@ -2,11 +2,33 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>Set Preamp gain</key>
+	<dict>
+		<key>var_names</key>
+		<array>
+			<string>value</string>
+		</array>
+		<key>description</key>
+		<string>Set the preamp gain value</string>
+		<key>key</key>
+		<string>0x0191</string>
+	</dict>
+	<key>Set Analog gain</key>
+	<dict>
+		<key>var_names</key>
+		<array>
+			<string>value</string>
+		</array>
+		<key>description</key>
+		<string>Set the analog gain value</string>
+		<key>key</key>
+		<string>0x0181</string>
+	</dict>
 	<key>Set exposure time</key>
 	<dict>
 		<key>var_names</key>
 		<array>
-			<string>t</string>
+			<string>time (us)</string>
 		</array>
 		<key>description</key>
 		<string>Set exposure time, t in microseconds</string>
