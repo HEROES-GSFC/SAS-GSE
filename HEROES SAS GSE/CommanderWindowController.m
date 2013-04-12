@@ -43,13 +43,6 @@
 {
     self = [super initWithWindow:window];
     if (self) {
-
-    }
-    return self;
-}
-
-- (NSDictionary *)plistDict{
-    if (_plistDict == nil) {
         // read command list dictionary from the CommandList.plist resource file
         NSString *errorDesc = nil;
         NSPropertyListFormat format;
@@ -58,14 +51,18 @@
         
         NSData *plistXML = [[NSFileManager defaultManager] contentsAtPath:plistPath];
         
-        _plistDict = (NSDictionary *)[NSPropertyListSerialization
-                                                   propertyListFromData:plistXML
-                                                   mutabilityOption:NSPropertyListMutableContainersAndLeaves
-                                                   format:&format
-                                                   errorDescription:&errorDesc];
-        if (!_plistDict) {
-            NSLog(@"Error reading CommandList.plist");
-        }
+        self.plistDict = (NSDictionary *)[NSPropertyListSerialization
+                                      propertyListFromData:plistXML
+                                      mutabilityOption:NSPropertyListMutableContainersAndLeaves
+                                      format:&format
+                                      errorDescription:&errorDesc];
+    }
+    return self;
+}
+
+- (NSDictionary *)plistDict{
+    if (_plistDict == nil) {
+        _plistDict = [[NSDictionary alloc] init];
     }
     return _plistDict;
 }
