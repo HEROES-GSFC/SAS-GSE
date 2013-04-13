@@ -8,9 +8,7 @@
 
 #import "TimeSeries.h"
 @interface TimeSeries()
--(float)calculateStandardDeviation;
--(void)updateStandardDeviation: (float) y;
-@property (nonatomic) float standardDeviationSquared;
+-(float)calculateStandardDeviation: (NSRange) range;
 @end
 
 @implementation TimeSeries
@@ -21,13 +19,15 @@
 @synthesize min;
 @synthesize max;
 @synthesize count;
-@synthesize standardDeviationSquared;
+@synthesize average;
+@synthesize ROI;
 
 -(id)init{
     self = [super init]; // call our super’s designated initializer
     if (self) {
         // insert initializing here
         self.count = 0;
+        self.ROI = NSMakeRange(0, 50);
     }
     return self;
 }
@@ -44,38 +44,36 @@
     }
     return _y;
 }
--(void)addPoint: (float)y{
-    //[self.x addObject:[NSNumber numberWithFloat:x]];
+- (void) addPoint: (float)x :(float) y{
+    [self.x addObject:[NSNumber numberWithFloat:x]];
     [self.y addObject:[NSNumber numberWithFloat:y]];
     if ([self.y count] == 1) {
         self.max = y;
         self.min = y;
-        self.standardDeviation = 0;
-        self.standardDeviationSquared = 0;
         self.average = y;
     } else {
-        self.average = 0.5 * (self.average + y);
         if (self.max < y){ self.max = y; }
         if (self.min > y){ self.min = y; }
-        [self updateStandardDeviation:y];
-        self.standardDeviation = sqrtf(self.standardDeviationSquared/[self.y count]);
     }
 }
 
--(float)calculateStandardDeviation{
-    float temp = 0;
-    for (NSNumber *number in self.y) {
-        temp += powf([number floatValue] - self.average, 2);
+-(float)average{
+    NSArray *ROIArray = [self.y subarrayWithRange:self.ROI];
+    float answer = 0;
+    for (NSNumber *number in ROIArray) {
+        answer += [number floatValue];
     }
-    return sqrtf(temp/[self.y count]);
+    return answer/[ROIArray count];
 }
 
--(void)updateStandardDeviation: (float) newy{
-    if ([self.y count] == 1) {
-        self.standardDeviationSquared = powf([[self.y objectAtIndex:0] floatValue] - self.average, 2);
-    } else {
-        self.standardDeviationSquared += powf(newy - self.average, 2);
+-(float)standardDeviation{
+    NSArray *ROIArray = [self.y subarrayWithRange:self.ROI];
+    float answer = 0;
+    float localAverage = self.average;
+    for (NSNumber *number in ROIArray) {
+        answer += powf([number floatValue] - localAverage, 2);
     }
+    return sqrtf(answer/[ROIArray count]);
 }
 
 @end

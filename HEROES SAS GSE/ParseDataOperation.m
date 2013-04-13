@@ -116,6 +116,8 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
             if ([self isCancelled])
             {
                 NSLog(@"I am stopping");
+                tmReceiver->close_connection();
+                free(tmReceiver);
                 [self.saveFile closeFile];
                 break;	// user cancelled this operation
             }

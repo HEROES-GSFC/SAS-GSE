@@ -17,8 +17,9 @@
 @property (nonatomic) float max;
 @property (nonatomic) float min;
 @property (nonatomic) float count;
+@property (nonatomic) NSRange ROI;
 
-- (void) addPoint: (float)y;
+- (void) addPoint: (float)x :(float) y;
 
 
 @end

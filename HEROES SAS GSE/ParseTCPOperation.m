@@ -69,6 +69,9 @@ NSString *kReceiveAndParseImageDidFinish = @"ReceiveAndParseImageDidFinish";
             if ([self isCancelled])
             {
                 NSLog(@"I am stopping too");
+                tcpReceiver->close_connection();
+                tcpReceiver->close_listen();
+                free(tcpReceiver);
                 break;	// user cancelled this operation
             }
             if((sock = tcpReceiver->accept_packet()) > 0){
