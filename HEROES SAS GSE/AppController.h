@@ -12,6 +12,7 @@
 #import "DataPacket.h"
 #import "ConsoleWindowController.h"
 #import "CommanderWindowController.h"
+#import "PlotWindowController.h"
 
 @interface AppController : NSObject
 - (IBAction)OpenWindow_WindowMenuItemAction:(NSMenuItem *)sender;
@@ -49,6 +50,7 @@
 
 @property (nonatomic, readonly) CommanderWindowController *Commander_window;
 @property (nonatomic, readonly) ConsoleWindowController *Console_window;
+@property (nonatomic, readonly) PlotWindowController *Plot_window;
 @property (unsafe_unretained) IBOutlet NSWindow *MainWindow;
 
 - (IBAction)PYASRbkgImageIsClicked:(NSButton *)sender;

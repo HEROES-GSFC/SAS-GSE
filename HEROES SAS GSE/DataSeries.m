@@ -11,7 +11,7 @@
 @implementation DataSeries
 
 @synthesize standardDeviation;
-@synthesize point = _point;
+@synthesize data = _data;
 @synthesize min;
 @synthesize max;
 @synthesize count;
@@ -30,11 +30,11 @@
     return self;
 }
 
--(NSMutableArray *) point{
-    if (_y == nil) {
-        _y = [[NSMutableArray alloc] init];
+-(NSMutableArray *) data{
+    if (_data == nil) {
+        _data = [[NSMutableArray alloc] init];
     }
-    return _y;
+    return _data;
 }
 - (void) addPoint: (float)newpoint{
     [self.data addObject:[NSNumber numberWithFloat:newpoint]];

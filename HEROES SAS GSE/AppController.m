@@ -52,6 +52,7 @@
 @synthesize PYASRcameraView = _PYASRcameraView;
 @synthesize Commander_window = _Commander_window;
 @synthesize Console_window = _Console_window;
+@synthesize Plot_window = _Plot_window;
 
 @synthesize timer = _timer;
 @synthesize listOfCommands = _listOfCommands;
@@ -195,6 +196,13 @@
         _PYASFcameraView = [[CameraView alloc] init];
     }
     return _PYASFcameraView;
+}
+
+- (PlotWindowController *)Plot_window{
+    if (_Plot_window == nil) {
+        _Plot_window = [[PlotWindowController alloc]init];
+    }
+    return _Plot_window;
 }
 
 - (DataPacket *)packet
@@ -498,6 +506,7 @@
     
     if ([userChoice isEqual: @"Commander"]) {
         [self.Commander_window showWindow:nil];
+        [self.Plot_window showWindow:nil];
     }
     if ([userChoice isEqual: @"Console"]) {
         [self.Console_window showWindow:nil];
