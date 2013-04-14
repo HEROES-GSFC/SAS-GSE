@@ -14,6 +14,7 @@
 #import "CameraView.h"
 #import "CommanderWindowController.h"
 #import "ConsoleWindowController.h"
+#import "DataSeries.h"
 
 @interface AppController ()
 @property (nonatomic, strong) NSOperationQueue *queue;
@@ -58,6 +59,7 @@
 @synthesize packet = _packet;
 @synthesize SAS1telemetrySaveFile = _SAS1telemetrySaveFile;
 @synthesize SAS2telemetrySaveFile = _SAS2telemetrySaveFile;
+@synthesize timeSeriesCollection = _timeSeriesCollection;
 
 - (id)init
 {
@@ -83,6 +85,14 @@
             NSLog(@"Error reading plist: %@, format: %ld", errorDesc, format);
         }
         self.listOfCommands = plistDict;
+        
+        DataSeries *cameraTemperature = [[DataSeries alloc] init];
+        NSMutableArray *time = [[NSMutableArray alloc] init];
+        NSArray *objects = [NSArray arrayWithObjects:time, cameraTemperature, nil];
+        NSArray *keys = [NSArray arrayWithObjects:@"time", @"camera temperature", nil];
+        cameraTemperature.name = @"Camera Temperature";
+        self.timeSeriesCollection = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+        
         [self.Commander_window showWindow:nil];
         [self.Commander_window.window orderFront:self];
 
@@ -103,6 +113,14 @@
         _Commander_window = [[CommanderWindowController alloc] init];
     }
     return _Commander_window;
+}
+- (NSDictionary *)timeSeriesCollection
+{
+    if (_timeSeriesCollection == nil)
+    {
+        _timeSeriesCollection = [[NSDictionary alloc] init];
+    }
+    return _timeSeriesCollection;
 }
 
 - (ConsoleWindowController *)Console_window
@@ -403,10 +421,14 @@
      
         [self.SAS1FrameNumberLabel setIntegerValue:[self.packet frameNumber]];
         [self.SAS1FrameTimeLabel setStringValue:[self.packet getframeTimeString]];
+        [[self.timeSeriesCollection objectForKey:@"time"] addObject:[self.packet getframeTimeString]];
         [self.SAS1CmdCountTextField setIntegerValue:[self.packet commandCount]];
         [self.SAS1CmdKeyTextField setStringValue:[NSString stringWithFormat:@"0x%04x", [self.packet commandKey]]];
         
-        [self.PYASFCameraTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", self.packet.cameraTemperature]];
+        [[self.timeSeriesCollection objectForKey:@"camera temperature"] addPoint:self.packet.cameraTemperature];
+        DataSeries *cameraTemps = [self.timeSeriesCollection objectForKey:@"camera temperature"];
+        
+        [self.PYASFCameraTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f, %6.2f, %6.2f", self.packet.cameraTemperature, cameraTemps.average, cameraTemps.standardDeviation]];
         if (!NSLocationInRange(self.packet.cameraTemperature, CameraOKTempRange)){
             [self.PYASFCameraTemperatureLabel setBackgroundColor:[NSColor redColor]];
         } else {[self.PYASFCameraTemperatureLabel setBackgroundColor:[NSColor whiteColor]];}

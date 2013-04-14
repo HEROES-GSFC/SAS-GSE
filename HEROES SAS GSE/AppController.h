@@ -45,6 +45,8 @@
 @property (nonatomic, strong) NSFileHandle *SAS1telemetrySaveFile;
 @property (nonatomic, strong) NSFileHandle *SAS2telemetrySaveFile;
 
+@property (nonatomic, strong) NSDictionary *timeSeriesCollection;
+
 @property (nonatomic, readonly) CommanderWindowController *Commander_window;
 @property (nonatomic, readonly) ConsoleWindowController *Console_window;
 @property (unsafe_unretained) IBOutlet NSWindow *MainWindow;

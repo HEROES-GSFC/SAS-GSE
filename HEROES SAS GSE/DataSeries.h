@@ -8,18 +8,18 @@
 
 #import <Foundation/Foundation.h>
 
-@interface TimeSeries : NSObject
+@interface DataSeries : NSObject
 
-@property (nonatomic, strong) NSMutableArray *x;
-@property (nonatomic, strong) NSMutableArray *y;
+@property (nonatomic, strong) NSMutableArray *data;
+@property (nonatomic, strong) NSString *description;
+@property (nonatomic, strong) NSString *name;
 @property (nonatomic) float standardDeviation;
 @property (nonatomic) float average;
 @property (nonatomic) float max;
 @property (nonatomic) float min;
-@property (nonatomic) float count;
+@property (nonatomic) NSInteger count;
 @property (nonatomic) NSRange ROI;
 
-- (void) addPoint: (float)x :(float) y;
-
+- (void) addPoint: (float) point;
 
 @end

@@ -6,21 +6,19 @@
 //  Copyright (c) 2013 GSFC. All rights reserved.
 //
 
-#import "TimeSeries.h"
-@interface TimeSeries()
--(float)calculateStandardDeviation: (NSRange) range;
-@end
+#import "DataSeries.h"
 
-@implementation TimeSeries
+@implementation DataSeries
 
 @synthesize standardDeviation;
-@synthesize x = _x;
-@synthesize y = _y;
+@synthesize point = _point;
 @synthesize min;
 @synthesize max;
 @synthesize count;
 @synthesize average;
 @synthesize ROI;
+@synthesize description;
+@synthesize name;
 
 -(id)init{
     self = [super init]; // call our super’s designated initializer
@@ -32,33 +30,29 @@
     return self;
 }
 
--(NSMutableArray *) x{
-    if (_x == nil) {
-        _x = [[NSMutableArray alloc] init];
-    }
-    return _x;
-}
--(NSMutableArray *) y{
+-(NSMutableArray *) point{
     if (_y == nil) {
         _y = [[NSMutableArray alloc] init];
     }
     return _y;
 }
-- (void) addPoint: (float)x :(float) y{
-    [self.x addObject:[NSNumber numberWithFloat:x]];
-    [self.y addObject:[NSNumber numberWithFloat:y]];
-    if ([self.y count] == 1) {
-        self.max = y;
-        self.min = y;
-        self.average = y;
+- (void) addPoint: (float)newpoint{
+    [self.data addObject:[NSNumber numberWithFloat:newpoint]];
+    self.count++;
+    if (self.count == 1) {
+        self.max = newpoint;
+        self.min = newpoint;
     } else {
-        if (self.max < y){ self.max = y; }
-        if (self.min > y){ self.min = y; }
+        if (self.max < newpoint){ self.max = newpoint; }
+        if (self.min > newpoint){ self.min = newpoint; }
+    }
+    if (self.count > self.ROI.length) {
+        self.ROI = NSMakeRange(self.ROI.location + self.count - self.ROI.length, self.ROI.length);
     }
 }
 
 -(float)average{
-    NSArray *ROIArray = [self.y subarrayWithRange:self.ROI];
+    NSArray *ROIArray = [self.data subarrayWithRange:self.ROI];
     float answer = 0;
     for (NSNumber *number in ROIArray) {
         answer += [number floatValue];
@@ -67,7 +61,7 @@
 }
 
 -(float)standardDeviation{
-    NSArray *ROIArray = [self.y subarrayWithRange:self.ROI];
+    NSArray *ROIArray = [self.data subarrayWithRange:self.ROI];
     float answer = 0;
     float localAverage = self.average;
     for (NSNumber *number in ROIArray) {
