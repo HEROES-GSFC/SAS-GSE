@@ -28,6 +28,7 @@
 		86159E7F16DED4FB00E79C27 /* CommanderWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 86159E7D16DED4FB00E79C27 /* CommanderWindowController.xib */; };
 		86159E8316DEFA7A00E79C27 /* ConsoleWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 86159E8116DEFA7A00E79C27 /* ConsoleWindowController.m */; };
 		86159E8416DEFA7A00E79C27 /* ConsoleWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 86159E8216DEFA7A00E79C27 /* ConsoleWindowController.xib */; };
+		861C4A9F171C999C004FCFAF /* Transform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 861C4A9E171C999C004FCFAF /* Transform.cpp */; };
 		8635E286171B0A1C00F69CD2 /* PlotWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8635E284171B0A1B00F69CD2 /* PlotWindowController.m */; };
 		8635E287171B0A1C00F69CD2 /* PlotWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8635E285171B0A1B00F69CD2 /* PlotWindowController.xib */; };
 		8635E443171B0D0600F69CD2 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8635E442171B0D0600F69CD2 /* Quartz.framework */; };
@@ -117,9 +118,10 @@
 		86159E8016DEFA7A00E79C27 /* ConsoleWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConsoleWindowController.h; sourceTree = "<group>"; };
 		86159E8116DEFA7A00E79C27 /* ConsoleWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConsoleWindowController.m; sourceTree = "<group>"; };
 		86159E8216DEFA7A00E79C27 /* ConsoleWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ConsoleWindowController.xib; sourceTree = "<group>"; };
-		8635E283171B0A1B00F69CD2 /* PlotWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlotWindowController.h; path = "HEROES SAS GSE/PlotWindowController.h"; sourceTree = "<group>"; };
-		8635E284171B0A1B00F69CD2 /* PlotWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlotWindowController.m; path = "HEROES SAS GSE/PlotWindowController.m"; sourceTree = "<group>"; };
-		8635E285171B0A1B00F69CD2 /* PlotWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PlotWindowController.xib; path = "HEROES SAS GSE/PlotWindowController.xib"; sourceTree = "<group>"; };
+		861C4A9E171C999C004FCFAF /* Transform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Transform.cpp; path = "lib/SAS-aspect/PYAS-core/aspect/Transform.cpp"; sourceTree = "<group>"; };
+		8635E283171B0A1B00F69CD2 /* PlotWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlotWindowController.h; sourceTree = "<group>"; };
+		8635E284171B0A1B00F69CD2 /* PlotWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlotWindowController.m; sourceTree = "<group>"; };
+		8635E285171B0A1B00F69CD2 /* PlotWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlotWindowController.xib; sourceTree = "<group>"; };
 		8635E442171B0D0600F69CD2 /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
 		8635E446171B4EB600F69CD2 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		8635E453171B539F00F69CD2 /* CorePlot.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CorePlot.framework; path = "HEROES SAS GSE/Frameworks/CorePlot.framework"; sourceTree = "<group>"; };
@@ -189,9 +191,6 @@
 			children = (
 				8635E456171B543B00F69CD2 /* CorePlot.framework */,
 				8635E446171B4EB600F69CD2 /* QuartzCore.framework */,
-				8635E283171B0A1B00F69CD2 /* PlotWindowController.h */,
-				8635E284171B0A1B00F69CD2 /* PlotWindowController.m */,
-				8635E285171B0A1B00F69CD2 /* PlotWindowController.xib */,
 				8660983A16B398DD00BE26D1 /* icon.iconset */,
 				860EF331163605D300B46E35 /* HEROES SAS GSE */,
 				860EF34E163605D400B46E35 /* HEROES SAS GSETests */,
@@ -296,6 +295,9 @@
 		86159E7516DED0D400E79C27 /* Windows */ = {
 			isa = PBXGroup;
 			children = (
+				8635E283171B0A1B00F69CD2 /* PlotWindowController.h */,
+				8635E284171B0A1B00F69CD2 /* PlotWindowController.m */,
+				8635E285171B0A1B00F69CD2 /* PlotWindowController.xib */,
 				86159E7B16DED4FA00E79C27 /* CommanderWindowController.h */,
 				86159E7C16DED4FB00E79C27 /* CommanderWindowController.m */,
 				86159E7D16DED4FB00E79C27 /* CommanderWindowController.xib */,
@@ -318,6 +320,7 @@
 				86672DF316F7AB4700F36110 /* types.cpp */,
 				86672DF416F7AB4700F36110 /* types.hpp */,
 				8693D5E716C5BB1A00985DDB /* Packet.cpp */,
+				861C4A9E171C999C004FCFAF /* Transform.cpp */,
 				8693D5E816C5BB1A00985DDB /* Packet.hpp */,
 				8693D5E916C5BB1A00985DDB /* Telemetry.cpp */,
 				86159E7016DC2E6800E79C27 /* TCPSender.cpp */,
@@ -493,6 +496,7 @@
 				86159E8316DEFA7A00E79C27 /* ConsoleWindowController.m in Sources */,
 				86A9642B171869BC00C16663 /* DataSeries.m in Sources */,
 				8635E286171B0A1C00F69CD2 /* PlotWindowController.m in Sources */,
+				861C4A9F171C999C004FCFAF /* Transform.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

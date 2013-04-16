@@ -144,6 +144,7 @@
     glColor3f(0.7f, 0.7f, 0.7f);
     [self drawACircle:screenCenter :self.screenRadius];
     
+    // draw solar north angle
     glColor3f(0.0f, 1.0f, 0.0f);
     [self drawALine:sunCenter :213.0 :20.0];
     

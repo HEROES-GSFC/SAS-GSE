@@ -15,6 +15,22 @@
 @implementation PlotWindowController
 
 @synthesize hostView = _hostView;
+@synthesize x = _x;
+@synthesize y = _y;
+
+-(DataSeries *)x{
+    if (_x == nil) {
+        _x = [[DataSeries alloc]init];
+    }
+    return _x;
+}
+
+-(DataSeries *)y{
+    if (_y == nil) {
+        _y = [[DataSeries alloc]init];
+    }
+    return _y;
+}
 
 -(CPTGraphHostingView *)hostView{
     if (_hostView == nil) {
@@ -31,7 +47,7 @@
 {
     self = [super initWithWindow:window];
     if (self) {
-        
+        self.test = 5;
     }
     return self;
 }
@@ -51,10 +67,11 @@
     CPTTheme *theme = [CPTTheme themeNamed:kCPTPlainBlackTheme];
     [graph applyTheme:theme];
     self.hostView.hostedGraph = graph;
+    
     // Setup scatter plot space
     CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)graph.defaultPlotSpace;
     NSTimeInterval xLow       = 0.0f;
-    plotSpace.xRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromFloat(xLow) length:CPTDecimalFromFloat(oneDay * 5.0f)];
+    plotSpace.xRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromFloat(xLow) length:CPTDecimalFromFloat(oneDay * 5.0f + self.test)];
     plotSpace.yRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromFloat(1.0) length:CPTDecimalFromFloat(3.0)];
     
     // Axes
@@ -88,8 +105,7 @@
     
     // Add some data
     NSMutableArray *newData = [NSMutableArray array];
-    NSUInteger i;
-    for ( i = 0; i < 5; i++ ) {
+    for ( NSUInteger i = 0; i < 5; i++ ) {
         NSTimeInterval x = oneDay * i;
         id y             = [NSDecimalNumber numberWithFloat:1.2 * rand() / (float)RAND_MAX + 1.2];
         [newData addObject:
@@ -99,6 +115,9 @@
           nil]];
     }
     plotData = newData;
+    
+    // Link data in
+
 }
 #pragma mark -
 #pragma mark Plot Data Source Methods
@@ -106,6 +125,37 @@
 -(NSUInteger)numberOfRecordsForPlot:(CPTPlot *)plot
 {
     return plotData.count;
+}
+
+-(void)update{
+    NSTimeInterval oneDay = 24 * 60 * 60;
+
+    NSMutableArray *data = [NSMutableArray array];
+    for (int i = 0; i < self.x.max; i++) {
+        [data addObject: [NSDictionary dictionaryWithObjectsAndKeys:
+                          [self.x.data objectAtIndex:i], [NSNumber numberWithInt:CPTScatterPlotFieldX],
+                          [self.y.data objectAtIndex:i], [NSNumber numberWithInt:CPTScatterPlotFieldY],
+                          nil]];
+    }
+    // Add some data
+    NSMutableArray *newData = [NSMutableArray array];
+    for ( int i = 0; i < self.test; i++ ) {
+        NSTimeInterval x = oneDay * i;
+        id y             = [NSDecimalNumber numberWithFloat:1.2 * rand() / (float)RAND_MAX + 1.2];
+        [newData addObject:
+         [NSDictionary dictionaryWithObjectsAndKeys:
+          [NSDecimalNumber numberWithFloat:x], [NSNumber numberWithInt:CPTScatterPlotFieldX],
+          y, [NSNumber numberWithInt:CPTScatterPlotFieldY],
+          nil]];
+    }
+    // Setup scatter plot space
+    CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)graph.defaultPlotSpace;
+    NSTimeInterval xLow       = 0.0f;
+    plotSpace.xRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromFloat(xLow) length:CPTDecimalFromFloat(oneDay * self.test)];
+    plotSpace.yRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromFloat(1.0) length:CPTDecimalFromFloat(3.0)];
+    
+    plotData = newData;
+    [graph reloadData];
 }
 
 -(NSNumber *)numberForPlot:(CPTPlot *)plot field:(NSUInteger)fieldEnum recordIndex:(NSUInteger)index

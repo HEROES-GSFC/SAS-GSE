@@ -7,6 +7,10 @@
 //
 
 #import "DataSeries.h"
+@interface DataSeries()
+-(float)calculateAverage;
+-(float)calculateStandardDeviation;
+@end
 
 @implementation DataSeries
 
@@ -19,6 +23,7 @@
 @synthesize ROI;
 @synthesize description;
 @synthesize name;
+@synthesize ROIlength;
 
 -(id)init{
     self = [super init]; // call our super’s designated initializer
@@ -26,6 +31,7 @@
         // insert initializing here
         self.count = 0;
         self.ROI = NSMakeRange(0, 50);
+        self.ROIlength = 50;
     }
     return self;
 }
@@ -46,12 +52,13 @@
         if (self.max < newpoint){ self.max = newpoint; }
         if (self.min > newpoint){ self.min = newpoint; }
     }
-    if (self.count > self.ROI.length) {
-        self.ROI = NSMakeRange(self.ROI.location + self.count - self.ROI.length, self.ROI.length);
-    }
+    self.ROI = NSMakeRange(self.count > self.ROIlength ? self.count - self.ROIlength: 0, self.count < self.ROIlength ? self.count : self.ROIlength );
+    
+    self.average = [self calculateAverage];
+    self.standardDeviation = [self calculateStandardDeviation];
 }
 
--(float)average{
+-(float)calculateAverage{
     NSArray *ROIArray = [self.data subarrayWithRange:self.ROI];
     float answer = 0;
     for (NSNumber *number in ROIArray) {
@@ -60,7 +67,7 @@
     return answer/[ROIArray count];
 }
 
--(float)standardDeviation{
+-(float)calculateStandardDeviation{
     NSArray *ROIArray = [self.data subarrayWithRange:self.ROI];
     float answer = 0;
     float localAverage = self.average;

@@ -15,8 +15,11 @@
 #import "CommanderWindowController.h"
 #import "ConsoleWindowController.h"
 #import "DataSeries.h"
+#import "Transform.hpp"
 
-@interface AppController ()
+@interface AppController (){
+    // transform object goes here
+}
 @property (nonatomic, strong) NSOperationQueue *queue;
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, strong) NSDictionary *listOfCommands;
@@ -433,10 +436,11 @@
         [self.SAS1CmdCountTextField setIntegerValue:[self.packet commandCount]];
         [self.SAS1CmdKeyTextField setStringValue:[NSString stringWithFormat:@"0x%04x", [self.packet commandKey]]];
         
-        [[self.timeSeriesCollection objectForKey:@"camera temperature"] addPoint:self.packet.cameraTemperature];
-        DataSeries *cameraTemps = [self.timeSeriesCollection objectForKey:@"camera temperature"];
+        //[[self.timeSeriesCollection objectForKey:@"camera temperature"] addPoint:self.packet.cameraTemperature];
+        //DataSeries *cameraTemps = [self.timeSeriesCollection objectForKey:@"camera temperature"];
         
-        [self.PYASFCameraTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f, %6.2f, %6.2f", self.packet.cameraTemperature, cameraTemps.average, cameraTemps.standardDeviation]];
+        //[self.PYASFCameraTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f, %6.2f, %6.2f", self.packet.cameraTemperature, cameraTemps.average, cameraTemps.standardDeviation]];
+         [self.PYASFCameraTemperatureLabel setFloatValue:self.packet.cameraTemperature];
         if (!NSLocationInRange(self.packet.cameraTemperature, CameraOKTempRange)){
             [self.PYASFCameraTemperatureLabel setBackgroundColor:[NSColor redColor]];
         } else {[self.PYASFCameraTemperatureLabel setBackgroundColor:[NSColor whiteColor]];}
@@ -453,6 +457,8 @@
         self.PYASFcameraView.chordCrossingPoints = self.packet.chordPoints;
         self.PYASFcameraView.fiducialPoints = self.packet.fiducialPoints;
         [self.PYASFcameraView setScreenCenter:[self.packet.screenCenter pointValue].x :[self.packet.screenCenter pointValue].y];
+        
+        //calculate the solar north angle here and pass it to PYASFcameraView
         
         NSString *writeString = [NSString stringWithFormat:@"%@, %@, %@, %@, %@, %@\n",
                              self.SAS1FrameTimeLabel.stringValue,
@@ -533,6 +539,8 @@
     self.PYASFcameraView.turnOnBkgImage = YES;
     [self.PYASFcameraView draw];
     
+    self.Plot_window.test += 1;
+    [self.Plot_window update];
     [self postToLogWindow:@"test string"];
     free(pixels);
 }

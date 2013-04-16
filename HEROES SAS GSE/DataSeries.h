@@ -19,6 +19,7 @@
 @property (nonatomic) float min;
 @property (nonatomic) NSInteger count;
 @property (nonatomic) NSRange ROI;
+@property (nonatomic) int ROIlength;
 
 - (void) addPoint: (float) point;
 

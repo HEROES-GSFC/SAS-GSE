@@ -15,7 +15,6 @@
 #import "PlotWindowController.h"
 
 @interface AppController : NSObject
-- (IBAction)OpenWindow_WindowMenuItemAction:(NSMenuItem *)sender;
 
 @property (weak) IBOutlet NSSegmentedControl *StartStopSegmentedControl;
 
@@ -60,5 +59,6 @@
 - (IBAction)PYASFsaveImage_ButtonAction:(NSButton *)sender;
 - (IBAction)PYASRsaveImage_ButtonAction:(NSButton *)sender;
 - (void)postToLogWindow: (NSString *)message;
+- (IBAction)OpenWindow_WindowMenuItemAction:(NSMenuItem *)sender;
 
 @end
