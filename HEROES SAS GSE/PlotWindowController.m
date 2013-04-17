@@ -85,6 +85,7 @@
     CPTTimeFormatter *timeFormatter = [[CPTTimeFormatter alloc] initWithDateFormatter:dateFormatter];
     timeFormatter.referenceDate = refDate;
     x.labelFormatter            = timeFormatter;
+    x.title = @"Temperature";
     
     CPTXYAxis *y = axisSet.yAxis;
     y.majorIntervalLength         = CPTDecimalFromString(@"0.5");
@@ -130,6 +131,8 @@
 -(void)update{
     NSTimeInterval oneDay = 24 * 60 * 60;
 
+    [self.x addPoint:[self.x.data count]+1];
+    
     NSMutableArray *data = [NSMutableArray array];
     for (int i = 0; i < self.x.max; i++) {
         [data addObject: [NSDictionary dictionaryWithObjectsAndKeys:
@@ -137,24 +140,19 @@
                           [self.y.data objectAtIndex:i], [NSNumber numberWithInt:CPTScatterPlotFieldY],
                           nil]];
     }
-    // Add some data
-    NSMutableArray *newData = [NSMutableArray array];
-    for ( int i = 0; i < self.test; i++ ) {
-        NSTimeInterval x = oneDay * i;
-        id y             = [NSDecimalNumber numberWithFloat:1.2 * rand() / (float)RAND_MAX + 1.2];
-        [newData addObject:
-         [NSDictionary dictionaryWithObjectsAndKeys:
-          [NSDecimalNumber numberWithFloat:x], [NSNumber numberWithInt:CPTScatterPlotFieldX],
-          y, [NSNumber numberWithInt:CPTScatterPlotFieldY],
-          nil]];
-    }
     // Setup scatter plot space
     CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)graph.defaultPlotSpace;
-    NSTimeInterval xLow       = 0.0f;
-    plotSpace.xRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromFloat(xLow) length:CPTDecimalFromFloat(oneDay * self.test)];
-    plotSpace.yRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromFloat(1.0) length:CPTDecimalFromFloat(3.0)];
+    plotSpace.xRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromFloat(0) length:CPTDecimalFromFloat([self.x.data count])];
+    plotSpace.yRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromFloat(1.0) length:CPTDecimalFromFloat(100)];
     
-    plotData = newData;
+    // Axes
+    CPTXYAxisSet *axisSet = (CPTXYAxisSet *)graph.axisSet;
+    CPTXYAxis *y = axisSet.yAxis;
+    y.majorIntervalLength         = CPTDecimalFromString(@"5");
+    y.minorTicksPerInterval       = 10;
+    y.orthogonalCoordinateDecimal = CPTDecimalFromFloat(oneDay);
+    
+    plotData = data;
     [graph reloadData];
 }
 

@@ -41,6 +41,7 @@
 @property (weak) IBOutlet NSTextField *PYASFImageMaxMinTextField;
 @property (weak) IBOutlet NSTextField *PYASRImageMaxMinTextField;
 @property (weak) IBOutlet NSButton *SaveData_checkbox;
+@property (weak) IBOutlet NSTextField *PYASFCTLSigmaTextField;
 
 @property (nonatomic, strong) NSFileHandle *SAS1telemetrySaveFile;
 @property (nonatomic, strong) NSFileHandle *SAS2telemetrySaveFile;

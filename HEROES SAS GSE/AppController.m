@@ -91,10 +91,15 @@
         self.listOfCommands = plistDict;
         
         DataSeries *cameraTemperature = [[DataSeries alloc] init];
-        NSMutableArray *time = [[NSMutableArray alloc] init];
-        NSArray *objects = [NSArray arrayWithObjects:time, cameraTemperature, nil];
-        NSArray *keys = [NSArray arrayWithObjects:@"time", @"camera temperature", nil];
+        DataSeries *ctlSolutionX = [[DataSeries alloc] init];
+        DataSeries *ctlSolutionY = [[DataSeries alloc] init];
         cameraTemperature.name = @"Camera Temperature";
+        ctlSolutionX.name = @"CTL X Solution ";
+        ctlSolutionY.name =@"CTL Y Solution";
+        
+        NSMutableArray *time = [[NSMutableArray alloc] init];
+        NSArray *objects = [NSArray arrayWithObjects:time, cameraTemperature, ctlSolutionX, ctlSolutionY, nil];
+        NSArray *keys = [NSArray arrayWithObjects:@"time", @"camera temperature", @"ctl X solution", @"ctl Y solution", nil];
         self.timeSeriesCollection = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
         
         [self.Commander_window showWindow:nil];
@@ -436,11 +441,20 @@
         [self.SAS1CmdCountTextField setIntegerValue:[self.packet commandCount]];
         [self.SAS1CmdKeyTextField setStringValue:[NSString stringWithFormat:@"0x%04x", [self.packet commandKey]]];
         
-        //[[self.timeSeriesCollection objectForKey:@"camera temperature"] addPoint:self.packet.cameraTemperature];
-        //DataSeries *cameraTemps = [self.timeSeriesCollection objectForKey:@"camera temperature"];
+        [[self.timeSeriesCollection objectForKey:@"camera temperature"] addPoint:self.packet.cameraTemperature];
+        [[self.timeSeriesCollection objectForKey:@"ctl X solution"] addPoint:[self.packet.CTLCommand pointValue].x];
+        [[self.timeSeriesCollection objectForKey:@"ctl Y solution"] addPoint:[self.packet.CTLCommand pointValue].y];
         
-        //[self.PYASFCameraTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f, %6.2f, %6.2f", self.packet.cameraTemperature, cameraTemps.average, cameraTemps.standardDeviation]];
-         [self.PYASFCameraTemperatureLabel setFloatValue:self.packet.cameraTemperature];
+        DataSeries *cameraTemps = [self.timeSeriesCollection objectForKey:@"camera temperature"];
+        DataSeries *ctlYValues = [self.timeSeriesCollection objectForKey:@"ctl X solution"];
+        DataSeries *ctlXValues = [self.timeSeriesCollection objectForKey:@"ctl Y solution"];
+
+        [self.PYASFCameraTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", self.packet.cameraTemperature]];
+        [self.PYASFCTLSigmaTextField setStringValue:[NSString stringWithFormat:@"%6.2f, %6.2f", ctlXValues.standardDeviation, ctlYValues.standardDeviation]];
+               
+        self.Plot_window.y = cameraTemps;
+        [self.Plot_window update];
+        //[self.PYASFCameraTemperatureLabel setFloatValue:self.packet.cameraTemperature];
         if (!NSLocationInRange(self.packet.cameraTemperature, CameraOKTempRange)){
             [self.PYASFCameraTemperatureLabel setBackgroundColor:[NSColor redColor]];
         } else {[self.PYASFCameraTemperatureLabel setBackgroundColor:[NSColor whiteColor]];}
@@ -457,7 +471,8 @@
         self.PYASFcameraView.chordCrossingPoints = self.packet.chordPoints;
         self.PYASFcameraView.fiducialPoints = self.packet.fiducialPoints;
         [self.PYASFcameraView setScreenCenter:[self.packet.screenCenter pointValue].x :[self.packet.screenCenter pointValue].y];
-        
+        self.PYASFcameraView.screenRadius = self.packet.screenRadius;
+
         //calculate the solar north angle here and pass it to PYASFcameraView
         
         NSString *writeString = [NSString stringWithFormat:@"%@, %@, %@, %@, %@, %@\n",
