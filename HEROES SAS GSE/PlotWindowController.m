@@ -59,46 +59,62 @@
     // If you make sure your dates are calculated at noon, you shouldn't have to
     // worry about daylight savings. If you use midnight, you will have to adjust
     // for daylight savings time.
-    NSDate *refDate       = [NSDate dateWithNaturalLanguageString:@"12:00 Oct 29, 2009"];
-    NSTimeInterval oneDay = 24 * 60 * 60;
+    NSDate *refDate       = [NSDate date];
+    NSTimeInterval oneDay = 60 * 60;
     
     // Create graph from theme
     graph = [(CPTXYGraph *)[CPTXYGraph alloc] initWithFrame:CGRectZero];
-    CPTTheme *theme = [CPTTheme themeNamed:kCPTPlainBlackTheme];
+    graph.plotAreaFrame.paddingTop    = 15.0;
+    graph.plotAreaFrame.paddingRight  = 15.0;
+    graph.plotAreaFrame.paddingBottom = 55.0;
+    graph.plotAreaFrame.paddingLeft   = 55.0;
+
+    CPTTheme *theme = [CPTTheme themeNamed:kCPTPlainWhiteTheme];
     [graph applyTheme:theme];
-    self.hostView.hostedGraph = graph;
     
+    self.hostView.hostedGraph = graph;
+
     // Setup scatter plot space
     CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)graph.defaultPlotSpace;
     NSTimeInterval xLow       = 0.0f;
     plotSpace.xRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromFloat(xLow) length:CPTDecimalFromFloat(oneDay * 5.0f + self.test)];
-    plotSpace.yRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromFloat(1.0) length:CPTDecimalFromFloat(3.0)];
+    plotSpace.yRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromFloat(0.0) length:CPTDecimalFromFloat(30.0)];
     
+    CPTMutableLineStyle *majorGridLineStyle = [CPTMutableLineStyle lineStyle];
+    majorGridLineStyle.lineWidth = 0.5f;
+    majorGridLineStyle.lineColor = [CPTColor grayColor];
+
     // Axes
     CPTXYAxisSet *axisSet = (CPTXYAxisSet *)graph.axisSet;
     CPTXYAxis *x          = axisSet.xAxis;
+    x.labelingPolicy              = CPTAxisLabelingPolicyAutomatic;
     x.majorIntervalLength         = CPTDecimalFromFloat(oneDay);
     x.orthogonalCoordinateDecimal = CPTDecimalFromString(@"2");
-    x.minorTicksPerInterval       = 0;
+    x.minorTicksPerInterval       = 5;
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateStyle: NSDateFormatterShortStyle];
+    [dateFormatter setDateFormat:@"HH:mm:ss"];
     CPTTimeFormatter *timeFormatter = [[CPTTimeFormatter alloc] initWithDateFormatter:dateFormatter];
     timeFormatter.referenceDate = refDate;
     x.labelFormatter            = timeFormatter;
-    x.title = @"Temperature";
-    
+    x.labelingPolicy              = CPTAxisLabelingPolicyAutomatic;
+    x.axisConstraints             = [CPTConstraints constraintWithLowerOffset:0.0];
+    x.majorGridLineStyle = majorGridLineStyle;
+
     CPTXYAxis *y = axisSet.yAxis;
-    y.majorIntervalLength         = CPTDecimalFromString(@"0.5");
+    y.majorIntervalLength         = CPTDecimalFromString(@"5");
     y.minorTicksPerInterval       = 5;
     y.orthogonalCoordinateDecimal = CPTDecimalFromFloat(oneDay);
+    y.axisConstraints             = [CPTConstraints constraintWithLowerOffset:0.0];
+    y.title = @"Temperature";
+    y.majorGridLineStyle = majorGridLineStyle;
     
     // Create a plot that uses the data source method
     CPTScatterPlot *dataSourceLinePlot = [[CPTScatterPlot alloc] init];
     dataSourceLinePlot.identifier = @"Date Plot";
     
     CPTMutableLineStyle *lineStyle = [dataSourceLinePlot.dataLineStyle mutableCopy];
-    lineStyle.lineWidth              = 3.f;
-    lineStyle.lineColor              = [CPTColor greenColor];
+    lineStyle.lineWidth              = 1.f;
+    lineStyle.lineColor              = [CPTColor redColor];
     dataSourceLinePlot.dataLineStyle = lineStyle;
     
     dataSourceLinePlot.dataSource = self;
@@ -108,7 +124,7 @@
     NSMutableArray *newData = [NSMutableArray array];
     for ( NSUInteger i = 0; i < 5; i++ ) {
         NSTimeInterval x = oneDay * i;
-        id y             = [NSDecimalNumber numberWithFloat:1.2 * rand() / (float)RAND_MAX + 1.2];
+        id y             = [NSDecimalNumber numberWithFloat:15 * rand() / (float)RAND_MAX + 15];
         [newData addObject:
          [NSDictionary dictionaryWithObjectsAndKeys:
           [NSDecimalNumber numberWithFloat:x], [NSNumber numberWithInt:CPTScatterPlotFieldX],
@@ -129,8 +145,7 @@
 }
 
 -(void)update{
-    NSTimeInterval oneDay = 24 * 60 * 60;
-
+    
     [self.x addPoint:[self.x.data count]+1];
     
     NSMutableArray *data = [NSMutableArray array];
@@ -147,10 +162,34 @@
     
     // Axes
     CPTXYAxisSet *axisSet = (CPTXYAxisSet *)graph.axisSet;
+
+    // X axis
+    CPTXYAxis *x = axisSet.xAxis;
+    NSTimeInterval tenMinutes = 10 * 60;
+
+    x.labelingPolicy              = CPTAxisLabelingPolicyAutomatic;
+    x.majorIntervalLength         = CPTDecimalFromFloat(tenMinutes);
+    x.orthogonalCoordinateDecimal = CPTDecimalFromString(@"2");
+    x.minorTicksPerInterval       = 5;
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setTimeStyle: NSDateFormatterShortStyle];
+    CPTTimeFormatter *timeFormatter = [[CPTTimeFormatter alloc] initWithDateFormatter:dateFormatter];
+    timeFormatter.referenceDate = [self.x.data objectAtIndex:0];
+    x.labelFormatter            = timeFormatter;
+    x.labelingPolicy              = CPTAxisLabelingPolicyAutomatic;
+    x.axisConstraints             = [CPTConstraints constraintWithLowerOffset:0.0];
+
+    // Y Axes
     CPTXYAxis *y = axisSet.yAxis;
     y.majorIntervalLength         = CPTDecimalFromString(@"5");
     y.minorTicksPerInterval       = 10;
-    y.orthogonalCoordinateDecimal = CPTDecimalFromFloat(oneDay);
+    y.orthogonalCoordinateDecimal = CPTDecimalFromFloat(tenMinutes);
+    y.title = self.y.name;
+    
+    // Setup scatter plot space
+    NSTimeInterval xLow       = 0.0f;
+    plotSpace.xRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromFloat(xLow) length:CPTDecimalFromFloat(tenMinutes * 5.0f + self.test)];
+    plotSpace.yRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromFloat(0.0) length:CPTDecimalFromFloat(30.0)];
     
     plotData = data;
     [graph reloadData];
