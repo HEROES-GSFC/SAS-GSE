@@ -22,5 +22,6 @@
 @property (nonatomic) int ROIlength;
 
 - (void) addPoint: (float) point;
+- (NSArray *)ROIdata;
 
 @end

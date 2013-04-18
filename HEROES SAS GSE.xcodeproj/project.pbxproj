@@ -124,10 +124,9 @@
 		8635E442171B0D0600F69CD2 /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
 		8635E453171B539F00F69CD2 /* CorePlot.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CorePlot.framework; path = "HEROES SAS GSE/Frameworks/CorePlot.framework"; sourceTree = "<group>"; };
 		8635E456171B543B00F69CD2 /* CorePlot.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CorePlot.framework; path = "HEROES SAS GSE/Frameworks/CorePlot.framework"; sourceTree = "<group>"; };
-		8660983A16B398DD00BE26D1 /* icon.iconset */ = {isa = PBXFileReference; lastKnownFileType = folder.iconset; path = icon.iconset; sourceTree = "<group>"; };
+		8660983A16B398DD00BE26D1 /* icon.iconset */ = {isa = PBXFileReference; lastKnownFileType = folder.iconset; name = icon.iconset; path = ../icon.iconset; sourceTree = "<group>"; };
 		8666A000169254AE00B0DACE /* DataPacket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataPacket.h; sourceTree = "<group>"; };
 		8666A001169254AE00B0DACE /* DataPacket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataPacket.m; sourceTree = "<group>"; };
-		8666A0071694874900B0DACE /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		8666E3C216A3BA6600A9DD85 /* Commander.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Commander.h; sourceTree = "<group>"; };
 		8666E3C316A3BA6600A9DD85 /* Commander.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Commander.m; sourceTree = "<group>"; };
 		86672DF316F7AB4700F36110 /* types.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = types.cpp; path = "lib/SAS-aspect/PYAS-core/aspect/types.cpp"; sourceTree = "<group>"; };
@@ -136,7 +135,7 @@
 		8670FBA817068B6100F9C2DC /* en */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = en; path = en.lproj/AppDelegate.m; sourceTree = "<group>"; };
 		86881A72163D9231003CC656 /* ParseDataOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParseDataOperation.h; sourceTree = "<group>"; };
 		86881A73163D9231003CC656 /* ParseDataOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParseDataOperation.m; sourceTree = "<group>"; };
-		868C540E171F7FED00518819 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		868C540E171F7FED00518819 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		8693D5E516C5BB1A00985DDB /* Command.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = Command.cpp; path = "lib/SAS-aspect/PYAS-core/aspect/Command.cpp"; sourceTree = "<group>"; };
 		8693D5E616C5BB1A00985DDB /* Command.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Command.hpp; path = "lib/SAS-aspect/PYAS-core/aspect/Command.hpp"; sourceTree = "<group>"; };
 		8693D5E716C5BB1A00985DDB /* Packet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Packet.cpp; path = "lib/SAS-aspect/PYAS-core/aspect/Packet.cpp"; sourceTree = "<group>"; };
@@ -187,9 +186,6 @@
 		860EF31C163605D300B46E35 = {
 			isa = PBXGroup;
 			children = (
-				8635E456171B543B00F69CD2 /* CorePlot.framework */,
-				8660983A16B398DD00BE26D1 /* icon.iconset */,
-				868C540E171F7FED00518819 /* README.md */,
 				860EF331163605D300B46E35 /* HEROES SAS GSE */,
 				860EF34E163605D400B46E35 /* HEROES SAS GSETests */,
 				860EF32A163605D300B46E35 /* Frameworks */,
@@ -209,6 +205,7 @@
 		860EF32A163605D300B46E35 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8635E456171B543B00F69CD2 /* CorePlot.framework */,
 				8635E453171B539F00F69CD2 /* CorePlot.framework */,
 				8635E442171B0D0600F69CD2 /* Quartz.framework */,
 				86672DF816F7D2BD00F36110 /* GLUT.framework */,
@@ -259,9 +256,10 @@
 		860EF332163605D300B46E35 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				8660983A16B398DD00BE26D1 /* icon.iconset */,
+				868C540E171F7FED00518819 /* README.md */,
 				8609D8C516D57CD2007D1FA6 /* CommandList.plist */,
 				860EF333163605D300B46E35 /* HEROES SAS GSE-Info.plist */,
-				8666A0071694874900B0DACE /* README.md */,
 				860EF334163605D300B46E35 /* InfoPlist.strings */,
 				860EF337163605D300B46E35 /* main.m */,
 				860EF339163605D300B46E35 /* HEROES SAS GSE-Prefix.pch */,

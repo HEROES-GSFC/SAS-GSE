@@ -30,8 +30,8 @@
     if (self) {
         // insert initializing here
         self.count = 0;
-        self.ROI = NSMakeRange(0, 50);
         self.ROIlength = 50;
+        self.ROI = NSMakeRange(0, self.ROIlength);
     }
     return self;
 }
@@ -42,6 +42,11 @@
     }
     return _data;
 }
+
+- (NSArray *)ROIdata{
+    return [self.data subarrayWithRange:self.ROI];
+}
+
 - (void) addPoint: (float)newpoint{
     [self.data addObject:[NSNumber numberWithFloat:newpoint]];
     self.count++;
@@ -52,7 +57,7 @@
         if (self.max < newpoint){ self.max = newpoint; }
         if (self.min > newpoint){ self.min = newpoint; }
     }
-    self.ROI = NSMakeRange(self.count > self.ROIlength ? self.count - self.ROIlength: 0, self.count < self.ROIlength ? self.count : self.ROIlength );
+    self.ROI = NSMakeRange(self.count > self.ROIlength ? self.count - self.ROIlength : 0, self.count < self.ROIlength ? self.count : self.ROIlength );
     
     self.average = [self calculateAverage];
     self.standardDeviation = [self calculateStandardDeviation];

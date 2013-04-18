@@ -93,13 +93,15 @@
         DataSeries *cameraTemperature = [[DataSeries alloc] init];
         DataSeries *ctlSolutionX = [[DataSeries alloc] init];
         DataSeries *ctlSolutionY = [[DataSeries alloc] init];
+        DataSeries *ctlSolutionR = [[DataSeries alloc] init];
         cameraTemperature.name = @"Camera Temperature";
         ctlSolutionX.name = @"CTL X Solution ";
-        ctlSolutionY.name =@"CTL Y Solution";
+        ctlSolutionY.name = @"CTL Y Solution";
+        ctlSolutionR.name = @"CTL R Solution";
         
         NSMutableArray *time = [[NSMutableArray alloc] init];
-        NSArray *objects = [NSArray arrayWithObjects:time, cameraTemperature, ctlSolutionX, ctlSolutionY, nil];
-        NSArray *keys = [NSArray arrayWithObjects:@"time", @"camera temperature", @"ctl X solution", @"ctl Y solution", nil];
+        NSArray *objects = [NSArray arrayWithObjects:time, cameraTemperature, ctlSolutionX, ctlSolutionY, ctlSolutionR, nil];
+        NSArray *keys = [NSArray arrayWithObjects:@"time", @"camera temperature", @"ctl X solution", @"ctl Y solution", @"ctl R solution", nil];
         self.timeSeriesCollection = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
         
         [self.Commander_window showWindow:nil];
@@ -437,22 +439,24 @@
      
         [self.SAS1FrameNumberLabel setIntegerValue:[self.packet frameNumber]];
         [self.SAS1FrameTimeLabel setStringValue:[self.packet getframeTimeString]];
-        [[self.timeSeriesCollection objectForKey:@"time"] addObject:[self.packet getframeTimeString]];
         [self.SAS1CmdCountTextField setIntegerValue:[self.packet commandCount]];
         [self.SAS1CmdKeyTextField setStringValue:[NSString stringWithFormat:@"0x%04x", [self.packet commandKey]]];
-        
+
+        [[self.timeSeriesCollection objectForKey:@"time"] addObject:[NSDate dateWithNaturalLanguageString:[self.packet getframeTimeString]]];
         [[self.timeSeriesCollection objectForKey:@"camera temperature"] addPoint:self.packet.cameraTemperature];
         [[self.timeSeriesCollection objectForKey:@"ctl X solution"] addPoint:[self.packet.CTLCommand pointValue].x];
         [[self.timeSeriesCollection objectForKey:@"ctl Y solution"] addPoint:[self.packet.CTLCommand pointValue].y];
-        
+        [[self.timeSeriesCollection objectForKey:@"ctl R solution"] addPoint:sqrtf(powf([self.packet.CTLCommand pointValue].y,2) + powf([self.packet.CTLCommand pointValue].y,2))];
+
         DataSeries *cameraTemps = [self.timeSeriesCollection objectForKey:@"camera temperature"];
         DataSeries *ctlYValues = [self.timeSeriesCollection objectForKey:@"ctl X solution"];
         DataSeries *ctlXValues = [self.timeSeriesCollection objectForKey:@"ctl Y solution"];
+        DataSeries *ctlRValues = [self.timeSeriesCollection objectForKey:@"ctl R solution"];
 
         [self.PYASFCameraTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", self.packet.cameraTemperature]];
         [self.PYASFCTLSigmaTextField setStringValue:[NSString stringWithFormat:@"%6.2f, %6.2f", ctlXValues.standardDeviation, ctlYValues.standardDeviation]];
                
-        self.Plot_window.y = cameraTemps;
+        self.Plot_window.y = ctlRValues;
         [self.Plot_window update];
         //[self.PYASFCameraTemperatureLabel setFloatValue:self.packet.cameraTemperature];
         if (!NSLocationInRange(self.packet.cameraTemperature, CameraOKTempRange)){
@@ -554,7 +558,6 @@
     self.PYASFcameraView.turnOnBkgImage = YES;
     [self.PYASFcameraView draw];
     
-    self.Plot_window.test += 1;
     [self.Plot_window update];
     [self postToLogWindow:@"test string"];
     free(pixels);
