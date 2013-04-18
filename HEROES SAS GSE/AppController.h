@@ -12,9 +12,9 @@
 #import "DataPacket.h"
 #import "ConsoleWindowController.h"
 #import "CommanderWindowController.h"
+#import "PlotWindowController.h"
 
 @interface AppController : NSObject
-- (IBAction)OpenWindow_WindowMenuItemAction:(NSMenuItem *)sender;
 
 @property (weak) IBOutlet NSSegmentedControl *StartStopSegmentedControl;
 
@@ -41,12 +41,16 @@
 @property (weak) IBOutlet NSTextField *PYASFImageMaxMinTextField;
 @property (weak) IBOutlet NSTextField *PYASRImageMaxMinTextField;
 @property (weak) IBOutlet NSButton *SaveData_checkbox;
+@property (weak) IBOutlet NSTextField *PYASFCTLSigmaTextField;
 
 @property (nonatomic, strong) NSFileHandle *SAS1telemetrySaveFile;
 @property (nonatomic, strong) NSFileHandle *SAS2telemetrySaveFile;
 
+@property (nonatomic, strong) NSDictionary *timeSeriesCollection;
+
 @property (nonatomic, readonly) CommanderWindowController *Commander_window;
 @property (nonatomic, readonly) ConsoleWindowController *Console_window;
+@property (nonatomic, readonly) PlotWindowController *Plot_window;
 @property (unsafe_unretained) IBOutlet NSWindow *MainWindow;
 
 - (IBAction)PYASRbkgImageIsClicked:(NSButton *)sender;
@@ -56,5 +60,6 @@
 - (IBAction)PYASFsaveImage_ButtonAction:(NSButton *)sender;
 - (IBAction)PYASRsaveImage_ButtonAction:(NSButton *)sender;
 - (void)postToLogWindow: (NSString *)message;
+- (IBAction)OpenWindow_WindowMenuItemAction:(NSMenuItem *)sender;
 
 @end

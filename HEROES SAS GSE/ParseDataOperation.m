@@ -115,7 +115,8 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
         while (1) {
             if ([self isCancelled])
             {
-                NSLog(@"I am stopping");
+                tmReceiver->close_connection();
+                free(tmReceiver);
                 [self.saveFile closeFile];
                 break;	// user cancelled this operation
             }
@@ -199,8 +200,7 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                             *(tm_packet) >> y_intercept >> y_slope;
                             
                             self.dataPacket.screenCenter = [NSValue valueWithPoint:NSMakePoint(-x_intercept/x_slope, -y_intercept/y_slope)];
-                            
-                            self.dataPacket.screenRadius = 0.5* ((3 - x_intercept)/x_slope + (3 - y_intercept)/y_slope);
+                            self.dataPacket.screenRadius = 0.5* ((3000.0/fabs(x_slope)) + (3000.0/fabs(y_slope)));
                             
                             uint8_t image_max, image_min;
                             *(tm_packet) >> image_max >> image_min;
