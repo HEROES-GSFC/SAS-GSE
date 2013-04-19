@@ -99,7 +99,7 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
         [[NSFileManager defaultManager] createFileAtPath:filePath contents:nil attributes:nil];
         self.saveFile = [NSFileHandle fileHandleForWritingAtPath:filePath];
     }
-    //say to handle where's the file fo write
+    //say to handle where's the file to write
     [self.saveFile truncateFileAtOffset:[self.saveFile seekToEndOfFile]];
 }
 

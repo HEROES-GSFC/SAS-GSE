@@ -63,7 +63,8 @@
 @synthesize packet = _packet;
 @synthesize SAS1telemetrySaveFile = _SAS1telemetrySaveFile;
 @synthesize SAS2telemetrySaveFile = _SAS2telemetrySaveFile;
-@synthesize timeSeriesCollection = _timeSeriesCollection;
+@synthesize PYASFtimeSeriesCollection = _PYASFtimeSeriesCollection;
+@synthesize PYASRtimeSeriesCollection = _PYASRtimeSeriesCollection;
 
 - (id)init
 {
@@ -90,26 +91,46 @@
         }
         self.listOfCommands = plistDict;
         
-        DataSeries *cameraTemperature = [[DataSeries alloc] init];
-        DataSeries *ctlSolutionX = [[DataSeries alloc] init];
-        DataSeries *ctlSolutionY = [[DataSeries alloc] init];
-        DataSeries *ctlSolutionR = [[DataSeries alloc] init];
-        cameraTemperature.name = @"Camera Temperature";
-        ctlSolutionX.name = @"CTL X Solution ";
-        ctlSolutionY.name = @"CTL Y Solution";
-        ctlSolutionR.name = @"CTL R Solution";
+        DataSeries *PYASFcameraTemperature = [[DataSeries alloc] init];
+        DataSeries *PYASFcpuTemperature = [[DataSeries alloc] init];
+        DataSeries *PYASFctlSolutionX = [[DataSeries alloc] init];
+        DataSeries *PYASFctlSolutionY = [[DataSeries alloc] init];
+        DataSeries *PYASFctlSolutionR = [[DataSeries alloc] init];
+        PYASFcameraTemperature.name = @"Camera Temperature";
+        PYASFcameraTemperature.name = @"CPU Temperature";
+        PYASFctlSolutionX.name = @"CTL X Solution ";
+        PYASFctlSolutionY.name = @"CTL Y Solution";
+        PYASFctlSolutionR.name = @"CTL R Solution";
         
-        NSMutableArray *time = [[NSMutableArray alloc] init];
-        NSArray *objects = [NSArray arrayWithObjects:time, cameraTemperature, ctlSolutionX, ctlSolutionY, ctlSolutionR, nil];
-        NSArray *keys = [NSArray arrayWithObjects:@"time", @"camera temperature", @"ctl X solution", @"ctl Y solution", @"ctl R solution", nil];
-        self.timeSeriesCollection = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+        NSMutableArray *PYASFtime = [[NSMutableArray alloc] init];
+        NSArray *PYASFobjects = [NSArray arrayWithObjects:PYASFtime, PYASFcameraTemperature, PYASFcpuTemperature, PYASFctlSolutionX, PYASFctlSolutionY, PYASFctlSolutionR, nil];
+        NSArray *keys = [NSArray arrayWithObjects:@"time", @"camera temperature", @"cpu temperature", @"ctl X solution", @"ctl Y solution", @"ctl R solution", nil];
+        self.PYASFtimeSeriesCollection = [NSDictionary dictionaryWithObjects:PYASFobjects forKeys:keys];
+        
+        DataSeries *PYASRcameraTemperature = [[DataSeries alloc] init];
+        DataSeries *PYASRcpuTemperature = [[DataSeries alloc] init];
+        DataSeries *PYASRctlSolutionX = [[DataSeries alloc] init];
+        DataSeries *PYASRctlSolutionY = [[DataSeries alloc] init];
+        DataSeries *PYASRctlSolutionR = [[DataSeries alloc] init];
+        PYASRcameraTemperature.name = @"Camera Temperature";
+        PYASRcpuTemperature.name = @"CPU Temperature";
+        PYASRctlSolutionX.name = @"CTL X Solution ";
+        PYASRctlSolutionY.name = @"CTL Y Solution";
+        PYASRctlSolutionR.name = @"CTL R Solution";
+        
+        NSMutableArray *PYASRtime = [[NSMutableArray alloc] init];
+        NSArray *PYASRobjects = [NSArray arrayWithObjects:PYASRtime, PYASRcameraTemperature, PYASRcpuTemperature, PYASRctlSolutionX, PYASRctlSolutionY, PYASRctlSolutionR, nil];
+        self.PYASRtimeSeriesCollection = [NSDictionary dictionaryWithObjects:PYASRobjects forKeys:keys];
+        
+        [self.GraphChooser removeAllItems];
+        [self.GraphChooser addItemsWithTitles:keys];
         
         [self.Commander_window showWindow:nil];
         [self.Commander_window.window orderFront:self];
 
         [self.Console_window showWindow:nil];
         [self.Console_window.window orderFront:self];
-
+        
         [NSApp activateIgnoringOtherApps:YES];
         [self.MainWindow makeKeyAndOrderFront:self];
         [self.MainWindow orderFrontRegardless];
@@ -125,13 +146,21 @@
     }
     return _Commander_window;
 }
-- (NSDictionary *)timeSeriesCollection
+- (NSDictionary *)PYASFtimeSeriesCollection
 {
-    if (_timeSeriesCollection == nil)
+    if (_PYASFtimeSeriesCollection == nil)
     {
-        _timeSeriesCollection = [[NSDictionary alloc] init];
+        _PYASFtimeSeriesCollection = [[NSDictionary alloc] init];
     }
-    return _timeSeriesCollection;
+    return _PYASFtimeSeriesCollection;
+}
+- (NSDictionary *)PYASRtimeSeriesCollection
+{
+    if (_PYASRtimeSeriesCollection == nil)
+    {
+        _PYASRtimeSeriesCollection = [[NSDictionary alloc] init];
+    }
+    return _PYASRtimeSeriesCollection;
 }
 
 - (ConsoleWindowController *)Console_window
@@ -442,23 +471,21 @@
         [self.SAS1CmdCountTextField setIntegerValue:[self.packet commandCount]];
         [self.SAS1CmdKeyTextField setStringValue:[NSString stringWithFormat:@"0x%04x", [self.packet commandKey]]];
 
-        [[self.timeSeriesCollection objectForKey:@"time"] addObject:[NSDate dateWithNaturalLanguageString:[self.packet getframeTimeString]]];
-        [[self.timeSeriesCollection objectForKey:@"camera temperature"] addPoint:self.packet.cameraTemperature];
-        [[self.timeSeriesCollection objectForKey:@"ctl X solution"] addPoint:[self.packet.CTLCommand pointValue].x];
-        [[self.timeSeriesCollection objectForKey:@"ctl Y solution"] addPoint:[self.packet.CTLCommand pointValue].y];
-        [[self.timeSeriesCollection objectForKey:@"ctl R solution"] addPoint:sqrtf(powf([self.packet.CTLCommand pointValue].y,2) + powf([self.packet.CTLCommand pointValue].y,2))];
-
-        DataSeries *cameraTemps = [self.timeSeriesCollection objectForKey:@"camera temperature"];
-        DataSeries *ctlYValues = [self.timeSeriesCollection objectForKey:@"ctl X solution"];
-        DataSeries *ctlXValues = [self.timeSeriesCollection objectForKey:@"ctl Y solution"];
-        DataSeries *ctlRValues = [self.timeSeriesCollection objectForKey:@"ctl R solution"];
+        [[self.PYASFtimeSeriesCollection objectForKey:@"time"] addObject:[NSDate dateWithNaturalLanguageString:[self.packet getframeTimeString]]];
+        [[self.PYASFtimeSeriesCollection objectForKey:@"camera temperature"] addPoint:self.packet.cameraTemperature];
+        [[self.PYASFtimeSeriesCollection objectForKey:@"cpu temperature"] addPoint:self.packet.cpuTemperature];
+        [[self.PYASFtimeSeriesCollection objectForKey:@"ctl X solution"] addPoint:60*60*[self.packet.CTLCommand pointValue].x];
+        [[self.PYASFtimeSeriesCollection objectForKey:@"ctl Y solution"] addPoint:60*60*[self.packet.CTLCommand pointValue].y];
+        [[self.PYASFtimeSeriesCollection objectForKey:@"ctl R solution"] addPoint:sqrtf(powf([self.packet.CTLCommand pointValue].y,2) + powf([self.packet.CTLCommand pointValue].y,2))];
+        
+        DataSeries *ctlYValues = [self.PYASFtimeSeriesCollection objectForKey:@"ctl X solution"];
+        DataSeries *ctlXValues = [self.PYASFtimeSeriesCollection objectForKey:@"ctl Y solution"];
+        
+        [[self.PYASFtimeSeriesCollection objectForKey:@"ctl R solution"] addPoint:sqrtf(powf([self.packet.CTLCommand pointValue].y - ctlXValues.average,2) + powf([self.packet.CTLCommand pointValue].y - ctlYValues.average,2))];
 
         [self.PYASFCameraTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", self.packet.cameraTemperature]];
         [self.PYASFCTLSigmaTextField setStringValue:[NSString stringWithFormat:@"%6.2f, %6.2f", ctlXValues.standardDeviation, ctlYValues.standardDeviation]];
-               
-        self.Plot_window.y = ctlRValues;
-        [self.Plot_window update];
-        //[self.PYASFCameraTemperatureLabel setFloatValue:self.packet.cameraTemperature];
+        
         if (!NSLocationInRange(self.packet.cameraTemperature, CameraOKTempRange)){
             [self.PYASFCameraTemperatureLabel setBackgroundColor:[NSColor redColor]];
         } else {[self.PYASFCameraTemperatureLabel setBackgroundColor:[NSColor whiteColor]];}
@@ -492,6 +519,7 @@
         [self.SAS1telemetrySaveFile writeData:[writeString dataUsingEncoding:NSUTF8StringEncoding]];
         
         [self.PYASFcameraView draw];
+        [self.Plot_window update];
     }
     
     if (self.packet.isSAS2) {
@@ -521,7 +549,18 @@
         self.PYASRcameraView.chordCrossingPoints = self.packet.chordPoints;
         self.PYASRcameraView.fiducialPoints = self.packet.fiducialPoints;
         
+        DataSeries *ctlYValues = [self.PYASRtimeSeriesCollection objectForKey:@"ctl X solution"];
+        DataSeries *ctlXValues = [self.PYASRtimeSeriesCollection objectForKey:@"ctl Y solution"];
+        
+        [[self.PYASRtimeSeriesCollection objectForKey:@"time"] addObject:[NSDate dateWithNaturalLanguageString:[self.packet getframeTimeString]]];
+        [[self.PYASRtimeSeriesCollection objectForKey:@"camera temperature"] addPoint:self.packet.cameraTemperature];
+        [[self.PYASRtimeSeriesCollection objectForKey:@"cpu temperature"] addPoint:self.packet.cpuTemperature];
+        [[self.PYASRtimeSeriesCollection objectForKey:@"ctl X solution"] addPoint:60*60*[self.packet.CTLCommand pointValue].x];
+        [[self.PYASRtimeSeriesCollection objectForKey:@"ctl Y solution"] addPoint:60*60*[self.packet.CTLCommand pointValue].y];
+        [[self.PYASRtimeSeriesCollection objectForKey:@"ctl R solution"] addPoint:sqrtf(powf([self.packet.CTLCommand pointValue].y - ctlXValues.average,2) + powf([self.packet.CTLCommand pointValue].y - ctlYValues.average,2))];
+
         [self.PYASRcameraView draw];
+        [self.Plot_window update];
     }
     
 }
@@ -536,6 +575,31 @@
     if ([userChoice isEqual: @"Console"]) {
         [self.Console_window showWindow:nil];
     }
+}
+
+- (IBAction)GraphIsChosen:(NSPopUpButton *)sender {
+    if ([sender indexOfSelectedItem] == 0) {
+        self.Plot_window.time = [self.PYASRtimeSeriesCollection objectForKey:@"time"];
+        self.Plot_window.y = [self.PYASRtimeSeriesCollection objectForKey:@"cpu temperature"];
+    }
+    if ([sender indexOfSelectedItem] == 1) {
+        self.Plot_window.time = [self.PYASRtimeSeriesCollection objectForKey:@"time"];
+        self.Plot_window.y = [self.PYASRtimeSeriesCollection objectForKey:@"camera temperature"];
+    }
+    if ([sender indexOfSelectedItem] == 2) {
+        self.Plot_window.time = [self.PYASRtimeSeriesCollection objectForKey:@"time"];
+        self.Plot_window.y = [self.PYASRtimeSeriesCollection objectForKey:@"ctl X solution"];
+    }
+    if ([sender indexOfSelectedItem] == 3) {
+        self.Plot_window.time = [self.PYASRtimeSeriesCollection objectForKey:@"time"];
+        self.Plot_window.y = [self.PYASRtimeSeriesCollection objectForKey:@"ctl Y solution"];
+    }
+    if ([sender indexOfSelectedItem] == 4) {
+        self.Plot_window.time = [self.PYASRtimeSeriesCollection objectForKey:@"time"];
+        self.Plot_window.y = [self.PYASRtimeSeriesCollection objectForKey:@"ctl R solution"];
+    }
+    
+    
 }
 
 - (IBAction)RunTest:(id)sender {

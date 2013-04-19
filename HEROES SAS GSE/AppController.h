@@ -42,11 +42,13 @@
 @property (weak) IBOutlet NSTextField *PYASRImageMaxMinTextField;
 @property (weak) IBOutlet NSButton *SaveData_checkbox;
 @property (weak) IBOutlet NSTextField *PYASFCTLSigmaTextField;
+@property (weak) IBOutlet NSPopUpButton *GraphChooser;
 
 @property (nonatomic, strong) NSFileHandle *SAS1telemetrySaveFile;
 @property (nonatomic, strong) NSFileHandle *SAS2telemetrySaveFile;
 
-@property (nonatomic, strong) NSDictionary *timeSeriesCollection;
+@property (nonatomic, strong) NSDictionary *PYASFtimeSeriesCollection;
+@property (nonatomic, strong) NSDictionary *PYASRtimeSeriesCollection;
 
 @property (nonatomic, readonly) CommanderWindowController *Commander_window;
 @property (nonatomic, readonly) ConsoleWindowController *Console_window;
@@ -61,5 +63,6 @@
 - (IBAction)PYASRsaveImage_ButtonAction:(NSButton *)sender;
 - (void)postToLogWindow: (NSString *)message;
 - (IBAction)OpenWindow_WindowMenuItemAction:(NSMenuItem *)sender;
+- (IBAction)GraphIsChosen:(NSPopUpButton *)sender;
 
 @end

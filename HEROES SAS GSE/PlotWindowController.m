@@ -71,17 +71,17 @@
 {
     [super windowDidLoad];
     
-    if (self.y == nil) {
-        NSMutableArray *tempx = [[NSMutableArray alloc] init];
-        DataSeries *tempy = [[DataSeries alloc] init];
-        tempy.name = @"temp data";
-        for (int i = 0; i < 100; i++) {
-            [tempx addObject:[[NSDate date] dateByAddingTimeInterval:i]];
-            [tempy addPoint:15+(float)arc4random()/RAND_MAX];
-        }
-        self.time = tempx;
-        self.y = tempy;
-    }
+    //if (self.y == nil) {
+    //    NSMutableArray *tempx = [[NSMutableArray alloc] init];
+    //    DataSeries *tempy = [[DataSeries alloc] init];
+    //    tempy.name = @"temp data";
+    //    for (int i = 0; i < 100; i++) {
+    //        [tempx addObject:[[NSDate date] dateByAddingTimeInterval:i]];
+    //        [tempy addPoint:15+(float)arc4random()/RAND_MAX];
+    //    }
+    //    self.time = tempx;
+    //    self.y = tempy;
+    //}
     // If you make sure your dates are calculated at noon, you shouldn't have to
     // worry about daylight savings. If you use midnight, you will have to adjust
     // for daylight savings time.
@@ -150,55 +150,64 @@
 }
 
 -(void)update{
-    NSDate *latestTime = [self.time objectAtIndex:[self.time count]-1];
-    NSDate *earliestTime;
-    float ymin, ymax;
-    
-    if (self.XaxisChoice.selectedSegment == 0) {
-        earliestTime = [self.time objectAtIndex:0];}
-    else { earliestTime = [self.time objectAtIndex:self.y.ROI.location]; }
-    
-    // Axes
-    CPTXYAxisSet *axisSet = (CPTXYAxisSet *)self.hostView.hostedGraph.axisSet;
-    
-    // should calculate the size of major and minor tickintevals needed on the fly
-    CPTXYAxis *y = axisSet.yAxis;
-    y.majorIntervalLength = CPTDecimalFromString(@"1");
-    y.minorTicksPerInterval = 10;
-    
-    // X axes
-    CPTXYAxis *x = axisSet.xAxis;
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"HH:mm:ss"];
-    CPTTimeFormatter *timeFormatter = [[CPTTimeFormatter alloc] initWithDateFormatter:dateFormatter];
-    timeFormatter.referenceDate = earliestTime;
-    x.labelFormatter = timeFormatter;
-    
-    // Setup scatter plot space
-    CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)self.hostView.hostedGraph.defaultPlotSpace;
-    plotSpace.xRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromFloat(0)
-                                                    length:CPTDecimalFromFloat([latestTime timeIntervalSinceDate:earliestTime])];
-    
-    if (self.YminChoice.selectedSegment == 0) {
-        ymin = self.y.min;
-    } else { ymin = [self.YminTextField floatValue]; }
-    if (self.YmaxChoice.selectedSegment == 0) {
-        ymax = self.y.max;
-    } else { ymax = [self.YmaxTextField floatValue]; }
-    plotSpace.yRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromFloat(ymin) length:CPTDecimalFromFloat(ymax-ymin)];
-    
-    NSUInteger indexmin = self.XaxisChoice.selectedSegment == 0 ? 0 : self.y.ROI.location;
-    NSMutableArray *data = [NSMutableArray array];
-    for ( NSUInteger i = indexmin; i < [self.time count]-1; i++ ) {
-        NSTimeInterval x = [[self.time objectAtIndex:i] timeIntervalSinceDate:earliestTime];
-        [data addObject:
-         [NSDictionary dictionaryWithObjectsAndKeys:
-          [NSNumber numberWithFloat:x], [NSNumber numberWithInt:CPTScatterPlotFieldX],
-          [self.y.data objectAtIndex:i], [NSNumber numberWithInt:CPTScatterPlotFieldY],
-          nil]];
+    if (self.time != nil) {
+        
+        NSDate *latestTime = [self.time objectAtIndex:[self.time count]-1];
+        NSDate *earliestTime;
+        float ymin, ymax;
+        
+        if (self.XaxisChoice.selectedSegment == 0) {
+            earliestTime = [self.time objectAtIndex:0];}
+        else { earliestTime = [self.time objectAtIndex:self.y.ROI.location]; }
+        
+        // Axes
+        CPTXYAxisSet *axisSet = (CPTXYAxisSet *)self.hostView.hostedGraph.axisSet;
+        
+        // should calculate the size of major and minor tickintevals needed on the fly
+        CPTXYAxis *y = axisSet.yAxis;
+        y.majorIntervalLength = CPTDecimalFromString(@"1");
+        y.minorTicksPerInterval = 10;
+        y.title = self.y.name;
+        // X axes
+        CPTXYAxis *x = axisSet.xAxis;
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"HH:mm:ss"];
+        CPTTimeFormatter *timeFormatter = [[CPTTimeFormatter alloc] initWithDateFormatter:dateFormatter];
+        timeFormatter.referenceDate = earliestTime;
+        x.labelFormatter = timeFormatter;
+        
+        // Setup scatter plot space
+        CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)self.hostView.hostedGraph.defaultPlotSpace;
+        plotSpace.xRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromFloat(0)
+                                                        length:CPTDecimalFromFloat([latestTime timeIntervalSinceDate:earliestTime])];
+        
+        if (self.YminChoice.selectedSegment == 0) {
+            ymin = self.y.min * 0.90;
+            if (ymin == 0) {
+                ymin = -1;
+            }
+        } else { ymin = [self.YminTextField floatValue]; }
+        if (self.YmaxChoice.selectedSegment == 0) {
+            ymax = self.y.max * 1.10;
+            if (ymax == 0) {
+                ymax = 1;
+            }
+        } else { ymax = [self.YmaxTextField floatValue]; }
+        plotSpace.yRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromFloat(ymin) length:CPTDecimalFromFloat(ymax-ymin)];
+        
+        NSUInteger indexmin = self.XaxisChoice.selectedSegment == 0 ? 0 : self.y.ROI.location;
+        NSMutableArray *data = [NSMutableArray array];
+        for ( NSUInteger i = indexmin; i < [self.time count]-1; i++ ) {
+            NSTimeInterval x = [[self.time objectAtIndex:i] timeIntervalSinceDate:earliestTime];
+            [data addObject:
+             [NSDictionary dictionaryWithObjectsAndKeys:
+              [NSNumber numberWithFloat:x], [NSNumber numberWithInt:CPTScatterPlotFieldX],
+              [self.y.data objectAtIndex:i], [NSNumber numberWithInt:CPTScatterPlotFieldY],
+              nil]];
+        }
+        plotData = data;
+        [graph reloadData];
     }
-    plotData = data;
-    [graph reloadData];
 }
 
 -(NSNumber *)numberForPlot:(CPTPlot *)plot field:(NSUInteger)fieldEnum recordIndex:(NSUInteger)index
