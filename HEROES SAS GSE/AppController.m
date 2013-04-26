@@ -467,6 +467,9 @@
 	NSDictionary *notifData = [note userInfo];
     self.packet = [notifData valueForKey:@"packet"];
     
+    Transform NorthTransform;
+    double northAngle;
+    
     NSRange CameraOKTempRange = NSMakeRange(-20, 60);
     NSRange CPUOKTempRange = NSMakeRange(-20, 60);
     
@@ -511,6 +514,19 @@
         self.PYASFcameraView.screenRadius = self.packet.screenRadius;
 
         //calculate the solar north angle here and pass it to PYASFcameraView
+        
+        NorthTransform.getSunAzEl();
+        northAngle = NorthTransform.getOrientation();
+        //this code assumes that up on the screen is the zenith (which it is not)
+        if (northAngle <= 180){  //should add a check for <0 degrees or >360 degrees
+            northAngle = 180 - northAngle;
+        }
+        else {
+            northAngle = 540 - northAngle;
+        }
+        self.PYASFcameraView.northAngle = northAngle;
+        self.PYASRcameraView.northAngle = northAngle;
+        
         
         NSString *writeString = [NSString stringWithFormat:@"%@, %@, %@, %@, %@, %@\n",
                              self.SAS1FrameTimeLabel.stringValue,
