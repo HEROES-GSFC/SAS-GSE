@@ -42,6 +42,7 @@
 
 @synthesize fiducialPoints = _fiducialPoints;
 @synthesize chordCrossingPoints = _chordCrossingPoints;
+@synthesize northAngle;
 @synthesize numberYPixels = _numberYPixels;
 @synthesize numberXPixels = _numberXPixels;
 @synthesize bkgImage = _bkgImage;
@@ -145,7 +146,7 @@
     [self drawACircle:screenCenter :self.screenRadius];
     
     glColor3f(0.0f, 1.0f, 0.0f);
-    [self drawALine:sunCenter :213.0 :20.0];
+    [self drawALine:sunCenter :213.0 :self.northAngle];
     
     // fit the chord crossing to the chord crossing and show that
     //NSDictionary *circleFitResult = [[NSDictionary alloc] init];
