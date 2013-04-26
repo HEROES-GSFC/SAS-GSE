@@ -138,6 +138,12 @@
 	return self;
 }
 
+-(void)awakeFromNib{
+    NSArray *keys = [NSArray arrayWithObjects:@"camera temperature", @"cpu temperature", @"ctl X solution", @"ctl Y solution", @"ctl R solution", nil];
+    [self.GraphChooser removeAllItems];
+    [self.GraphChooser addItemsWithTitles:keys];
+}
+
 - (CommanderWindowController *)Commander_window
 {
     if (_Commander_window == nil)
@@ -464,7 +470,7 @@
     NSRange CameraOKTempRange = NSMakeRange(-20, 60);
     NSRange CPUOKTempRange = NSMakeRange(-20, 60);
     
-    if (self.packet.isSAS1) {
+    if (self.packet.isSAS2) {
      
         [self.SAS1FrameNumberLabel setIntegerValue:[self.packet frameNumber]];
         [self.SAS1FrameTimeLabel setStringValue:[self.packet getframeTimeString]];
@@ -522,7 +528,7 @@
         [self.Plot_window update];
     }
     
-    if (self.packet.isSAS2) {
+    if (self.packet.isSAS1) {
         
         [self.SAS2FrameNumberLabel setIntegerValue:[self.packet frameNumber]];
         [self.SAS2FrameTimeLabel setStringValue:[self.packet getframeTimeString]];
@@ -579,24 +585,24 @@
 
 - (IBAction)GraphIsChosen:(NSPopUpButton *)sender {
     if ([sender indexOfSelectedItem] == 0) {
-        self.Plot_window.time = [self.PYASRtimeSeriesCollection objectForKey:@"time"];
-        self.Plot_window.y = [self.PYASRtimeSeriesCollection objectForKey:@"cpu temperature"];
+        self.Plot_window.time = [self.PYASFtimeSeriesCollection objectForKey:@"time"];
+        self.Plot_window.y = [self.PYASFtimeSeriesCollection objectForKey:@"cpu temperature"];
     }
     if ([sender indexOfSelectedItem] == 1) {
-        self.Plot_window.time = [self.PYASRtimeSeriesCollection objectForKey:@"time"];
-        self.Plot_window.y = [self.PYASRtimeSeriesCollection objectForKey:@"camera temperature"];
+        self.Plot_window.time = [self.PYASFtimeSeriesCollection objectForKey:@"time"];
+        self.Plot_window.y = [self.PYASFtimeSeriesCollection objectForKey:@"camera temperature"];
     }
     if ([sender indexOfSelectedItem] == 2) {
-        self.Plot_window.time = [self.PYASRtimeSeriesCollection objectForKey:@"time"];
-        self.Plot_window.y = [self.PYASRtimeSeriesCollection objectForKey:@"ctl X solution"];
+        self.Plot_window.time = [self.PYASFtimeSeriesCollection objectForKey:@"time"];
+        self.Plot_window.y = [self.PYASFtimeSeriesCollection objectForKey:@"ctl X solution"];
     }
     if ([sender indexOfSelectedItem] == 3) {
-        self.Plot_window.time = [self.PYASRtimeSeriesCollection objectForKey:@"time"];
-        self.Plot_window.y = [self.PYASRtimeSeriesCollection objectForKey:@"ctl Y solution"];
+        self.Plot_window.time = [self.PYASFtimeSeriesCollection objectForKey:@"time"];
+        self.Plot_window.y = [self.PYASFtimeSeriesCollection objectForKey:@"ctl Y solution"];
     }
     if ([sender indexOfSelectedItem] == 4) {
-        self.Plot_window.time = [self.PYASRtimeSeriesCollection objectForKey:@"time"];
-        self.Plot_window.y = [self.PYASRtimeSeriesCollection objectForKey:@"ctl R solution"];
+        self.Plot_window.time = [self.PYASFtimeSeriesCollection objectForKey:@"time"];
+        self.Plot_window.y = [self.PYASFtimeSeriesCollection objectForKey:@"ctl R solution"];
     }
     
     

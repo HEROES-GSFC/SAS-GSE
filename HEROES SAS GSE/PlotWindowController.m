@@ -151,7 +151,8 @@
 
 -(void)update{
     if (self.time != nil) {
-        
+        if ([self.time count] > 1) {
+            
         NSDate *latestTime = [self.time objectAtIndex:[self.time count]-1];
         NSDate *earliestTime;
         float ymin, ymax;
@@ -207,6 +208,7 @@
         }
         plotData = data;
         [graph reloadData];
+        }
     }
 }
 

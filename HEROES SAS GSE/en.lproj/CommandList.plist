@@ -2,6 +2,28 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>Start Saving Images</key>
+	<dict>
+		<key>var_names</key>
+		<array>
+			<string>value</string>
+		</array>
+		<key>description</key>
+		<string>Image (FITS) file saving will be turned on</string>
+		<key>key</key>
+		<string>0x0100</string>
+	</dict>
+	<key>Stop Saving Images</key>
+	<dict>
+		<key>var_names</key>
+		<array>
+			<string>value</string>
+		</array>
+		<key>description</key>
+		<string>Image (FITS) file saving will be turned off</string>
+		<key>key</key>
+		<string>0x0100</string>
+	</dict>
 	<key>Set Preamp gain</key>
 	<dict>
 		<key>var_names</key>
@@ -20,7 +42,7 @@
 			<string>value</string>
 		</array>
 		<key>description</key>
-		<string>Set the analog gain value</string>
+		<string>Set the analog gain value  (log scale, ~160 doubles the gain)</string>
 		<key>key</key>
 		<string>0x0181</string>
 	</dict>

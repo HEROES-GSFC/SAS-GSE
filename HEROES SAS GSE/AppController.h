@@ -14,7 +14,7 @@
 #import "CommanderWindowController.h"
 #import "PlotWindowController.h"
 
-@interface AppController : NSObject
+@interface AppController : NSWindowController
 
 @property (weak) IBOutlet NSSegmentedControl *StartStopSegmentedControl;
 
