@@ -2,27 +2,27 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>Start Saving Images</key>
+	<key>Request Disk Usage</key>
 	<dict>
 		<key>var_names</key>
 		<array>
-			<string>value</string>
+			<string>Disk ID</string>
 		</array>
 		<key>description</key>
-		<string>Image (FITS) file saving will be turned on</string>
+		<string>Request the disk usage for disk, returned as a percentage</string>
 		<key>key</key>
-		<string>0x0100</string>
+		<string>0x0281</string>
 	</dict>
-	<key>Stop Saving Images</key>
+	<key>Start/Stop Saving Images</key>
 	<dict>
 		<key>var_names</key>
 		<array>
-			<string>value</string>
+			<string>On/Off</string>
 		</array>
 		<key>description</key>
-		<string>Image (FITS) file saving will be turned off</string>
+		<string>Set image saving boolean</string>
 		<key>key</key>
-		<string>0x0100</string>
+		<string>0x0121</string>
 	</dict>
 	<key>Set Preamp gain</key>
 	<dict>
