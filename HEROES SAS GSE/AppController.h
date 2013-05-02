@@ -43,6 +43,7 @@
 @property (weak) IBOutlet NSButton *SaveData_checkbox;
 @property (weak) IBOutlet NSTextField *PYASFCTLSigmaTextField;
 @property (weak) IBOutlet NSPopUpButton *GraphChooser;
+@property (weak) IBOutlet NSForm *PYASFTemperaturesForm;
 
 @property (nonatomic, strong) NSFileHandle *SAS1telemetrySaveFile;
 @property (nonatomic, strong) NSFileHandle *SAS2telemetrySaveFile;

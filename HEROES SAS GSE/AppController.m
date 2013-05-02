@@ -56,6 +56,7 @@
 @synthesize Commander_window = _Commander_window;
 @synthesize Console_window = _Console_window;
 @synthesize Plot_window = _Plot_window;
+@synthesize PYASFTemperaturesForm;
 
 @synthesize timer = _timer;
 @synthesize listOfCommands = _listOfCommands;
@@ -142,6 +143,18 @@
     NSArray *keys = [NSArray arrayWithObjects:@"camera temperature", @"cpu temperature", @"ctl X solution", @"ctl Y solution", @"ctl R solution", nil];
     [self.GraphChooser removeAllItems];
     [self.GraphChooser addItemsWithTitles:keys];
+    
+    NSArray *temperatureNames = [NSArray arrayWithObjects:@"T1", @"T2", @"T3", @"T4", @"T6", @"T7", nil];
+    
+    NSInteger numberofCols = [self.PYASFTemperaturesForm numberOfColumns];
+    NSInteger numberofRows = [self.PYASFTemperaturesForm numberOfRows];
+    for (int i=0; i < numberofCols; i++) {
+        for (int j=0; j < numberofRows; j++){
+            NSFormCell *cell = [self.PYASFTemperaturesForm cellAtRow:j column:i];
+            [cell setTitle:[temperatureNames objectAtIndex:i*numberofCols + j]];
+            [cell setIntegerValue:0];
+        }
+    }    
 }
 
 - (CommanderWindowController *)Commander_window
@@ -473,7 +486,18 @@
     NSRange CameraOKTempRange = NSMakeRange(-20, 60);
     NSRange CPUOKTempRange = NSMakeRange(-20, 60);
     
-    if (self.packet.isSAS2) {
+    //calculate the solar north angle here and pass it to PYASFcameraView
+    NorthTransform.getSunAzEl();
+    northAngle = NorthTransform.getOrientation();
+    //this code assumes that up on the screen is the zenith (which it is not)
+    if (northAngle <= 180){  //should add a check for <0 degrees or >360 degrees
+        northAngle = 180 - northAngle;
+    }
+    else {
+        northAngle = 540 - northAngle;
+    }
+    
+    if (self.packet.isSAS1) {
      
         [self.SAS1FrameNumberLabel setIntegerValue:[self.packet frameNumber]];
         [self.SAS1FrameTimeLabel setStringValue:[self.packet getframeTimeString]];
@@ -513,20 +537,16 @@
         [self.PYASFcameraView setScreenCenter:[self.packet.screenCenter pointValue].x :[self.packet.screenCenter pointValue].y];
         self.PYASFcameraView.screenRadius = self.packet.screenRadius;
 
-        //calculate the solar north angle here and pass it to PYASFcameraView
-        
-        NorthTransform.getSunAzEl();
-        northAngle = NorthTransform.getOrientation();
-        //this code assumes that up on the screen is the zenith (which it is not)
-        if (northAngle <= 180){  //should add a check for <0 degrees or >360 degrees
-            northAngle = 180 - northAngle;
+        NSInteger numberofCols = [self.PYASFTemperaturesForm numberOfColumns];
+        NSInteger numberofRows = [self.PYASFTemperaturesForm numberOfRows];
+        for (int i=0; i < numberofCols; i++) {
+            for (int j=0; j < numberofRows; j++){
+                NSFormCell *cell = [self.PYASFTemperaturesForm cellAtRow:j column:i];
+                [cell setIntegerValue:[[self.packet.i2cTemperatures objectAtIndex:i*numberofCols + j] integerValue]];
+            }
         }
-        else {
-            northAngle = 540 - northAngle;
-        }
-        self.PYASFcameraView.northAngle = northAngle;
-        self.PYASRcameraView.northAngle = northAngle;
         
+        self.PYASFcameraView.northAngle = northAngle;        
         
         NSString *writeString = [NSString stringWithFormat:@"%@, %@, %@, %@, %@, %@\n",
                              self.SAS1FrameTimeLabel.stringValue,
@@ -544,7 +564,7 @@
         [self.Plot_window update];
     }
     
-    if (self.packet.isSAS1) {
+    if (self.packet.isSAS2) {
         
         [self.SAS2FrameNumberLabel setIntegerValue:[self.packet frameNumber]];
         [self.SAS2FrameTimeLabel setStringValue:[self.packet getframeTimeString]];
@@ -580,6 +600,8 @@
         [[self.PYASRtimeSeriesCollection objectForKey:@"ctl X solution"] addPoint:60*60*[self.packet.CTLCommand pointValue].x];
         [[self.PYASRtimeSeriesCollection objectForKey:@"ctl Y solution"] addPoint:60*60*[self.packet.CTLCommand pointValue].y];
         [[self.PYASRtimeSeriesCollection objectForKey:@"ctl R solution"] addPoint:sqrtf(powf([self.packet.CTLCommand pointValue].y - ctlXValues.average,2) + powf([self.packet.CTLCommand pointValue].y - ctlYValues.average,2))];
+
+        self.PYASRcameraView.northAngle = northAngle;
 
         [self.PYASRcameraView draw];
         [self.Plot_window update];
