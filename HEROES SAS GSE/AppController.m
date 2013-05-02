@@ -566,6 +566,7 @@
         [self.SAS1telemetrySaveFile writeData:[writeString dataUsingEncoding:NSUTF8StringEncoding]];
         
         [self.PYASFcameraView draw];
+        [self.PYASRcameraView draw];
         [self.Plot_window update];
     }
     
@@ -617,6 +618,7 @@
         
         self.PYASRcameraView.northAngle = northAngle;
 
+        [self.PYASFcameraView draw];
         [self.PYASRcameraView draw];
         [self.Plot_window update];
     }

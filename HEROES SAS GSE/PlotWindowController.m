@@ -92,12 +92,13 @@
     graph.legendAnchor           = CPTRectAnchorBottom;
     graph.legendDisplacement     = CGPointMake(0.0, 12.0);
     
+    [graph.plotAreaFrame removeAllAnnotations];
     CPTTextLayer *textLayer = [[CPTTextLayer alloc] initWithText:@"test"];
     CPTLayerAnnotation *annotation = [[CPTLayerAnnotation alloc] initWithAnchorLayer:graph.plotAreaFrame];
     annotation.rectAnchor = CPTRectAnchorTopLeft;
     annotation.displacement = CGPointMake(0, 0);
     annotation.contentLayer = textLayer;
-    annotation.contentAnchorPoint = CGPointMake(0, 1);//top left
+    annotation.contentAnchorPoint = CGPointMake(0, 1); //top left
     [graph.plotAreaFrame addAnnotation:annotation];
     
     self.hostView.hostedGraph = graph;
@@ -167,11 +168,6 @@
         // Axes
         CPTXYAxisSet *axisSet = (CPTXYAxisSet *)self.hostView.hostedGraph.axisSet;
         
-        // should calculate the size of major and minor tickintevals needed on the fly
-        CPTXYAxis *y = axisSet.yAxis;
-        y.majorIntervalLength = CPTDecimalFromString(@"1");
-        y.minorTicksPerInterval = 10;
-        y.title = self.y.name;
         // X axes
         CPTXYAxis *x = axisSet.xAxis;
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
@@ -199,6 +195,16 @@
         } else { ymax = [self.YmaxTextField floatValue]; }
         plotSpace.yRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromFloat(ymin) length:CPTDecimalFromFloat(ymax-ymin)];
         
+        // should calculate the size of major and minor tickintevals needed on the fly
+        CPTXYAxis *y = axisSet.yAxis;
+        y.majorIntervalLength = CPTDecimalFromString([NSString stringWithFormat:@"%f", abs(ymax - ymin)/10.0]);
+            NSLog(@"%@", [NSString stringWithFormat:@"%f, %f, %f", ymin, ymax, (ymax - ymin)/10.0]);
+        y.minorTicksPerInterval = 1;
+        y.title = self.y.name;
+        
+        //first remove all of the annotations to redraw them
+        [graph.plotAreaFrame removeAllAnnotations];
+        
         NSString *annotationText = [NSString stringWithFormat:@"avg = %f, sig = %f", self.y.average, self.y.standardDeviation];
         CPTTextLayer *textLayer = [[CPTTextLayer alloc] initWithText:annotationText];
         CPTLayerAnnotation *annotation = [[CPTLayerAnnotation alloc] initWithAnchorLayer:graph.plotAreaFrame];
@@ -209,8 +215,8 @@
         [self.hostView.hostedGraph.plotAreaFrame addAnnotation:annotation];
 
         // Update legend
-        //self.hostView.hostedGraph.legend.textStyle = x.titleTextStyle;
-        //self.hostView.hostedGraph.legend.borderLineStyle = x.axisLineStyle;
+        // self.hostView.hostedGraph.legend.textStyle = x.titleTextStyle;
+        // self.hostView.hostedGraph.legend.borderLineStyle = x.axisLineStyle;
         
         NSUInteger indexmin = self.XaxisChoice.selectedSegment == 0 ? 0 : self.y.ROI.location;
         NSMutableArray *data = [NSMutableArray array];
