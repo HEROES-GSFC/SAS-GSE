@@ -57,6 +57,7 @@
 @synthesize Console_window = _Console_window;
 @synthesize Plot_window = _Plot_window;
 @synthesize PYASFTemperaturesForm;
+@synthesize PYASRTemperaturesForm;
 
 @synthesize timer = _timer;
 @synthesize listOfCommands = _listOfCommands;
@@ -151,6 +152,10 @@
     for (int i=0; i < numberofCols; i++) {
         for (int j=0; j < numberofRows; j++){
             NSFormCell *cell = [self.PYASFTemperaturesForm cellAtRow:j column:i];
+            [cell setTitle:[temperatureNames objectAtIndex:i*numberofCols + j]];
+            [cell setIntegerValue:0];
+            
+            cell = [self.PYASRTemperaturesForm cellAtRow:j column:i];
             [cell setTitle:[temperatureNames objectAtIndex:i*numberofCols + j]];
             [cell setIntegerValue:0];
         }
@@ -601,6 +606,15 @@
         [[self.PYASRtimeSeriesCollection objectForKey:@"ctl Y solution"] addPoint:60*60*[self.packet.CTLCommand pointValue].y];
         [[self.PYASRtimeSeriesCollection objectForKey:@"ctl R solution"] addPoint:sqrtf(powf([self.packet.CTLCommand pointValue].y - ctlXValues.average,2) + powf([self.packet.CTLCommand pointValue].y - ctlYValues.average,2))];
 
+        NSInteger numberofCols = [self.PYASRTemperaturesForm numberOfColumns];
+        NSInteger numberofRows = [self.PYASRTemperaturesForm numberOfRows];
+        for (int i=0; i < numberofCols; i++) {
+            for (int j=0; j < numberofRows; j++){
+                NSFormCell *cell = [self.PYASRTemperaturesForm cellAtRow:j column:i];
+                [cell setIntegerValue:[[self.packet.i2cTemperatures objectAtIndex:i*numberofCols + j] integerValue]];
+            }
+        }
+        
         self.PYASRcameraView.northAngle = northAngle;
 
         [self.PYASRcameraView draw];
