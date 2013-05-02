@@ -71,21 +71,6 @@
 {
     [super windowDidLoad];
     
-    //if (self.y == nil) {
-    //    NSMutableArray *tempx = [[NSMutableArray alloc] init];
-    //    DataSeries *tempy = [[DataSeries alloc] init];
-    //    tempy.name = @"temp data";
-    //    for (int i = 0; i < 100; i++) {
-    //        [tempx addObject:[[NSDate date] dateByAddingTimeInterval:i]];
-    //        [tempy addPoint:15+(float)arc4random()/RAND_MAX];
-    //    }
-    //    self.time = tempx;
-    //    self.y = tempy;
-    //}
-    // If you make sure your dates are calculated at noon, you shouldn't have to
-    // worry about daylight savings. If you use midnight, you will have to adjust
-    // for daylight savings time.
-    
     // Create graph from theme
     graph = [(CPTXYGraph *)[CPTXYGraph alloc] initWithFrame:CGRectZero];
     graph.plotAreaFrame.paddingTop    = 15.0;
@@ -96,6 +81,24 @@
     CPTTheme *theme = [CPTTheme themeNamed:kCPTPlainWhiteTheme];
     [graph applyTheme:theme];
     graph.plotAreaFrame.borderLineStyle = nil;
+    
+    // Add legend
+    graph.legend                 = [CPTLegend legendWithGraph:graph];
+    //graph.legend.textStyle       = x.titleTextStyle;
+    graph.legend.fill            = [CPTFill fillWithColor:[CPTColor darkGrayColor]];
+    //graph.legend.borderLineStyle = x.axisLineStyle;
+    graph.legend.cornerRadius    = 5.0;
+    graph.legend.swatchSize      = CGSizeMake(25.0, 25.0);
+    graph.legendAnchor           = CPTRectAnchorBottom;
+    graph.legendDisplacement     = CGPointMake(0.0, 12.0);
+    
+    CPTTextLayer *textLayer = [[CPTTextLayer alloc] initWithText:@"test"];
+    CPTLayerAnnotation *annotation = [[CPTLayerAnnotation alloc] initWithAnchorLayer:graph.plotAreaFrame];
+    annotation.rectAnchor = CPTRectAnchorTopLeft;
+    annotation.displacement = CGPointMake(0, 0);
+    annotation.contentLayer = textLayer;
+    annotation.contentAnchorPoint = CGPointMake(0, 1);//top left
+    [graph.plotAreaFrame addAnnotation:annotation];
     
     self.hostView.hostedGraph = graph;
     
@@ -195,6 +198,19 @@
             }
         } else { ymax = [self.YmaxTextField floatValue]; }
         plotSpace.yRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromFloat(ymin) length:CPTDecimalFromFloat(ymax-ymin)];
+        
+        NSString *annotationText = [NSString stringWithFormat:@"avg = %f, sig = %f", self.y.average, self.y.standardDeviation];
+        CPTTextLayer *textLayer = [[CPTTextLayer alloc] initWithText:annotationText];
+        CPTLayerAnnotation *annotation = [[CPTLayerAnnotation alloc] initWithAnchorLayer:graph.plotAreaFrame];
+        annotation.rectAnchor = CPTRectAnchorTopLeft;
+        annotation.displacement = CGPointMake(0, 0);
+        annotation.contentLayer = textLayer;
+        annotation.contentAnchorPoint = CGPointMake(0, 1);//top left
+        [self.hostView.hostedGraph.plotAreaFrame addAnnotation:annotation];
+
+        // Update legend
+        //self.hostView.hostedGraph.legend.textStyle = x.titleTextStyle;
+        //self.hostView.hostedGraph.legend.borderLineStyle = x.axisLineStyle;
         
         NSUInteger indexmin = self.XaxisChoice.selectedSegment == 0 ? 0 : self.y.ROI.location;
         NSMutableArray *data = [NSMutableArray array];
