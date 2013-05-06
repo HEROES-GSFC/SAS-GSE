@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8605B2FD173610700094566C /* CorePlot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8605B2FC173610700094566C /* CorePlot.framework */; };
+		8605B2FE1736107A0094566C /* CorePlot.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8605B2FC173610700094566C /* CorePlot.framework */; };
+		8605B3001736116B0094566C /* CorePlot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8605B2FF1736116B0094566C /* CorePlot.framework */; };
 		8609D8C716D57CD2007D1FA6 /* CommandList.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8609D8C516D57CD2007D1FA6 /* CommandList.plist */; };
 		860EF32C163605D300B46E35 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 860EF32B163605D300B46E35 /* Cocoa.framework */; };
 		860EF336163605D300B46E35 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 860EF334163605D300B46E35 /* InfoPlist.strings */; };
@@ -32,8 +35,6 @@
 		8635E286171B0A1C00F69CD2 /* PlotWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8635E284171B0A1B00F69CD2 /* PlotWindowController.m */; };
 		8635E287171B0A1C00F69CD2 /* PlotWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8635E285171B0A1B00F69CD2 /* PlotWindowController.xib */; };
 		8635E443171B0D0600F69CD2 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8635E442171B0D0600F69CD2 /* Quartz.framework */; };
-		8635E454171B539F00F69CD2 /* CorePlot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8635E453171B539F00F69CD2 /* CorePlot.framework */; };
-		8635E457171B543B00F69CD2 /* CorePlot.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8635E456171B543B00F69CD2 /* CorePlot.framework */; };
 		8660983B16B398DD00BE26D1 /* icon.iconset in Resources */ = {isa = PBXBuildFile; fileRef = 8660983A16B398DD00BE26D1 /* icon.iconset */; };
 		8666A002169254AE00B0DACE /* DataPacket.m in Sources */ = {isa = PBXBuildFile; fileRef = 8666A001169254AE00B0DACE /* DataPacket.m */; };
 		8666E3C416A3BA6600A9DD85 /* Commander.m in Sources */ = {isa = PBXBuildFile; fileRef = 8666E3C316A3BA6600A9DD85 /* Commander.m */; };
@@ -76,13 +77,15 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				8635E457171B543B00F69CD2 /* CorePlot.framework in CopyFiles */,
+				8605B2FE1736107A0094566C /* CorePlot.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		8605B2FC173610700094566C /* CorePlot.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CorePlot.framework; path = "HEROES SAS GSE/Frameworks/CorePlot.framework"; sourceTree = "<group>"; };
+		8605B2FF1736116B0094566C /* CorePlot.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CorePlot.framework; path = "HEROES SAS GSE/Frameworks/CorePlot.framework"; sourceTree = "<group>"; };
 		8609D8C616D57CD2007D1FA6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = en; path = en.lproj/CommandList.plist; sourceTree = "<group>"; };
 		860EF327163605D300B46E35 /* HEROES SAS GSE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "HEROES SAS GSE.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		860EF32B163605D300B46E35 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
@@ -122,8 +125,6 @@
 		8635E284171B0A1B00F69CD2 /* PlotWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlotWindowController.m; sourceTree = "<group>"; };
 		8635E285171B0A1B00F69CD2 /* PlotWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlotWindowController.xib; sourceTree = "<group>"; };
 		8635E442171B0D0600F69CD2 /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
-		8635E453171B539F00F69CD2 /* CorePlot.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CorePlot.framework; path = "HEROES SAS GSE/Frameworks/CorePlot.framework"; sourceTree = "<group>"; };
-		8635E456171B543B00F69CD2 /* CorePlot.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CorePlot.framework; path = "HEROES SAS GSE/Frameworks/CorePlot.framework"; sourceTree = "<group>"; };
 		8660983A16B398DD00BE26D1 /* icon.iconset */ = {isa = PBXFileReference; lastKnownFileType = folder.iconset; name = icon.iconset; path = ../icon.iconset; sourceTree = "<group>"; };
 		8666A000169254AE00B0DACE /* DataPacket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataPacket.h; sourceTree = "<group>"; };
 		8666A001169254AE00B0DACE /* DataPacket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataPacket.m; sourceTree = "<group>"; };
@@ -163,11 +164,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8605B2FD173610700094566C /* CorePlot.framework in Frameworks */,
 				8635E443171B0D0600F69CD2 /* Quartz.framework in Frameworks */,
 				86672DF916F7D2BD00F36110 /* GLUT.framework in Frameworks */,
 				86A62FEA164D80BF0049527C /* OpenGL.framework in Frameworks */,
 				860EF32C163605D300B46E35 /* Cocoa.framework in Frameworks */,
-				8635E454171B539F00F69CD2 /* CorePlot.framework in Frameworks */,
+				8605B3001736116B0094566C /* CorePlot.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -186,6 +188,7 @@
 		860EF31C163605D300B46E35 = {
 			isa = PBXGroup;
 			children = (
+				8605B2FC173610700094566C /* CorePlot.framework */,
 				860EF331163605D300B46E35 /* HEROES SAS GSE */,
 				860EF34E163605D400B46E35 /* HEROES SAS GSETests */,
 				860EF32A163605D300B46E35 /* Frameworks */,
@@ -205,8 +208,7 @@
 		860EF32A163605D300B46E35 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				8635E456171B543B00F69CD2 /* CorePlot.framework */,
-				8635E453171B539F00F69CD2 /* CorePlot.framework */,
+				8605B2FF1736116B0094566C /* CorePlot.framework */,
 				8635E442171B0D0600F69CD2 /* Quartz.framework */,
 				86672DF816F7D2BD00F36110 /* GLUT.framework */,
 				86A62FE9164D80BF0049527C /* OpenGL.framework */,
@@ -645,7 +647,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/HEROES SAS GSE/lib\"";
+				USER_HEADER_SEARCH_PATHS = "$(inherited) \"$(SRCROOT)\"";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -672,7 +674,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/HEROES SAS GSE/lib\"";
+				USER_HEADER_SEARCH_PATHS = "$(inherited) \"$(SRCROOT)\"";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
