@@ -24,6 +24,7 @@
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, strong) NSDictionary *listOfCommands;
 @property (nonatomic, strong) DataPacket *packet;
+@property (nonatomic, strong) NSArray *PlotWindowsAvailable;
 - (NSString *)createDateTimeString: (NSString *)type;
 - (void)OpenTelemetrySaveTextFiles;
 @end
@@ -59,6 +60,7 @@
 @synthesize PYASFTemperaturesForm;
 @synthesize PYASRTemperaturesForm;
 @synthesize TimeProfileMenu;
+@synthesize PlotWindows = _PlotWindows;
 
 @synthesize timer = _timer;
 @synthesize listOfCommands = _listOfCommands;
@@ -93,6 +95,8 @@
             NSLog(@"Error reading plist: %@, format: %ld", errorDesc, format);
         }
         self.listOfCommands = plistDict;
+        
+        self.PlotWindowsAvailable = [NSArray arrayWithObjects:@"camera temperature", @"cpu temperature", @"ctl X solution", @"ctl Y solution", @"ctl R solution", nil];
         
         DataSeries *PYASFcameraTemperature = [[DataSeries alloc] init];
         DataSeries *PYASFcpuTemperature = [[DataSeries alloc] init];
@@ -163,7 +167,10 @@
     }
     
     for (NSString *title in keys) {
-        [self.TimeProfileMenu addItemWithTitle:title action:@selector(OpenWindow_WindowMenuItemAction) keyEquivalent:@""];
+        [self.TimeProfileMenu addItemWithTitle:title action:NULL keyEquivalent:@""];
+        NSMenuItem *menuItem = [self.TimeProfileMenu itemWithTitle:title];
+        [menuItem setTarget:self];
+        [menuItem setAction:@selector(OpenWindow_WindowMenuItemAction:)];
     }
 }
 
@@ -174,6 +181,14 @@
         _Commander_window = [[CommanderWindowController alloc] init];
     }
     return _Commander_window;
+}
+- (NSMutableDictionary *)PlotWindows
+{
+    if (_PlotWindows == nil)
+    {
+        _PlotWindows = [[NSMutableDictionary alloc] init];
+    }
+    return _PlotWindows;
 }
 - (NSDictionary *)PYASFtimeSeriesCollection
 {
@@ -640,6 +655,18 @@
     if ([userChoice isEqual: @"Console"]) {
         [self.Console_window showWindow:nil];
     }
+    if ([self.PlotWindowsAvailable containsObject:userChoice]) {
+        if ([self.PlotWindows objectForKey:userChoice] == nil) {
+            PlotWindowController *newPlotWindow = [[PlotWindowController alloc] init];
+            [self.PlotWindows setObject:newPlotWindow forKey:userChoice];
+            [newPlotWindow showWindow:self];
+            [sender setState:1];
+        } else {
+            [self.PlotWindows removeObjectForKey:userChoice];
+            [sender setState:0];
+        }
+    }
+    
 }
 
 - (IBAction)GraphIsChosen:(NSPopUpButton *)sender {

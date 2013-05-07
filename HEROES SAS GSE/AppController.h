@@ -56,6 +56,7 @@
 @property (nonatomic, readonly) CommanderWindowController *Commander_window;
 @property (nonatomic, readonly) ConsoleWindowController *Console_window;
 @property (nonatomic, readonly) PlotWindowController *Plot_window;
+@property (nonatomic, strong) NSMutableDictionary *PlotWindows;
 @property (unsafe_unretained) IBOutlet NSWindow *MainWindow;
 
 - (IBAction)PYASRbkgImageIsClicked:(NSButton *)sender;
