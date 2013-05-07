@@ -236,8 +236,7 @@
 
 -(NSNumber *)numberForPlot:(CPTPlot *)plot field:(NSUInteger)fieldEnum recordIndex:(NSUInteger)index
 {
-    NSDecimalNumber *num = [[plotData objectAtIndex:index] objectForKey:[NSNumber numberWithInt:fieldEnum]];
-    
+    NSDecimalNumber *num = [[plotData objectAtIndex:index] objectForKey:[NSNumber numberWithUnsignedLong:fieldEnum]];
     return num;
 }
 

@@ -58,6 +58,7 @@
 @synthesize Plot_window = _Plot_window;
 @synthesize PYASFTemperaturesForm;
 @synthesize PYASRTemperaturesForm;
+@synthesize TimeProfileMenu;
 
 @synthesize timer = _timer;
 @synthesize listOfCommands = _listOfCommands;
@@ -100,7 +101,7 @@
         DataSeries *PYASFctlSolutionR = [[DataSeries alloc] init];
         PYASFcameraTemperature.name = @"Camera Temperature";
         PYASFcameraTemperature.name = @"CPU Temperature";
-        PYASFctlSolutionX.name = @"CTL X Solution ";
+        PYASFctlSolutionX.name = @"CTL X Solution";
         PYASFctlSolutionY.name = @"CTL Y Solution";
         PYASFctlSolutionR.name = @"CTL R Solution";
         
@@ -116,7 +117,7 @@
         DataSeries *PYASRctlSolutionR = [[DataSeries alloc] init];
         PYASRcameraTemperature.name = @"Camera Temperature";
         PYASRcpuTemperature.name = @"CPU Temperature";
-        PYASRctlSolutionX.name = @"CTL X Solution ";
+        PYASRctlSolutionX.name = @"CTL X Solution";
         PYASRctlSolutionY.name = @"CTL Y Solution";
         PYASRctlSolutionR.name = @"CTL R Solution";
         
@@ -159,7 +160,11 @@
             [cell setTitle:[temperatureNames objectAtIndex:i*numberofCols + j]];
             [cell setIntegerValue:0];
         }
-    }    
+    }
+    
+    for (NSString *title in keys) {
+        [self.TimeProfileMenu addItemWithTitle:title action:@selector(OpenWindow_WindowMenuItemAction) keyEquivalent:@""];
+    }
 }
 
 - (CommanderWindowController *)Commander_window

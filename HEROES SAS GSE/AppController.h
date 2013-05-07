@@ -48,6 +48,7 @@
 
 @property (nonatomic, strong) NSFileHandle *SAS1telemetrySaveFile;
 @property (nonatomic, strong) NSFileHandle *SAS2telemetrySaveFile;
+@property (weak) IBOutlet NSMenu *TimeProfileMenu;
 
 @property (nonatomic, strong) NSDictionary *PYASFtimeSeriesCollection;
 @property (nonatomic, strong) NSDictionary *PYASRtimeSeriesCollection;
