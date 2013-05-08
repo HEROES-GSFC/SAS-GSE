@@ -152,6 +152,7 @@
 		86A62FE9164D80BF0049527C /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		86A96429171869BC00C16663 /* DataSeries.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataSeries.h; sourceTree = "<group>"; };
 		86A9642A171869BC00C16663 /* DataSeries.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSeries.m; sourceTree = "<group>"; };
+		86B31625173AF0D000EF5104 /* Transform.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Transform.hpp; path = "lib/SAS-aspect/PYAS-core/aspect/Transform.hpp"; sourceTree = "<group>"; };
 		86D27B6B1713A8C7004287F0 /* Image.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Image.cpp; path = "lib/SAS-aspect/PYAS-core/aspect/Image.cpp"; sourceTree = "<group>"; };
 		86D27B6C1713A8C7004287F0 /* Image.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Image.hpp; path = "lib/SAS-aspect/PYAS-core/aspect/Image.hpp"; sourceTree = "<group>"; };
 		86E1D84A1695ED1B0079303F /* lib_crc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lib_crc.c; sourceTree = "<group>"; };
@@ -318,6 +319,7 @@
 				86672DF316F7AB4700F36110 /* types.cpp */,
 				86672DF416F7AB4700F36110 /* types.hpp */,
 				8693D5E716C5BB1A00985DDB /* Packet.cpp */,
+				86B31625173AF0D000EF5104 /* Transform.hpp */,
 				861C4A9E171C999C004FCFAF /* Transform.cpp */,
 				8693D5E816C5BB1A00985DDB /* Packet.hpp */,
 				8693D5E916C5BB1A00985DDB /* Telemetry.cpp */,

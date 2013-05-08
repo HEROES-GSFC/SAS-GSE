@@ -162,6 +162,32 @@
             [menuItem setAction:@selector(OpenWindow_WindowMenuItemAction:)];
         }
     }
+    
+    // start the GetPathsOperation with the root path to start the search
+    ParseDataOperation *parseOp = [[ParseDataOperation alloc] init];
+    ParseTCPOperation *parseTCP = [[ParseTCPOperation alloc] init];
+    
+    [self.queue addOperation:parseOp];	// this will start the "TestOperation"
+    [self.queue addOperation:parseTCP];
+    
+    if([[self.queue operations] containsObject:parseOp]){
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(anyThread_handleData:)
+                                                     name:kReceiveAndParseDataDidFinish
+                                                   object:nil];
+        
+        [self.RunningIndicator setHidden:NO];
+        [self.RunningIndicator startAnimation:self];
+    }
+    
+    if([[self.queue operations] containsObject:parseTCP]){
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(anyThread_handleImage:)
+                                                     name:kReceiveAndParseImageDidFinish
+                                                   object:nil];
+    }
+    
+    [self OpenTelemetrySaveTextFiles];
 }
 
 - (CommanderWindowController *)Commander_window
@@ -576,8 +602,11 @@
         [self.SAS1telemetrySaveFile writeData:[writeString dataUsingEncoding:NSUTF8StringEncoding]];
         
         [self.PYASFcameraView draw];
-        [self.PYASRcameraView draw];
+        //[self.PYASRcameraView draw];
         [self.Plot_window update];
+        for (PlotWindowController *PlotWindow in self.PlotWindows) {
+            [PlotWindow update];
+        }
     }
     
     if (self.packet.isSAS2) {
@@ -628,7 +657,7 @@
         
         self.PYASRcameraView.northAngle = northAngle;
         
-        [self.PYASFcameraView draw];
+        //[self.PYASFcameraView draw];
         [self.PYASRcameraView draw];
         [self.Plot_window update];
     }
@@ -640,14 +669,13 @@
     
     if ([userChoice isEqual: @"Commander"]) {
         [self.Commander_window showWindow:nil];
-        [self.Plot_window showWindow:nil];
     }
     if ([userChoice isEqual: @"Console"]) {
         [self.Console_window showWindow:nil];
     }
     if ([self.PlotWindowsAvailable containsObject:userChoice]) {
         if ([self.PlotWindows objectForKey:userChoice] == nil) {
-            PlotWindowController *newPlotWindow = [[PlotWindowController alloc] init];
+            PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:[self.PYASFtimeSeriesCollection objectForKey:@"time"] :[self.PYASFtimeSeriesCollection objectForKey:@"cpu temperature"]];
             [self.PlotWindows setObject:newPlotWindow forKey:userChoice];
             [newPlotWindow showWindow:self];
             [sender setState:1];
