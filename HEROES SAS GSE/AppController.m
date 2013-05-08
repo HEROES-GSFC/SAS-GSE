@@ -32,7 +32,6 @@
 @implementation AppController
 
 // GUI Elements
-@synthesize RunningIndicator;
 @synthesize SAS2CPUTemperatureLabel;
 @synthesize PYASFCameraTemperatureLabel;
 @synthesize SAS1CPUTemperatureLabel;
@@ -45,9 +44,7 @@
 @synthesize PYASRImageMaxMinTextField;
 @synthesize PYASFdrawBkgImage_checkbox;
 @synthesize PYASRdrawBkgImage_checkbox;
-@synthesize SaveData_checkbox;
 
-@synthesize StartStopSegmentedControl;
 @synthesize SAS1CmdCountTextField;
 @synthesize SAS1CmdKeyTextField;
 @synthesize PYASFImageMaxMinTextField;
@@ -176,8 +173,6 @@
                                                      name:kReceiveAndParseDataDidFinish
                                                    object:nil];
         
-        [self.RunningIndicator setHidden:NO];
-        [self.RunningIndicator startAnimation:self];
     }
     
     if([[self.queue operations] containsObject:parseTCP]){
@@ -188,6 +183,8 @@
     }
     
     [self OpenTelemetrySaveTextFiles];
+
+    [self postToLogWindow:@"Application started"];
 }
 
 - (CommanderWindowController *)Commander_window
@@ -312,47 +309,45 @@
     return _packet;
 }
 
-- (IBAction)StartStopButtonAction:(id)sender {
-    if ([StartStopSegmentedControl selectedSegment] == 0) {
-        
-        [self.queue cancelAllOperations];
-        
-        // start the GetPathsOperation with the root path to start the search
-        ParseDataOperation *parseOp = [[ParseDataOperation alloc] init];
-        ParseTCPOperation *parseTCP = [[ParseTCPOperation alloc] init];
-        
-        [self.queue addOperation:parseOp];	// this will start the "TestOperation"
-        [self.queue addOperation:parseTCP];
-        
-        if([[self.queue operations] containsObject:parseOp]){
-            [[NSNotificationCenter defaultCenter] addObserver:self
-                                                     selector:@selector(anyThread_handleData:)
-                                                         name:kReceiveAndParseDataDidFinish
-                                                       object:nil];
-            
-            [self.RunningIndicator setHidden:NO];
-            [self.RunningIndicator startAnimation:self];
-        }
-        
-        if([[self.queue operations] containsObject:parseTCP]){
-            [[NSNotificationCenter defaultCenter] addObserver:self
-                                                     selector:@selector(anyThread_handleImage:)
-                                                         name:kReceiveAndParseImageDidFinish
-                                                       object:nil];
-        }
-        
-        if ([self.SaveData_checkbox state] == NSOnState) {
-            [self OpenTelemetrySaveTextFiles];
-        }
-    }
-    if ([StartStopSegmentedControl selectedSegment] == 1) {
-        [self.queue cancelAllOperations];
-        [self.RunningIndicator setHidden:YES];
-        [self.RunningIndicator stopAnimation:self];
-        [self.SAS1telemetrySaveFile closeFile];
-        [self.SAS2telemetrySaveFile closeFile];
-    }
-}
+//- (IBAction)StartStopButtonAction:(id)sender {
+//        
+//        [self.queue cancelAllOperations];
+//        
+//        // start the GetPathsOperation with the root path to start the search
+//        ParseDataOperation *parseOp = [[ParseDataOperation alloc] init];
+//        ParseTCPOperation *parseTCP = [[ParseTCPOperation alloc] init];
+//        
+//        [self.queue addOperation:parseOp];	// this will start the "TestOperation"
+//        [self.queue addOperation:parseTCP];
+//        
+//        if([[self.queue operations] containsObject:parseOp]){
+//            [[NSNotificationCenter defaultCenter] addObserver:self
+//                                                     selector:@selector(anyThread_handleData:)
+//                                                         name:kReceiveAndParseDataDidFinish
+//                                                       object:nil];
+//            
+//            [self.RunningIndicator setHidden:NO];
+//            [self.RunningIndicator startAnimation:self];
+//        }
+//        
+//        if([[self.queue operations] containsObject:parseTCP]){
+//            [[NSNotificationCenter defaultCenter] addObserver:self
+//                                                     selector:@selector(anyThread_handleImage:)
+//                                                         name:kReceiveAndParseImageDidFinish
+//                                                       object:nil];
+//        }
+//        
+//        if ([self.SaveData_checkbox state] == NSOnState) {
+//            [self OpenTelemetrySaveTextFiles];
+//        }
+//    }
+//    if ([StartStopSegmentedControl selectedSegment] == 1) {
+//        // is the following code needed to run on close of application?
+//        [self.queue cancelAllOperations];
+//        [self.SAS1telemetrySaveFile closeFile];
+//        [self.SAS2telemetrySaveFile closeFile];
+//    }
+//}
 
 
 - (IBAction)PYASRsaveImage_ButtonAction:(NSButton *)sender {
