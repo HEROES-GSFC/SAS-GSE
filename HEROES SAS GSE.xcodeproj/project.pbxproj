@@ -189,7 +189,6 @@
 		860EF31C163605D300B46E35 = {
 			isa = PBXGroup;
 			children = (
-				8605B2FC173610700094566C /* CorePlot.framework */,
 				860EF331163605D300B46E35 /* HEROES SAS GSE */,
 				860EF34E163605D400B46E35 /* HEROES SAS GSETests */,
 				860EF32A163605D300B46E35 /* Frameworks */,
@@ -209,6 +208,7 @@
 		860EF32A163605D300B46E35 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8605B2FC173610700094566C /* CorePlot.framework */,
 				8605B2FF1736116B0094566C /* CorePlot.framework */,
 				8635E442171B0D0600F69CD2 /* Quartz.framework */,
 				86672DF816F7D2BD00F36110 /* GLUT.framework */,
@@ -249,7 +249,8 @@
 				86A9642A171869BC00C16663 /* DataSeries.m */,
 				8666E3C216A3BA6600A9DD85 /* Commander.h */,
 				8666E3C316A3BA6600A9DD85 /* Commander.m */,
-				86159E7516DED0D400E79C27 /* Windows */,
+				86B31626173AFBC900EF5104 /* NIB Files */,
+				86159E7516DED0D400E79C27 /* Windows Controllers */,
 				8693D5E416C5BAC500985DDB /* Externals */,
 				860EF332163605D300B46E35 /* Supporting Files */,
 			);
@@ -290,22 +291,17 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		86159E7516DED0D400E79C27 /* Windows */ = {
+		86159E7516DED0D400E79C27 /* Windows Controllers */ = {
 			isa = PBXGroup;
 			children = (
 				8635E283171B0A1B00F69CD2 /* PlotWindowController.h */,
 				8635E284171B0A1B00F69CD2 /* PlotWindowController.m */,
-				8635E285171B0A1B00F69CD2 /* PlotWindowController.xib */,
 				86159E7B16DED4FA00E79C27 /* CommanderWindowController.h */,
 				86159E7C16DED4FB00E79C27 /* CommanderWindowController.m */,
-				86159E7D16DED4FB00E79C27 /* CommanderWindowController.xib */,
-				860EF3621636073000B46E35 /* PreferencesWindow.xib */,
-				860EF340163605D300B46E35 /* MainMenu.xib */,
 				86159E8016DEFA7A00E79C27 /* ConsoleWindowController.h */,
 				86159E8116DEFA7A00E79C27 /* ConsoleWindowController.m */,
-				86159E8216DEFA7A00E79C27 /* ConsoleWindowController.xib */,
 			);
-			name = Windows;
+			name = "Windows Controllers";
 			sourceTree = "<group>";
 		};
 		8693D5E416C5BAC500985DDB /* Externals */ = {
@@ -334,6 +330,18 @@
 				8693D5EE16C5BB1A00985DDB /* UDPSender.hpp */,
 			);
 			name = Externals;
+			sourceTree = "<group>";
+		};
+		86B31626173AFBC900EF5104 /* NIB Files */ = {
+			isa = PBXGroup;
+			children = (
+				860EF340163605D300B46E35 /* MainMenu.xib */,
+				86159E8216DEFA7A00E79C27 /* ConsoleWindowController.xib */,
+				860EF3621636073000B46E35 /* PreferencesWindow.xib */,
+				86159E7D16DED4FB00E79C27 /* CommanderWindowController.xib */,
+				8635E285171B0A1B00F69CD2 /* PlotWindowController.xib */,
+			);
+			name = "NIB Files";
 			sourceTree = "<group>";
 		};
 		86E1D8481695ED1B0079303F /* lib */ = {

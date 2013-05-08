@@ -53,7 +53,6 @@
 @synthesize PYASRcameraView = _PYASRcameraView;
 @synthesize Commander_window = _Commander_window;
 @synthesize Console_window = _Console_window;
-@synthesize Plot_window = _Plot_window;
 @synthesize PYASFTemperaturesForm;
 @synthesize PYASRTemperaturesForm;
 @synthesize TimeProfileMenu;
@@ -183,7 +182,6 @@
     }
     
     [self OpenTelemetrySaveTextFiles];
-
     [self postToLogWindow:@"Application started"];
 }
 
@@ -292,13 +290,6 @@
         _PYASFcameraView = [[CameraView alloc] init];
     }
     return _PYASFcameraView;
-}
-
-- (PlotWindowController *)Plot_window{
-    if (_Plot_window == nil) {
-        _Plot_window = [[PlotWindowController alloc]init];
-    }
-    return _Plot_window;
 }
 
 - (DataPacket *)packet
@@ -470,7 +461,7 @@
         self.PYASRcameraView.turnOnBkgImage = YES;
         [self.PYASRcameraView draw];
         
-        NSString *logMessage = [NSString stringWithFormat:@"Received %@ image. Size is %ldx%ld = %ld", cameraName, self.PYASFcameraView.imageXSize, self.PYASFcameraView.imageYSize, (unsigned long)[data length]];
+        NSString *logMessage = [NSString stringWithFormat:@"Received %@ image. Size is %dx%ld = %ld", cameraName, self.PYASFcameraView.imageXSize, self.PYASFcameraView.imageYSize, (unsigned long)[data length]];
         [self postToLogWindow:logMessage];
     }
     
@@ -597,11 +588,6 @@
         [self.SAS1telemetrySaveFile writeData:[writeString dataUsingEncoding:NSUTF8StringEncoding]];
         
         [self.PYASFcameraView draw];
-        //[self.PYASRcameraView draw];
-        [self.Plot_window update];
-        for (PlotWindowController *PlotWindow in self.PlotWindows) {
-            [PlotWindow update];
-        }
     }
     
     if (self.packet.isSAS2) {
@@ -649,14 +635,15 @@
                 [cell setIntegerValue:[[self.packet.i2cTemperatures objectAtIndex:i*numberofCols + j] integerValue]];
             }
         }
-        
         self.PYASRcameraView.northAngle = northAngle;
         
         //[self.PYASFcameraView draw];
         [self.PYASRcameraView draw];
-        [self.Plot_window update];
     }
-    
+    // Update the plot windows
+    for (id key in self.PlotWindows) {
+        [[self.PlotWindows objectForKey:key] update];
+    }
 }
 
 - (IBAction)OpenWindow_WindowMenuItemAction:(NSMenuItem *)sender {
@@ -670,7 +657,7 @@
     }
     if ([self.PlotWindowsAvailable containsObject:userChoice]) {
         if ([self.PlotWindows objectForKey:userChoice] == nil) {
-            PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:[self.PYASFtimeSeriesCollection objectForKey:@"time"] :[self.PYASFtimeSeriesCollection objectForKey:@"cpu temperature"]];
+            PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:[self.PYASFtimeSeriesCollection objectForKey:@"time"] :[self.PYASFtimeSeriesCollection objectForKey:userChoice]];
             [self.PlotWindows setObject:newPlotWindow forKey:userChoice];
             [newPlotWindow showWindow:self];
             [sender setState:1];
@@ -679,31 +666,6 @@
             [sender setState:0];
         }
     }
-    
-}
-
-- (IBAction)GraphIsChosen:(NSPopUpButton *)sender {
-    if ([sender indexOfSelectedItem] == 0) {
-        self.Plot_window.time = [self.PYASFtimeSeriesCollection objectForKey:@"time"];
-        self.Plot_window.y = [self.PYASFtimeSeriesCollection objectForKey:@"cpu temperature"];
-    }
-    if ([sender indexOfSelectedItem] == 1) {
-        self.Plot_window.time = [self.PYASFtimeSeriesCollection objectForKey:@"time"];
-        self.Plot_window.y = [self.PYASFtimeSeriesCollection objectForKey:@"camera temperature"];
-    }
-    if ([sender indexOfSelectedItem] == 2) {
-        self.Plot_window.time = [self.PYASFtimeSeriesCollection objectForKey:@"time"];
-        self.Plot_window.y = [self.PYASFtimeSeriesCollection objectForKey:@"ctl X solution"];
-    }
-    if ([sender indexOfSelectedItem] == 3) {
-        self.Plot_window.time = [self.PYASFtimeSeriesCollection objectForKey:@"time"];
-        self.Plot_window.y = [self.PYASFtimeSeriesCollection objectForKey:@"ctl Y solution"];
-    }
-    if ([sender indexOfSelectedItem] == 4) {
-        self.Plot_window.time = [self.PYASFtimeSeriesCollection objectForKey:@"time"];
-        self.Plot_window.y = [self.PYASFtimeSeriesCollection objectForKey:@"ctl R solution"];
-    }
-    
     
 }
 
@@ -727,7 +689,6 @@
     self.PYASFcameraView.turnOnBkgImage = YES;
     [self.PYASFcameraView draw];
     
-    [self.Plot_window update];
     [self postToLogWindow:@"test string"];
     free(pixels);
 }
