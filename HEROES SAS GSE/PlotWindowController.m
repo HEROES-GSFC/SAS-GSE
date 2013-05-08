@@ -58,6 +58,13 @@
     return [super initWithWindowNibName:@"PlotWindowController"];
 }
 
+- (id)initWithData:(NSMutableArray *)time :(DataSeries *)data{
+    self = [self init];
+    self.y = data;
+    self.time = time;
+    return self;
+}
+
 - (id)initWithWindow:(NSWindow *)window
 {
     self = [super initWithWindow:window];

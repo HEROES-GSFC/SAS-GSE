@@ -29,5 +29,5 @@
 - (IBAction)TextFieldUpdated:(NSTextField *)sender;
 
 -(void) update;
-
+- (id)initWithData:(NSMutableArray *)time :(DataSeries *)data;
 @end
