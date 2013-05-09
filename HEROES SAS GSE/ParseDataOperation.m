@@ -99,7 +99,7 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
         [[NSFileManager defaultManager] createFileAtPath:filePath contents:nil attributes:nil];
         self.saveFile = [NSFileHandle fileHandleForWritingAtPath:filePath];
     }
-    //say to handle where's the file fo write
+    //say to handle where's the file to write
     [self.saveFile truncateFileAtOffset:[self.saveFile seekToEndOfFile]];
 }
 
@@ -214,6 +214,12 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                             double ctl_xvalue, ctl_yvalue;
                             *(tm_packet) >> ctl_xvalue >> ctl_yvalue;
                             [self.dataPacket setCTLCommand:[NSValue valueWithPoint:NSMakePoint(ctl_xvalue, ctl_yvalue)]];
+                            
+                            int8_t i2c_temperature;
+                            for (int i=0; i<8; i++){
+                                *(tm_packet) >> i2c_temperature;
+                                [self.dataPacket.i2cTemperatures insertObject:[NSNumber numberWithInt:i2c_temperature] atIndex:i];
+                            }                            
                         }
                         
                         if (tm_packet->getTypeID() == SAS_CM_ACK_TYPE) {

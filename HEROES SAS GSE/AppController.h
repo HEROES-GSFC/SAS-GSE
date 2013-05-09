@@ -14,11 +14,8 @@
 #import "CommanderWindowController.h"
 #import "PlotWindowController.h"
 
-@interface AppController : NSObject
+@interface AppController : NSWindowController
 
-@property (weak) IBOutlet NSSegmentedControl *StartStopSegmentedControl;
-
-@property (weak) IBOutlet NSProgressIndicator *RunningIndicator;
 @property (weak) IBOutlet NSTextField *SAS1FrameNumberLabel;
 @property (weak) IBOutlet NSTextField *SAS2FrameNumberLabel;
 @property (weak) IBOutlet NSTextField *SAS1FrameTimeLabel;
@@ -40,22 +37,26 @@
 @property (weak) IBOutlet NSTextField *PYASRCTLCmdEchoTextField;
 @property (weak) IBOutlet NSTextField *PYASFImageMaxMinTextField;
 @property (weak) IBOutlet NSTextField *PYASRImageMaxMinTextField;
-@property (weak) IBOutlet NSButton *SaveData_checkbox;
 @property (weak) IBOutlet NSTextField *PYASFCTLSigmaTextField;
+@property (weak) IBOutlet NSForm *PYASFTemperaturesForm;
+@property (weak) IBOutlet NSForm *PYASRTemperaturesForm;
 
 @property (nonatomic, strong) NSFileHandle *SAS1telemetrySaveFile;
 @property (nonatomic, strong) NSFileHandle *SAS2telemetrySaveFile;
+@property (weak) IBOutlet NSMenu *TimeProfileMenu;
 
 @property (nonatomic, strong) NSDictionary *timeSeriesCollection;
+@property (nonatomic, strong) NSDictionary *PYASFtimeSeriesCollection;
+@property (nonatomic, strong) NSDictionary *PYASRtimeSeriesCollection;
+@property (nonatomic, strong) NSDictionary *RAStimeSeriesCollection;
 
 @property (nonatomic, readonly) CommanderWindowController *Commander_window;
 @property (nonatomic, readonly) ConsoleWindowController *Console_window;
-@property (nonatomic, readonly) PlotWindowController *Plot_window;
+@property (nonatomic, strong) NSMutableDictionary *PlotWindows;
 @property (unsafe_unretained) IBOutlet NSWindow *MainWindow;
 
 - (IBAction)PYASRbkgImageIsClicked:(NSButton *)sender;
 - (IBAction)PYASFbkgImageIsClicked:(NSButton *)sender;
-- (IBAction)StartStopButtonAction:(NSButton *)sender;
 - (IBAction)RunTest:(NSButton *)sender;
 - (IBAction)PYASFsaveImage_ButtonAction:(NSButton *)sender;
 - (IBAction)PYASRsaveImage_ButtonAction:(NSButton *)sender;

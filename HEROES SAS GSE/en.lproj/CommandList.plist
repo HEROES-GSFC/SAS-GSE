@@ -2,6 +2,91 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>Request RAS RAW Image</key>
+	<dict>
+		<key>var_names</key>
+		<array/>
+		<key>description</key>
+		<string>Request an image from the RAS</string>
+		<key>key</key>
+		<string>0x0910</string>
+	</dict>
+	<key>Shutdown</key>
+	<dict>
+		<key>var_names</key>
+		<array/>
+		<key>description</key>
+		<string>Request a clean shutdown of the system</string>
+		<key>key</key>
+		<string>0x00f0</string>
+	</dict>
+	<key>Request Exposure</key>
+	<dict>
+		<key>var_names</key>
+		<array/>
+		<key>description</key>
+		<string>Request the disk usage for disk, returned as a percentage</string>
+		<key>key</key>
+		<string>0x0850</string>
+	</dict>
+	<key>Request Analog Gain</key>
+	<dict>
+		<key>var_names</key>
+		<array/>
+		<key>description</key>
+		<string>Request the disk usage for disk, returned as a percentage</string>
+		<key>key</key>
+		<string>0x0860</string>
+	</dict>
+	<key>Request Preamp Gain</key>
+	<dict>
+		<key>var_names</key>
+		<array/>
+		<key>description</key>
+		<string>Request the disk usage for disk, returned as a percentage</string>
+		<key>key</key>
+		<string>0x0870</string>
+	</dict>
+	<key>Stop Outputting CTL</key>
+	<dict>
+		<key>var_names</key>
+		<array/>
+		<key>description</key>
+		<string>Start sending CTL solutions</string>
+		<key>key</key>
+		<string>0x0040</string>
+	</dict>
+	<key>Start Outputting CTL</key>
+	<dict>
+		<key>var_names</key>
+		<array/>
+		<key>description</key>
+		<string>Start sending CTL solutions</string>
+		<key>key</key>
+		<string>0x0030</string>
+	</dict>
+	<key>Request Disk Usage</key>
+	<dict>
+		<key>var_names</key>
+		<array>
+			<string>Disk ID</string>
+		</array>
+		<key>description</key>
+		<string>Request the disk usage for disk, returned as a percentage</string>
+		<key>key</key>
+		<string>0x0881</string>
+	</dict>
+	<key>Start/Stop Saving Images</key>
+	<dict>
+		<key>var_names</key>
+		<array>
+			<string>On/Off</string>
+		</array>
+		<key>description</key>
+		<string>Set image saving boolean</string>
+		<key>key</key>
+		<string>0x0421</string>
+	</dict>
 	<key>Set Preamp gain</key>
 	<dict>
 		<key>var_names</key>
@@ -11,7 +96,7 @@
 		<key>description</key>
 		<string>Set the preamp gain value</string>
 		<key>key</key>
-		<string>0x0191</string>
+		<string>0x0491</string>
 	</dict>
 	<key>Set Analog gain</key>
 	<dict>
@@ -20,9 +105,9 @@
 			<string>value</string>
 		</array>
 		<key>description</key>
-		<string>Set the analog gain value</string>
+		<string>Set the analog gain value  (log scale, ~160 doubles the gain)</string>
 		<key>key</key>
-		<string>0x0181</string>
+		<string>0x0481</string>
 	</dict>
 	<key>Set exposure time</key>
 	<dict>
@@ -33,12 +118,12 @@
 		<key>description</key>
 		<string>Set exposure time, t in microseconds</string>
 		<key>key</key>
-		<string>0x0151</string>
+		<string>0x0451</string>
 	</dict>
 	<key>Set new pointing</key>
 	<dict>
 		<key>key</key>
-		<string>0x0112</string>
+		<string>0x0412</string>
 		<key>description</key>
 		<string>Set new solar target, x and y in arcseconds</string>
 		<key>var_names</key>
@@ -54,7 +139,7 @@
 		<key>description</key>
 		<string>Ask for a full frame to be sent over TCP</string>
 		<key>key</key>
-		<string>0x0210</string>
+		<string>0x0810</string>
 	</dict>
 	<key>Restart all Workers</key>
 	<dict>

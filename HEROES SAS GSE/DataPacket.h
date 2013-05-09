@@ -24,6 +24,8 @@
 @property (nonatomic) BOOL isSAS2;
 @property (nonatomic) NSValue *screenCenter;
 @property (nonatomic) float screenRadius;
+@property (nonatomic) NSMutableArray *i2cTemperatures;
+
 
 -(NSString *) getframeTimeString;
 -(void) addChordPoint: (NSPoint) point :(int) index;

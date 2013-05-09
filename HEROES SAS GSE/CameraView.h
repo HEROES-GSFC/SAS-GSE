@@ -12,10 +12,11 @@
 
 @property (nonatomic, strong) NSMutableArray *fiducialPoints;
 @property (nonatomic, strong) NSMutableArray *chordCrossingPoints;
+@property (nonatomic) double northAngle;
 @property (nonatomic, strong) NSData *bkgImage;
 @property (nonatomic) BOOL turnOnBkgImage;
-@property (nonatomic) long imageXSize;
-@property (nonatomic) long imageYSize;
+@property (nonatomic) GLsizei imageXSize;
+@property (nonatomic) GLsizei imageYSize;
 @property (nonatomic) BOOL imageExists;
 @property (nonatomic) float screenRadius;
 
