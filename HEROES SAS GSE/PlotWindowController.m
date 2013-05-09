@@ -10,6 +10,7 @@
 #import <CorePlot/CorePlot.h>
 
 @interface PlotWindowController ()
+@property (nonatomic, strong) NSArray *lineColorList;
 @end
 
 @implementation PlotWindowController
@@ -22,6 +23,8 @@
 @synthesize YminChoice;
 @synthesize YmaxChoice;
 @synthesize XaxisChoice;
+@synthesize lineColorList;
+@synthesize MainWindow;
 
 -(CPTGraphHostingView *)hostView{
     if (_hostView == nil) {
@@ -58,7 +61,7 @@
     return [super initWithWindowNibName:@"PlotWindowController"];
 }
 
-- (id)initWithData:(NSMutableArray *)time :(DataSeries *)data{
+- (id)initWithData:(NSMutableArray *)time :(NSDictionary *)data{
     self = [self init];
     self.y = data;
     self.time = time;
@@ -69,7 +72,7 @@
 {
     self = [super initWithWindow:window];
     if (self) {
-        //insert initialization here
+        self.lineColorList = [[NSArray alloc] initWithObjects:[CPTColor redColor], [CPTColor blueColor], [CPTColor greenColor], nil];
     }
     return self;
 }
@@ -77,7 +80,6 @@
 - (void)windowDidLoad
 {
     [super windowDidLoad];
-    
     // Create graph from theme
     graph = [(CPTXYGraph *)[CPTXYGraph alloc] initWithFrame:CGRectZero];
     graph.plotAreaFrame.paddingTop    = 15.0;
@@ -89,27 +91,6 @@
     [graph applyTheme:theme];
     graph.plotAreaFrame.borderLineStyle = nil;
     
-    // Add legend
-    graph.legend                 = [CPTLegend legendWithGraph:graph];
-    //graph.legend.textStyle       = x.titleTextStyle;
-    graph.legend.fill            = [CPTFill fillWithColor:[CPTColor darkGrayColor]];
-    //graph.legend.borderLineStyle = x.axisLineStyle;
-    graph.legend.cornerRadius    = 5.0;
-    graph.legend.swatchSize      = CGSizeMake(25.0, 25.0);
-    graph.legendAnchor           = CPTRectAnchorBottom;
-    graph.legendDisplacement     = CGPointMake(0.0, 12.0);
-    
-    [graph.plotAreaFrame removeAllAnnotations];
-    CPTTextLayer *textLayer = [[CPTTextLayer alloc] initWithText:@"test"];
-    CPTLayerAnnotation *annotation = [[CPTLayerAnnotation alloc] initWithAnchorLayer:graph.plotAreaFrame];
-    annotation.rectAnchor = CPTRectAnchorTopLeft;
-    annotation.displacement = CGPointMake(0, 0);
-    annotation.contentLayer = textLayer;
-    annotation.contentAnchorPoint = CGPointMake(0, 1); //top left
-    [graph.plotAreaFrame addAnnotation:annotation];
-    
-    self.hostView.hostedGraph = graph;
-    
     CPTMutableLineStyle *majorGridLineStyle = [CPTMutableLineStyle lineStyle];
     majorGridLineStyle.lineWidth = 0.5f;
     majorGridLineStyle.lineColor = [CPTColor grayColor];
@@ -118,34 +99,64 @@
     CPTXYAxisSet *axisSet = (CPTXYAxisSet *)graph.axisSet;
     
     // X axes
-    CPTXYAxis *x = axisSet.xAxis;
-    x.labelingPolicy = CPTAxisLabelingPolicyAutomatic;
-    x.majorIntervalLength = CPTDecimalFromFloat(10);        // one minute
-    x.orthogonalCoordinateDecimal = CPTDecimalFromString(@"2");
-    x.minorTicksPerInterval       = 5;                      // one every ten s
+    CPTXYAxis *xAxis = axisSet.xAxis;
+    xAxis.labelingPolicy = CPTAxisLabelingPolicyAutomatic;
+    xAxis.majorIntervalLength = CPTDecimalFromFloat(10);        // one minute
+    xAxis.orthogonalCoordinateDecimal = CPTDecimalFromString(@"2");
+    xAxis.minorTicksPerInterval       = 5;                      // one every ten s
+    xAxis.labelingPolicy = CPTAxisLabelingPolicyAutomatic;
+    xAxis.axisConstraints = [CPTConstraints constraintWithLowerOffset:0.0];
+    xAxis.majorGridLineStyle = majorGridLineStyle;
+
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"HH:mm:ss"];
+    CPTTimeFormatter *timeFormatter = [[CPTTimeFormatter alloc] initWithDateFormatter:dateFormatter];
+ 
+    CPTXYAxis *yAxis = axisSet.yAxis;
+    yAxis.axisConstraints = [CPTConstraints constraintWithLowerOffset:0.0];
+    yAxis.orthogonalCoordinateDecimal = CPTDecimalFromFloat(0);
+    yAxis.majorGridLineStyle = majorGridLineStyle;
     
-    x.labelingPolicy = CPTAxisLabelingPolicyAutomatic;
-    x.axisConstraints = [CPTConstraints constraintWithLowerOffset:0.0];
-    x.majorGridLineStyle = majorGridLineStyle;
+    [graph.plotAreaFrame removeAllAnnotations];
+    int i = 0;
+    for (NSString *key in self.y) {
+        DataSeries *ydata = [self.y objectForKey:key];
+        if (i == 0) {
+            yAxis.title = ydata.name;
+            timeFormatter.referenceDate = [self.time objectAtIndex:0];
+            xAxis.labelFormatter = timeFormatter;
+            [self.MainWindow setTitle:ydata.name];
+        }
+
+        // Create a plot that uses the data source method
+        CPTScatterPlot *linePlot = [[CPTScatterPlot alloc] init];
+        DataSeries *currenty = [self.y objectForKey:key];
+        linePlot.identifier = key;
+        
+        // linestyle for data
+        CPTMutableLineStyle *lineStyle = [linePlot.dataLineStyle mutableCopy];
+        lineStyle.lineWidth = 2.f;
+        lineStyle.lineColor = [self.lineColorList objectAtIndex:i];
+        linePlot.dataLineStyle = lineStyle;
+        linePlot.dataSource = self;
+        [graph addPlot:linePlot];
+        i++;
+    }
     
-    CPTXYAxis *y = axisSet.yAxis;
-    y.axisConstraints = [CPTConstraints constraintWithLowerOffset:0.0];
-    y.orthogonalCoordinateDecimal = CPTDecimalFromFloat(0);
-    y.title = self.y.name;
-    y.majorGridLineStyle = majorGridLineStyle;
+    // Add legend
+    graph.legend                 = [CPTLegend legendWithGraph:graph];
+    graph.legend.textStyle       = xAxis.titleTextStyle;
+    graph.legend.fill            = [CPTFill fillWithColor:[CPTColor whiteColor]];
+    graph.legend.borderLineStyle = xAxis.axisLineStyle;
+    graph.legend.cornerRadius    = 5.0;
+    graph.legend.swatchSize      = CGSizeMake(25.0, 25.0);
+    graph.legendAnchor           = CPTRectAnchorBottom;
+    graph.legendDisplacement     = CGPointMake(0.0, 12.0);
     
-    // Create a plot that uses the data source method
-    CPTScatterPlot *dataSourceLinePlot = [[CPTScatterPlot alloc] init];
-    dataSourceLinePlot.identifier = @"Time Plot";
+    self.hostView.hostedGraph = graph;
     
-    // linestyle for data
-    CPTMutableLineStyle *lineStyle = [dataSourceLinePlot.dataLineStyle mutableCopy];
-    lineStyle.lineWidth              = 2.f;
-    lineStyle.lineColor              = [CPTColor redColor];
-    dataSourceLinePlot.dataLineStyle = lineStyle;
-    
-    dataSourceLinePlot.dataSource = self;
-    [graph addPlot:dataSourceLinePlot];
+    [graph.defaultPlotSpace scaleToFitPlots:[graph allPlots]];
+    [graph reloadData];
     [self update];
 }
 #pragma mark -
@@ -153,7 +164,7 @@
 
 -(NSUInteger)numberOfRecordsForPlot:(CPTPlot *)plot
 {
-    return plotData.count;
+    return 10;
 }
 
 - (IBAction)TextFieldUpdated:(NSTextField *)sender {
@@ -163,88 +174,72 @@
 -(void)update{
     if (self.time != nil) {
         if ([self.time count] > 1) {
-            
-        NSDate *latestTime = [self.time objectAtIndex:[self.time count]-1];
-        NSDate *earliestTime;
-        float ymin, ymax;
-        
-        if (self.XaxisChoice.selectedSegment == 0) {
-            earliestTime = [self.time objectAtIndex:0];}
-        else { earliestTime = [self.time objectAtIndex:self.y.ROI.location]; }
-        
-        // Axes
-        CPTXYAxisSet *axisSet = (CPTXYAxisSet *)self.hostView.hostedGraph.axisSet;
-        
-        // X axes
-        CPTXYAxis *x = axisSet.xAxis;
-        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        [dateFormatter setDateFormat:@"HH:mm:ss"];
-        CPTTimeFormatter *timeFormatter = [[CPTTimeFormatter alloc] initWithDateFormatter:dateFormatter];
-        timeFormatter.referenceDate = earliestTime;
-        x.labelFormatter = timeFormatter;
-        
-        // Setup scatter plot space
-        CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)self.hostView.hostedGraph.defaultPlotSpace;
-        plotSpace.xRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromFloat(0)
-                                                        length:CPTDecimalFromFloat([latestTime timeIntervalSinceDate:earliestTime])];
-        
-        if (self.YminChoice.selectedSegment == 0) {
-            ymin = self.y.min * 0.90;
-            if (ymin == 0) {
-                ymin = -1;
-            }
-        } else { ymin = [self.YminTextField floatValue]; }
-        if (self.YmaxChoice.selectedSegment == 0) {
-            ymax = self.y.max * 1.10;
-            if (ymax == 0) {
-                ymax = 1;
-            }
-        } else { ymax = [self.YmaxTextField floatValue]; }
-        plotSpace.yRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromFloat(ymin) length:CPTDecimalFromFloat(ymax-ymin)];
-        
-        // should calculate the size of major and minor tickintevals needed on the fly
-        CPTXYAxis *y = axisSet.yAxis;
-        y.majorIntervalLength = CPTDecimalFromString([NSString stringWithFormat:@"%f", abs(ymax - ymin)/10.0]);
-            NSLog(@"%@", [NSString stringWithFormat:@"%f, %f, %f", ymin, ymax, (ymax - ymin)/10.0]);
-        y.minorTicksPerInterval = 1;
-        y.title = self.y.name;
-        
-        //first remove all of the annotations to redraw them
-        [graph.plotAreaFrame removeAllAnnotations];
-        
-        NSString *annotationText = [NSString stringWithFormat:@"avg = %f, sig = %f", self.y.average, self.y.standardDeviation];
-        CPTTextLayer *textLayer = [[CPTTextLayer alloc] initWithText:annotationText];
-        CPTLayerAnnotation *annotation = [[CPTLayerAnnotation alloc] initWithAnchorLayer:graph.plotAreaFrame];
-        annotation.rectAnchor = CPTRectAnchorTopLeft;
-        annotation.displacement = CGPointMake(0, 0);
-        annotation.contentLayer = textLayer;
-        annotation.contentAnchorPoint = CGPointMake(0, 1);//top left
-        [self.hostView.hostedGraph.plotAreaFrame addAnnotation:annotation];
+            float ymin, ymax;
 
-        // Update legend
-        // self.hostView.hostedGraph.legend.textStyle = x.titleTextStyle;
-        // self.hostView.hostedGraph.legend.borderLineStyle = x.axisLineStyle;
-        
-        NSUInteger indexmin = self.XaxisChoice.selectedSegment == 0 ? 0 : self.y.ROI.location;
-        NSMutableArray *data = [NSMutableArray array];
-        for ( NSUInteger i = indexmin; i < [self.time count]-1; i++ ) {
-            NSTimeInterval x = [[self.time objectAtIndex:i] timeIntervalSinceDate:earliestTime];
-            [data addObject:
-             [NSDictionary dictionaryWithObjectsAndKeys:
-              [NSNumber numberWithFloat:x], [NSNumber numberWithInt:CPTScatterPlotFieldX],
-              [self.y.data objectAtIndex:i], [NSNumber numberWithInt:CPTScatterPlotFieldY],
-              nil]];
-        }
-        plotData = data;
-        [graph reloadData];
+            NSDate *latestTime = [self.time objectAtIndex:[self.time count]-1];
+            NSDate *earliestTime;
+            
+            NSArray *ys = [self.y allValues];
+            DataSeries *defaulty = [ys objectAtIndex:0];
+            ymin = defaulty.min;
+            ymax = defaulty.max;
+            
+            if (self.XaxisChoice.selectedSegment == 1) {
+                earliestTime = [self.time objectAtIndex:0];}
+            else { earliestTime = [self.time objectAtIndex:defaulty.ROI.location]; }
+            
+            // Axes
+            CPTXYAxisSet *axisSet = (CPTXYAxisSet *)self.hostView.hostedGraph.axisSet;
+            
+            // Setup scatter plot space
+            CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)self.hostView.hostedGraph.defaultPlotSpace;
+            plotSpace.xRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromFloat(0)
+                                                            length:CPTDecimalFromFloat([latestTime timeIntervalSinceDate:earliestTime])];
+            [graph.plotAreaFrame removeAllAnnotations];
+            int i = 0;
+            for (NSString *key in self.y) {
+                DataSeries *ydata = [self.y objectForKey:key];
+                if (ymin > ydata.min){ ymin = ydata.min; }
+                if (ymax < ydata.max){ ymin = ydata.max; }
+                
+                // add annotation to plot
+                NSString *annotationText = [NSString stringWithFormat:@"avg = %f, sig = %f", ydata.average, ydata.standardDeviation];
+                CPTTextLayer *textLayer = [[CPTTextLayer alloc] initWithText:annotationText];
+                //textLayer.backgroundColor = [CPTColor redColor];
+                CPTLayerAnnotation *annotation = [[CPTLayerAnnotation alloc] initWithAnchorLayer:graph.plotAreaFrame];
+                annotation.rectAnchor = CPTRectAnchorTopLeft;
+                annotation.displacement = CGPointMake(0 + 200*i, 0);
+                annotation.contentLayer = textLayer;
+                annotation.contentAnchorPoint = CGPointMake(0, 1);//top left
+
+                [self.hostView.hostedGraph.plotAreaFrame addAnnotation:annotation];
+                i++;
+            }
+            // should calculate the size of major and minor tickintevals needed on the fly
+            //CPTXYAxis *y = axisSet.yAxis;
+            //y.majorIntervalLength = CPTDecimalFromString([NSString stringWithFormat:@"%f", abs(ymax - ymin)/10.0]);
+            //NSLog(@"%@", [NSString stringWithFormat:@"%f, %f, %f", ymin, ymax, (ymax - ymin)/10.0]);
+            //y.minorTicksPerInterval = 1;
+            [graph.defaultPlotSpace scaleToFitPlots:[graph allPlots]];
+            [graph reloadData];
         }
     }
 }
 
 -(NSNumber *)numberForPlot:(CPTPlot *)plot field:(NSUInteger)fieldEnum recordIndex:(NSUInteger)index
 {
-    NSDecimalNumber *num = [[plotData objectAtIndex:index] objectForKey:[NSNumber numberWithUnsignedLong:fieldEnum]];
-    return num;
+    NSArray *ys = [self.y allValues];
+    DataSeries *defaulty = [ys objectAtIndex:0];
+    NSUInteger indexmin = self.XaxisChoice.selectedSegment == 0 ? 0 : defaulty.ROI.location;
+    
+    if (fieldEnum == CPTScatterPlotFieldX) {
+        NSTimeInterval x = [[self.time objectAtIndex:(index + indexmin)] timeIntervalSinceDate:[self.time objectAtIndex:indexmin]];
+        return [NSNumber numberWithFloat:x];
+    } else {
+        NSString *plot_name = plot.identifier;
+        DataSeries *ydata = [self.y objectForKey:plot_name];
+        return [ydata.data objectAtIndex:(index + indexmin)];
+    }
 }
 
 @end

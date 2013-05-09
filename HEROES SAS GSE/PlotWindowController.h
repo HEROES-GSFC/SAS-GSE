@@ -17,7 +17,7 @@
 
 @property (nonatomic, strong) IBOutlet CPTGraphHostingView *hostView;
 @property (nonatomic, strong) NSMutableArray *time;
-@property (nonatomic, strong) DataSeries *y;
+@property (nonatomic, strong) NSDictionary *y;
 - (IBAction)YminClicked:(NSSegmentedControl *)sender;
 - (IBAction)YmaxClicked:(NSSegmentedControl *)sender;
 - (IBAction)XaxisClicked:(NSSegmentedControl *)sender;
@@ -26,8 +26,9 @@
 @property (weak) IBOutlet NSSegmentedControl *YminChoice;
 @property (weak) IBOutlet NSSegmentedControl *YmaxChoice;
 @property (weak) IBOutlet NSSegmentedControl *XaxisChoice;
+@property (strong) IBOutlet NSWindow *MainWindow;
 - (IBAction)TextFieldUpdated:(NSTextField *)sender;
 
 -(void) update;
-- (id)initWithData:(NSMutableArray *)time :(DataSeries *)data;
+- (id)initWithData:(NSMutableArray *)time :(NSDictionary *)data;
 @end

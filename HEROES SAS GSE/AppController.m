@@ -72,21 +72,17 @@
 	self = [super init];
 	if (self)
     {
-        
         // read command list dictionary from the CommandList.plist resource file
         NSString *errorDesc = nil;
         NSPropertyListFormat format;
         
         NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"CommandList" ofType:@"plist"];
-        
         NSData *plistXML = [[NSFileManager defaultManager] contentsAtPath:plistPath];
-        
         NSDictionary *plistDict = (NSDictionary *)[NSPropertyListSerialization
                                                    propertyListFromData:plistXML
                                                    mutabilityOption:NSPropertyListMutableContainersAndLeaves
                                                    format:&format
                                                    errorDescription:&errorDesc];
-        
         if (!plistDict) {
             NSLog(@"Error reading plist: %@, format: %ld", errorDesc, format);
         }
@@ -118,7 +114,7 @@
                 [PYASRobjects addObject:newSeries];
             }
         }
-        self.PYASRtimeSeriesCollection = [NSDictionary dictionaryWithObjects:PYASFobjects forKeys:self.PlotWindowsAvailable];
+        self.PYASRtimeSeriesCollection = [NSDictionary dictionaryWithObjects:PYASRobjects forKeys:self.PlotWindowsAvailable];
         
         [self.Commander_window showWindow:nil];
         [self.Commander_window.window orderFront:self];
@@ -657,9 +653,13 @@
     }
     if ([self.PlotWindowsAvailable containsObject:userChoice]) {
         if ([self.PlotWindows objectForKey:userChoice] == nil) {
-            PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:[self.PYASFtimeSeriesCollection objectForKey:@"time"] :[self.PYASFtimeSeriesCollection objectForKey:userChoice]];
-            [self.PlotWindows setObject:newPlotWindow forKey:userChoice];
+            NSDictionary *data = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                  [self.PYASFtimeSeriesCollection objectForKey:userChoice] , @"PYAS-F",
+                                  [self.PYASRtimeSeriesCollection objectForKey:userChoice] , @"PYAS-R", nil];
+            PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:[self.PYASFtimeSeriesCollection objectForKey:@"time"] :data];
+            ;
             [newPlotWindow showWindow:self];
+            [self.PlotWindows setObject:newPlotWindow forKey:userChoice];
             [sender setState:1];
         } else {
             [self.PlotWindows removeObjectForKey:userChoice];
@@ -691,6 +691,19 @@
     
     [self postToLogWindow:@"test string"];
     free(pixels);
+
+    DataSeries *PYASFcamTemp = [self.PYASFtimeSeriesCollection objectForKey:@"camera temperature"];
+    DataSeries *PYASRcamTemp = [self.PYASRtimeSeriesCollection objectForKey:@"camera temperature"];
+    for (int i = 0; i < 10; i++) {
+        NSString *faketime = [NSString stringWithFormat:@"2012/04/05 01:1%i", i];
+        [[self.PYASFtimeSeriesCollection objectForKey:@"time"] addObject:[NSDate dateWithNaturalLanguageString:faketime]];
+        [PYASFcamTemp addPoint:(float)rand()/RAND_MAX * 5];
+        [PYASRcamTemp addPoint:(float)rand()/RAND_MAX * 5];
+    }
+    // Update the plot windows
+    for (id key in self.PlotWindows) {
+        [[self.PlotWindows objectForKey:key] update];
+    }
 }
 
 @end

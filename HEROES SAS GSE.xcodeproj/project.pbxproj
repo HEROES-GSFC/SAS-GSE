@@ -21,7 +21,6 @@
 		860EF353163605D400B46E35 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 860EF351163605D400B46E35 /* InfoPlist.strings */; };
 		860EF356163605D400B46E35 /* HEROES_SAS_GSETests.m in Sources */ = {isa = PBXBuildFile; fileRef = 860EF355163605D400B46E35 /* HEROES_SAS_GSETests.m */; };
 		860EF3611636060100B46E35 /* AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = 860EF3601636060100B46E35 /* AppController.m */; };
-		860EF3631636073000B46E35 /* PreferencesWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 860EF3621636073000B46E35 /* PreferencesWindow.xib */; };
 		86159E6A16DB1D7B00E79C27 /* ParseTCPOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 86159E6916DB1D7B00E79C27 /* ParseTCPOperation.m */; };
 		86159E6D16DB210F00E79C27 /* TCPReceiver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 86159E6B16DB210F00E79C27 /* TCPReceiver.cpp */; };
 		86159E6E16DB311200E79C27 /* TCPReceiver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 86159E6B16DB210F00E79C27 /* TCPReceiver.cpp */; };
@@ -107,7 +106,6 @@
 		860EF355163605D400B46E35 /* HEROES_SAS_GSETests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HEROES_SAS_GSETests.m; sourceTree = "<group>"; };
 		860EF35F1636060100B46E35 /* AppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppController.h; sourceTree = "<group>"; };
 		860EF3601636060100B46E35 /* AppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppController.m; sourceTree = "<group>"; };
-		860EF3621636073000B46E35 /* PreferencesWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PreferencesWindow.xib; sourceTree = "<group>"; };
 		86159E6816DB1D7B00E79C27 /* ParseTCPOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParseTCPOperation.h; sourceTree = "<group>"; };
 		86159E6916DB1D7B00E79C27 /* ParseTCPOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParseTCPOperation.m; sourceTree = "<group>"; };
 		86159E6B16DB210F00E79C27 /* TCPReceiver.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TCPReceiver.cpp; path = "lib/SAS-aspect/PYAS-core/aspect/TCPReceiver.cpp"; sourceTree = "<group>"; };
@@ -337,7 +335,6 @@
 			children = (
 				860EF340163605D300B46E35 /* MainMenu.xib */,
 				86159E8216DEFA7A00E79C27 /* ConsoleWindowController.xib */,
-				860EF3621636073000B46E35 /* PreferencesWindow.xib */,
 				86159E7D16DED4FB00E79C27 /* CommanderWindowController.xib */,
 				8635E285171B0A1B00F69CD2 /* PlotWindowController.xib */,
 			);
@@ -438,7 +435,6 @@
 				860EF336163605D300B46E35 /* InfoPlist.strings in Resources */,
 				860EF33C163605D300B46E35 /* Credits.rtf in Resources */,
 				860EF342163605D300B46E35 /* MainMenu.xib in Resources */,
-				860EF3631636073000B46E35 /* PreferencesWindow.xib in Resources */,
 				86E1D84F1695ED1B0079303F /* lib_crc.txt in Resources */,
 				8660983B16B398DD00BE26D1 /* icon.iconset in Resources */,
 				8609D8C716D57CD2007D1FA6 /* CommandList.plist in Resources */,
