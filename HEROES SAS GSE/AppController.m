@@ -64,8 +64,10 @@
 @synthesize packet = _packet;
 @synthesize SAS1telemetrySaveFile = _SAS1telemetrySaveFile;
 @synthesize SAS2telemetrySaveFile = _SAS2telemetrySaveFile;
-@synthesize PYASFtimeSeriesCollection = _PYASFtimeSeriesCollection;
-@synthesize PYASRtimeSeriesCollection = _PYASRtimeSeriesCollection;
+@synthesize timeSeriesCollection = _timeSeriesCollection;
+@synthesize PYASFtimeSeriesCollection;
+@synthesize PYASRtimeSeriesCollection;
+@synthesize RAStimeSeriesCollection;
 
 - (id)init
 {
@@ -75,7 +77,6 @@
         // read command list dictionary from the CommandList.plist resource file
         NSString *errorDesc = nil;
         NSPropertyListFormat format;
-        
         NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"CommandList" ofType:@"plist"];
         NSData *plistXML = [[NSFileManager defaultManager] contentsAtPath:plistPath];
         NSDictionary *plistDict = (NSDictionary *)[NSPropertyListSerialization
@@ -88,7 +89,18 @@
         }
         self.listOfCommands = plistDict;
         
+
         self.PlotWindowsAvailable = [NSArray arrayWithObjects:@"time", @"camera temperature", @"cpu temperature", @"ctl X solution", @"ctl Y solution", @"ctl R solution", nil];
+
+        NSArray *systemNames = [[NSArray alloc] initWithObjects:@"SAS-1", "SAS-2", nil];
+        //NSArray *cameraNames = [[NSArray alloc] initWithObjects:@"PYAS-F", "PYAS-R", "RAS", nil];
+        NSArray *data = [NSArray arrayWithObjects:@"camera temperature", @"cpu temperature", @"ctl X solution", @"ctl Y solution", nil];
+        
+        //self.PlotWindowsAvailable = data;
+        //NSDictionary *
+        //self.timeSeriesCollection = [NSDictionary alloc] initWithObjects:<#(NSArray *)#> forKeys:systemNames];
+        self.PYASFtimeSeriesCollection = [[NSDictionary alloc] init];
+        self.PYASRtimeSeriesCollection = [[NSDictionary alloc] init];
         
         NSMutableArray *PYASFobjects = [[NSMutableArray alloc] init];
         for (NSString *plotName in self.PlotWindowsAvailable) {
@@ -115,6 +127,10 @@
             }
         }
         self.PYASRtimeSeriesCollection = [NSDictionary dictionaryWithObjects:PYASRobjects forKeys:self.PlotWindowsAvailable];
+        
+        DataSeries *RAStemp = [[DataSeries alloc] init];
+        RAStemp.name = @"camera temperature";
+        self.RAStimeSeriesCollection = [[NSDictionary alloc] initWithObjectsAndKeys:[PYASRobjects objectAtIndex:0], @"time", RAStemp, @"camera temperature", nil];
         
         [self.Commander_window showWindow:nil];
         [self.Commander_window.window orderFront:self];
@@ -143,15 +159,6 @@
             cell = [self.PYASRTemperaturesForm cellAtRow:j column:i];
             [cell setTitle:[temperatureNames objectAtIndex:i*numberofCols + j]];
             [cell setIntegerValue:0];
-        }
-    }
-    
-    for (NSString *title in self.PlotWindowsAvailable) {
-        if (![title isEqualToString:@"time"]) {
-            [self.TimeProfileMenu addItemWithTitle:title action:NULL keyEquivalent:@""];
-            NSMenuItem *menuItem = [self.TimeProfileMenu itemWithTitle:title];
-            [menuItem setTarget:self];
-            [menuItem setAction:@selector(OpenWindow_WindowMenuItemAction:)];
         }
     }
     
@@ -196,22 +203,6 @@
         _PlotWindows = [[NSMutableDictionary alloc] init];
     }
     return _PlotWindows;
-}
-- (NSDictionary *)PYASFtimeSeriesCollection
-{
-    if (_PYASFtimeSeriesCollection == nil)
-    {
-        _PYASFtimeSeriesCollection = [[NSDictionary alloc] init];
-    }
-    return _PYASFtimeSeriesCollection;
-}
-- (NSDictionary *)PYASRtimeSeriesCollection
-{
-    if (_PYASRtimeSeriesCollection == nil)
-    {
-        _PYASRtimeSeriesCollection = [[NSDictionary alloc] init];
-    }
-    return _PYASRtimeSeriesCollection;
 }
 
 - (ConsoleWindowController *)Console_window
@@ -445,7 +436,7 @@
         self.PYASFcameraView.turnOnBkgImage = YES;
         [self.PYASFcameraView draw];
         
-        NSString *logMessage = [NSString stringWithFormat:@"Received %@ image. Size is %ldx%ld = %ld", cameraName, self.PYASFcameraView.imageXSize, self.PYASFcameraView.imageYSize, (unsigned long)[data length]];
+        NSString *logMessage = [NSString stringWithFormat:@"Received %@ image. Size is %dx%d = %ld", cameraName, self.PYASFcameraView.imageXSize, self.PYASFcameraView.imageYSize, (unsigned long)[data length]];
         [self postToLogWindow:logMessage];
     }
     
@@ -457,7 +448,7 @@
         self.PYASRcameraView.turnOnBkgImage = YES;
         [self.PYASRcameraView draw];
         
-        NSString *logMessage = [NSString stringWithFormat:@"Received %@ image. Size is %dx%ld = %ld", cameraName, self.PYASFcameraView.imageXSize, self.PYASFcameraView.imageYSize, (unsigned long)[data length]];
+        NSString *logMessage = [NSString stringWithFormat:@"Received %@ image. Size is %dx%d = %ld", cameraName, self.PYASFcameraView.imageXSize, self.PYASFcameraView.imageYSize, (unsigned long)[data length]];
         [self postToLogWindow:logMessage];
     }
     
@@ -623,6 +614,9 @@
         [[self.PYASRtimeSeriesCollection objectForKey:@"ctl Y solution"] addPoint:60*60*[self.packet.CTLCommand pointValue].y];
         [[self.PYASRtimeSeriesCollection objectForKey:@"ctl R solution"] addPoint:sqrtf(powf([self.packet.CTLCommand pointValue].y - ctlXValues.average,2) + powf([self.packet.CTLCommand pointValue].y - ctlYValues.average,2))];
         
+        [[self.RAStimeSeriesCollection objectForKey:@"time"] addObject:[NSDate dateWithNaturalLanguageString:[self.packet getframeTimeString]]];
+        [[self.RAStimeSeriesCollection objectForKey:@"camera temperature"] addPoint:self.packet.cameraTemperature];
+        
         NSInteger numberofCols = [self.PYASRTemperaturesForm numberOfColumns];
         NSInteger numberofRows = [self.PYASRTemperaturesForm numberOfRows];
         for (int i=0; i < numberofCols; i++) {
@@ -653,13 +647,22 @@
     }
     if ([self.PlotWindowsAvailable containsObject:userChoice]) {
         if ([self.PlotWindows objectForKey:userChoice] == nil) {
-            NSDictionary *data = [[NSDictionary alloc] initWithObjectsAndKeys:
-                                  [self.PYASFtimeSeriesCollection objectForKey:userChoice] , @"PYAS-F",
-                                  [self.PYASRtimeSeriesCollection objectForKey:userChoice] , @"PYAS-R", nil];
-            PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:[self.PYASFtimeSeriesCollection objectForKey:@"time"] :data];
-            ;
-            [newPlotWindow showWindow:self];
-            [self.PlotWindows setObject:newPlotWindow forKey:userChoice];
+            if ([userChoice isEqualToString:@"camera temperature"]) {
+                NSDictionary *data = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                      [self.PYASFtimeSeriesCollection objectForKey:userChoice] , @"PYAS-F",
+                                      [self.PYASRtimeSeriesCollection objectForKey:userChoice] , @"PYAS-R",
+                                      [self.RAStimeSeriesCollection objectForKey:userChoice] , @"RAS", nil];
+                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:[self.PYASFtimeSeriesCollection objectForKey:@"time"] :data];
+                [newPlotWindow showWindow:self];
+                [self.PlotWindows setObject:newPlotWindow forKey:userChoice];
+            } else {
+                NSDictionary *data = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                      [self.PYASFtimeSeriesCollection objectForKey:userChoice] , @"PYAS-F",
+                                      [self.PYASRtimeSeriesCollection objectForKey:userChoice] , @"PYAS-R", nil];
+                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:[self.PYASFtimeSeriesCollection objectForKey:@"time"] :data];
+                [newPlotWindow showWindow:self];
+                [self.PlotWindows setObject:newPlotWindow forKey:userChoice];
+            }
             [sender setState:1];
         } else {
             [self.PlotWindows removeObjectForKey:userChoice];

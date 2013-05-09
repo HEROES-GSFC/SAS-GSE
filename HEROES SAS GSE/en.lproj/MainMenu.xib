@@ -1497,6 +1497,7 @@
 											<string key="NSFrame">{{180, 390}, {64, 22}}</string>
 											<reference key="NSSuperview" ref="259097874"/>
 											<reference key="NSWindow"/>
+											<reference key="NSNextKeyView" ref="558533730"/>
 											<string key="NSReuseIdentifierKey">_NS:1535</string>
 											<string key="NSAntiCompressionPriority">{1000, 750}</string>
 											<bool key="NSEnabled">YES</bool>
@@ -1520,7 +1521,7 @@
 											<string key="NSFrame">{{157, 143}, {87, 22}}</string>
 											<reference key="NSSuperview" ref="259097874"/>
 											<reference key="NSWindow"/>
-											<reference key="NSNextKeyView" ref="558533730"/>
+											<reference key="NSNextKeyView" ref="68690526"/>
 											<string key="NSReuseIdentifierKey">_NS:1535</string>
 											<string key="NSAntiCompressionPriority">{1000, 750}</string>
 											<bool key="NSEnabled">YES</bool>
@@ -1841,7 +1842,7 @@
 											<string key="NSFrame">{{6, 270}, {245, 112}}</string>
 											<reference key="NSSuperview" ref="259097874"/>
 											<reference key="NSWindow"/>
-											<reference key="NSNextKeyView" ref="68690526"/>
+											<reference key="NSNextKeyView" ref="1024054695"/>
 											<string key="NSReuseIdentifierKey">_NS:9</string>
 											<bool key="NSEnabled">YES</bool>
 											<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
@@ -1986,8 +1987,7 @@
 													<reference key="NSSupport" ref="540291167"/>
 												</object>
 											</object>
-											<int key="NSSelectedRow">-1</int>
-											<int key="NSSelectedCol">-1</int>
+											<reference key="NSSelectedCell" ref="5972810"/>
 											<reference key="NSBackgroundColor" ref="470459070"/>
 											<object class="NSColor" key="NSCellBackgroundColor" id="1039207266">
 												<int key="NSColorSpace">3</int>
@@ -2160,6 +2160,7 @@
 											<string key="NSFrame">{{196, 390}, {55, 22}}</string>
 											<reference key="NSSuperview" ref="348958171"/>
 											<reference key="NSWindow"/>
+											<reference key="NSNextKeyView" ref="661228538"/>
 											<string key="NSReuseIdentifierKey">_NS:1535</string>
 											<bool key="NSEnabled">YES</bool>
 											<object class="NSTextFieldCell" key="NSCell" id="672796617">
@@ -2557,6 +2558,7 @@
 											<string key="NSFrame">{{6, 259}, {245, 112}}</string>
 											<reference key="NSSuperview" ref="348958171"/>
 											<reference key="NSWindow"/>
+											<reference key="NSNextKeyView" ref="852693939"/>
 											<string key="NSReuseIdentifierKey">_NS:9</string>
 											<bool key="NSEnabled">YES</bool>
 											<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
@@ -2745,7 +2747,7 @@
 							<string key="NSFrame">{{435, 847}, {97, 32}}</string>
 							<reference key="NSSuperview" ref="439893737"/>
 							<reference key="NSWindow"/>
-							<reference key="NSNextKeyView"/>
+							<reference key="NSNextKeyView" ref="209043691"/>
 							<string key="NSReuseIdentifierKey">_NS:9</string>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="783845847">
@@ -2941,9 +2943,9 @@
 					<string key="NSFrameSize">{1149, 901}</string>
 					<reference key="NSSuperview"/>
 					<reference key="NSWindow"/>
-					<reference key="NSNextKeyView"/>
+					<reference key="NSNextKeyView" ref="22532436"/>
 				</object>
-				<string key="NSScreenRect">{{0, 0}, {1280, 778}}</string>
+				<string key="NSScreenRect">{{0, 0}, {1920, 1178}}</string>
 				<string key="NSMaxSize">{10000000000000, 10000000000000}</string>
 				<bool key="NSWindowIsRestorable">NO</bool>
 			</object>
@@ -9963,20 +9965,14 @@
 					<string key="className">AppController</string>
 					<string key="superclassName">NSWindowController</string>
 					<dictionary class="NSMutableDictionary" key="actions">
-						<string key="GraphIsChosen:">NSPopUpButton</string>
 						<string key="OpenWindow_WindowMenuItemAction:">NSMenuItem</string>
 						<string key="PYASFbkgImageIsClicked:">NSButton</string>
 						<string key="PYASFsaveImage_ButtonAction:">NSButton</string>
 						<string key="PYASRbkgImageIsClicked:">NSButton</string>
 						<string key="PYASRsaveImage_ButtonAction:">NSButton</string>
 						<string key="RunTest:">NSButton</string>
-						<string key="StartStopButtonAction:">NSButton</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
-						<object class="IBActionInfo" key="GraphIsChosen:">
-							<string key="name">GraphIsChosen:</string>
-							<string key="candidateClassName">NSPopUpButton</string>
-						</object>
 						<object class="IBActionInfo" key="OpenWindow_WindowMenuItemAction:">
 							<string key="name">OpenWindow_WindowMenuItemAction:</string>
 							<string key="candidateClassName">NSMenuItem</string>
@@ -10001,13 +9997,8 @@
 							<string key="name">RunTest:</string>
 							<string key="candidateClassName">NSButton</string>
 						</object>
-						<object class="IBActionInfo" key="StartStopButtonAction:">
-							<string key="name">StartStopButtonAction:</string>
-							<string key="candidateClassName">NSButton</string>
-						</object>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
-						<string key="GraphChooser">NSPopUpButton</string>
 						<string key="MainWindow">NSWindow</string>
 						<string key="PYASFCTLCmdEchoTextField">NSTextField</string>
 						<string key="PYASFCTLSigmaTextField">NSTextField</string>
@@ -10023,7 +10014,6 @@
 						<string key="PYASRcameraView">CameraView</string>
 						<string key="PYASRdrawBkgImage_checkbox">NSButton</string>
 						<string key="RASCameraTemperatureLabel">NSTextField</string>
-						<string key="RunningIndicator">NSProgressIndicator</string>
 						<string key="SAS1CPUTemperatureLabel">NSTextField</string>
 						<string key="SAS1CmdCountTextField">NSTextField</string>
 						<string key="SAS1CmdKeyTextField">NSTextField</string>
@@ -10034,15 +10024,9 @@
 						<string key="SAS2CmdKeyTextField">NSTextField</string>
 						<string key="SAS2FrameNumberLabel">NSTextField</string>
 						<string key="SAS2FrameTimeLabel">NSTextField</string>
-						<string key="SaveData_checkbox">NSButton</string>
-						<string key="StartStopSegmentedControl">NSSegmentedControl</string>
 						<string key="TimeProfileMenu">NSMenu</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<object class="IBToOneOutletInfo" key="GraphChooser">
-							<string key="name">GraphChooser</string>
-							<string key="candidateClassName">NSPopUpButton</string>
-						</object>
 						<object class="IBToOneOutletInfo" key="MainWindow">
 							<string key="name">MainWindow</string>
 							<string key="candidateClassName">NSWindow</string>
@@ -10103,10 +10087,6 @@
 							<string key="name">RASCameraTemperatureLabel</string>
 							<string key="candidateClassName">NSTextField</string>
 						</object>
-						<object class="IBToOneOutletInfo" key="RunningIndicator">
-							<string key="name">RunningIndicator</string>
-							<string key="candidateClassName">NSProgressIndicator</string>
-						</object>
 						<object class="IBToOneOutletInfo" key="SAS1CPUTemperatureLabel">
 							<string key="name">SAS1CPUTemperatureLabel</string>
 							<string key="candidateClassName">NSTextField</string>
@@ -10146,14 +10126,6 @@
 						<object class="IBToOneOutletInfo" key="SAS2FrameTimeLabel">
 							<string key="name">SAS2FrameTimeLabel</string>
 							<string key="candidateClassName">NSTextField</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="SaveData_checkbox">
-							<string key="name">SaveData_checkbox</string>
-							<string key="candidateClassName">NSButton</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="StartStopSegmentedControl">
-							<string key="name">StartStopSegmentedControl</string>
-							<string key="candidateClassName">NSSegmentedControl</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="TimeProfileMenu">
 							<string key="name">TimeProfileMenu</string>
