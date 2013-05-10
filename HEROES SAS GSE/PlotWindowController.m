@@ -116,7 +116,7 @@
     yAxis.axisConstraints = [CPTConstraints constraintWithLowerOffset:0.0];
     yAxis.orthogonalCoordinateDecimal = CPTDecimalFromFloat(0);
     yAxis.majorGridLineStyle = majorGridLineStyle;
-    
+
     [graph.plotAreaFrame removeAllAnnotations];
     int i = 0;
     for (NSString *key in self.y) {
@@ -130,7 +130,6 @@
 
         // Create a plot that uses the data source method
         CPTScatterPlot *linePlot = [[CPTScatterPlot alloc] init];
-        DataSeries *currenty = [self.y objectForKey:key];
         linePlot.identifier = key;
         
         // linestyle for data
@@ -164,7 +163,9 @@
 
 -(NSUInteger)numberOfRecordsForPlot:(CPTPlot *)plot
 {
-    return 10;
+    NSArray *ys = [self.y allValues];
+    DataSeries *defaulty = [ys objectAtIndex:0];
+    return defaulty.count;
 }
 
 - (IBAction)TextFieldUpdated:(NSTextField *)sender {
@@ -187,6 +188,12 @@
             if (self.XaxisChoice.selectedSegment == 1) {
                 earliestTime = [self.time objectAtIndex:0];}
             else { earliestTime = [self.time objectAtIndex:defaulty.ROI.location]; }
+            if (self.YmaxChoice.selectedSegment == 1) {
+                ymax = [self.YmaxTextField floatValue];
+            }
+            if (self.YminChoice.selectedSegment == 1) {
+                ymin = [self.YminTextField floatValue];
+            }
             
             // Axes
             CPTXYAxisSet *axisSet = (CPTXYAxisSet *)self.hostView.hostedGraph.axisSet;
@@ -215,12 +222,18 @@
                 [self.hostView.hostedGraph.plotAreaFrame addAnnotation:annotation];
                 i++;
             }
-            // should calculate the size of major and minor tickintevals needed on the fly
-            //CPTXYAxis *y = axisSet.yAxis;
-            //y.majorIntervalLength = CPTDecimalFromString([NSString stringWithFormat:@"%f", abs(ymax - ymin)/10.0]);
-            //NSLog(@"%@", [NSString stringWithFormat:@"%f, %f, %f", ymin, ymax, (ymax - ymin)/10.0]);
-            //y.minorTicksPerInterval = 1;
-            [graph.defaultPlotSpace scaleToFitPlots:[graph allPlots]];
+            
+            if( (self.YmaxChoice.selectedSegment == 1) || (self.YminChoice.selectedSegment == 1) ){
+                // should calculate the size of major and minor tickintevals needed on the fly
+                CPTXYAxis *y = axisSet.yAxis;
+                y.majorIntervalLength = CPTDecimalFromString([NSString stringWithFormat:@"%f", abs(ymax - ymin)/10.0]);
+                y.minorTicksPerInterval = 1;
+                plotSpace.yRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromFloat(ymin)
+                                                                length:CPTDecimalFromFloat(abs(ymax - ymin))];
+                
+            } else{
+                [graph.defaultPlotSpace scaleToFitPlots:[graph allPlots]];
+            }
             [graph reloadData];
         }
     }
