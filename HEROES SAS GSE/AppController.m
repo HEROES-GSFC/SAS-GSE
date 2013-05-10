@@ -101,12 +101,13 @@
         //self.timeSeriesCollection = [NSDictionary alloc] initWithObjects:<#(NSArray *)#> forKeys:systemNames];
         self.PYASFtimeSeriesCollection = [[NSDictionary alloc] init];
         self.PYASRtimeSeriesCollection = [[NSDictionary alloc] init];
+        self.RAStimeSeriesCollection = [[NSDictionary alloc] init];
         
         NSMutableArray *PYASFobjects = [[NSMutableArray alloc] init];
         for (NSString *plotName in self.PlotWindowsAvailable) {
             if ([plotName isEqualToString:@"time"]) {
-                NSMutableArray *newSeries = [[NSMutableArray alloc] init];
-                [PYASFobjects addObject:newSeries];
+                NSMutableArray *timeArray = [[NSMutableArray alloc] init];
+                [PYASFobjects addObject:timeArray];
             } else {
                 DataSeries *newSeries = [[DataSeries alloc] init];
                 newSeries.name = plotName;
@@ -118,8 +119,8 @@
         NSMutableArray *PYASRobjects = [[NSMutableArray alloc] init];
         for (NSString *plotName in self.PlotWindowsAvailable) {
             if ([plotName isEqualToString:@"time"]) {
-                NSMutableArray *newSeries = [[NSMutableArray alloc] init];
-                [PYASRobjects addObject:newSeries];
+                NSMutableArray *timeArray = [[NSMutableArray alloc] init];
+                [PYASRobjects addObject:timeArray];
             } else {
                 DataSeries *newSeries = [[DataSeries alloc] init];
                 newSeries.name = plotName;
@@ -520,13 +521,14 @@
     }
     
     if (self.packet.isSAS1) {
-        
+        NSLog(@"SAS-1");
         [self.SAS1FrameNumberLabel setIntegerValue:[self.packet frameNumber]];
         [self.SAS1FrameTimeLabel setStringValue:[self.packet getframeTimeString]];
         [self.SAS1CmdCountTextField setIntegerValue:[self.packet commandCount]];
         [self.SAS1CmdKeyTextField setStringValue:[NSString stringWithFormat:@"0x%04x", [self.packet commandKey]]];
         
         [[self.PYASFtimeSeriesCollection objectForKey:@"time"] addObject:[NSDate dateWithNaturalLanguageString:[self.packet getframeTimeString]]];
+        NSLog(@"%@", [self.packet getframeTimeString]);
         [[self.PYASFtimeSeriesCollection objectForKey:@"camera temperature"] addPoint:self.packet.cameraTemperature];
         [[self.PYASFtimeSeriesCollection objectForKey:@"cpu temperature"] addPoint:self.packet.cpuTemperature];
         [[self.PYASFtimeSeriesCollection objectForKey:@"ctl X solution"] addPoint:60*60*[self.packet.CTLCommand pointValue].x];
@@ -586,7 +588,7 @@
     }
     
     if (self.packet.isSAS2) {
-        
+        NSLog(@"SAS-2");
         [self.SAS2FrameNumberLabel setIntegerValue:[self.packet frameNumber]];
         [self.SAS2FrameTimeLabel setStringValue:[self.packet getframeTimeString]];
         [self.SAS2CmdCountTextField setIntegerValue:[self.packet commandCount]];
@@ -659,18 +661,22 @@
     if ([self.PlotWindowsAvailable containsObject:userChoice]) {
         if ([self.PlotWindows objectForKey:userChoice] == nil) {
             if ([userChoice isEqualToString:@"camera temperature"]) {
+                NSDictionary *PYASFData = [[NSDictionary alloc] initWithObjectsAndKeys:[self.PYASFtimeSeriesCollection objectForKey:@"time"], @"time", [self.PYASFtimeSeriesCollection objectForKey:userChoice], @"y", nil];
+                NSDictionary *PYASRData = [[NSDictionary alloc] initWithObjectsAndKeys:[self.PYASRtimeSeriesCollection objectForKey:@"time"], @"time", [self.PYASRtimeSeriesCollection objectForKey:userChoice], @"y", nil];
                 NSDictionary *data = [[NSDictionary alloc] initWithObjectsAndKeys:
-                                      [self.PYASFtimeSeriesCollection objectForKey:userChoice] , @"PYAS-F",
-                                      [self.PYASRtimeSeriesCollection objectForKey:userChoice] , @"PYAS-R",
-                                      [self.RAStimeSeriesCollection objectForKey:userChoice] , @"RAS", nil];
-                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:[self.PYASFtimeSeriesCollection objectForKey:@"time"] :data];
+                                      PYASFData , @"PYAS-F",
+                                      PYASRData , @"PYAS-R", nil];
+                //[self.RAStimeSeriesCollection objectForKey:userChoice] , @"RAS", nil];
+                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data];
                 [newPlotWindow showWindow:self];
                 [self.PlotWindows setObject:newPlotWindow forKey:userChoice];
             } else {
+                NSDictionary *PYASFData = [[NSDictionary alloc] initWithObjectsAndKeys:[self.PYASFtimeSeriesCollection objectForKey:@"time"], @"time", [self.PYASFtimeSeriesCollection objectForKey:userChoice], @"y", nil];
+                NSDictionary *PYASRData = [[NSDictionary alloc] initWithObjectsAndKeys:[self.PYASRtimeSeriesCollection objectForKey:@"time"], @"time", [self.PYASRtimeSeriesCollection objectForKey:userChoice], @"y", nil];
                 NSDictionary *data = [[NSDictionary alloc] initWithObjectsAndKeys:
-                                      [self.PYASFtimeSeriesCollection objectForKey:userChoice] , @"PYAS-F",
-                                      [self.PYASRtimeSeriesCollection objectForKey:userChoice] , @"PYAS-R", nil];
-                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:[self.PYASFtimeSeriesCollection objectForKey:@"time"] :data];
+                                      PYASFData , @"PYAS-F",
+                                      PYASRData , @"PYAS-R", nil];
+                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data];
                 [newPlotWindow showWindow:self];
                 [self.PlotWindows setObject:newPlotWindow forKey:userChoice];
             }

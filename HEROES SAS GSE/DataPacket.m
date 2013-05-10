@@ -104,7 +104,7 @@
 - (NSString *) getframeTimeString{
     NSDate *date = [NSDate dateWithTimeIntervalSince1970:self.frameSeconds];
     NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"D HH:mm:ss"];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
     NSString *dateString = [dateFormatter stringFromDate: date];
     
     return dateString;

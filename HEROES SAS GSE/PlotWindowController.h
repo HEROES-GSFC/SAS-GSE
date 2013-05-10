@@ -16,8 +16,7 @@
 }
 
 @property (nonatomic, strong) IBOutlet CPTGraphHostingView *hostView;
-@property (nonatomic, strong) NSMutableArray *time;
-@property (nonatomic, strong) NSDictionary *y;
+@property (nonatomic, strong) NSDictionary *data;
 - (IBAction)YminClicked:(NSSegmentedControl *)sender;
 - (IBAction)YmaxClicked:(NSSegmentedControl *)sender;
 - (IBAction)XaxisClicked:(NSSegmentedControl *)sender;
@@ -30,5 +29,5 @@
 - (IBAction)TextFieldUpdated:(NSTextField *)sender;
 
 -(void) update;
-- (id)initWithData:(NSMutableArray *)time :(NSDictionary *)data;
+- (id)initWithData:(NSDictionary *)inputdata;
 @end
