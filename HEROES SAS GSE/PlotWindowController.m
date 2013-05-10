@@ -107,39 +107,42 @@
     xAxis.labelingPolicy = CPTAxisLabelingPolicyAutomatic;
     xAxis.axisConstraints = [CPTConstraints constraintWithLowerOffset:0.0];
     xAxis.majorGridLineStyle = majorGridLineStyle;
-
+    
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"HH:mm:ss"];
     CPTTimeFormatter *timeFormatter = [[CPTTimeFormatter alloc] initWithDateFormatter:dateFormatter];
- 
+    
     CPTXYAxis *yAxis = axisSet.yAxis;
     yAxis.axisConstraints = [CPTConstraints constraintWithLowerOffset:0.0];
     yAxis.orthogonalCoordinateDecimal = CPTDecimalFromFloat(0);
     yAxis.majorGridLineStyle = majorGridLineStyle;
-
+    
     [graph.plotAreaFrame removeAllAnnotations];
     int i = 0;
     for (NSString *key in self.y) {
-        DataSeries *ydata = [self.y objectForKey:key];
-        if (i == 0) {
-            yAxis.title = ydata.name;
-            timeFormatter.referenceDate = [self.time objectAtIndex:0];
-            xAxis.labelFormatter = timeFormatter;
-            [self.MainWindow setTitle:ydata.name];
+        if (!self.time || !self.time.count){
+            DataSeries *ydata = [self.y objectForKey:key];
+            if (i == 0) {
+                yAxis.title = ydata.name;
+                //timeFormatter.referenceDate = [self.time objectAtIndex:0];
+                NSLog(@"%d", [self.time count]);
+                xAxis.labelFormatter = timeFormatter;
+                [self.MainWindow setTitle:ydata.name];
+            }
+            
+            // Create a plot that uses the data source method
+            CPTScatterPlot *linePlot = [[CPTScatterPlot alloc] init];
+            linePlot.identifier = key;
+            
+            // linestyle for data
+            CPTMutableLineStyle *lineStyle = [linePlot.dataLineStyle mutableCopy];
+            lineStyle.lineWidth = 2.f;
+            lineStyle.lineColor = [self.lineColorList objectAtIndex:i];
+            linePlot.dataLineStyle = lineStyle;
+            linePlot.dataSource = self;
+            [graph addPlot:linePlot];
+            i++;
         }
-
-        // Create a plot that uses the data source method
-        CPTScatterPlot *linePlot = [[CPTScatterPlot alloc] init];
-        linePlot.identifier = key;
-        
-        // linestyle for data
-        CPTMutableLineStyle *lineStyle = [linePlot.dataLineStyle mutableCopy];
-        lineStyle.lineWidth = 2.f;
-        lineStyle.lineColor = [self.lineColorList objectAtIndex:i];
-        linePlot.dataLineStyle = lineStyle;
-        linePlot.dataSource = self;
-        [graph addPlot:linePlot];
-        i++;
     }
     
     // Add legend
@@ -176,7 +179,7 @@
     if (self.time != nil) {
         if ([self.time count] > 1) {
             float ymin, ymax;
-
+            
             NSDate *latestTime = [self.time objectAtIndex:[self.time count]-1];
             NSDate *earliestTime;
             
@@ -218,7 +221,7 @@
                 annotation.displacement = CGPointMake(0 + 200*i, 0);
                 annotation.contentLayer = textLayer;
                 annotation.contentAnchorPoint = CGPointMake(0, 1);//top left
-
+                
                 [self.hostView.hostedGraph.plotAreaFrame addAnnotation:annotation];
                 i++;
             }
