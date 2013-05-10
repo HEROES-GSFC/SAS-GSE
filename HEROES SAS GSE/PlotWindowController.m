@@ -107,11 +107,11 @@
     xAxis.labelingPolicy = CPTAxisLabelingPolicyAutomatic;
     xAxis.axisConstraints = [CPTConstraints constraintWithLowerOffset:0.0];
     xAxis.majorGridLineStyle = majorGridLineStyle;
-
+    
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"HH:mm:ss"];
     CPTTimeFormatter *timeFormatter = [[CPTTimeFormatter alloc] initWithDateFormatter:dateFormatter];
- 
+    
     CPTXYAxis *yAxis = axisSet.yAxis;
     yAxis.axisConstraints = [CPTConstraints constraintWithLowerOffset:0.0];
     yAxis.orthogonalCoordinateDecimal = CPTDecimalFromFloat(0);
@@ -120,27 +120,29 @@
     [graph.plotAreaFrame removeAllAnnotations];
     int i = 0;
     for (NSString *key in self.y) {
-        DataSeries *ydata = [self.y objectForKey:key];
-        if (i == 0) {
-            yAxis.title = ydata.name;
-            timeFormatter.referenceDate = [self.time objectAtIndex:0];
-            xAxis.labelFormatter = timeFormatter;
-            [self.MainWindow setTitle:ydata.name];
+        if (!self.time || !self.time.count){
+            DataSeries *ydata = [self.y objectForKey:key];
+            if (i == 0) {
+                yAxis.title = ydata.name;
+                //timeFormatter.referenceDate = [self.time objectAtIndex:0];
+                NSLog(@"%d", [self.time count]);
+                xAxis.labelFormatter = timeFormatter;
+                [self.MainWindow setTitle:ydata.name];
+            }
+            
+            // Create a plot that uses the data source method
+            CPTScatterPlot *linePlot = [[CPTScatterPlot alloc] init];
+            linePlot.identifier = key;
+            
+            // linestyle for data
+            CPTMutableLineStyle *lineStyle = [linePlot.dataLineStyle mutableCopy];
+            lineStyle.lineWidth = 2.f;
+            lineStyle.lineColor = [self.lineColorList objectAtIndex:i];
+            linePlot.dataLineStyle = lineStyle;
+            linePlot.dataSource = self;
+            [graph addPlot:linePlot];
+            i++;
         }
-
-        // Create a plot that uses the data source method
-        CPTScatterPlot *linePlot = [[CPTScatterPlot alloc] init];
-        DataSeries *currenty = [self.y objectForKey:key];
-        linePlot.identifier = key;
-        
-        // linestyle for data
-        CPTMutableLineStyle *lineStyle = [linePlot.dataLineStyle mutableCopy];
-        lineStyle.lineWidth = 2.f;
-        lineStyle.lineColor = [self.lineColorList objectAtIndex:i];
-        linePlot.dataLineStyle = lineStyle;
-        linePlot.dataSource = self;
-        [graph addPlot:linePlot];
-        i++;
     }
     
     // Add legend
@@ -164,7 +166,9 @@
 
 -(NSUInteger)numberOfRecordsForPlot:(CPTPlot *)plot
 {
-    return 10;
+    NSArray *ys = [self.y allValues];
+    DataSeries *defaulty = [ys objectAtIndex:0];
+    return defaulty.count;
 }
 
 - (IBAction)TextFieldUpdated:(NSTextField *)sender {
@@ -175,7 +179,7 @@
     if (self.time != nil) {
         if ([self.time count] > 1) {
             float ymin, ymax;
-
+            
             NSDate *latestTime = [self.time objectAtIndex:[self.time count]-1];
             NSDate *earliestTime;
             
@@ -187,6 +191,12 @@
             if (self.XaxisChoice.selectedSegment == 1) {
                 earliestTime = [self.time objectAtIndex:0];}
             else { earliestTime = [self.time objectAtIndex:defaulty.ROI.location]; }
+            if (self.YmaxChoice.selectedSegment == 1) {
+                ymax = [self.YmaxTextField floatValue];
+            }
+            if (self.YminChoice.selectedSegment == 1) {
+                ymin = [self.YminTextField floatValue];
+            }
             
             // Axes
             CPTXYAxisSet *axisSet = (CPTXYAxisSet *)self.hostView.hostedGraph.axisSet;
@@ -211,16 +221,22 @@
                 annotation.displacement = CGPointMake(0 + 200*i, 0);
                 annotation.contentLayer = textLayer;
                 annotation.contentAnchorPoint = CGPointMake(0, 1);//top left
-
+                
                 [self.hostView.hostedGraph.plotAreaFrame addAnnotation:annotation];
                 i++;
             }
-            // should calculate the size of major and minor tickintevals needed on the fly
-            //CPTXYAxis *y = axisSet.yAxis;
-            //y.majorIntervalLength = CPTDecimalFromString([NSString stringWithFormat:@"%f", abs(ymax - ymin)/10.0]);
-            //NSLog(@"%@", [NSString stringWithFormat:@"%f, %f, %f", ymin, ymax, (ymax - ymin)/10.0]);
-            //y.minorTicksPerInterval = 1;
-            [graph.defaultPlotSpace scaleToFitPlots:[graph allPlots]];
+            
+            if( (self.YmaxChoice.selectedSegment == 1) || (self.YminChoice.selectedSegment == 1) ){
+                // should calculate the size of major and minor tickintevals needed on the fly
+                CPTXYAxis *y = axisSet.yAxis;
+                y.majorIntervalLength = CPTDecimalFromString([NSString stringWithFormat:@"%f", abs(ymax - ymin)/10.0]);
+                y.minorTicksPerInterval = 1;
+                plotSpace.yRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromFloat(ymin)
+                                                                length:CPTDecimalFromFloat(abs(ymax - ymin))];
+                
+            } else{
+                [graph.defaultPlotSpace scaleToFitPlots:[graph allPlots]];
+            }
             [graph reloadData];
         }
     }

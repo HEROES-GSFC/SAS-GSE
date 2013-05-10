@@ -162,6 +162,14 @@
         }
     }
     
+    for (NSString *title in self.PlotWindowsAvailable) {
+        if (![title isEqualToString:@"time"]) {
+            [self.TimeProfileMenu addItemWithTitle:title action:NULL keyEquivalent:@""];
+            NSMenuItem *menuItem = [self.TimeProfileMenu itemWithTitle:title];
+            [menuItem setTarget:self];
+            [menuItem setAction:@selector(OpenWindow_WindowMenuItemAction:)];
+        }
+    }
     // start the GetPathsOperation with the root path to start the search
     ParseDataOperation *parseOp = [[ParseDataOperation alloc] init];
     ParseTCPOperation *parseTCP = [[ParseTCPOperation alloc] init];
@@ -700,11 +708,14 @@
 
     DataSeries *PYASFcamTemp = [self.PYASFtimeSeriesCollection objectForKey:@"camera temperature"];
     DataSeries *PYASRcamTemp = [self.PYASRtimeSeriesCollection objectForKey:@"camera temperature"];
+    DataSeries *RAScamTemp = [self.RAStimeSeriesCollection objectForKey:@"camera temperature"];
     for (int i = 0; i < 10; i++) {
+        NSDate *currentDate = [NSDate date];
         NSString *faketime = [NSString stringWithFormat:@"2012/04/05 01:1%i", i];
-        [[self.PYASFtimeSeriesCollection objectForKey:@"time"] addObject:[NSDate dateWithNaturalLanguageString:faketime]];
+        [[self.PYASFtimeSeriesCollection objectForKey:@"time"] addObject:[NSDate dateWithTimeInterval:i sinceDate:[NSDate date]]];
         [PYASFcamTemp addPoint:(float)rand()/RAND_MAX * 5];
         [PYASRcamTemp addPoint:(float)rand()/RAND_MAX * 5];
+        [RAScamTemp addPoint:(float)rand()/RAND_MAX * 5];
     }
     // Update the plot windows
     for (id key in self.PlotWindows) {
