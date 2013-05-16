@@ -79,7 +79,7 @@
     [self.confirm_Button setEnabled:NO];
     [self.targetListcomboBox selectItemAtIndex:0];
 
-    [self.destinationIP_textField setStringValue:@"192.168.2.221"];    
+    [self.destinationIP_textField setStringValue:@"192.168.1.32"];    
 }
 - (IBAction)ConfirmButtonPushed:(NSButton *)sender {
     [self.send_Button setEnabled:YES];
