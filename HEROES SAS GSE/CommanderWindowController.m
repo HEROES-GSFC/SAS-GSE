@@ -86,7 +86,7 @@
     [self.confirm_Button setEnabled:NO];
     [self.commandListcomboBox setEnabled:NO];
 
-    NSInteger numberOfVariablesCurrentlyDisplayed = (long)[self.Variables_Form numberOfRows];
+    //NSInteger numberOfVariablesCurrentlyDisplayed = (long)[self.Variables_Form numberOfRows];
     // clear the form of all elements
     //for (int i = 0; i < numberOfVariablesCurrentlyDisplayed; i++) {
      //   [[self.Variables_Form cellAtIndex:i] setEditable:NO];

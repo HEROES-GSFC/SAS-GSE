@@ -110,6 +110,11 @@
     return dateString;
 }
 
+- (NSDate *) getDate{
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:self.frameSeconds];
+    return date;
+}
+
 -(void) addChordPoint:(NSPoint)point :(int) index{
     [self.chordPoints replaceObjectAtIndex:index withObject:[NSValue valueWithPoint:point]];
 }

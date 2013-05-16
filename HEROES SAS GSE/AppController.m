@@ -92,13 +92,10 @@
 
         self.PlotWindowsAvailable = [NSArray arrayWithObjects:@"time", @"camera temperature", @"cpu temperature", @"ctl X solution", @"ctl Y solution", @"ctl R solution", nil];
 
-        NSArray *systemNames = [[NSArray alloc] initWithObjects:@"SAS-1", "SAS-2", nil];
+        NSArray *systemNames = [[NSArray alloc] initWithObjects:@"SAS-1", @"SAS-2", nil];
         //NSArray *cameraNames = [[NSArray alloc] initWithObjects:@"PYAS-F", "PYAS-R", "RAS", nil];
         NSArray *data = [NSArray arrayWithObjects:@"camera temperature", @"cpu temperature", @"ctl X solution", @"ctl Y solution", nil];
         
-        //self.PlotWindowsAvailable = data;
-        //NSDictionary *
-        //self.timeSeriesCollection = [NSDictionary alloc] initWithObjects:<#(NSArray *)#> forKeys:systemNames];
         self.PYASFtimeSeriesCollection = [[NSDictionary alloc] init];
         self.PYASRtimeSeriesCollection = [[NSDictionary alloc] init];
         self.RAStimeSeriesCollection = [[NSDictionary alloc] init];
@@ -131,7 +128,7 @@
         
         DataSeries *RAStemp = [[DataSeries alloc] init];
         RAStemp.name = @"camera temperature";
-        self.RAStimeSeriesCollection = [[NSDictionary alloc] initWithObjectsAndKeys:[PYASRobjects objectAtIndex:0], @"time", RAStemp, @"camera temperature", nil];
+        self.RAStimeSeriesCollection = [[NSDictionary alloc] initWithObjectsAndKeys:[[NSMutableArray alloc] init], @"time", RAStemp, @"camera temperature", nil];
         
         [self.Commander_window showWindow:nil];
         [self.Commander_window.window orderFront:self];
@@ -524,17 +521,18 @@
         
         [self.SAS1FrameNumberLabel setIntegerValue:[self.packet frameNumber]];
         [self.SAS1FrameTimeLabel setStringValue:[self.packet getframeTimeString]];
+        //NSLog(@"SAS-1 %@", [self.packet getframeTimeString]);
         [self.SAS1CmdCountTextField setIntegerValue:[self.packet commandCount]];
         [self.SAS1CmdKeyTextField setStringValue:[NSString stringWithFormat:@"0x%04x", [self.packet commandKey]]];
+        [[self.PYASFtimeSeriesCollection objectForKey:@"time"] addObject:[self.packet getDate]];
         
-        [[self.PYASFtimeSeriesCollection objectForKey:@"time"] addObject:[NSDate dateWithNaturalLanguageString:[self.packet getframeTimeString]]];
-        NSLog(@"%@", [self.packet getframeTimeString]);
         [[self.PYASFtimeSeriesCollection objectForKey:@"camera temperature"] addPoint:self.packet.cameraTemperature];
         [[self.PYASFtimeSeriesCollection objectForKey:@"cpu temperature"] addPoint:self.packet.cpuTemperature];
         [[self.PYASFtimeSeriesCollection objectForKey:@"ctl X solution"] addPoint:60*60*[self.packet.CTLCommand pointValue].x];
         [[self.PYASFtimeSeriesCollection objectForKey:@"ctl Y solution"] addPoint:60*60*[self.packet.CTLCommand pointValue].y];
         [[self.PYASFtimeSeriesCollection objectForKey:@"ctl R solution"] addPoint:sqrtf(powf([self.packet.CTLCommand pointValue].y,2) + powf([self.packet.CTLCommand pointValue].y,2))];
-        
+        //NSLog(@"%@", [self.PYASFtimeSeriesCollection objectForKey:@"time"]);
+
         DataSeries *ctlYValues = [self.PYASFtimeSeriesCollection objectForKey:@"ctl X solution"];
         DataSeries *ctlXValues = [self.PYASFtimeSeriesCollection objectForKey:@"ctl Y solution"];
         
@@ -604,7 +602,8 @@
         self.PYASRcameraView.chordCrossingPoints = self.packet.chordPoints;
         self.PYASRcameraView.fiducialPoints = self.packet.fiducialPoints;
         self.PYASRImageMaxMinTextField.stringValue = [NSString stringWithFormat:@"%ld, %ld", (unsigned long)self.packet.ImageRange.location, (unsigned long)self.packet.ImageRange.length];
-        
+        //NSLog(@"SAS-2 %@", [self.packet getframeTimeString]);
+
         if ([self.packet frameNumber] % 2){
             [self.PYASRCameraTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", self.packet.cameraTemperature]];
             [[self.PYASRtimeSeriesCollection objectForKey:@"camera temperature"] addPoint:self.packet.cameraTemperature];
@@ -616,6 +615,7 @@
             
         } else {
             [self.RASCameraTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", self.packet.cameraTemperature]];
+            [[self.RAStimeSeriesCollection objectForKey:@"time"] addObject:[self.packet getDate]];
             [[self.RAStimeSeriesCollection objectForKey:@"camera temperature"] addPoint:self.packet.cameraTemperature];
             [self.RASCameraTemperatureLabel setBackgroundColor:[NSColor whiteColor]];
             if (self.packet.cameraTemperature > CameraOKTempRange[1])
@@ -642,13 +642,11 @@
         DataSeries *ctlYValues = [self.PYASRtimeSeriesCollection objectForKey:@"ctl X solution"];
         DataSeries *ctlXValues = [self.PYASRtimeSeriesCollection objectForKey:@"ctl Y solution"];
         
-        [[self.PYASRtimeSeriesCollection objectForKey:@"time"] addObject:[NSDate dateWithNaturalLanguageString:[self.packet getframeTimeString]]];
+        [[self.PYASRtimeSeriesCollection objectForKey:@"time"] addObject:[self.packet getDate]];
         [[self.PYASRtimeSeriesCollection objectForKey:@"cpu temperature"] addPoint:self.packet.cpuTemperature];
         [[self.PYASRtimeSeriesCollection objectForKey:@"ctl X solution"] addPoint:60*60*[self.packet.CTLCommand pointValue].x];
         [[self.PYASRtimeSeriesCollection objectForKey:@"ctl Y solution"] addPoint:60*60*[self.packet.CTLCommand pointValue].y];
         [[self.PYASRtimeSeriesCollection objectForKey:@"ctl R solution"] addPoint:sqrtf(powf([self.packet.CTLCommand pointValue].y - ctlXValues.average,2) + powf([self.packet.CTLCommand pointValue].y - ctlYValues.average,2))];
-        
-        [[self.RAStimeSeriesCollection objectForKey:@"time"] addObject:[NSDate dateWithNaturalLanguageString:[self.packet getframeTimeString]]];
         
         NSInteger numberofCols = [self.PYASRTemperaturesForm numberOfColumns];
         NSInteger numberofRows = [self.PYASRTemperaturesForm numberOfRows];
@@ -683,10 +681,11 @@
             if ([userChoice isEqualToString:@"camera temperature"]) {
                 NSDictionary *PYASFData = [[NSDictionary alloc] initWithObjectsAndKeys:[self.PYASFtimeSeriesCollection objectForKey:@"time"], @"time", [self.PYASFtimeSeriesCollection objectForKey:userChoice], @"y", nil];
                 NSDictionary *PYASRData = [[NSDictionary alloc] initWithObjectsAndKeys:[self.PYASRtimeSeriesCollection objectForKey:@"time"], @"time", [self.PYASRtimeSeriesCollection objectForKey:userChoice], @"y", nil];
+                NSDictionary *RASData = [[NSDictionary alloc] initWithObjectsAndKeys:[self.RAStimeSeriesCollection objectForKey:@"time"], @"time", [self.RAStimeSeriesCollection objectForKey:userChoice], @"y", nil];
                 NSDictionary *data = [[NSDictionary alloc] initWithObjectsAndKeys:
                                       PYASFData , @"PYAS-F",
-                                      PYASRData , @"PYAS-R", nil];
-                //[self.RAStimeSeriesCollection objectForKey:userChoice] , @"RAS", nil];
+                                      PYASRData , @"PYAS-R",
+                                      RASData, @"RAS", nil];
                 PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data];
                 [newPlotWindow showWindow:self];
                 [self.PlotWindows setObject:newPlotWindow forKey:userChoice];
@@ -736,7 +735,7 @@
     DataSeries *PYASRcamTemp = [self.PYASRtimeSeriesCollection objectForKey:@"camera temperature"];
     DataSeries *RAScamTemp = [self.RAStimeSeriesCollection objectForKey:@"camera temperature"];
     for (int i = 0; i < 10; i++) {
-        NSDate *currentDate = [NSDate date];
+        //NSDate *currentDate = [NSDate date];
         NSString *faketime = [NSString stringWithFormat:@"2012/04/05 01:1%i", i];
         [[self.PYASFtimeSeriesCollection objectForKey:@"time"] addObject:[NSDate dateWithTimeInterval:i sinceDate:[NSDate date]]];
         [PYASFcamTemp addPoint:(float)rand()/RAND_MAX * 5];
