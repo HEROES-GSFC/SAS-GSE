@@ -22,7 +22,12 @@
 #import "types.hpp"
 
 #define PAYLOAD_SIZE 20
-#define DEFAULT_PORT 2002 /* The default port to send on */
+
+#if true
+#define DEFAULT_PORT 2003 /* The default port to send on */
+#else
+#define DEFAULT_PORT 2002
+#endif
 
 #define SAS_TARGET_ID 0x30
 #define SAS_TM_TYPE 0x70

@@ -5,7 +5,7 @@
 //  Created by Steven Christe on 10/22/12.
 //  Copyright (c) 2012 GSFC. All rights reserved.
 //
-
+#define GROUND_NETWORK true
 #import "AppController.h"
 #import "ParseDataOperation.h"
 #import "ParseTCPOperation.h"
@@ -16,15 +16,19 @@
 #import "ConsoleWindowController.h"
 #import "DataSeries.h"
 #import "Transform.hpp"
+#import "RASCameraViewWindow.h"
 
-@interface AppController (){
-    // transform object goes here
-}
+#define RED_INDICATOR 3
+#define ORANGE_INDICATOR 2
+#define GREEN_INDICATOR 1
+
+@interface AppController ()
 @property (nonatomic, strong) NSOperationQueue *queue;
-@property (nonatomic, strong) NSTimer *timer;
+@property (nonatomic, strong) NSTimer *IndicatorFlipTimer;
 @property (nonatomic, strong) NSDictionary *listOfCommands;
 @property (nonatomic, strong) DataPacket *packet;
 @property (nonatomic, strong) NSArray *PlotWindowsAvailable;
+@property (nonatomic, strong) NSArray *IndicatorTimers;
 - (NSString *)createDateTimeString: (NSString *)type;
 - (void)OpenTelemetrySaveTextFiles;
 @end
@@ -42,8 +46,6 @@
 @synthesize SAS2FrameNumberLabel;
 @synthesize SAS2FrameTimeLabel;
 @synthesize PYASRImageMaxMinTextField;
-@synthesize PYASFdrawBkgImage_checkbox;
-@synthesize PYASRdrawBkgImage_checkbox;
 
 @synthesize SAS1CmdCountTextField;
 @synthesize SAS1CmdKeyTextField;
@@ -58,7 +60,7 @@
 @synthesize TimeProfileMenu;
 @synthesize PlotWindows = _PlotWindows;
 
-@synthesize timer = _timer;
+@synthesize IndicatorFlipTimer = _IndicatorFlipTimer;
 @synthesize listOfCommands = _listOfCommands;
 @synthesize queue = _queue;
 @synthesize packet = _packet;
@@ -68,6 +70,14 @@
 @synthesize PYASFtimeSeriesCollection;
 @synthesize PYASRtimeSeriesCollection;
 @synthesize RAStimeSeriesCollection;
+@synthesize rasCameraViewWindow;
+
+@synthesize RAS_indicator;
+@synthesize PYASF_indicator;
+@synthesize PYASR_indicator;
+@synthesize SAS1_indicator;
+@synthesize SAS2_indicator;
+@synthesize IndicatorTimers;
 
 - (id)init
 {
@@ -89,12 +99,16 @@
         }
         self.listOfCommands = plistDict;
         
-
+        //self.IndicatorFlipTimer = [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(FlipIndicators) userInfo:nil repeats:YES];
+        
+        //NSTimer *SAS1IndicatorTimer = [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(FlipIndicators) userInfo:nil repeats:YES];
+        //NSArray *timerArray = [NSArray arrayWithObjects:<#(id), ...#>, nil]
+        
         self.PlotWindowsAvailable = [NSArray arrayWithObjects:@"time", @"camera temperature", @"cpu temperature", @"ctl X solution", @"ctl Y solution", @"ctl R solution", nil];
-
-        NSArray *systemNames = [[NSArray alloc] initWithObjects:@"SAS-1", @"SAS-2", nil];
+        
+        //NSArray *systemNames = [[NSArray alloc] initWithObjects:@"SAS-1", @"SAS-2", nil];
         //NSArray *cameraNames = [[NSArray alloc] initWithObjects:@"PYAS-F", "PYAS-R", "RAS", nil];
-        NSArray *data = [NSArray arrayWithObjects:@"camera temperature", @"cpu temperature", @"ctl X solution", @"ctl Y solution", nil];
+        //NSArray *data = [NSArray arrayWithObjects:@"camera temperature", @"cpu temperature", @"ctl X solution", @"ctl Y solution", nil];
         
         self.PYASFtimeSeriesCollection = [[NSDictionary alloc] init];
         self.PYASRtimeSeriesCollection = [[NSDictionary alloc] init];
@@ -238,21 +252,6 @@
     return _SAS2telemetrySaveFile;
 }
 
-
-- (IBAction)PYASRbkgImageIsClicked:(NSButton *)sender {
-    if ([sender state] == NSOnState) {
-        self.PYASFcameraView.turnOnBkgImage = TRUE;}
-    if ([sender state] == NSOffState){
-        self.PYASFcameraView.turnOnBkgImage = FALSE;}
-}
-
-- (IBAction)PYASFbkgImageIsClicked:(NSButton *)sender {
-    if ([sender state] == NSOnState) {
-        self.PYASRcameraView.turnOnBkgImage = TRUE;}
-    if ([sender state] == NSOffState){
-        self.PYASRcameraView.turnOnBkgImage = FALSE;}
-}
-
 - (NSOperationQueue *)queue
 {
     if (_queue == nil) {
@@ -294,33 +293,33 @@
 }
 
 //- (IBAction)StartStopButtonAction:(id)sender {
-//        
+//
 //        [self.queue cancelAllOperations];
-//        
+//
 //        // start the GetPathsOperation with the root path to start the search
 //        ParseDataOperation *parseOp = [[ParseDataOperation alloc] init];
 //        ParseTCPOperation *parseTCP = [[ParseTCPOperation alloc] init];
-//        
+//
 //        [self.queue addOperation:parseOp];	// this will start the "TestOperation"
 //        [self.queue addOperation:parseTCP];
-//        
+//
 //        if([[self.queue operations] containsObject:parseOp]){
 //            [[NSNotificationCenter defaultCenter] addObserver:self
 //                                                     selector:@selector(anyThread_handleData:)
 //                                                         name:kReceiveAndParseDataDidFinish
 //                                                       object:nil];
-//            
+//
 //            [self.RunningIndicator setHidden:NO];
 //            [self.RunningIndicator startAnimation:self];
 //        }
-//        
+//
 //        if([[self.queue operations] containsObject:parseTCP]){
 //            [[NSNotificationCenter defaultCenter] addObserver:self
 //                                                     selector:@selector(anyThread_handleImage:)
 //                                                         name:kReceiveAndParseImageDidFinish
 //                                                       object:nil];
 //        }
-//        
+//
 //        if ([self.SaveData_checkbox state] == NSOnState) {
 //            [self OpenTelemetrySaveTextFiles];
 //        }
@@ -334,54 +333,43 @@
 //}
 
 
-- (IBAction)PYASRsaveImage_ButtonAction:(NSButton *)sender {
+- (IBAction)PYASsaveImage_ButtonAction:(NSButton *)sender {
     
-    NSData *imagedata = self.PYASRcameraView.bkgImage;
+    NSData *imagedata;
+    NSUInteger len;
+    long xpixels, ypixels;
+    NSBitmapImageRep *greyRep;
+    unsigned char *pix;
+    NSString *filenamePrefix;
     
-    NSUInteger len = [self.PYASRcameraView.bkgImage length];
-    
-    long xpixels = self.PYASRcameraView.imageXSize;
-    long ypixels = self.PYASRcameraView.imageYSize;
-    
-    NSBitmapImageRep *greyRep = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:nil pixelsWide:xpixels pixelsHigh:ypixels bitsPerSample:8 samplesPerPixel:1 hasAlpha:NO isPlanar:NO colorSpaceName:NSCalibratedWhiteColorSpace bitmapFormat:0 bytesPerRow:xpixels bitsPerPixel:8];
-    
-    unsigned char *pix = [greyRep bitmapData];
-    
-    memcpy(pix, [self.PYASRcameraView.bkgImage bytes], len);
-    
-    NSImage *greyscale = [[NSImage alloc] initWithSize:NSMakeSize(xpixels, ypixels)];
-    [greyscale addRepresentation:greyRep];
-    
-    NSData *temp = [greyscale TIFFRepresentation];
-    NSBitmapImageRep *imageRep = [NSBitmapImageRep imageRepWithData:temp];
-    NSDictionary *imageProps = [NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:1.0] forKey:NSImageCompressionFactor];
-    imagedata = [imageRep representationUsingType:NSPNGFileType properties:imageProps];
-    
-    //open a save panel
-    NSSavePanel* panel = [NSSavePanel savePanel];
-    [panel setNameFieldStringValue:[NSString stringWithFormat:@"PYASimage%@.png", [self createDateTimeString:@"file"]]];
-    [panel beginWithCompletionHandler:^(NSInteger result){
-        if (result == NSFileHandlingPanelOKButton) {
-            NSURL *theFile = [panel URL];
-            [imagedata writeToFile:[theFile path] atomically:YES];
-        }
-    }];
-}
-
-- (IBAction)PYASFsaveImage_ButtonAction:(NSButton *)sender {
-    
-    NSData *imagedata = self.PYASFcameraView.bkgImage;
-    
-    NSUInteger len = [self.PYASFcameraView.bkgImage length];
-    
-    long xpixels = self.PYASFcameraView.imageXSize;
-    long ypixels = self.PYASFcameraView.imageYSize;
-    
-    NSBitmapImageRep *greyRep = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:nil pixelsWide:xpixels pixelsHigh:ypixels bitsPerSample:8 samplesPerPixel:1 hasAlpha:NO isPlanar:NO colorSpaceName:NSCalibratedWhiteColorSpace bitmapFormat:0 bytesPerRow:xpixels bitsPerPixel:8];
-    
-    unsigned char *pix = [greyRep bitmapData];
-    
-    memcpy(pix, [self.PYASFcameraView.bkgImage bytes], len);
+    if ([[sender title] isEqualToString:@"save PYAS-F"]) {
+        filenamePrefix = @"PYASF";
+        imagedata = self.PYASFcameraView.bkgImage;
+        len = [self.PYASFcameraView.bkgImage length];
+        
+        xpixels = self.PYASFcameraView.imageXSize;
+        ypixels = self.PYASFcameraView.imageYSize;
+        
+        greyRep = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:nil pixelsWide:xpixels pixelsHigh:ypixels bitsPerSample:8 samplesPerPixel:1 hasAlpha:NO isPlanar:NO colorSpaceName:NSCalibratedWhiteColorSpace bitmapFormat:0 bytesPerRow:xpixels bitsPerPixel:8];
+        
+        pix = [greyRep bitmapData];
+        
+        memcpy(pix, [self.PYASFcameraView.bkgImage bytes], len);
+    }
+    if ([[sender title] isEqualToString:@"save PYAS-R"]) {
+        filenamePrefix = @"PYASR";
+        imagedata = self.PYASRcameraView.bkgImage;
+        len = [self.PYASRcameraView.bkgImage length];
+        
+        xpixels = self.PYASRcameraView.imageXSize;
+        ypixels = self.PYASRcameraView.imageYSize;
+        
+        greyRep = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:nil pixelsWide:xpixels pixelsHigh:ypixels bitsPerSample:8 samplesPerPixel:1 hasAlpha:NO isPlanar:NO colorSpaceName:NSCalibratedWhiteColorSpace bitmapFormat:0 bytesPerRow:xpixels bitsPerPixel:8];
+        
+        pix = [greyRep bitmapData];
+        
+        memcpy(pix, [self.PYASRcameraView.bkgImage bytes], len);
+    }
     
     NSImage *greyscale = [[NSImage alloc] initWithSize:NSMakeSize(xpixels, ypixels)];
     [greyscale addRepresentation:greyRep];
@@ -393,7 +381,7 @@
     
     //open a save panel
     NSSavePanel* panel = [NSSavePanel savePanel];
-    [panel setNameFieldStringValue:[NSString stringWithFormat:@"PYASimage%@.png", [self createDateTimeString:@"file"]]];
+    [panel setNameFieldStringValue:[NSString stringWithFormat:@"%@image%@.png", filenamePrefix, [self createDateTimeString:@"file"]]];
     [panel beginWithCompletionHandler:^(NSInteger result){
         if (result == NSFileHandlingPanelOKButton) {
             NSURL *theFile = [panel URL];
@@ -428,6 +416,14 @@
     [self performSelectorOnMainThread:@selector(mainThread_handleImage:) withObject:note waitUntilDone:NO];
 }
 
+- (void)FlipIndicators{
+    [self.RAS_indicator setIntValue:RED_INDICATOR];
+    [self.PYASF_indicator setIntValue:RED_INDICATOR];
+    [self.PYASR_indicator setIntValue:RED_INDICATOR];
+    [self.SAS2_indicator setIntValue:RED_INDICATOR];
+    [self.SAS1_indicator setIntValue:RED_INDICATOR];
+}
+
 - (void)mainThread_handleImage:(NSNotification *)note
 {
     NSDictionary *notifData = [note userInfo];
@@ -457,7 +453,18 @@
         NSString *logMessage = [NSString stringWithFormat:@"Received %@ image. Size is %dx%d = %ld", cameraName, self.PYASFcameraView.imageXSize, self.PYASFcameraView.imageYSize, (unsigned long)[data length]];
         [self postToLogWindow:logMessage];
     }
-    
+    if ([cameraName isEqualToString:@"RAS"]) {
+        self.rasCameraViewWindow = [[RASCameraViewWindow alloc] init];
+        [self.rasCameraViewWindow showWindow:self];
+        self.rasCameraViewWindow.cameraView.bkgImage = data;
+        self.rasCameraViewWindow.cameraView.imageXSize = [[notifData valueForKey:@"xsize"] intValue];
+        self.rasCameraViewWindow.cameraView.imageYSize = [[notifData valueForKey:@"ysize"] intValue];
+        self.rasCameraViewWindow.cameraView.imageExists = YES;
+        self.rasCameraViewWindow.cameraView.turnOnBkgImage = YES;
+        [self.rasCameraViewWindow.cameraView draw];
+        NSString *logMessage = [NSString stringWithFormat:@"Received %@ image. Size is %dx%d = %ld", cameraName, self.rasCameraViewWindow.cameraView.imageXSize, self.rasCameraViewWindow.cameraView.imageYSize, (unsigned long)[data length]];
+        [self postToLogWindow:logMessage];
+    }
 }
 
 - (void)postToLogWindow: (NSString *)message{
@@ -518,7 +525,7 @@
     }
     
     if (self.packet.isSAS1) {
-        
+        [self.SAS1_indicator setIntValue:GREEN_INDICATOR];
         [self.SAS1FrameNumberLabel setIntegerValue:[self.packet frameNumber]];
         [self.SAS1FrameTimeLabel setStringValue:[self.packet getframeTimeString]];
         //NSLog(@"SAS-1 %@", [self.packet getframeTimeString]);
@@ -532,11 +539,17 @@
         [[self.PYASFtimeSeriesCollection objectForKey:@"ctl Y solution"] addPoint:60*60*[self.packet.CTLCommand pointValue].y];
         [[self.PYASFtimeSeriesCollection objectForKey:@"ctl R solution"] addPoint:sqrtf(powf([self.packet.CTLCommand pointValue].y,2) + powf([self.packet.CTLCommand pointValue].y,2))];
         //NSLog(@"%@", [self.PYASFtimeSeriesCollection objectForKey:@"time"]);
-
+        
         DataSeries *ctlYValues = [self.PYASFtimeSeriesCollection objectForKey:@"ctl X solution"];
         DataSeries *ctlXValues = [self.PYASFtimeSeriesCollection objectForKey:@"ctl Y solution"];
         
         [[self.PYASFtimeSeriesCollection objectForKey:@"ctl R solution"] addPoint:sqrtf(powf([self.packet.CTLCommand pointValue].y - ctlXValues.average,2) + powf([self.packet.CTLCommand pointValue].y - ctlYValues.average,2))];
+        
+        if (self.packet.cameraTemperature != 0) {
+            [self.PYASF_indicator setIntValue:GREEN_INDICATOR];
+        } else {
+            [self.PYASF_indicator setIntValue:RED_INDICATOR];
+        }
         
         [self.PYASFCameraTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", self.packet.cameraTemperature]];
         [self.PYASFCTLSigmaTextField setStringValue:[NSString stringWithFormat:@"%6.2f, %6.2f", ctlXValues.standardDeviation, ctlYValues.standardDeviation]];
@@ -546,7 +559,7 @@
             [self.PYASFCameraTemperatureLabel setBackgroundColor:[NSColor redColor]];
         if (self.packet.cameraTemperature < CameraOKTempRange[0])
             [self.PYASFCameraTemperatureLabel setBackgroundColor:[NSColor blueColor]];
-
+        
         [self.SAS1CPUTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", self.packet.cpuTemperature]];
         [self.SAS1CPUTemperatureLabel setBackgroundColor:[NSColor whiteColor]];
         if (self.packet.cpuTemperature > CPUOKTempRange[1])
@@ -591,7 +604,7 @@
     }
     
     if (self.packet.isSAS2) {
-        
+        [self.SAS2_indicator setIntValue:GREEN_INDICATOR];
         [self.SAS2FrameNumberLabel setIntegerValue:[self.packet frameNumber]];
         [self.SAS2FrameTimeLabel setStringValue:[self.packet getframeTimeString]];
         [self.SAS2CmdCountTextField setIntegerValue:[self.packet commandCount]];
@@ -603,7 +616,7 @@
         self.PYASRcameraView.fiducialPoints = self.packet.fiducialPoints;
         self.PYASRImageMaxMinTextField.stringValue = [NSString stringWithFormat:@"%ld, %ld", (unsigned long)self.packet.ImageRange.location, (unsigned long)self.packet.ImageRange.length];
         //NSLog(@"SAS-2 %@", [self.packet getframeTimeString]);
-
+        
         if ([self.packet frameNumber] % 2){
             [self.PYASRCameraTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", self.packet.cameraTemperature]];
             [[self.PYASRtimeSeriesCollection objectForKey:@"camera temperature"] addPoint:self.packet.cameraTemperature];
@@ -612,6 +625,11 @@
                 [self.PYASRCameraTemperatureLabel setBackgroundColor:[NSColor redColor]];
             if (self.packet.cameraTemperature < CameraOKTempRange[0])
                 [self.PYASRCameraTemperatureLabel setBackgroundColor:[NSColor blueColor]];
+            if (self.packet.cameraTemperature != 0) {
+                [self.PYASF_indicator setIntValue:GREEN_INDICATOR];
+            } else {
+                [self.PYASF_indicator setIntValue:RED_INDICATOR];
+            }
             
         } else {
             [self.RASCameraTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", self.packet.cameraTemperature]];
@@ -622,6 +640,11 @@
                 [self.RASCameraTemperatureLabel setBackgroundColor:[NSColor redColor]];
             if (self.packet.cameraTemperature < CameraOKTempRange[0])
                 [self.RASCameraTemperatureLabel setBackgroundColor:[NSColor blueColor]];
+            if (self.packet.cameraTemperature != 0) {
+                [self.RAS_indicator setIntValue:GREEN_INDICATOR];
+            } else {
+                [self.RAS_indicator setIntValue:RED_INDICATOR];
+            }
             
         }
         [self.SAS2CPUTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", self.packet.cpuTemperature]];
@@ -631,7 +654,7 @@
         if (self.packet.cpuTemperature < CPUOKTempRange[0])
             [self.SAS2CPUTemperatureLabel setBackgroundColor:[NSColor blueColor]];
         
-    
+        
         [self.PYASRcameraView setCircleCenter:[self.packet.sunCenter pointValue].x :[self.packet.sunCenter pointValue].y];
         self.PYASRcameraView.chordCrossingPoints = self.packet.chordPoints;
         self.PYASRcameraView.fiducialPoints = self.packet.fiducialPoints;
@@ -708,6 +731,15 @@
     
 }
 
+- (IBAction)ClearPYASBkgImage:(NSButton *)sender {
+    if ([[sender title] isEqualToString:@"Clear PYAS-F Image"]) {
+        self.PYASFcameraView.bkgImage = nil;
+    }
+    if ([[sender title] isEqualToString:@"Clear PYAS-R Image"]) {
+        self.PYASRcameraView.bkgImage = nil;
+    }
+}
+
 - (IBAction)RunTest:(id)sender {
     int xpixels = 1296;
     int ypixels = 966;
@@ -730,7 +762,7 @@
     
     [self postToLogWindow:@"test string"];
     free(pixels);
-
+    
     DataSeries *PYASFcamTemp = [self.PYASFtimeSeriesCollection objectForKey:@"camera temperature"];
     DataSeries *PYASRcamTemp = [self.PYASRtimeSeriesCollection objectForKey:@"camera temperature"];
     DataSeries *RAScamTemp = [self.RAStimeSeriesCollection objectForKey:@"camera temperature"];
