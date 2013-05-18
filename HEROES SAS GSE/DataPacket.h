@@ -32,5 +32,6 @@
 -(void) addFiducialPoint: (NSPoint) point :(int) index;
 -(NSMutableArray *) chordPoints;
 -(NSMutableArray *) fiducialPoints;
+-(NSDate *) getDate;
 
 @end

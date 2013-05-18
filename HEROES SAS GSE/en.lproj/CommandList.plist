@@ -11,6 +11,17 @@
 		<key>key</key>
 		<string>0x0910</string>
 	</dict>
+	<key>Send CTL Test Solutions</key>
+	<dict>
+		<key>var_names</key>
+		<array/>
+		<key>Item 0</key>
+		<string>type</string>
+		<key>description</key>
+		<string>Send a set of three identifical solutions to the CTL</string>
+		<key>key</key>
+		<string>0x0081</string>
+	</dict>
 	<key>Shutdown</key>
 	<dict>
 		<key>var_names</key>
@@ -20,16 +31,25 @@
 		<key>key</key>
 		<string>0x00f0</string>
 	</dict>
-	<key>Request Exposure</key>
+	<key>Request PYAS Exposure</key>
 	<dict>
 		<key>var_names</key>
 		<array/>
 		<key>description</key>
-		<string>Request the disk usage for disk, returned as a percentage</string>
+		<string>Request the current PYAS exposure value</string>
 		<key>key</key>
 		<string>0x0850</string>
 	</dict>
-	<key>Request Analog Gain</key>
+	<key>Request RAS Exposure</key>
+	<dict>
+		<key>var_names</key>
+		<array/>
+		<key>description</key>
+		<string>Request the current RAS exposure value</string>
+		<key>key</key>
+		<string>0x0950</string>
+	</dict>
+	<key>Request PYAS Analog Gain</key>
 	<dict>
 		<key>var_names</key>
 		<array/>
@@ -38,7 +58,16 @@
 		<key>key</key>
 		<string>0x0860</string>
 	</dict>
-	<key>Request Preamp Gain</key>
+	<key>Request RAS Analog Gain</key>
+	<dict>
+		<key>var_names</key>
+		<array/>
+		<key>description</key>
+		<string>Request the current RAS analog gain value</string>
+		<key>key</key>
+		<string>0x0960</string>
+	</dict>
+	<key>Request PYAS Preamp Gain</key>
 	<dict>
 		<key>var_names</key>
 		<array/>
@@ -46,6 +75,15 @@
 		<string>Request the disk usage for disk, returned as a percentage</string>
 		<key>key</key>
 		<string>0x0870</string>
+	</dict>
+	<key>Request RAS Preamp Gain</key>
+	<dict>
+		<key>var_names</key>
+		<array/>
+		<key>description</key>
+		<string>Request the current RAS preamp gain value</string>
+		<key>key</key>
+		<string>0x0970</string>
 	</dict>
 	<key>Stop Outputting CTL</key>
 	<dict>
@@ -87,7 +125,7 @@
 		<key>key</key>
 		<string>0x0421</string>
 	</dict>
-	<key>Set Preamp gain</key>
+	<key>Set PYAS Preamp gain</key>
 	<dict>
 		<key>var_names</key>
 		<array>
@@ -98,7 +136,18 @@
 		<key>key</key>
 		<string>0x0491</string>
 	</dict>
-	<key>Set Analog gain</key>
+	<key>Set RAS Preamp gain</key>
+	<dict>
+		<key>var_names</key>
+		<array>
+			<string>value</string>
+		</array>
+		<key>description</key>
+		<string>Set the RAS preamp gain value</string>
+		<key>key</key>
+		<string>0x0591</string>
+	</dict>
+	<key>Set PYAS Analog gain</key>
 	<dict>
 		<key>var_names</key>
 		<array>
@@ -109,7 +158,29 @@
 		<key>key</key>
 		<string>0x0481</string>
 	</dict>
-	<key>Set exposure time</key>
+	<key>Set RAS Analog gain</key>
+	<dict>
+		<key>var_names</key>
+		<array>
+			<string>value</string>
+		</array>
+		<key>description</key>
+		<string>Set the analog gain value  (log scale, ~160 doubles the gain)</string>
+		<key>key</key>
+		<string>0x0581</string>
+	</dict>
+	<key>Set PYAS exposure time</key>
+	<dict>
+		<key>var_names</key>
+		<array>
+			<string>time (us)</string>
+		</array>
+		<key>description</key>
+		<string>Set exposure time, t in microseconds (default 15,000)</string>
+		<key>key</key>
+		<string>0x0451</string>
+	</dict>
+	<key>Set RAS exposure time</key>
 	<dict>
 		<key>var_names</key>
 		<array>
@@ -118,7 +189,7 @@
 		<key>description</key>
 		<string>Set exposure time, t in microseconds</string>
 		<key>key</key>
-		<string>0x0451</string>
+		<string>0x0551</string>
 	</dict>
 	<key>Set new pointing</key>
 	<dict>

@@ -79,14 +79,14 @@
     [self.confirm_Button setEnabled:NO];
     [self.targetListcomboBox selectItemAtIndex:0];
 
-    [self.destinationIP_textField setStringValue:@"192.168.2.221"];    
+    [self.destinationIP_textField setStringValue:@"192.168.1.32"];    
 }
 - (IBAction)ConfirmButtonPushed:(NSButton *)sender {
     [self.send_Button setEnabled:YES];
     [self.confirm_Button setEnabled:NO];
     [self.commandListcomboBox setEnabled:NO];
 
-    NSInteger numberOfVariablesCurrentlyDisplayed = (long)[self.Variables_Form numberOfRows];
+    //NSInteger numberOfVariablesCurrentlyDisplayed = (long)[self.Variables_Form numberOfRows];
     // clear the form of all elements
     //for (int i = 0; i < numberOfVariablesCurrentlyDisplayed; i++) {
      //   [[self.Variables_Form cellAtIndex:i] setEditable:NO];

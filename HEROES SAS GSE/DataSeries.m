@@ -30,7 +30,7 @@
     if (self) {
         // insert initializing here
         self.count = 0;
-        self.ROIlength = 50;
+        self.ROIlength = 5;
         self.ROI = NSMakeRange(0, self.ROIlength);
     }
     return self;
@@ -57,7 +57,7 @@
         if (self.max < newpoint){ self.max = newpoint; }
         if (self.min > newpoint){ self.min = newpoint; }
     }
-    self.ROI = NSMakeRange(self.count > self.ROIlength ? self.count - self.ROIlength : 0, self.count < self.ROIlength ? self.count : self.ROIlength );
+    self.ROI = NSMakeRange(self.count > self.ROIlength ? self.count - self.ROIlength - 1: 0, self.count < self.ROIlength ? self.count : self.ROIlength );
     
     self.average = [self calculateAverage];
     self.standardDeviation = [self calculateStandardDeviation];

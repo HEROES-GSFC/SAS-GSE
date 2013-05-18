@@ -11,7 +11,11 @@
 #include "Command.hpp"
 #include "UDPSender.hpp"
 
+#if true
+#define SAS_CMD_PORT 2001
+#else
 #define SAS_CMD_PORT 2000
+#endif
 
 @interface Commander(){
 @private
