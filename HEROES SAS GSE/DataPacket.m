@@ -12,6 +12,7 @@
 #define MAX_CHORDS 20
 #define MAX_FIDUCIALS 20
 #define NUM_I2C_SENSORS 8
+#define NUM_VOLTAGE_READINGS 5
 
 @interface DataPacket()
 @property (nonatomic, strong) NSMutableArray *chordPoints;
@@ -34,9 +35,15 @@
 @synthesize cpuTemperature = _cpuTemperature;
 @synthesize isSAS1 = _isSAS1;
 @synthesize isSAS2 = _isSAS2;
-@synthesize ImageRange = _ImageRange;
+@synthesize ImageMax;
 @synthesize screenRadius;
 @synthesize i2cTemperatures = _i2cTemperatures;
+@synthesize isClockSynced;
+@synthesize isOutputting;
+@synthesize isSavingImages;
+@synthesize isSunFound;
+@synthesize isTracking;
+@synthesize aspectErrorCode;
 
 -(id)init{
     self = [super init]; // call our super’s designated initializer
@@ -67,6 +74,14 @@
         _i2cTemperatures = [[NSMutableArray alloc] initWithCapacity:NUM_I2C_SENSORS];
     }
     return _i2cTemperatures;
+}
+
+- (NSMutableArray *) sbcVoltages
+{
+    if (_sbcVoltages == nil) {
+        _sbcVoltages = [[NSMutableArray alloc] initWithCapacity:NUM_VOLTAGE_READINGS];
+    }
+    return _sbcVoltages;
 }
 
 - (NSMutableArray *)fiducialPoints

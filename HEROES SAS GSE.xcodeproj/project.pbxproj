@@ -63,6 +63,7 @@
 		8666E3C416A3BA6600A9DD85 /* Commander.m in Sources */ = {isa = PBXBuildFile; fileRef = 8666E3C316A3BA6600A9DD85 /* Commander.m */; };
 		86672DF916F7D2BD00F36110 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86672DF816F7D2BD00F36110 /* GLUT.framework */; };
 		8670FBA717068B6100F9C2DC /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8670FBA917068B6100F9C2DC /* AppDelegate.m */; };
+		8685690B174C2CB300104789 /* AutoFlipSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = 8685690A174C2CB300104789 /* AutoFlipSwitch.m */; };
 		86881A74163D9231003CC656 /* ParseDataOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 86881A73163D9231003CC656 /* ParseDataOperation.m */; };
 		868C540F171F7FED00518819 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 868C540E171F7FED00518819 /* README.md */; };
 		86A62FE7164D7EE10049527C /* CameraView.m in Sources */ = {isa = PBXBuildFile; fileRef = 86A62FE6164D7EE10049527C /* CameraView.m */; };
@@ -160,6 +161,8 @@
 		8666E3C316A3BA6600A9DD85 /* Commander.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Commander.m; sourceTree = "<group>"; };
 		86672DF816F7D2BD00F36110 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
 		8670FBA817068B6100F9C2DC /* en */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = en; path = en.lproj/AppDelegate.m; sourceTree = "<group>"; };
+		86856909174C2CB300104789 /* AutoFlipSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoFlipSwitch.h; sourceTree = "<group>"; };
+		8685690A174C2CB300104789 /* AutoFlipSwitch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutoFlipSwitch.m; sourceTree = "<group>"; };
 		86881A72163D9231003CC656 /* ParseDataOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParseDataOperation.h; sourceTree = "<group>"; };
 		86881A73163D9231003CC656 /* ParseDataOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParseDataOperation.m; sourceTree = "<group>"; };
 		868C540E171F7FED00518819 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = README.md; path = ../README.md; sourceTree = "<group>"; };
@@ -253,6 +256,8 @@
 				8670FBA917068B6100F9C2DC /* AppDelegate.m */,
 				860EF35F1636060100B46E35 /* AppController.h */,
 				860EF3601636060100B46E35 /* AppController.m */,
+				86856909174C2CB300104789 /* AutoFlipSwitch.h */,
+				8685690A174C2CB300104789 /* AutoFlipSwitch.m */,
 				86881A72163D9231003CC656 /* ParseDataOperation.h */,
 				86881A73163D9231003CC656 /* ParseDataOperation.m */,
 				86159E6816DB1D7B00E79C27 /* ParseTCPOperation.h */,
@@ -540,6 +545,7 @@
 				8643B00E1745506E003052A6 /* Command.hpp in Sources */,
 				8635E286171B0A1C00F69CD2 /* PlotWindowController.m in Sources */,
 				86BA707B1745580300B02AE4 /* RASCameraViewWindow.m in Sources */,
+				8685690B174C2CB300104789 /* AutoFlipSwitch.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -18,10 +18,6 @@
 #import "Transform.hpp"
 #import "RASCameraViewWindow.h"
 
-#define RED_INDICATOR 3
-#define ORANGE_INDICATOR 2
-#define GREEN_INDICATOR 1
-
 @interface AppController ()
 @property (nonatomic, strong) NSOperationQueue *queue;
 @property (nonatomic, strong) NSTimer *IndicatorFlipTimer;
@@ -45,11 +41,9 @@
 @synthesize SAS1FrameTimeLabel;
 @synthesize SAS2FrameNumberLabel;
 @synthesize SAS2FrameTimeLabel;
-@synthesize PYASRImageMaxMinTextField;
 
 @synthesize SAS1CmdCountTextField;
 @synthesize SAS1CmdKeyTextField;
-@synthesize PYASFImageMaxMinTextField;
 @synthesize MainWindow;
 @synthesize PYASFcameraView = _PYASFcameraView;
 @synthesize PYASRcameraView = _PYASRcameraView;
@@ -72,11 +66,8 @@
 @synthesize RAStimeSeriesCollection;
 @synthesize rasCameraViewWindow;
 
-@synthesize RAS_indicator;
-@synthesize PYASF_indicator;
-@synthesize PYASR_indicator;
-@synthesize SAS1_indicator;
-@synthesize SAS2_indicator;
+@synthesize SAS1AutoFlipSwitch;
+@synthesize SAS2AutoFlipSwitch;
 @synthesize IndicatorTimers;
 
 - (id)init
@@ -170,6 +161,21 @@
             
             cell = [self.PYASRTemperaturesForm cellAtRow:j column:i];
             [cell setTitle:[temperatureNames objectAtIndex:i*numberofCols + j]];
+            [cell setIntegerValue:0];
+        }
+    }
+    
+    NSArray *voltageNames = [NSArray arrayWithObjects:@"10.5V", @"2.5V", @"3.3V", @"5.0V", @"12.0V", @"", nil];
+    numberofCols = [self.PYASFVoltagesForm numberOfColumns];
+    numberofRows = [self.PYASFVoltagesForm numberOfRows];
+    for (int i=0; i < numberofCols; i++) {
+        for (int j=0; j < numberofRows; j++){
+            NSFormCell *cell = [self.PYASFVoltagesForm cellAtRow:j column:i];
+            [cell setTitle:[voltageNames objectAtIndex:i*numberofCols + j]];
+            [cell setIntegerValue:0];
+            
+            cell = [self.PYASRVoltagesForm cellAtRow:j column:i];
+            [cell setTitle:[voltageNames objectAtIndex:i*numberofCols + j]];
             [cell setIntegerValue:0];
         }
     }
@@ -416,14 +422,6 @@
     [self performSelectorOnMainThread:@selector(mainThread_handleImage:) withObject:note waitUntilDone:NO];
 }
 
-- (void)FlipIndicators{
-    [self.RAS_indicator setIntValue:RED_INDICATOR];
-    [self.PYASF_indicator setIntValue:RED_INDICATOR];
-    [self.PYASR_indicator setIntValue:RED_INDICATOR];
-    [self.SAS2_indicator setIntValue:RED_INDICATOR];
-    [self.SAS1_indicator setIntValue:RED_INDICATOR];
-}
-
 - (void)mainThread_handleImage:(NSNotification *)note
 {
     NSDictionary *notifData = [note userInfo];
@@ -525,51 +523,28 @@
     }
     
     if (self.packet.isSAS1) {
-        [self.SAS1_indicator setIntValue:GREEN_INDICATOR];
+        //[self.SAS1_indicator setIntValue:GREEN_INDICATOR];
         [self.SAS1FrameNumberLabel setIntegerValue:[self.packet frameNumber]];
         [self.SAS1FrameTimeLabel setStringValue:[self.packet getframeTimeString]];
-        //NSLog(@"SAS-1 %@", [self.packet getframeTimeString]);
-        [self.SAS1CmdCountTextField setIntegerValue:[self.packet commandCount]];
+
         [self.SAS1CmdKeyTextField setStringValue:[NSString stringWithFormat:@"0x%04x", [self.packet commandKey]]];
-        [[self.PYASFtimeSeriesCollection objectForKey:@"time"] addObject:[self.packet getDate]];
         
+        [[self.PYASFtimeSeriesCollection objectForKey:@"time"] addObject:[self.packet getDate]];
         [[self.PYASFtimeSeriesCollection objectForKey:@"camera temperature"] addPoint:self.packet.cameraTemperature];
         [[self.PYASFtimeSeriesCollection objectForKey:@"cpu temperature"] addPoint:self.packet.cpuTemperature];
         [[self.PYASFtimeSeriesCollection objectForKey:@"ctl X solution"] addPoint:60*60*[self.packet.CTLCommand pointValue].x];
         [[self.PYASFtimeSeriesCollection objectForKey:@"ctl Y solution"] addPoint:60*60*[self.packet.CTLCommand pointValue].y];
         [[self.PYASFtimeSeriesCollection objectForKey:@"ctl R solution"] addPoint:sqrtf(powf([self.packet.CTLCommand pointValue].y,2) + powf([self.packet.CTLCommand pointValue].y,2))];
-        //NSLog(@"%@", [self.PYASFtimeSeriesCollection objectForKey:@"time"]);
         
         DataSeries *ctlYValues = [self.PYASFtimeSeriesCollection objectForKey:@"ctl X solution"];
         DataSeries *ctlXValues = [self.PYASFtimeSeriesCollection objectForKey:@"ctl Y solution"];
         
         [[self.PYASFtimeSeriesCollection objectForKey:@"ctl R solution"] addPoint:sqrtf(powf([self.packet.CTLCommand pointValue].y - ctlXValues.average,2) + powf([self.packet.CTLCommand pointValue].y - ctlYValues.average,2))];
         
-        if (self.packet.cameraTemperature != 0) {
-            [self.PYASF_indicator setIntValue:GREEN_INDICATOR];
-        } else {
-            [self.PYASF_indicator setIntValue:RED_INDICATOR];
-        }
-        
-        [self.PYASFCameraTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", self.packet.cameraTemperature]];
         [self.PYASFCTLSigmaTextField setStringValue:[NSString stringWithFormat:@"%6.2f, %6.2f", ctlXValues.standardDeviation, ctlYValues.standardDeviation]];
         
-        [self.PYASFCameraTemperatureLabel setBackgroundColor:[NSColor whiteColor]];
-        if (self.packet.cameraTemperature > CameraOKTempRange[1])
-            [self.PYASFCameraTemperatureLabel setBackgroundColor:[NSColor redColor]];
-        if (self.packet.cameraTemperature < CameraOKTempRange[0])
-            [self.PYASFCameraTemperatureLabel setBackgroundColor:[NSColor blueColor]];
-        
-        [self.SAS1CPUTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", self.packet.cpuTemperature]];
-        [self.SAS1CPUTemperatureLabel setBackgroundColor:[NSColor whiteColor]];
-        if (self.packet.cpuTemperature > CPUOKTempRange[1])
-            [self.SAS1CPUTemperatureLabel setBackgroundColor:[NSColor redColor]];
-        if (self.packet.cpuTemperature < CPUOKTempRange[0])
-            [self.SAS1CPUTemperatureLabel setBackgroundColor:[NSColor blueColor]];
-        
-        
         [self.PYASFCTLCmdEchoTextField setStringValue:[NSString stringWithFormat:@"%5.3f, %5.3f", [self.packet.CTLCommand pointValue].x, [self.packet.CTLCommand pointValue].y]];
-        self.PYASFImageMaxMinTextField.stringValue = [NSString stringWithFormat:@"%ld, %ld", (unsigned long)self.packet.ImageRange.location, (unsigned long)self.packet.ImageRange.length];
+        self.PYASFImageMaxTextField.intValue = self.packet.ImageMax;
         
         [self.PYASFcameraView setCircleCenter:[self.packet.sunCenter pointValue].x :[self.packet.sunCenter pointValue].y];
         self.PYASFcameraView.chordCrossingPoints = self.packet.chordPoints;
@@ -577,16 +552,75 @@
         [self.PYASFcameraView setScreenCenter:[self.packet.screenCenter pointValue].x :[self.packet.screenCenter pointValue].y];
         self.PYASFcameraView.screenRadius = self.packet.screenRadius;
         
-        NSInteger numberofCols = [self.PYASFTemperaturesForm numberOfColumns];
-        NSInteger numberofRows = [self.PYASFTemperaturesForm numberOfRows];
-        for (int i=0; i < numberofCols; i++) {
-            for (int j=0; j < numberofRows; j++){
-                NSFormCell *cell = [self.PYASFTemperaturesForm cellAtRow:j column:i];
-                [cell setIntegerValue:[[self.packet.i2cTemperatures objectAtIndex:i*numberofCols + j] integerValue]];
-            }
+        [self.PYASFCameraTemperatureLabel setBackgroundColor:[NSColor whiteColor]];
+        [self.SAS1CPUTemperatureLabel setBackgroundColor:[NSColor whiteColor]];
+
+        switch (self.packet.frameNumber % 8) {
+            case 0:
+                [self.SAS1CPUTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", self.packet.cpuTemperature]];
+                [self.PYASFCameraTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", self.packet.cameraTemperature]];
+                if (self.packet.cameraTemperature != 0) {
+                    [self.PYASFAutoFlipSwitch reset];
+                }
+                break;
+            case 1:
+                [self.PYASFCameraTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", self.packet.cameraTemperature]];
+                if (self.packet.cameraTemperature != 0) {
+                    [self.PYASFAutoFlipSwitch reset];
+                }
+                [[self.PYASFTemperaturesForm cellAtIndex:0] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:0] floatValue]];
+                break;
+            case 2:
+                [[self.PYASFTemperaturesForm cellAtIndex:1] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:1] floatValue]];
+                [[self.PYASFVoltagesForm cellAtIndex:0] setFloatValue:[[self.packet.sbcVoltages objectAtIndex:0] floatValue]];
+                break;
+            case 3:
+                [[self.PYASFTemperaturesForm cellAtIndex:2] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:2] floatValue]];
+                [[self.PYASFVoltagesForm cellAtIndex:1] setFloatValue:[[self.packet.sbcVoltages objectAtIndex:1] floatValue]];
+                break;
+            case 4:
+                [[self.PYASFTemperaturesForm cellAtIndex:3] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:3] floatValue]];
+                [[self.PYASFVoltagesForm cellAtIndex:2] setFloatValue:[[self.packet.sbcVoltages objectAtIndex:2] floatValue]];
+                break;
+            case 5:
+                [[self.PYASFTemperaturesForm cellAtIndex:4] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:4] floatValue]];
+                [[self.PYASFVoltagesForm cellAtIndex:3] setFloatValue:[[self.packet.sbcVoltages objectAtIndex:3] floatValue]];
+                break;
+            case 6:
+                [[self.PYASFTemperaturesForm cellAtIndex:5] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:5] floatValue]];
+                [[self.PYASFVoltagesForm cellAtIndex:4] setFloatValue:[[self.packet.sbcVoltages objectAtIndex:4] floatValue]];
+                break;
+            case 7:
+                [[self.PYASFTemperaturesForm cellAtIndex:6] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:6] floatValue]];
+                // add is image saving here
+                break;
+            default:
+                break;
         }
+//        if (self.PYASFCameraTemperatureLabel.floatValue > CameraOKTempRange[1])
+//            [self.PYASFCameraTemperatureLabel setBackgroundColor:[NSColor redColor]];
+//        if (self.PYASFCameraTemperatureLabel.floatValue < CameraOKTempRange[0])
+//            [self.PYASFCameraTemperatureLabel setBackgroundColor:[NSColor blueColor]];
+//        
+//        if (self.packet.cpuTemperature > CPUOKTempRange[1])
+//            [self.SAS1CPUTemperatureLabel setBackgroundColor:[NSColor redColor]];
+//        if (self.packet.cpuTemperature < CPUOKTempRange[0])
+//            [self.SAS1CPUTemperatureLabel setBackgroundColor:[NSColor blueColor]];
+//        
+        
+        [self.PYASFAspectErrorCodeTextField setIntegerValue:self.packet.aspectErrorCode];
+        [self.PYASFisTracking_indicator setIntValue:3*self.packet.isTracking];
+        [self.PYASFProvidingCTL_indicator setIntValue:3*self.packet.isOutputting];
+        [self.SAS1ClockSync_indicator setIntValue:3*self.packet.isClockSynced];
+        [self.PYASFFoundSun_indicator setIntValue:3*self.packet.isSunFound];
         
         self.PYASFcameraView.northAngle = northAngle;
+        
+        NSInteger index = 0;
+        for (NSNumber *voltage in self.packet.sbcVoltages) {
+            [[self.PYASFVoltagesForm cellAtIndex:index] setIntegerValue:[voltage integerValue]];
+            index++;
+        }
         
         NSString *writeString = [NSString stringWithFormat:@"%@, %@, %@, %@, %@, %@\n",
                                  self.SAS1FrameTimeLabel.stringValue,
@@ -604,63 +638,108 @@
     }
     
     if (self.packet.isSAS2) {
-        [self.SAS2_indicator setIntValue:GREEN_INDICATOR];
+        //[self.SAS2_indicator setIntValue:GREEN_INDICATOR];
         [self.SAS2FrameNumberLabel setIntegerValue:[self.packet frameNumber]];
         [self.SAS2FrameTimeLabel setStringValue:[self.packet getframeTimeString]];
-        [self.SAS2CmdCountTextField setIntegerValue:[self.packet commandCount]];
         [self.SAS2CmdKeyTextField setStringValue:[NSString stringWithFormat:@"0x%04x", [self.packet commandKey]]];
         
         [self.PYASRCTLCmdEchoTextField setStringValue:[NSString stringWithFormat:@"%5.3f, %5.3f", [self.packet.CTLCommand pointValue].x, [self.packet.CTLCommand pointValue].y]];
-        [self.PYASRcameraView setCircleCenter:[self.packet.sunCenter pointValue].x :[self.packet.sunCenter pointValue].y];
-        self.PYASRcameraView.chordCrossingPoints = self.packet.chordPoints;
-        self.PYASRcameraView.fiducialPoints = self.packet.fiducialPoints;
-        self.PYASRImageMaxMinTextField.stringValue = [NSString stringWithFormat:@"%ld, %ld", (unsigned long)self.packet.ImageRange.location, (unsigned long)self.packet.ImageRange.length];
-        //NSLog(@"SAS-2 %@", [self.packet getframeTimeString]);
-        
-        if ([self.packet frameNumber] % 2){
-            [self.PYASRCameraTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", self.packet.cameraTemperature]];
-            [[self.PYASRtimeSeriesCollection objectForKey:@"camera temperature"] addPoint:self.packet.cameraTemperature];
-            [self.PYASRCameraTemperatureLabel setBackgroundColor:[NSColor whiteColor]];
-            if (self.packet.cameraTemperature > CameraOKTempRange[1])
-                [self.PYASRCameraTemperatureLabel setBackgroundColor:[NSColor redColor]];
-            if (self.packet.cameraTemperature < CameraOKTempRange[0])
-                [self.PYASRCameraTemperatureLabel setBackgroundColor:[NSColor blueColor]];
-            if (self.packet.cameraTemperature != 0) {
-                [self.PYASF_indicator setIntValue:GREEN_INDICATOR];
-            } else {
-                [self.PYASF_indicator setIntValue:RED_INDICATOR];
-            }
-            
-        } else {
-            [self.RASCameraTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", self.packet.cameraTemperature]];
-            [[self.RAStimeSeriesCollection objectForKey:@"time"] addObject:[self.packet getDate]];
-            [[self.RAStimeSeriesCollection objectForKey:@"camera temperature"] addPoint:self.packet.cameraTemperature];
-            [self.RASCameraTemperatureLabel setBackgroundColor:[NSColor whiteColor]];
-            if (self.packet.cameraTemperature > CameraOKTempRange[1])
-                [self.RASCameraTemperatureLabel setBackgroundColor:[NSColor redColor]];
-            if (self.packet.cameraTemperature < CameraOKTempRange[0])
-                [self.RASCameraTemperatureLabel setBackgroundColor:[NSColor blueColor]];
-            if (self.packet.cameraTemperature != 0) {
-                [self.RAS_indicator setIntValue:GREEN_INDICATOR];
-            } else {
-                [self.RAS_indicator setIntValue:RED_INDICATOR];
-            }
-            
-        }
-        [self.SAS2CPUTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", self.packet.cpuTemperature]];
-        [self.SAS2CPUTemperatureLabel setBackgroundColor:[NSColor whiteColor]];
-        if (self.packet.cpuTemperature > CPUOKTempRange[1])
-            [self.SAS2CPUTemperatureLabel setBackgroundColor:[NSColor redColor]];
-        if (self.packet.cpuTemperature < CPUOKTempRange[0])
-            [self.SAS2CPUTemperatureLabel setBackgroundColor:[NSColor blueColor]];
-        
         
         [self.PYASRcameraView setCircleCenter:[self.packet.sunCenter pointValue].x :[self.packet.sunCenter pointValue].y];
         self.PYASRcameraView.chordCrossingPoints = self.packet.chordPoints;
         self.PYASRcameraView.fiducialPoints = self.packet.fiducialPoints;
-        
         [self.PYASRcameraView setScreenCenter:[self.packet.screenCenter pointValue].x :[self.packet.screenCenter pointValue].y];
         self.PYASRcameraView.screenRadius = self.packet.screenRadius;
+        
+        if (self.packet.frameNumber % 2) {
+            self.PYASRImageMaxTextField.intValue = self.packet.ImageMax;
+        } else {
+            self.RASImageMaxTextField.intValue = self.packet.ImageMax;
+        }
+        //NSLog(@"SAS-2 %@", [self.packet getframeTimeString]);
+        
+//        if ([self.packet frameNumber] % 2){
+//            [self.PYASRCameraTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", self.packet.cameraTemperature]];
+//            [[self.PYASRtimeSeriesCollection objectForKey:@"camera temperature"] addPoint:self.packet.cameraTemperature];
+//            [self.PYASRCameraTemperatureLabel setBackgroundColor:[NSColor whiteColor]];
+//            if (self.packet.cameraTemperature > CameraOKTempRange[1])
+//                [self.PYASRCameraTemperatureLabel setBackgroundColor:[NSColor redColor]];
+//            if (self.packet.cameraTemperature < CameraOKTempRange[0])
+//                [self.PYASRCameraTemperatureLabel setBackgroundColor:[NSColor blueColor]];
+//            if (self.packet.cameraTemperature != 0) {
+//                [self.PYASF_indicator setIntValue:GREEN_INDICATOR];
+//            } else {
+//                [self.PYASF_indicator setIntValue:RED_INDICATOR];
+//            }
+//            
+//        } else {
+//            [self.RASCameraTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", self.packet.cameraTemperature]];
+//            [[self.RAStimeSeriesCollection objectForKey:@"time"] addObject:[self.packet getDate]];
+//            [[self.RAStimeSeriesCollection objectForKey:@"camera temperature"] addPoint:self.packet.cameraTemperature];
+//            [self.RASCameraTemperatureLabel setBackgroundColor:[NSColor whiteColor]];
+//            if (self.packet.cameraTemperature > CameraOKTempRange[1])
+//                [self.RASCameraTemperatureLabel setBackgroundColor:[NSColor redColor]];
+//            if (self.packet.cameraTemperature < CameraOKTempRange[0])
+//                [self.RASCameraTemperatureLabel setBackgroundColor:[NSColor blueColor]];
+//            if (self.packet.cameraTemperature != 0) {
+//                [self.RAS_indicator setIntValue:GREEN_INDICATOR];
+//            } else {
+//                [self.RAS_indicator setIntValue:RED_INDICATOR];
+//            }
+//            
+//        }
+//        [self.SAS2CPUTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", self.packet.cpuTemperature]];
+//        [self.SAS2CPUTemperatureLabel setBackgroundColor:[NSColor whiteColor]];
+//        if (self.packet.cpuTemperature > CPUOKTempRange[1])
+//            [self.SAS2CPUTemperatureLabel setBackgroundColor:[NSColor redColor]];
+//        if (self.packet.cpuTemperature < CPUOKTempRange[0])
+//            [self.SAS2CPUTemperatureLabel setBackgroundColor:[NSColor blueColor]];
+//        
+        [self.PYASFCameraTemperatureLabel setBackgroundColor:[NSColor whiteColor]];
+        [self.SAS1CPUTemperatureLabel setBackgroundColor:[NSColor whiteColor]];
+        
+        switch (self.packet.frameNumber % 8) {
+            case 0:
+                [self.SAS2CPUTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", self.packet.cpuTemperature]];
+                [self.PYASRCameraTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", self.packet.cameraTemperature]];
+                if (self.packet.cameraTemperature != 0) {
+                    [self.PYASRAutoFlipSwitch reset];
+                }
+                break;
+            case 1:
+                [self.RASCameraTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", self.packet.cameraTemperature]];
+                if (self.packet.cameraTemperature != 0) {
+                    [self.RASAutoFlipSwitch reset];
+                }
+                [[self.PYASRTemperaturesForm cellAtIndex:0] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:0] floatValue]];
+                break;
+            case 2:
+                [[self.PYASRTemperaturesForm cellAtIndex:1] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:1] floatValue]];
+                [[self.PYASRVoltagesForm cellAtIndex:0] setFloatValue:[[self.packet.sbcVoltages objectAtIndex:0] floatValue]];
+                break;
+            case 3:
+                [[self.PYASRTemperaturesForm cellAtIndex:2] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:2] floatValue]];
+                [[self.PYASRVoltagesForm cellAtIndex:1] setFloatValue:[[self.packet.sbcVoltages objectAtIndex:1] floatValue]];
+                break;
+            case 4:
+                [[self.PYASRTemperaturesForm cellAtIndex:3] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:3] floatValue]];
+                [[self.PYASRVoltagesForm cellAtIndex:2] setFloatValue:[[self.packet.sbcVoltages objectAtIndex:2] floatValue]];
+                break;
+            case 5:
+                [[self.PYASRTemperaturesForm cellAtIndex:4] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:4] floatValue]];
+                [[self.PYASRVoltagesForm cellAtIndex:3] setFloatValue:[[self.packet.sbcVoltages objectAtIndex:3] floatValue]];
+                break;
+            case 6:
+                [[self.PYASRTemperaturesForm cellAtIndex:5] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:5] floatValue]];
+                [[self.PYASRVoltagesForm cellAtIndex:4] setFloatValue:[[self.packet.sbcVoltages objectAtIndex:4] floatValue]];
+                break;
+            case 7:
+                [[self.PYASRTemperaturesForm cellAtIndex:6] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:6] floatValue]];
+                // add is image saving here
+                break;
+            default:
+                break;
+        }
         
         DataSeries *ctlYValues = [self.PYASRtimeSeriesCollection objectForKey:@"ctl X solution"];
         DataSeries *ctlXValues = [self.PYASRtimeSeriesCollection objectForKey:@"ctl Y solution"];
@@ -671,15 +750,13 @@
         [[self.PYASRtimeSeriesCollection objectForKey:@"ctl Y solution"] addPoint:60*60*[self.packet.CTLCommand pointValue].y];
         [[self.PYASRtimeSeriesCollection objectForKey:@"ctl R solution"] addPoint:sqrtf(powf([self.packet.CTLCommand pointValue].y - ctlXValues.average,2) + powf([self.packet.CTLCommand pointValue].y - ctlYValues.average,2))];
         
-        NSInteger numberofCols = [self.PYASRTemperaturesForm numberOfColumns];
-        NSInteger numberofRows = [self.PYASRTemperaturesForm numberOfRows];
-        for (int i=0; i < numberofCols; i++) {
-            for (int j=0; j < numberofRows; j++){
-                NSFormCell *cell = [self.PYASRTemperaturesForm cellAtRow:j column:i];
-                [cell setIntegerValue:[[self.packet.i2cTemperatures objectAtIndex:i*numberofCols + j] integerValue]];
-            }
-        }
         self.PYASRcameraView.northAngle = northAngle;
+        
+        [self.PYASRAspectErrorCodeTextField setIntegerValue:self.packet.aspectErrorCode];
+        [self.PYASRisTracking_indicator setIntValue:3*self.packet.isTracking];
+        [self.PYASRProvidingCTL_indicator setIntValue:3*self.packet.isOutputting];
+        [self.SAS2ClockSync_indicator setIntValue:3*self.packet.isClockSynced];
+        [self.PYASRFoundSun_indicator setIntValue:3*self.packet.isSunFound];
         
         //[self.PYASFcameraView draw];
         [self.PYASRcameraView draw];
