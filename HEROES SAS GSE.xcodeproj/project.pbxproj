@@ -69,6 +69,7 @@
 		86A62FE7164D7EE10049527C /* CameraView.m in Sources */ = {isa = PBXBuildFile; fileRef = 86A62FE6164D7EE10049527C /* CameraView.m */; };
 		86A62FEA164D80BF0049527C /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86A62FE9164D80BF0049527C /* OpenGL.framework */; };
 		86A9642B171869BC00C16663 /* DataSeries.m in Sources */ = {isa = PBXBuildFile; fileRef = 86A9642A171869BC00C16663 /* DataSeries.m */; };
+		86B185A7174F13AF00FE4316 /* NumberInRangeFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 86B185A6174F13AF00FE4316 /* NumberInRangeFormatter.m */; };
 		86BA707B1745580300B02AE4 /* RASCameraViewWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 86BA70791745580300B02AE4 /* RASCameraViewWindow.m */; };
 		86BA707C1745580300B02AE4 /* RASCameraViewWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 86BA707A1745580300B02AE4 /* RASCameraViewWindow.xib */; };
 		86E1D84E1695ED1B0079303F /* lib_crc.c in Sources */ = {isa = PBXBuildFile; fileRef = 86E1D84A1695ED1B0079303F /* lib_crc.c */; };
@@ -171,6 +172,8 @@
 		86A62FE9164D80BF0049527C /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		86A96429171869BC00C16663 /* DataSeries.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataSeries.h; sourceTree = "<group>"; };
 		86A9642A171869BC00C16663 /* DataSeries.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSeries.m; sourceTree = "<group>"; };
+		86B185A5174F13AF00FE4316 /* NumberInRangeFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NumberInRangeFormatter.h; sourceTree = "<group>"; };
+		86B185A6174F13AF00FE4316 /* NumberInRangeFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NumberInRangeFormatter.m; sourceTree = "<group>"; };
 		86BA70781745580300B02AE4 /* RASCameraViewWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RASCameraViewWindow.h; sourceTree = "<group>"; };
 		86BA70791745580300B02AE4 /* RASCameraViewWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RASCameraViewWindow.m; sourceTree = "<group>"; };
 		86BA707A1745580300B02AE4 /* RASCameraViewWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RASCameraViewWindow.xib; sourceTree = "<group>"; };
@@ -268,6 +271,8 @@
 				86A62FE6164D7EE10049527C /* CameraView.m */,
 				86A96429171869BC00C16663 /* DataSeries.h */,
 				86A9642A171869BC00C16663 /* DataSeries.m */,
+				86B185A5174F13AF00FE4316 /* NumberInRangeFormatter.h */,
+				86B185A6174F13AF00FE4316 /* NumberInRangeFormatter.m */,
 				8666E3C216A3BA6600A9DD85 /* Commander.h */,
 				8666E3C316A3BA6600A9DD85 /* Commander.m */,
 				86B31626173AFBC900EF5104 /* NIB Files */,
@@ -546,6 +551,7 @@
 				8635E286171B0A1C00F69CD2 /* PlotWindowController.m in Sources */,
 				86BA707B1745580300B02AE4 /* RASCameraViewWindow.m in Sources */,
 				8685690B174C2CB300104789 /* AutoFlipSwitch.m in Sources */,
+				86B185A7174F13AF00FE4316 /* NumberInRangeFormatter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
