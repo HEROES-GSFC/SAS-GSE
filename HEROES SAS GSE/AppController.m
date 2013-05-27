@@ -150,7 +150,8 @@
 
 -(void)awakeFromNib{
     NSArray *temperatureNames = [NSArray arrayWithObjects:@"T1", @"T2", @"T3", @"T4", @"T6", @"T7", nil];
-    
+
+
     NSInteger numberofCols = [self.PYASFTemperaturesForm numberOfColumns];
     NSInteger numberofRows = [self.PYASFTemperaturesForm numberOfRows];
     for (int i=0; i < numberofCols; i++) {
@@ -158,10 +159,14 @@
             NSFormCell *cell = [self.PYASFTemperaturesForm cellAtRow:j column:i];
             [cell setTitle:[temperatureNames objectAtIndex:i*numberofCols + j]];
             [cell setIntegerValue:0];
+            [cell setEditable:NO];
+            [cell setPreferredTextFieldWidth:50.0];
             
             cell = [self.PYASRTemperaturesForm cellAtRow:j column:i];
             [cell setTitle:[temperatureNames objectAtIndex:i*numberofCols + j]];
             [cell setIntegerValue:0];
+            [cell setEditable:NO];
+            [cell setPreferredTextFieldWidth:50.0];
         }
     }
     
@@ -173,10 +178,14 @@
             NSFormCell *cell = [self.PYASFVoltagesForm cellAtRow:j column:i];
             [cell setTitle:[voltageNames objectAtIndex:i*numberofCols + j]];
             [cell setIntegerValue:0];
-            
+            [cell setEditable:NO];
+            [cell setPreferredTextFieldWidth:50.0];
+
             cell = [self.PYASRVoltagesForm cellAtRow:j column:i];
             [cell setTitle:[voltageNames objectAtIndex:i*numberofCols + j]];
             [cell setIntegerValue:0];
+            [cell setEditable:NO];
+            [cell setPreferredTextFieldWidth:50.0];
         }
     }
     

@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		8605B2FD173610700094566C /* CorePlot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8605B2FC173610700094566C /* CorePlot.framework */; };
 		8605B2FE1736107A0094566C /* CorePlot.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8605B2FC173610700094566C /* CorePlot.framework */; };
-		8605B3001736116B0094566C /* CorePlot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8605B2FF1736116B0094566C /* CorePlot.framework */; };
 		8609D8C716D57CD2007D1FA6 /* CommandList.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8609D8C516D57CD2007D1FA6 /* CommandList.plist */; };
 		860EF32C163605D300B46E35 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 860EF32B163605D300B46E35 /* Cocoa.framework */; };
 		860EF336163605D300B46E35 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 860EF334163605D300B46E35 /* InfoPlist.strings */; };
@@ -29,35 +28,15 @@
 		8635E286171B0A1C00F69CD2 /* PlotWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8635E284171B0A1B00F69CD2 /* PlotWindowController.m */; };
 		8635E287171B0A1C00F69CD2 /* PlotWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8635E285171B0A1B00F69CD2 /* PlotWindowController.xib */; };
 		8635E443171B0D0600F69CD2 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8635E442171B0D0600F69CD2 /* Quartz.framework */; };
-		8643AFE117454F44003052A6 /* Command.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8643AFDF17454F44003052A6 /* Command.cpp */; };
-		8643AFE417454F4C003052A6 /* types.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8643AFE217454F4C003052A6 /* types.cpp */; };
-		8643AFE717454F5B003052A6 /* Packet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8643AFE517454F5B003052A6 /* Packet.cpp */; };
-		8643AFEA17454F64003052A6 /* Transform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8643AFE817454F64003052A6 /* Transform.cpp */; };
-		8643AFED17454F70003052A6 /* Telemetry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8643AFEB17454F70003052A6 /* Telemetry.cpp */; };
-		8643AFF217454F80003052A6 /* UDPReceiver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8643AFEE17454F80003052A6 /* UDPReceiver.cpp */; };
-		8643AFF317454F80003052A6 /* UDPSender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8643AFF017454F80003052A6 /* UDPSender.cpp */; };
-		8643AFF817454F88003052A6 /* TCPReceiver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8643AFF417454F88003052A6 /* TCPReceiver.cpp */; };
-		8643AFF917454F88003052A6 /* TCPSender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8643AFF617454F88003052A6 /* TCPSender.cpp */; };
 		8643AFFA17454FDA003052A6 /* Image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8643AFDC17454F24003052A6 /* Image.cpp */; };
 		8643AFFB17455021003052A6 /* TCPReceiver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8643AFF417454F88003052A6 /* TCPReceiver.cpp */; };
-		8643AFFC17455023003052A6 /* TCPReceiver.hpp in Sources */ = {isa = PBXBuildFile; fileRef = 8643AFF517454F88003052A6 /* TCPReceiver.hpp */; };
 		8643AFFD17455026003052A6 /* TCPSender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8643AFF617454F88003052A6 /* TCPSender.cpp */; };
-		8643AFFE17455027003052A6 /* TCPSender.hpp in Sources */ = {isa = PBXBuildFile; fileRef = 8643AFF717454F88003052A6 /* TCPSender.hpp */; };
 		8643AFFF17455029003052A6 /* UDPReceiver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8643AFEE17454F80003052A6 /* UDPReceiver.cpp */; };
-		8643B0001745502B003052A6 /* UDPReceiver.hpp in Sources */ = {isa = PBXBuildFile; fileRef = 8643AFEF17454F80003052A6 /* UDPReceiver.hpp */; };
 		8643B00217455045003052A6 /* UDPSender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8643AFF017454F80003052A6 /* UDPSender.cpp */; };
-		8643B0031745504A003052A6 /* UDPSender.hpp in Sources */ = {isa = PBXBuildFile; fileRef = 8643AFF117454F80003052A6 /* UDPSender.hpp */; };
 		8643B0041745504D003052A6 /* Telemetry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8643AFEB17454F70003052A6 /* Telemetry.cpp */; };
-		8643B00517455050003052A6 /* Telemetry.hpp in Sources */ = {isa = PBXBuildFile; fileRef = 8643AFEC17454F70003052A6 /* Telemetry.hpp */; };
 		8643B00617455054003052A6 /* Transform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8643AFE817454F64003052A6 /* Transform.cpp */; };
-		8643B00717455057003052A6 /* Transform.hpp in Sources */ = {isa = PBXBuildFile; fileRef = 8643AFE917454F64003052A6 /* Transform.hpp */; };
-		8643B0081745505A003052A6 /* Packet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8643AFE517454F5B003052A6 /* Packet.cpp */; };
-		8643B0091745505D003052A6 /* Packet.hpp in Sources */ = {isa = PBXBuildFile; fileRef = 8643AFE617454F5B003052A6 /* Packet.hpp */; };
 		8643B00B17455065003052A6 /* types.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8643AFE217454F4C003052A6 /* types.cpp */; };
-		8643B00C17455067003052A6 /* types.hpp in Sources */ = {isa = PBXBuildFile; fileRef = 8643AFE317454F4C003052A6 /* types.hpp */; };
 		8643B00D1745506B003052A6 /* Command.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8643AFDF17454F44003052A6 /* Command.cpp */; };
-		8643B00E1745506E003052A6 /* Command.hpp in Sources */ = {isa = PBXBuildFile; fileRef = 8643AFE017454F44003052A6 /* Command.hpp */; };
-		8643B01017455081003052A6 /* Image.hpp in Sources */ = {isa = PBXBuildFile; fileRef = 8643B00F17455079003052A6 /* Image.hpp */; };
 		8660983B16B398DD00BE26D1 /* icon.iconset in Resources */ = {isa = PBXBuildFile; fileRef = 8660983A16B398DD00BE26D1 /* icon.iconset */; };
 		8666A002169254AE00B0DACE /* DataPacket.m in Sources */ = {isa = PBXBuildFile; fileRef = 8666A001169254AE00B0DACE /* DataPacket.m */; };
 		8666E3C416A3BA6600A9DD85 /* Commander.m in Sources */ = {isa = PBXBuildFile; fileRef = 8666E3C316A3BA6600A9DD85 /* Commander.m */; };
@@ -72,6 +51,7 @@
 		86B185A7174F13AF00FE4316 /* NumberInRangeFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 86B185A6174F13AF00FE4316 /* NumberInRangeFormatter.m */; };
 		86BA707B1745580300B02AE4 /* RASCameraViewWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 86BA70791745580300B02AE4 /* RASCameraViewWindow.m */; };
 		86BA707C1745580300B02AE4 /* RASCameraViewWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 86BA707A1745580300B02AE4 /* RASCameraViewWindow.xib */; };
+		86D8091D1753EC4600E38052 /* Packet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8643AFE517454F5B003052A6 /* Packet.cpp */; };
 		86E1D84E1695ED1B0079303F /* lib_crc.c in Sources */ = {isa = PBXBuildFile; fileRef = 86E1D84A1695ED1B0079303F /* lib_crc.c */; };
 		86E1D84F1695ED1B0079303F /* lib_crc.txt in Resources */ = {isa = PBXBuildFile; fileRef = 86E1D84C1695ED1B0079303F /* lib_crc.txt */; };
 /* End PBXBuildFile section */
@@ -192,7 +172,6 @@
 				86672DF916F7D2BD00F36110 /* GLUT.framework in Frameworks */,
 				86A62FEA164D80BF0049527C /* OpenGL.framework in Frameworks */,
 				860EF32C163605D300B46E35 /* Cocoa.framework in Frameworks */,
-				8605B3001736116B0094566C /* CorePlot.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -444,7 +423,7 @@
 		860EF31E163605D300B46E35 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0450;
+				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = GSFC;
 			};
 			buildConfigurationList = 860EF321163605D300B46E35 /* Build configuration list for PBXProject "HEROES SAS GSE" */;
@@ -516,7 +495,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8643AFFA17454FDA003052A6 /* Image.cpp in Sources */,
+				86D8091D1753EC4600E38052 /* Packet.cpp in Sources */,
 				860EF338163605D300B46E35 /* main.m in Sources */,
 				8670FBA717068B6100F9C2DC /* AppDelegate.m in Sources */,
 				860EF3611636060100B46E35 /* AppController.m in Sources */,
@@ -530,24 +509,14 @@
 				86159E8316DEFA7A00E79C27 /* ConsoleWindowController.m in Sources */,
 				86A9642B171869BC00C16663 /* DataSeries.m in Sources */,
 				8643AFFB17455021003052A6 /* TCPReceiver.cpp in Sources */,
-				8643AFFE17455027003052A6 /* TCPSender.hpp in Sources */,
 				8643AFFF17455029003052A6 /* UDPReceiver.cpp in Sources */,
 				8643B00217455045003052A6 /* UDPSender.cpp in Sources */,
 				8643B0041745504D003052A6 /* Telemetry.cpp in Sources */,
-				8643B00517455050003052A6 /* Telemetry.hpp in Sources */,
 				8643AFFD17455026003052A6 /* TCPSender.cpp in Sources */,
-				8643B0031745504A003052A6 /* UDPSender.hpp in Sources */,
-				8643B0001745502B003052A6 /* UDPReceiver.hpp in Sources */,
-				8643AFFC17455023003052A6 /* TCPReceiver.hpp in Sources */,
 				8643B00617455054003052A6 /* Transform.cpp in Sources */,
-				8643B00717455057003052A6 /* Transform.hpp in Sources */,
 				8643B00B17455065003052A6 /* types.cpp in Sources */,
-				8643B00C17455067003052A6 /* types.hpp in Sources */,
-				8643B0081745505A003052A6 /* Packet.cpp in Sources */,
-				8643B0091745505D003052A6 /* Packet.hpp in Sources */,
 				8643B00D1745506B003052A6 /* Command.cpp in Sources */,
-				8643B01017455081003052A6 /* Image.hpp in Sources */,
-				8643B00E1745506E003052A6 /* Command.hpp in Sources */,
+				8643AFFA17454FDA003052A6 /* Image.cpp in Sources */,
 				8635E286171B0A1C00F69CD2 /* PlotWindowController.m in Sources */,
 				86BA707B1745580300B02AE4 /* RASCameraViewWindow.m in Sources */,
 				8685690B174C2CB300104789 /* AutoFlipSwitch.m in Sources */,
@@ -560,15 +529,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				860EF356163605D400B46E35 /* HEROES_SAS_GSETests.m in Sources */,
-				8643AFE117454F44003052A6 /* Command.cpp in Sources */,
-				8643AFE417454F4C003052A6 /* types.cpp in Sources */,
-				8643AFE717454F5B003052A6 /* Packet.cpp in Sources */,
-				8643AFEA17454F64003052A6 /* Transform.cpp in Sources */,
-				8643AFED17454F70003052A6 /* Telemetry.cpp in Sources */,
-				8643AFF217454F80003052A6 /* UDPReceiver.cpp in Sources */,
-				8643AFF317454F80003052A6 /* UDPSender.cpp in Sources */,
-				8643AFF817454F88003052A6 /* TCPReceiver.cpp in Sources */,
-				8643AFF917454F88003052A6 /* TCPSender.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -709,7 +669,8 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				USER_HEADER_SEARCH_PATHS = "$(inherited) \"$(SRCROOT)\"";
+				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
+				USER_HEADER_SEARCH_PATHS = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -736,7 +697,8 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				USER_HEADER_SEARCH_PATHS = "$(inherited) \"$(SRCROOT)\"";
+				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
+				USER_HEADER_SEARCH_PATHS = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -747,6 +709,7 @@
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/HEROES SAS GSE.app/Contents/MacOS/HEROES SAS GSE";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"";
+				GCC_INPUT_FILETYPE = automatic;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HEROES SAS GSE/HEROES SAS GSE-Prefix.pch";
 				INFOPLIST_FILE = "HEROES SAS GSETests/HEROES SAS GSETests-Info.plist";
@@ -762,6 +725,7 @@
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/HEROES SAS GSE.app/Contents/MacOS/HEROES SAS GSE";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"";
+				GCC_INPUT_FILETYPE = automatic;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HEROES SAS GSE/HEROES SAS GSE-Prefix.pch";
 				INFOPLIST_FILE = "HEROES SAS GSETests/HEROES SAS GSETests-Info.plist";
