@@ -33,9 +33,9 @@
 @implementation AppController
 
 // GUI Elements
+@synthesize SAS1CPUTemperatureLabel;
 @synthesize SAS2CPUTemperatureLabel;
 @synthesize PYASFCameraTemperatureLabel;
-@synthesize SAS1CPUTemperatureLabel;
 @synthesize PYASRCameraTemperatureLabel;
 
 @synthesize SAS1FrameNumberLabel;
@@ -151,43 +151,63 @@
 
 -(void)awakeFromNib{
     NSArray *temperatureNames = [NSArray arrayWithObjects:@"T1", @"T2", @"T3", @"T4", @"T6", @"T7", nil];
-
-    //[self.SAS1CPUTemperatureLabel setAllowsEditingTextAttributes:YES];
-
+    NumberInRangeFormatter *formatter;
+    
     NSInteger numberofCols = [self.PYASFTemperaturesForm numberOfColumns];
     NSInteger numberofRows = [self.PYASFTemperaturesForm numberOfRows];
     for (int i=0; i < numberofCols; i++) {
         for (int j=0; j < numberofRows; j++){
+            NumberInRangeFormatter *formatter1 = [[NumberInRangeFormatter alloc] init];
+            formatter1.maximum = 100;
+            formatter1.minimum = -20;
+            
             NSFormCell *cell = [self.PYASFTemperaturesForm cellAtRow:j column:i];
             [cell setTitle:[temperatureNames objectAtIndex:i*numberofCols + j]];
             [cell setIntegerValue:0];
             [cell setEditable:NO];
             [cell setPreferredTextFieldWidth:50.0];
+            [cell setFormatter:formatter1];
             
+            NumberInRangeFormatter *formatter2 = [[NumberInRangeFormatter alloc] init];
+            formatter2.maximum = 100;
+            formatter2.minimum = -20;
             cell = [self.PYASRTemperaturesForm cellAtRow:j column:i];
             [cell setTitle:[temperatureNames objectAtIndex:i*numberofCols + j]];
             [cell setIntegerValue:0];
             [cell setEditable:NO];
             [cell setPreferredTextFieldWidth:50.0];
+            [cell setFormatter:formatter1];
         }
     }
     
+    NSArray *voltages = [NSArray arrayWithObjects:[NSNumber numberWithFloat:10.5], [NSNumber numberWithFloat:2.5], [NSNumber numberWithFloat:3.3], [NSNumber numberWithFloat:5.0], [NSNumber numberWithFloat:12.0], [NSNumber numberWithFloat:12.0], nil ];
     NSArray *voltageNames = [NSArray arrayWithObjects:@"10.5V", @"2.5V", @"3.3V", @"5.0V", @"12.0V", @"", nil];
     numberofCols = [self.PYASFVoltagesForm numberOfColumns];
     numberofRows = [self.PYASFVoltagesForm numberOfRows];
-    for (int i=0; i < numberofCols; i++) {
-        for (int j=0; j < numberofRows; j++){
+    
+    for (NSInteger i = 0; i < numberofCols; i++) {
+        for (NSInteger j = 0; j < numberofRows; j++) {
+            NumberInRangeFormatter *formatter1 = [[NumberInRangeFormatter alloc] init];
+            formatter1.maximum = [[voltages objectAtIndex:(j + i*numberofRows)] floatValue] * 1.2;
+            formatter1.minimum = [[voltages objectAtIndex:(j + i*numberofRows)] floatValue] * 0.8;
+            
             NSFormCell *cell = [self.PYASFVoltagesForm cellAtRow:j column:i];
-            [cell setTitle:[voltageNames objectAtIndex:i*numberofCols + j]];
+            [cell setTitle:[voltageNames objectAtIndex:(j + i*numberofRows)]];
             [cell setIntegerValue:0];
             [cell setEditable:NO];
             [cell setPreferredTextFieldWidth:50.0];
-
-            cell = [self.PYASRVoltagesForm cellAtRow:j column:i];
-            [cell setTitle:[voltageNames objectAtIndex:i*numberofCols + j]];
-            [cell setIntegerValue:0];
-            [cell setEditable:NO];
-            [cell setPreferredTextFieldWidth:50.0];
+            [cell setFormatter:formatter1];
+            
+            NumberInRangeFormatter *formatter2 = [[NumberInRangeFormatter alloc] init];
+            formatter2.maximum = [[voltages objectAtIndex:(j + i*numberofRows)] floatValue] * 1.2;
+            formatter2.minimum = [[voltages objectAtIndex:(j + i*numberofRows)] floatValue] * 0.8;
+            
+            NSFormCell *cell2 = [self.PYASRVoltagesForm cellAtRow:j column:i];
+            [cell2 setTitle:[voltageNames objectAtIndex:(j + i*numberofRows)]];
+            [cell2 setIntegerValue:0];
+            [cell2 setEditable:NO];
+            [cell2 setPreferredTextFieldWidth:50.0];
+            [cell2 setFormatter:formatter2];
         }
     }
     
@@ -220,9 +240,20 @@
                                                      name:kReceiveAndParseImageDidFinish
                                                    object:nil];
     }
-    
-    NumberInRangeFormatter *formatter = [self.SAS1CPUTemperatureLabel formatter];
-    formatter.maximum = 50;
+    formatter = [self.SAS1CPUTemperatureLabel formatter];
+    formatter.maximum = 90;
+    formatter.minimum = -20;
+    formatter = [self.SAS2CPUTemperatureLabel formatter];
+    formatter.maximum = 90;
+    formatter.minimum = -20;
+    formatter = [self.PYASFCameraTemperatureLabel formatter];
+    formatter.maximum = 90;
+    formatter.minimum = -20;
+    formatter = [self.PYASRCameraTemperatureLabel formatter];
+    formatter.maximum = 90;
+    formatter.minimum = -20;
+    formatter = [self.RASCameraTemperatureLabel formatter];
+    formatter.maximum = 90;
     formatter.minimum = -20;
     
     [self OpenTelemetrySaveTextFiles];
@@ -429,7 +460,7 @@
 
 - (void)anyThread_handleData:(NSNotification *)note
 {
-	[self performSelectorOnMainThread:@selector(mainThread_handleData:) withObject:note waitUntilDone:NO];
+    [self performSelectorOnMainThread:@selector(mainThread_handleData:) withObject:note waitUntilDone:NO];
 }
 
 - (void)anyThread_handleImage:(NSNotification *)note
@@ -510,21 +541,18 @@
 - (void)mainThread_handleData:(NSNotification *)note
 {
     // Pending NSNotifications can possibly back up while waiting to be executed,
-	// and if the user stops the queue, we may have left-over pending
-	// notifications to process.
-	//
-	// So make sure we have "active" running NSOperations in the queue
-	// if we are to continuously add found image files to the table view.
-	// Otherwise, we let any remaining notifications drain out.
-	//
-	NSDictionary *notifData = [note userInfo];
+    // and if the user stops the queue, we may have left-over pending
+    // notifications to process.
+    //
+    // So make sure we have "active" running NSOperations in the queue
+    // if we are to continuously add found image files to the table view.
+    // Otherwise, we let any remaining notifications drain out.
+    //
+    NSDictionary *notifData = [note userInfo];
     self.packet = [notifData valueForKey:@"packet"];
     
     Transform NorthTransform;
     double northAngle;
-    
-    int CameraOKTempRange[2] = {-20, 80};
-    int CPUOKTempRange[2] = {-20, 80};
     
     //calculate the solar north angle here and pass it to PYASFcameraView
     NorthTransform.getSunAzEl();
@@ -541,7 +569,7 @@
         //[self.SAS1_indicator setIntValue:GREEN_INDICATOR];
         [self.SAS1FrameNumberLabel setIntegerValue:[self.packet frameNumber]];
         [self.SAS1FrameTimeLabel setStringValue:[self.packet getframeTimeString]];
-
+        
         [self.SAS1CmdKeyTextField setStringValue:[NSString stringWithFormat:@"0x%04x", [self.packet commandKey]]];
         
         [[self.PYASFtimeSeriesCollection objectForKey:@"time"] addObject:[self.packet getDate]];
@@ -569,7 +597,7 @@
         
         [self.PYASFCameraTemperatureLabel setBackgroundColor:[NSColor whiteColor]];
         [self.SAS1CPUTemperatureLabel setBackgroundColor:[NSColor whiteColor]];
-
+        
         switch (self.packet.frameNumber % 8) {
             case 0:
                 [self.SAS1CPUTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", self.packet.cpuTemperature]];
@@ -612,16 +640,16 @@
             default:
                 break;
         }
-//        if (self.PYASFCameraTemperatureLabel.floatValue > CameraOKTempRange[1])
-//            [self.PYASFCameraTemperatureLabel setBackgroundColor:[NSColor redColor]];
-//        if (self.PYASFCameraTemperatureLabel.floatValue < CameraOKTempRange[0])
-//            [self.PYASFCameraTemperatureLabel setBackgroundColor:[NSColor blueColor]];
-//        
-//        if (self.packet.cpuTemperature > CPUOKTempRange[1])
-//            [self.SAS1CPUTemperatureLabel setBackgroundColor:[NSColor redColor]];
-//        if (self.packet.cpuTemperature < CPUOKTempRange[0])
-//            [self.SAS1CPUTemperatureLabel setBackgroundColor:[NSColor blueColor]];
-//        
+        //        if (self.PYASFCameraTemperatureLabel.floatValue > CameraOKTempRange[1])
+        //            [self.PYASFCameraTemperatureLabel setBackgroundColor:[NSColor redColor]];
+        //        if (self.PYASFCameraTemperatureLabel.floatValue < CameraOKTempRange[0])
+        //            [self.PYASFCameraTemperatureLabel setBackgroundColor:[NSColor blueColor]];
+        //
+        //        if (self.packet.cpuTemperature > CPUOKTempRange[1])
+        //            [self.SAS1CPUTemperatureLabel setBackgroundColor:[NSColor redColor]];
+        //        if (self.packet.cpuTemperature < CPUOKTempRange[0])
+        //            [self.SAS1CPUTemperatureLabel setBackgroundColor:[NSColor blueColor]];
+        //
         
         [self.PYASFAspectErrorCodeTextField setIntegerValue:self.packet.aspectErrorCode];
         [self.PYASFisTracking_indicator setIntValue:3*self.packet.isTracking];
@@ -673,43 +701,43 @@
         }
         //NSLog(@"SAS-2 %@", [self.packet getframeTimeString]);
         
-//        if ([self.packet frameNumber] % 2){
-//            [self.PYASRCameraTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", self.packet.cameraTemperature]];
-//            [[self.PYASRtimeSeriesCollection objectForKey:@"camera temperature"] addPoint:self.packet.cameraTemperature];
-//            [self.PYASRCameraTemperatureLabel setBackgroundColor:[NSColor whiteColor]];
-//            if (self.packet.cameraTemperature > CameraOKTempRange[1])
-//                [self.PYASRCameraTemperatureLabel setBackgroundColor:[NSColor redColor]];
-//            if (self.packet.cameraTemperature < CameraOKTempRange[0])
-//                [self.PYASRCameraTemperatureLabel setBackgroundColor:[NSColor blueColor]];
-//            if (self.packet.cameraTemperature != 0) {
-//                [self.PYASF_indicator setIntValue:GREEN_INDICATOR];
-//            } else {
-//                [self.PYASF_indicator setIntValue:RED_INDICATOR];
-//            }
-//            
-//        } else {
-//            [self.RASCameraTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", self.packet.cameraTemperature]];
-//            [[self.RAStimeSeriesCollection objectForKey:@"time"] addObject:[self.packet getDate]];
-//            [[self.RAStimeSeriesCollection objectForKey:@"camera temperature"] addPoint:self.packet.cameraTemperature];
-//            [self.RASCameraTemperatureLabel setBackgroundColor:[NSColor whiteColor]];
-//            if (self.packet.cameraTemperature > CameraOKTempRange[1])
-//                [self.RASCameraTemperatureLabel setBackgroundColor:[NSColor redColor]];
-//            if (self.packet.cameraTemperature < CameraOKTempRange[0])
-//                [self.RASCameraTemperatureLabel setBackgroundColor:[NSColor blueColor]];
-//            if (self.packet.cameraTemperature != 0) {
-//                [self.RAS_indicator setIntValue:GREEN_INDICATOR];
-//            } else {
-//                [self.RAS_indicator setIntValue:RED_INDICATOR];
-//            }
-//            
-//        }
-//        [self.SAS2CPUTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", self.packet.cpuTemperature]];
-//        [self.SAS2CPUTemperatureLabel setBackgroundColor:[NSColor whiteColor]];
-//        if (self.packet.cpuTemperature > CPUOKTempRange[1])
-//            [self.SAS2CPUTemperatureLabel setBackgroundColor:[NSColor redColor]];
-//        if (self.packet.cpuTemperature < CPUOKTempRange[0])
-//            [self.SAS2CPUTemperatureLabel setBackgroundColor:[NSColor blueColor]];
-//        
+        //        if ([self.packet frameNumber] % 2){
+        //            [self.PYASRCameraTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", self.packet.cameraTemperature]];
+        //            [[self.PYASRtimeSeriesCollection objectForKey:@"camera temperature"] addPoint:self.packet.cameraTemperature];
+        //            [self.PYASRCameraTemperatureLabel setBackgroundColor:[NSColor whiteColor]];
+        //            if (self.packet.cameraTemperature > CameraOKTempRange[1])
+        //                [self.PYASRCameraTemperatureLabel setBackgroundColor:[NSColor redColor]];
+        //            if (self.packet.cameraTemperature < CameraOKTempRange[0])
+        //                [self.PYASRCameraTemperatureLabel setBackgroundColor:[NSColor blueColor]];
+        //            if (self.packet.cameraTemperature != 0) {
+        //                [self.PYASF_indicator setIntValue:GREEN_INDICATOR];
+        //            } else {
+        //                [self.PYASF_indicator setIntValue:RED_INDICATOR];
+        //            }
+        //
+        //        } else {
+        //            [self.RASCameraTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", self.packet.cameraTemperature]];
+        //            [[self.RAStimeSeriesCollection objectForKey:@"time"] addObject:[self.packet getDate]];
+        //            [[self.RAStimeSeriesCollection objectForKey:@"camera temperature"] addPoint:self.packet.cameraTemperature];
+        //            [self.RASCameraTemperatureLabel setBackgroundColor:[NSColor whiteColor]];
+        //            if (self.packet.cameraTemperature > CameraOKTempRange[1])
+        //                [self.RASCameraTemperatureLabel setBackgroundColor:[NSColor redColor]];
+        //            if (self.packet.cameraTemperature < CameraOKTempRange[0])
+        //                [self.RASCameraTemperatureLabel setBackgroundColor:[NSColor blueColor]];
+        //            if (self.packet.cameraTemperature != 0) {
+        //                [self.RAS_indicator setIntValue:GREEN_INDICATOR];
+        //            } else {
+        //                [self.RAS_indicator setIntValue:RED_INDICATOR];
+        //            }
+        //
+        //        }
+        //        [self.SAS2CPUTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", self.packet.cpuTemperature]];
+        //        [self.SAS2CPUTemperatureLabel setBackgroundColor:[NSColor whiteColor]];
+        //        if (self.packet.cpuTemperature > CPUOKTempRange[1])
+        //            [self.SAS2CPUTemperatureLabel setBackgroundColor:[NSColor redColor]];
+        //        if (self.packet.cpuTemperature < CPUOKTempRange[0])
+        //            [self.SAS2CPUTemperatureLabel setBackgroundColor:[NSColor blueColor]];
+        //
         [self.PYASFCameraTemperatureLabel setBackgroundColor:[NSColor whiteColor]];
         [self.SAS1CPUTemperatureLabel setBackgroundColor:[NSColor whiteColor]];
         
@@ -854,7 +882,6 @@
     
     [self postToLogWindow:@"test string"];
     free(pixels);
-    NSCell *cell = [self.PYASFVoltagesForm cellAtIndex:0];
     [self.PYASFCameraTemperatureLabel setIntegerValue:-30];
     [self.PYASRCameraTemperatureLabel setIntegerValue:-30];
     [self.SAS1CPUTemperatureLabel setIntegerValue:100];
