@@ -10,4 +10,7 @@
 
 @interface NumberInRangeFormatter : NSFormatter
 
+@property (nonatomic) NSInteger minimum;
+@property (nonatomic) NSInteger maximum;
+
 @end

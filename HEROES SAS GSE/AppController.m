@@ -17,6 +17,7 @@
 #import "DataSeries.h"
 #import "Transform.hpp"
 #import "RASCameraViewWindow.h"
+#import "NumberInRangeFormatter.h"
 
 @interface AppController ()
 @property (nonatomic, strong) NSOperationQueue *queue;
@@ -151,6 +152,7 @@
 -(void)awakeFromNib{
     NSArray *temperatureNames = [NSArray arrayWithObjects:@"T1", @"T2", @"T3", @"T4", @"T6", @"T7", nil];
 
+    //[self.SAS1CPUTemperatureLabel setAllowsEditingTextAttributes:YES];
 
     NSInteger numberofCols = [self.PYASFTemperaturesForm numberOfColumns];
     NSInteger numberofRows = [self.PYASFTemperaturesForm numberOfRows];
@@ -218,6 +220,10 @@
                                                      name:kReceiveAndParseImageDidFinish
                                                    object:nil];
     }
+    
+    NumberInRangeFormatter *formatter = [self.SAS1CPUTemperatureLabel formatter];
+    formatter.maximum = 50;
+    formatter.minimum = -20;
     
     [self OpenTelemetrySaveTextFiles];
     [self postToLogWindow:@"Application started"];
@@ -848,13 +854,16 @@
     
     [self postToLogWindow:@"test string"];
     free(pixels);
+    NSCell *cell = [self.PYASFVoltagesForm cellAtIndex:0];
+    [self.PYASFCameraTemperatureLabel setIntegerValue:-30];
+    [self.PYASRCameraTemperatureLabel setIntegerValue:-30];
+    [self.SAS1CPUTemperatureLabel setIntegerValue:100];
     
     DataSeries *PYASFcamTemp = [self.PYASFtimeSeriesCollection objectForKey:@"camera temperature"];
     DataSeries *PYASRcamTemp = [self.PYASRtimeSeriesCollection objectForKey:@"camera temperature"];
     DataSeries *RAScamTemp = [self.RAStimeSeriesCollection objectForKey:@"camera temperature"];
     for (int i = 0; i < 10; i++) {
         //NSDate *currentDate = [NSDate date];
-        NSString *faketime = [NSString stringWithFormat:@"2012/04/05 01:1%i", i];
         [[self.PYASFtimeSeriesCollection objectForKey:@"time"] addObject:[NSDate dateWithTimeInterval:i sinceDate:[NSDate date]]];
         [PYASFcamTemp addPoint:(float)rand()/RAND_MAX * 5];
         [PYASRcamTemp addPoint:(float)rand()/RAND_MAX * 5];

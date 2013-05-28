@@ -41,7 +41,6 @@
 -(void)FlipOff{
     self.intValue = RED_INDICATOR;
     [self.timer invalidate];
-    NSLog(@"done");
 }
 
 @end

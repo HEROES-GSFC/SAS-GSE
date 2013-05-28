@@ -15,7 +15,7 @@
     if (![anObject isKindOfClass:[NSNumber class]]) {
         return nil;
     }
-    return [NSString stringWithFormat:@"$%.2f", [anObject  floatValue]];
+    return [NSString stringWithFormat:@"%.2f", [anObject  floatValue]];
 }
 
 - (BOOL)getObjectValue:(id *)obj forString:(NSString *)string errorDescription:(NSString  **)error {
@@ -39,6 +39,24 @@
 
 - (NSAttributedString *)attributedStringForObjectValue:(id)anObject withDefaultAttributes:(NSDictionary *)attributes{
     
+    NSString *string = [self stringForObjectValue:anObject];
+    NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] initWithString:string];
+    NSInteger stringLength = [string length];
+    
+    if ([[attrString string] floatValue] < self.minimum)
+    {
+        NSDictionary *firstAttributes = @{NSForegroundColorAttributeName: [NSColor whiteColor],
+                                          NSBackgroundColorAttributeName: [NSColor blueColor]};
+        [attrString setAttributes:firstAttributes range:NSMakeRange(0, stringLength)];
+    }
+    if ([[attrString string] floatValue] > self.maximum)
+    {
+        NSDictionary *firstAttributes = @{NSForegroundColorAttributeName: [NSColor whiteColor],
+                                          NSBackgroundColorAttributeName: [NSColor redColor]};
+        [attrString setAttributes:firstAttributes range:NSMakeRange(0, stringLength)];
+    }
+    
+    return attrString;
 }
 
 @end

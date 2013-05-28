@@ -51,7 +51,6 @@
 @property (weak) IBOutlet AutoFlipSwitch *RASAutoFlipSwitch;
 
 
-
 @property (weak) IBOutlet NSTextField *PYASRAspectErrorCodeTextField;
 @property (weak) IBOutlet NSTextField *PYASFAspectErrorCodeTextField;
 @property (weak) IBOutlet NSLevelIndicator *PYASRisTracking_indicator;
