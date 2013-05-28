@@ -10,6 +10,17 @@
 
 @implementation NumberInRangeFormatter
 
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        self.maximum = 10;
+        self.minimum = 0;
+    }
+    return self;
+}
+
+
 - (NSString *)stringForObjectValue:(id)anObject {
     
     if (![anObject isKindOfClass:[NSNumber class]]) {
