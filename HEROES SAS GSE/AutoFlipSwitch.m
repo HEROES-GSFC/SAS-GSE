@@ -23,19 +23,20 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.timer = [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(FlipOff) userInfo:nil repeats:NO];
+        self.timer = [NSTimer scheduledTimerWithTimeInterval:9.0 target:self selector:@selector(FlipOff) userInfo:nil repeats:NO];
         [self setCriticalValue:RED_INDICATOR];
         [self setWarningValue:ORANGE_INDICATOR];
         [self setMinValue:0];
         [self setMaxValue:1];
     }
-    self.intValue = GREEN_INDICATOR;
+    self.intValue = ORANGE_INDICATOR;
     return self;
 }
 
 - (void)reset{
+    self.intValue = GREEN_INDICATOR;
     [self.timer invalidate];
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(FlipOff) userInfo:nil repeats:NO];
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:9.0 target:self selector:@selector(FlipOff) userInfo:nil repeats:NO];
 }
 
 -(void)FlipOff{

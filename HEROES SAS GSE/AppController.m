@@ -162,7 +162,7 @@
             formatter1.minimum = -20;
             
             NSFormCell *cell = [self.PYASFTemperaturesForm cellAtRow:j column:i];
-            [cell setTitle:[temperatureNames objectAtIndex:i*numberofCols + j]];
+            [cell setTitle:[temperatureNames objectAtIndex:i*numberofRows + j]];
             [cell setIntegerValue:0];
             [cell setEditable:NO];
             [cell setPreferredTextFieldWidth:50.0];
@@ -172,7 +172,7 @@
             formatter2.maximum = 100;
             formatter2.minimum = -20;
             cell = [self.PYASRTemperaturesForm cellAtRow:j column:i];
-            [cell setTitle:[temperatureNames objectAtIndex:i*numberofCols + j]];
+            [cell setTitle:[temperatureNames objectAtIndex:i*numberofRows + j]];
             [cell setIntegerValue:0];
             [cell setEditable:NO];
             [cell setPreferredTextFieldWidth:50.0];
@@ -566,7 +566,7 @@
     }
     
     if (self.packet.isSAS1) {
-        //[self.SAS1_indicator setIntValue:GREEN_INDICATOR];
+        [self.SAS1AutoFlipSwitch reset];
         [self.SAS1FrameNumberLabel setIntegerValue:[self.packet frameNumber]];
         [self.SAS1FrameTimeLabel setStringValue:[self.packet getframeTimeString]];
         
@@ -611,30 +611,30 @@
                 if (self.packet.cameraTemperature != 0) {
                     [self.PYASFAutoFlipSwitch reset];
                 }
-                [[self.PYASFTemperaturesForm cellAtIndex:0] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:0] floatValue]];
+                [[self.PYASFTemperaturesForm cellAtRow:0 column:0] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:0] floatValue]];
                 break;
             case 2:
-                [[self.PYASFTemperaturesForm cellAtIndex:1] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:1] floatValue]];
-                [[self.PYASFVoltagesForm cellAtIndex:0] setFloatValue:[[self.packet.sbcVoltages objectAtIndex:0] floatValue]];
+                [[self.PYASFTemperaturesForm cellAtRow:1 column:0] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:1] floatValue]];
+                [[self.PYASFVoltagesForm cellAtRow:0 column:0] setFloatValue:[[self.packet.sbcVoltages objectAtIndex:0] floatValue]];
                 break;
             case 3:
-                [[self.PYASFTemperaturesForm cellAtIndex:2] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:2] floatValue]];
-                [[self.PYASFVoltagesForm cellAtIndex:1] setFloatValue:[[self.packet.sbcVoltages objectAtIndex:1] floatValue]];
+                [[self.PYASFTemperaturesForm cellAtRow:2 column:0] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:2] floatValue]];
+                [[self.PYASFVoltagesForm cellAtRow:1 column:0] setFloatValue:[[self.packet.sbcVoltages objectAtIndex:1] floatValue]];
                 break;
             case 4:
-                [[self.PYASFTemperaturesForm cellAtIndex:3] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:3] floatValue]];
-                [[self.PYASFVoltagesForm cellAtIndex:2] setFloatValue:[[self.packet.sbcVoltages objectAtIndex:2] floatValue]];
+                [[self.PYASFTemperaturesForm cellAtRow:3 column:0] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:3] floatValue]];
+                [[self.PYASFVoltagesForm cellAtRow:2 column:0] setFloatValue:[[self.packet.sbcVoltages objectAtIndex:2] floatValue]];
                 break;
             case 5:
-                [[self.PYASFTemperaturesForm cellAtIndex:4] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:4] floatValue]];
-                [[self.PYASFVoltagesForm cellAtIndex:3] setFloatValue:[[self.packet.sbcVoltages objectAtIndex:3] floatValue]];
+                [[self.PYASFTemperaturesForm cellAtRow:0 column:1] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:4] floatValue]];
+                [[self.PYASFVoltagesForm cellAtRow:0 column:1] setFloatValue:[[self.packet.sbcVoltages objectAtIndex:3] floatValue]];
                 break;
             case 6:
-                [[self.PYASFTemperaturesForm cellAtIndex:5] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:5] floatValue]];
-                [[self.PYASFVoltagesForm cellAtIndex:4] setFloatValue:[[self.packet.sbcVoltages objectAtIndex:4] floatValue]];
+                [[self.PYASFTemperaturesForm cellAtRow:1 column:1] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:5] floatValue]];
+                [[self.PYASFVoltagesForm cellAtRow:1 column:1] setFloatValue:[[self.packet.sbcVoltages objectAtIndex:4] floatValue]];
                 break;
             case 7:
-                [[self.PYASFTemperaturesForm cellAtIndex:6] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:6] floatValue]];
+                [[self.PYASFTemperaturesForm cellAtRow:2 column:1] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:6] floatValue]];
                 // add is image saving here
                 break;
             default:
@@ -652,10 +652,10 @@
         //
         
         [self.PYASFAspectErrorCodeTextField setIntegerValue:self.packet.aspectErrorCode];
-        [self.PYASFisTracking_indicator setIntValue:3*self.packet.isTracking];
-        [self.PYASFProvidingCTL_indicator setIntValue:3*self.packet.isOutputting];
-        [self.SAS1ClockSync_indicator setIntValue:3*self.packet.isClockSynced];
-        [self.PYASFFoundSun_indicator setIntValue:3*self.packet.isSunFound];
+        [self.PYASFisTracking_indicator setIntValue:1*self.packet.isTracking];
+        [self.PYASFProvidingCTL_indicator setIntValue:1*self.packet.isOutputting];
+        [self.SAS1ClockSync_indicator setIntValue:1*self.packet.isClockSynced];
+        [self.PYASFFoundSun_indicator setIntValue:1*self.packet.isSunFound];
         
         self.PYASFcameraView.northAngle = northAngle;
         
@@ -681,7 +681,7 @@
     }
     
     if (self.packet.isSAS2) {
-        //[self.SAS2_indicator setIntValue:GREEN_INDICATOR];
+        //[self.SAS2AutoFlipSwitch reset];
         [self.SAS2FrameNumberLabel setIntegerValue:[self.packet frameNumber]];
         [self.SAS2FrameTimeLabel setStringValue:[self.packet getframeTimeString]];
         [self.SAS2CmdKeyTextField setStringValue:[NSString stringWithFormat:@"0x%04x", [self.packet commandKey]]];
@@ -754,30 +754,30 @@
                 if (self.packet.cameraTemperature != 0) {
                     [self.RASAutoFlipSwitch reset];
                 }
-                [[self.PYASRTemperaturesForm cellAtIndex:0] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:0] floatValue]];
+                [[self.PYASRTemperaturesForm cellAtRow:0 column:0] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:0] floatValue]];
                 break;
             case 2:
-                [[self.PYASRTemperaturesForm cellAtIndex:1] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:1] floatValue]];
-                [[self.PYASRVoltagesForm cellAtIndex:0] setFloatValue:[[self.packet.sbcVoltages objectAtIndex:0] floatValue]];
+                [[self.PYASRTemperaturesForm cellAtRow:1 column:0] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:1] floatValue]];
+                [[self.PYASRVoltagesForm cellAtRow:0 column:0] setFloatValue:[[self.packet.sbcVoltages objectAtIndex:0] floatValue]];
                 break;
             case 3:
-                [[self.PYASRTemperaturesForm cellAtIndex:2] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:2] floatValue]];
-                [[self.PYASRVoltagesForm cellAtIndex:1] setFloatValue:[[self.packet.sbcVoltages objectAtIndex:1] floatValue]];
+                [[self.PYASRTemperaturesForm cellAtRow:2 column:0] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:2] floatValue]];
+                [[self.PYASRVoltagesForm cellAtRow:1 column:0] setFloatValue:[[self.packet.sbcVoltages objectAtIndex:1] floatValue]];
                 break;
             case 4:
-                [[self.PYASRTemperaturesForm cellAtIndex:3] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:3] floatValue]];
-                [[self.PYASRVoltagesForm cellAtIndex:2] setFloatValue:[[self.packet.sbcVoltages objectAtIndex:2] floatValue]];
+                [[self.PYASRTemperaturesForm cellAtRow:3 column:0] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:3] floatValue]];
+                [[self.PYASRVoltagesForm cellAtRow:2 column:0] setFloatValue:[[self.packet.sbcVoltages objectAtIndex:2] floatValue]];
                 break;
             case 5:
-                [[self.PYASRTemperaturesForm cellAtIndex:4] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:4] floatValue]];
-                [[self.PYASRVoltagesForm cellAtIndex:3] setFloatValue:[[self.packet.sbcVoltages objectAtIndex:3] floatValue]];
+                [[self.PYASRTemperaturesForm cellAtRow:0 column:1] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:4] floatValue]];
+                [[self.PYASRVoltagesForm cellAtRow:0 column:1] setFloatValue:[[self.packet.sbcVoltages objectAtIndex:3] floatValue]];
                 break;
             case 6:
-                [[self.PYASRTemperaturesForm cellAtIndex:5] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:5] floatValue]];
-                [[self.PYASRVoltagesForm cellAtIndex:4] setFloatValue:[[self.packet.sbcVoltages objectAtIndex:4] floatValue]];
+                [[self.PYASRTemperaturesForm cellAtRow:1 column:1] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:5] floatValue]];
+                [[self.PYASRVoltagesForm cellAtRow:1 column:1] setFloatValue:[[self.packet.sbcVoltages objectAtIndex:4] floatValue]];
                 break;
             case 7:
-                [[self.PYASRTemperaturesForm cellAtIndex:6] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:6] floatValue]];
+                [[self.PYASRTemperaturesForm cellAtRow:2 column:1] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:6] floatValue]];
                 // add is image saving here
                 break;
             default:
@@ -796,10 +796,10 @@
         self.PYASRcameraView.northAngle = northAngle;
         
         [self.PYASRAspectErrorCodeTextField setIntegerValue:self.packet.aspectErrorCode];
-        [self.PYASRisTracking_indicator setIntValue:3*self.packet.isTracking];
-        [self.PYASRProvidingCTL_indicator setIntValue:3*self.packet.isOutputting];
-        [self.SAS2ClockSync_indicator setIntValue:3*self.packet.isClockSynced];
-        [self.PYASRFoundSun_indicator setIntValue:3*self.packet.isSunFound];
+        [self.PYASRisTracking_indicator setIntValue:1*self.packet.isTracking];
+        [self.PYASRProvidingCTL_indicator setIntValue:1*self.packet.isOutputting];
+        [self.SAS2ClockSync_indicator setIntValue:1*self.packet.isClockSynced];
+        [self.PYASRFoundSun_indicator setIntValue:1*self.packet.isSunFound];
         
         //[self.PYASFcameraView draw];
         [self.PYASRcameraView draw];

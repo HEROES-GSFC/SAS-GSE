@@ -158,16 +158,16 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                             
                             uint32_t frame_number;
                             *(tm_packet) >> frame_number;
-                            uint16_t status_bitfield;
+                            uint8_t status_bitfield;
                             *(tm_packet) >> status_bitfield;
                             
                             [self.dataPacket setFrameNumber: frame_number];
                             
                             //parse this bit field
-                            self.dataPacket.isTracking = (bool)((status_bitfield >> 7) & 128);
-                            self.dataPacket.isSunFound = (bool)((status_bitfield >> 6) & 64);
-                            self.dataPacket.isOutputting = (bool)((status_bitfield >> 5) & 32);
-                            self.dataPacket.isClockSynced = (bool)((status_bitfield >> 4) & 16);
+                            self.dataPacket.isTracking = (bool)((status_bitfield & 128) >> 7);
+                            self.dataPacket.isSunFound = (bool)((status_bitfield & 64) >> 6);
+                            self.dataPacket.isOutputting = (bool)((status_bitfield & 32) >> 5);
+                            self.dataPacket.isClockSynced = (bool)((status_bitfield & 16) >> 4);
                             self.dataPacket.aspectErrorCode = status_bitfield & 0xf;
                             
                             uint16_t command_key;
@@ -183,25 +183,31 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                                     self.dataPacket.cameraTemperature = Float2B(housekeeping2).value();
                                     break;
                                 case 1:
-                                    [self.dataPacket.i2cTemperatures insertObject:[NSNumber numberWithInt:(int16_t)housekeeping1] atIndex:0];
+                                    [self.dataPacket.i2cTemperatures replaceObjectAtIndex:0 withObject:[NSNumber numberWithInt:(int16_t)housekeeping1]];
                                     self.dataPacket.cameraTemperature = Float2B(housekeeping2).value();
+                                    break;
                                 case 2:
-                                    [self.dataPacket.i2cTemperatures insertObject:[NSNumber numberWithInt:(int16_t)housekeeping1] atIndex:1];
-                                    [self.dataPacket.sbcVoltages insertObject:[NSNumber numberWithInt:(int16_t)housekeeping2] atIndex:0];
+                                    [self.dataPacket.i2cTemperatures replaceObjectAtIndex:1 withObject:[NSNumber numberWithInt:(int16_t)housekeeping1]];
+                                    [self.dataPacket.sbcVoltages replaceObjectAtIndex:0 withObject:[NSNumber numberWithInt:(int16_t)housekeeping2]];
+                                    break;
                                 case 3:
-                                    [self.dataPacket.i2cTemperatures insertObject:[NSNumber numberWithInt:(int16_t)housekeeping1] atIndex:2];
-                                    [self.dataPacket.sbcVoltages insertObject:[NSNumber numberWithInt:(int16_t)housekeeping2] atIndex:1];
+                                    [self.dataPacket.i2cTemperatures replaceObjectAtIndex:2 withObject:[NSNumber numberWithInt:(int16_t)housekeeping1]];
+                                    [self.dataPacket.sbcVoltages replaceObjectAtIndex:1 withObject:[NSNumber numberWithInt:(int16_t)housekeeping2]];
+                                    break;
                                 case 4:
-                                    [self.dataPacket.i2cTemperatures insertObject:[NSNumber numberWithInt:(int16_t)housekeeping1] atIndex:3];
-                                    [self.dataPacket.sbcVoltages insertObject:[NSNumber numberWithInt:(int16_t)housekeeping2] atIndex:2];
+                                    [self.dataPacket.i2cTemperatures replaceObjectAtIndex:3 withObject:[NSNumber numberWithInt:(int16_t)housekeeping1]];
+                                    [self.dataPacket.sbcVoltages replaceObjectAtIndex:2 withObject:[NSNumber numberWithInt:(int16_t)housekeeping2]];
+                                    break;
                                 case 5:
-                                    [self.dataPacket.i2cTemperatures insertObject:[NSNumber numberWithInt:(int16_t)housekeeping1] atIndex:4];
-                                    [self.dataPacket.sbcVoltages insertObject:[NSNumber numberWithInt:(int16_t)housekeeping2] atIndex:3];
+                                    [self.dataPacket.i2cTemperatures replaceObjectAtIndex:4 withObject:[NSNumber numberWithInt:(int16_t)housekeeping1]];
+                                    [self.dataPacket.sbcVoltages replaceObjectAtIndex:3 withObject:[NSNumber numberWithInt:(int16_t)housekeeping2]];
+                                    break;
                                 case 6:
-                                    [self.dataPacket.i2cTemperatures insertObject:[NSNumber numberWithInt:(int16_t)housekeeping1] atIndex:5];
-                                    [self.dataPacket.sbcVoltages insertObject:[NSNumber numberWithInt:(int16_t)housekeeping2] atIndex:4];
+                                    [self.dataPacket.i2cTemperatures replaceObjectAtIndex:5 withObject:[NSNumber numberWithInt:(int16_t)housekeeping1]];
+                                    [self.dataPacket.sbcVoltages replaceObjectAtIndex:4 withObject:[NSNumber numberWithInt:(int16_t)housekeeping2]];
+                                    break;
                                 case 7:
-                                    [self.dataPacket.i2cTemperatures insertObject:[NSNumber numberWithInt:(int16_t)housekeeping1] atIndex:6];
+                                    [self.dataPacket.i2cTemperatures replaceObjectAtIndex:6 withObject:[NSNumber numberWithInt:(int16_t)housekeeping1]];
                                     self.dataPacket.isSavingImages = housekeeping2;
                                 default:
                                     break;
