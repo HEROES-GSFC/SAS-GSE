@@ -158,30 +158,65 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                             
                             uint32_t frame_number;
                             *(tm_packet) >> frame_number;
-                            uint16_t command_count;
-                            *(tm_packet) >> command_count;
+                            uint8_t status_bitfield;
+                            *(tm_packet) >> status_bitfield;
+                            
+                            [self.dataPacket setFrameNumber: frame_number];
+                            
+                            //parse this bit field
+                            self.dataPacket.isTracking = (bool)((status_bitfield & 128) >> 7);
+                            self.dataPacket.isSunFound = (bool)((status_bitfield & 64) >> 6);
+                            self.dataPacket.isOutputting = (bool)((status_bitfield & 32) >> 5);
+                            self.dataPacket.isClockSynced = (bool)((status_bitfield & 16) >> 4);
+                            self.dataPacket.aspectErrorCode = status_bitfield & 0xf;
+                            
                             uint16_t command_key;
                             *(tm_packet) >> command_key;
+                            [self.dataPacket setCommandKey: command_key];
                             
                             uint16_t housekeeping1, housekeeping2;
                             *(tm_packet) >> housekeeping1 >> housekeeping2;
                             
-                            //For now, housekeeping1 is always camera temperature
-                            self.dataPacket.cameraTemperature = Float2B(housekeeping1).value();
+                            switch (frame_number % 8) {
+                                case 0:
+                                    self.dataPacket.cpuTemperature = (int16_t)housekeeping1;
+                                    self.dataPacket.cameraTemperature = Float2B(housekeeping2).value();
+                                    break;
+                                case 1:
+                                    [self.dataPacket.i2cTemperatures replaceObjectAtIndex:0 withObject:[NSNumber numberWithInt:(int16_t)housekeeping1]];
+                                    self.dataPacket.cameraTemperature = Float2B(housekeeping2).value();
+                                    break;
+                                case 2:
+                                    [self.dataPacket.i2cTemperatures replaceObjectAtIndex:1 withObject:[NSNumber numberWithInt:(int16_t)housekeeping1]];
+                                    [self.dataPacket.sbcVoltages replaceObjectAtIndex:0 withObject:[NSNumber numberWithInt:(int16_t)housekeeping2]];
+                                    break;
+                                case 3:
+                                    [self.dataPacket.i2cTemperatures replaceObjectAtIndex:2 withObject:[NSNumber numberWithInt:(int16_t)housekeeping1]];
+                                    [self.dataPacket.sbcVoltages replaceObjectAtIndex:1 withObject:[NSNumber numberWithInt:(int16_t)housekeeping2]];
+                                    break;
+                                case 4:
+                                    [self.dataPacket.i2cTemperatures replaceObjectAtIndex:3 withObject:[NSNumber numberWithInt:(int16_t)housekeeping1]];
+                                    [self.dataPacket.sbcVoltages replaceObjectAtIndex:2 withObject:[NSNumber numberWithInt:(int16_t)housekeeping2]];
+                                    break;
+                                case 5:
+                                    [self.dataPacket.i2cTemperatures replaceObjectAtIndex:4 withObject:[NSNumber numberWithInt:(int16_t)housekeeping1]];
+                                    [self.dataPacket.sbcVoltages replaceObjectAtIndex:3 withObject:[NSNumber numberWithInt:(int16_t)housekeeping2]];
+                                    break;
+                                case 6:
+                                    [self.dataPacket.i2cTemperatures replaceObjectAtIndex:5 withObject:[NSNumber numberWithInt:(int16_t)housekeeping1]];
+                                    [self.dataPacket.sbcVoltages replaceObjectAtIndex:4 withObject:[NSNumber numberWithInt:(int16_t)housekeeping2]];
+                                    break;
+                                case 7:
+                                    [self.dataPacket.i2cTemperatures replaceObjectAtIndex:6 withObject:[NSNumber numberWithInt:(int16_t)housekeeping1]];
+                                    self.dataPacket.isSavingImages = housekeeping2;
+                                default:
+                                    break;
+                            }
                             
-                            //For now, housekeeping2 is always CPU temperature
-                            self.dataPacket.cpuTemperature = (int16_t)housekeeping2;
-
                             Pair3B sunCenter, sunCenterError;
                             *(tm_packet) >> sunCenter >> sunCenterError;
                             
                             [self.dataPacket setSunCenter:[NSValue valueWithPoint:NSMakePoint(sunCenter.x(), sunCenter.y())]];
-                            
-                            Pair3B predictCenter, predictCenterError;
-                            *(tm_packet) >> predictCenter >> predictCenterError;
-                            
-                            uint16_t nLimbs;
-                            *(tm_packet) >> nLimbs;
                             
                             for (int i = 0; i < NUM_LIMBS; i++) {
                                 Pair3B limb;
@@ -189,8 +224,11 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                                 [self.dataPacket addChordPoint:NSMakePoint(limb.x(),limb.y()) :i];
                             }
                             
-                            uint16_t nFiducials;
+                            uint8_t nFiducials;
                             *(tm_packet) >> nFiducials;
+                            
+                            uint8_t nLimbs;
+                            *(tm_packet) >> nLimbs;
                             
                             for (int i = 0; i < NUM_FIDUCIALS; i++) {
                                 Pair3B fiducial;
@@ -207,24 +245,14 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                             self.dataPacket.screenCenter = [NSValue valueWithPoint:NSMakePoint(-x_intercept/x_slope, -y_intercept/y_slope)];
                             self.dataPacket.screenRadius = 0.5* ((3000.0/fabs(x_slope)) + (3000.0/fabs(y_slope)));
                             
-                            uint8_t image_max, image_min;
-                            *(tm_packet) >> image_max >> image_min;
+                            uint8_t image_max;
+                            *(tm_packet) >> image_max;
                             
-                            self.dataPacket.ImageRange = NSMakeRange(image_min, image_max);
+                            self.dataPacket.ImageMax = image_max;
                             
-                            [self.dataPacket setFrameNumber: frame_number];
-                            [self.dataPacket setCommandCount: command_count];
-                            [self.dataPacket setCommandKey: command_key];
-                            
-                            double ctl_xvalue, ctl_yvalue;
+                            float ctl_xvalue, ctl_yvalue;
                             *(tm_packet) >> ctl_xvalue >> ctl_yvalue;
                             [self.dataPacket setCTLCommand:[NSValue valueWithPoint:NSMakePoint(ctl_xvalue, ctl_yvalue)]];
-                            
-                            int8_t i2c_temperature;
-                            for (int i=0; i<8; i++){
-                                *(tm_packet) >> i2c_temperature;
-                                [self.dataPacket.i2cTemperatures insertObject:[NSNumber numberWithInt:i2c_temperature] atIndex:i];
-                            }                            
                         }
                         
                         if (tm_packet->getTypeID() == SAS_CM_ACK_TYPE) {

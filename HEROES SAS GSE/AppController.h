@@ -14,6 +14,7 @@
 #import "CommanderWindowController.h"
 #import "PlotWindowController.h"
 #import "RASCameraViewWindow.h"
+#import "AutoFlipSwitch.h"
 
 @interface AppController : NSWindowController
 
@@ -34,18 +35,34 @@
 @property (nonatomic, strong) IBOutlet CameraView *PYASFcameraView;
 @property (weak) IBOutlet NSTextField *PYASFCTLCmdEchoTextField;
 @property (weak) IBOutlet NSTextField *PYASRCTLCmdEchoTextField;
-@property (weak) IBOutlet NSTextField *PYASFImageMaxMinTextField;
-@property (weak) IBOutlet NSTextField *PYASRImageMaxMinTextField;
+@property (weak) IBOutlet NSTextField *PYASFImageMaxTextField;
+@property (weak) IBOutlet NSTextField *PYASRImageMaxTextField;
+@property (weak) IBOutlet NSTextField *RASImageMaxTextField;
+
 @property (weak) IBOutlet NSTextField *PYASFCTLSigmaTextField;
 @property (weak) IBOutlet NSForm *PYASFTemperaturesForm;
 @property (weak) IBOutlet NSForm *PYASRTemperaturesForm;
 @property (weak) IBOutlet NSMenu *TimeProfileMenu;
 @property (unsafe_unretained) IBOutlet NSWindow *MainWindow;
-@property (weak) IBOutlet NSLevelIndicator *SAS1_indicator;
-@property (weak) IBOutlet NSLevelIndicator *SAS2_indicator;
-@property (weak) IBOutlet NSLevelIndicator *PYASF_indicator;
-@property (weak) IBOutlet NSLevelIndicator *PYASR_indicator;
-@property (weak) IBOutlet NSLevelIndicator *RAS_indicator;
+@property (weak) IBOutlet AutoFlipSwitch *SAS1AutoFlipSwitch;
+@property (weak) IBOutlet NSLayoutConstraint *SAS2AutoFlipSwitch;
+@property (weak) IBOutlet AutoFlipSwitch *PYASFAutoFlipSwitch;
+@property (weak) IBOutlet AutoFlipSwitch *PYASRAutoFlipSwitch;
+@property (weak) IBOutlet AutoFlipSwitch *RASAutoFlipSwitch;
+
+
+@property (weak) IBOutlet NSTextField *PYASRAspectErrorCodeTextField;
+@property (weak) IBOutlet NSTextField *PYASFAspectErrorCodeTextField;
+@property (weak) IBOutlet NSLevelIndicator *PYASRisTracking_indicator;
+@property (weak) IBOutlet NSLevelIndicator *PYASFisTracking_indicator;
+@property (weak) IBOutlet NSLevelIndicator *PYASRFoundSun_indicator;
+@property (weak) IBOutlet NSLevelIndicator *PYASFFoundSun_indicator;
+@property (weak) IBOutlet NSLevelIndicator *PYASRProvidingCTL_indicator;
+@property (weak) IBOutlet NSLevelIndicator *PYASFProvidingCTL_indicator;
+@property (weak) IBOutlet NSForm *PYASRVoltagesForm;
+@property (weak) IBOutlet NSForm *PYASFVoltagesForm;
+@property (weak) IBOutlet NSLevelIndicator *SAS1ClockSync_indicator;
+@property (weak) IBOutlet NSLevelIndicator *SAS2ClockSync_indicator;
 
 @property (nonatomic, strong) RASCameraViewWindow *rasCameraViewWindow;
 @property (nonatomic, strong) NSFileHandle *SAS1telemetrySaveFile;

@@ -17,7 +17,7 @@
 @property (nonatomic) uint16_t commandKey;
 @property (nonatomic) NSValue *sunCenter;
 @property (nonatomic) NSValue *CTLCommand;
-@property (nonatomic) NSRange ImageRange;
+@property (nonatomic) int ImageMax;
 @property (nonatomic) float cameraTemperature;
 @property (nonatomic) float cpuTemperature;
 @property (nonatomic) BOOL isSAS1;
@@ -25,7 +25,13 @@
 @property (nonatomic) NSValue *screenCenter;
 @property (nonatomic) float screenRadius;
 @property (nonatomic) NSMutableArray *i2cTemperatures;
-
+@property (nonatomic) NSMutableArray *sbcVoltages;
+@property (nonatomic) BOOL isTracking;
+@property (nonatomic) BOOL isSunFound;
+@property (nonatomic) BOOL isOutputting;
+@property (nonatomic) BOOL isClockSynced;
+@property (nonatomic) BOOL isSavingImages;
+@property (nonatomic) int aspectErrorCode;
 
 -(NSString *) getframeTimeString;
 -(void) addChordPoint: (NSPoint) point :(int) index;
