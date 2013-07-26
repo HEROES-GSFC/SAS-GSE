@@ -56,6 +56,12 @@
         for (int i = 0; i < MAX_FIDUCIALS; i++) {
             [self.fiducialPoints addObject:[NSValue valueWithPoint:NSMakePoint(0,0)]];
         }
+        for (int i = 0; i < NUM_I2C_SENSORS; i++) {
+            [self.i2cTemperatures addObject:[NSNumber numberWithInt:-1]];
+        }
+        for (int i = 0; i < NUM_VOLTAGE_READINGS; i++) {
+            [self.sbcVoltages addObject:[NSNumber numberWithInt:-1]];
+        }
     }
     return self;
 }
