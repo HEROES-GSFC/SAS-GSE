@@ -150,7 +150,7 @@
 }
 
 -(void)awakeFromNib{
-    NSArray *temperatureNames = [NSArray arrayWithObjects:@"T1", @"T2", @"T3", @"T4", @"T6", @"T7", nil];
+    NSArray *temperatureNames = [NSArray arrayWithObjects:@"T0", @"T1", @"T2", @"T3", @"T4", @"T6", @"T7", @"T8", nil];
     NumberInRangeFormatter *formatter;
     
     NSInteger numberofCols = [self.PYASFTemperaturesForm numberOfColumns];
