@@ -147,47 +147,47 @@
 		<key>key</key>
 		<string>0x0591</string>
 	</dict>
-	<key>Set Relay to ON</key>
+	<key>Turn Relay ON</key>
 	<dict>
 		<key>var_names</key>
 		<array>
 			<string>relay number</string>
 		</array>
 		<key>description</key>
-		<string>Set a relay to ON (energize the relay)</string>
+		<string>Turn a relay ON (powered)</string>
 		<key>key</key>
-		<string>0x0601</string>
+		<string>0x0101</string>
 	</dict>
-	<key>Set Relay to OFF</key>
+	<key>Turn Relay OFF</key>
 	<dict>
 		<key>var_names</key>
 		<array>
 			<string>relay number</string>
 		</array>
 		<key>description</key>
-		<string>Set a relay to OFF (de-energize the relay)</string>
+		<string>Turn a relay OFF (unpowered)</string>
 		<key>key</key>
-		<string>0x0611</string>
+		<string>0x0111</string>
 	</dict>
-	<key>Set all Relays to OFF</key>
+	<key>Turn all relays ON</key>
 	<dict>
 		<key>var_names</key>
 		<array/>
 		<key>description</key>
-		<string>Flip all relays to OFF (de-energize all relays)</string>
+		<string>Turn all relays ON (powered)</string>
 		<key>key</key>
-		<string>0x0591</string>
+		<string>0x0120</string>
 	</dict>
-	<key>Set all Relays to ON</key>
+	<key>Turn all relays OFF</key>
 	<dict>
 		<key>var_names</key>
 		<array>
 			<string>value</string>
 		</array>
 		<key>description</key>
-		<string>Flip all relays to ON (energize all relays)</string>
+		<string>Turn all relays OFF (unpowered)</string>
 		<key>key</key>
-		<string>0x0630</string>
+		<string>0x0130</string>
 	</dict>
 	<key>Set PYAS Analog gain</key>
 	<dict>
