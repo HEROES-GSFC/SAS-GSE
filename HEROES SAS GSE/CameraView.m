@@ -164,7 +164,11 @@
         //NSLog(@"mouse lcoation is %f, %f", self.mouseLocation.x, self.mouseLocation.y);
         [self drawACross:self.mouseLocation :0.02];
         unsigned char pixelValue;
-        [self.bkgImage getBytes:&pixelValue range:NSMakeRange(self.mouseLocation.x + ((int) self.mouseLocation.y) * self.imageXSize, 1)];
+        if (self.imageExists){
+            [self.bkgImage getBytes:&pixelValue range:NSMakeRange(self.mouseLocation.x + ((int) self.mouseLocation.y) * self.imageXSize, 1)];
+        } else {
+            pixelValue = 0;
+        }
         NSString *text = [NSString stringWithFormat:@"%u, %f, %f", pixelValue, self.mouseLocation.x, self.mouseLocation.y];
         [self drawText:self.mouseLocation :text];
     }
@@ -272,10 +276,6 @@
 // called after context is created
 - (void) prepareOpenGL
 {
-    //GLint swapInt = 1;
-    
-    //    [[self openGLContext] setValues:&swapInt forParameter:NSOpenGLCPSwapInterval]; // set to vbl sync
-    
 	// init GL stuff here
     glLoadIdentity();
     glPushMatrix();

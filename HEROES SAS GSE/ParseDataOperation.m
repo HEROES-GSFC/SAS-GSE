@@ -24,7 +24,7 @@
 #define PAYLOAD_SIZE 20
 
 #if true
-#define DEFAULT_PORT 2003 /* The default port to send on */
+#define DEFAULT_PORT 2002 /* The default port to send on */
 #else
 #define DEFAULT_PORT 2002
 #endif

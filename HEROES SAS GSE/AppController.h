@@ -45,10 +45,11 @@
 @property (weak) IBOutlet NSMenu *TimeProfileMenu;
 @property (unsafe_unretained) IBOutlet NSWindow *MainWindow;
 @property (weak) IBOutlet AutoFlipSwitch *SAS1AutoFlipSwitch;
-@property (weak) IBOutlet NSLayoutConstraint *SAS2AutoFlipSwitch;
+
 @property (weak) IBOutlet AutoFlipSwitch *PYASFAutoFlipSwitch;
 @property (weak) IBOutlet AutoFlipSwitch *PYASRAutoFlipSwitch;
 @property (weak) IBOutlet AutoFlipSwitch *RASAutoFlipSwitch;
+@property (weak) IBOutlet AutoFlipSwitch *SAS2AutoFlipSwitch;
 
 
 @property (weak) IBOutlet NSTextField *PYASRAspectErrorCodeTextField;

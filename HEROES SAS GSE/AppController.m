@@ -681,7 +681,7 @@
     }
     
     if (self.packet.isSAS2) {
-        //[self.SAS2AutoFlipSwitch reset];
+        [self.SAS2AutoFlipSwitch reset];
         [self.SAS2FrameNumberLabel setIntegerValue:[self.packet frameNumber]];
         [self.SAS2FrameTimeLabel setStringValue:[self.packet getframeTimeString]];
         [self.SAS2CmdKeyTextField setStringValue:[NSString stringWithFormat:@"0x%04x", [self.packet commandKey]]];
