@@ -848,15 +848,16 @@
             [sender setState:0];
         }
     }
-    
 }
 
 - (IBAction)ClearPYASBkgImage:(NSButton *)sender {
     if ([[sender title] isEqualToString:@"Clear PYAS-F Image"]) {
         self.PYASFcameraView.bkgImage = nil;
+        self.PYASFcameraView.imageExists = NO;
     }
     if ([[sender title] isEqualToString:@"Clear PYAS-R Image"]) {
         self.PYASRcameraView.bkgImage = nil;
+        self.PYASRcameraView.imageExists = NO;
     }
 }
 
