@@ -181,7 +181,7 @@
     }
     
     NSArray *voltages = [NSArray arrayWithObjects:[NSNumber numberWithFloat:10.5], [NSNumber numberWithFloat:2.5], [NSNumber numberWithFloat:3.3], [NSNumber numberWithFloat:5.0], [NSNumber numberWithFloat:12.0], [NSNumber numberWithFloat:12.0], nil ];
-    NSArray *voltageNames = [NSArray arrayWithObjects:@"10.5V", @"2.5V", @"3.3V", @"5.0V", @"12.0V", @"", nil];
+    NSArray *voltageNames = [NSArray arrayWithObjects:@"1.05V", @"2.5V", @"3.3V", @"5.0V", @"12.0V", @"", nil];
     numberofCols = [self.PYASFVoltagesForm numberOfColumns];
     numberofRows = [self.PYASFVoltagesForm numberOfRows];
     
