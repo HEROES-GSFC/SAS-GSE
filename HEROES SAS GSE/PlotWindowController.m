@@ -164,8 +164,8 @@
 
 -(void)update{
     if (self.data != nil) {
-        float ymin = 0;
-        float ymax = 40;
+        float ymin;
+        float ymax;
         // Axes
         CPTXYAxisSet *axisSet = (CPTXYAxisSet *)self.hostView.hostedGraph.axisSet;
         CPTXYAxis *yAxis = axisSet.yAxis;
@@ -184,7 +184,6 @@
             DataSeries *ydata = [currentData objectForKey:@"y"];
             NSMutableArray *time = [currentData objectForKey:@"time"];
             if (time.count != 0) {
-                
                 if (i == 0) {
                     NSDate *latestTime = [time lastObject];
                     ymin = ydata.min;
@@ -199,11 +198,9 @@
                                                                     length:CPTDecimalFromFloat([latestTime timeIntervalSinceDate:self.earliestTime])];
                 }
                 
-                
                 if (ymax < ydata.max){ ymax = ydata.max; }
                 if (ymin > ydata.min){ ymin = ydata.min; }
-                
-                
+                                
                 // add annotation to plot
                 NSString *annotationText = [NSString stringWithFormat:@"avg = %f, sig = %f", ydata.average, ydata.standardDeviation];
                 CPTTextLayer *textLayer = [[CPTTextLayer alloc] initWithText:annotationText];
@@ -222,7 +219,6 @@
         }
         if (self.YminChoice.selectedSegment == 1) {
             ymin = [self.YminTextField floatValue];}
-        
         
         // should calculate the size of major and minor tickintevals needed on the fly
         yAxis.majorIntervalLength = CPTDecimalFromCGFloat(abs(ymax - ymin)/5.0);
@@ -243,26 +239,24 @@
     NSArray *time;
     NSNumber *result;
     
-    //if (self.XaxisChoice.selectedSegment == 1){
-    //    time = [currentData objectForKey:@"time"];
-    //} else {
-    //    time = [[currentData objectForKey:@"time"] subarrayWithRange:ydata.ROI];
-    //}
+    if (self.XaxisChoice.selectedSegment == 1){
+        time = [currentData objectForKey:@"time"];
+    } else {
+        time = [[currentData objectForKey:@"time"] subarrayWithRange:ydata.ROI];
+    }
     if (fieldEnum == CPTScatterPlotFieldX) {
         NSTimeInterval x = [[time objectAtIndex:index] timeIntervalSinceDate:self.earliestTime];
         //NSLog(@"%@", [[time subarrayWithRange:ydata.ROI] objectAtIndex:0]);
-        //NSLog(@"%@ %lu %@", plot_name, (unsigned long)fieldEnum, [NSNumber numberWithDouble:x]);
         result = [NSNumber numberWithDouble:x];
     }
     if (fieldEnum == CPTScatterPlotFieldY) {
-        //NSLog(@"y numberForPlot: %@", [ydata.data objectAtIndex:(index + indexmin)]);
-        
         if (self.XaxisChoice.selectedSegment == 1){
             result = [ydata.data objectAtIndex:index];
         } else {
             result = [[ydata ROIdata] objectAtIndex:index];
         }
     }
+    //NSLog(@"numberForPlot: %@", result);
     return result;
 }
 

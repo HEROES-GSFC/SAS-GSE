@@ -30,7 +30,7 @@
     if (self) {
         // insert initializing here
         self.count = 0;
-        self.ROIlength = 5;
+        self.ROIlength = 1;
         self.ROI = NSMakeRange(0, self.ROIlength);
     }
     return self;
@@ -49,18 +49,22 @@
 
 - (void) addPoint: (float)newpoint{
     [self.data addObject:[NSNumber numberWithFloat:newpoint]];
+    [self update];
+}
+
+- (void) update{
     self.count++;
-    if (self.count == 1) {
-        self.max = newpoint;
-        self.min = newpoint;
+    float latest_value = [self.data.lastObject floatValue];
+    if (self.count == 1){
+        self.max = latest_value;
+        self.min = latest_value;
     } else {
-        if (self.max < newpoint){ self.max = newpoint; }
-        if (self.min > newpoint){ self.min = newpoint; }
+        if (self.max < latest_value){ self.max = latest_value; }
+        if (self.min > latest_value){ self.min = latest_value; }
     }
-    self.ROI = NSMakeRange(self.count > self.ROIlength ? self.count - self.ROIlength - 1: 0, self.count < self.ROIlength ? self.count : self.ROIlength );
-    
     self.average = [self calculateAverage];
     self.standardDeviation = [self calculateStandardDeviation];
+    self.ROI = NSMakeRange(self.count > self.ROIlength ? self.count - self.ROIlength - 1: 0, self.count < self.ROIlength ? self.count - 1: self.ROIlength );
 }
 
 -(float)calculateAverage{

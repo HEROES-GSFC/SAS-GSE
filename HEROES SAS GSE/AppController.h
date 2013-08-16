@@ -69,9 +69,7 @@
 @property (nonatomic, strong) NSFileHandle *SAS1telemetrySaveFile;
 @property (nonatomic, strong) NSFileHandle *SAS2telemetrySaveFile;
 @property (nonatomic, strong) NSDictionary *timeSeriesCollection;
-@property (nonatomic, strong) NSDictionary *PYASFtimeSeriesCollection;
-@property (nonatomic, strong) NSDictionary *PYASRtimeSeriesCollection;
-@property (nonatomic, strong) NSDictionary *RAStimeSeriesCollection;
+
 @property (nonatomic, readonly) CommanderWindowController *Commander_window;
 @property (nonatomic, readonly) ConsoleWindowController *Console_window;
 @property (nonatomic, strong) NSMutableDictionary *PlotWindows;

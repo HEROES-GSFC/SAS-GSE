@@ -23,5 +23,6 @@
 
 - (void) addPoint: (float) point;
 - (NSArray *)ROIdata;
+- (void) update;
 
 @end
