@@ -10,19 +10,19 @@
 
 @interface DataSeries : NSObject
 
-@property (nonatomic, strong) NSMutableArray *data;
 @property (nonatomic, strong) NSString *description;
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic) float standardDeviation;
 @property (nonatomic) float average;
 @property (nonatomic) float max;
 @property (nonatomic) float min;
-@property (nonatomic) NSInteger count;
+@property (nonatomic) NSUInteger count;
 @property (nonatomic) NSRange ROI;
 @property (nonatomic) int ROIlength;
+@property (nonatomic) BOOL ROIEnabled;
 
 - (void) addPoint: (float) point;
-- (NSArray *)ROIdata;
 - (void) update;
+- (NSArray *) data;
 
 @end

@@ -8,7 +8,6 @@
 
 #import <Cocoa/Cocoa.h>
 #import <CorePlot/CorePlot.h>
-#import "DataSeries.h"
 
 @interface PlotWindowController : NSWindowController<CPTPlotDataSource> {
     CPTXYGraph *graph;

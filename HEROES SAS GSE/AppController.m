@@ -107,7 +107,7 @@
             [allTimeSeries addObject:timeSeries];
         }
         
-        //self.timeSeriesCollection = [NSDictionary dictionaryWithObjects:timeSeriesNames forKeys:allTimeSeries];
+        self.timeSeriesCollection = [NSDictionary dictionaryWithObjects:allTimeSeries forKeys:timeSeriesNames];
         
         [self.Commander_window showWindow:nil];
         [self.Commander_window.window orderFront:self];
@@ -317,47 +317,6 @@
     return _packet;
 }
 
-//- (IBAction)StartStopButtonAction:(id)sender {
-//
-//        [self.queue cancelAllOperations];
-//
-//        // start the GetPathsOperation with the root path to start the search
-//        ParseDataOperation *parseOp = [[ParseDataOperation alloc] init];
-//        ParseTCPOperation *parseTCP = [[ParseTCPOperation alloc] init];
-//
-//        [self.queue addOperation:parseOp];	// this will start the "TestOperation"
-//        [self.queue addOperation:parseTCP];
-//
-//        if([[self.queue operations] containsObject:parseOp]){
-//            [[NSNotificationCenter defaultCenter] addObserver:self
-//                                                     selector:@selector(anyThread_handleData:)
-//                                                         name:kReceiveAndParseDataDidFinish
-//                                                       object:nil];
-//
-//            [self.RunningIndicator setHidden:NO];
-//            [self.RunningIndicator startAnimation:self];
-//        }
-//
-//        if([[self.queue operations] containsObject:parseTCP]){
-//            [[NSNotificationCenter defaultCenter] addObserver:self
-//                                                     selector:@selector(anyThread_handleImage:)
-//                                                         name:kReceiveAndParseImageDidFinish
-//                                                       object:nil];
-//        }
-//
-//        if ([self.SaveData_checkbox state] == NSOnState) {
-//            [self OpenTelemetrySaveTextFiles];
-//        }
-//    }
-//    if ([StartStopSegmentedControl selectedSegment] == 1) {
-//        // is the following code needed to run on close of application?
-//        [self.queue cancelAllOperations];
-//        [self.SAS1telemetrySaveFile closeFile];
-//        [self.SAS2telemetrySaveFile closeFile];
-//    }
-//}
-
-
 - (IBAction)PYASsaveImage_ButtonAction:(NSButton *)sender {
     
     NSData *imagedata;
@@ -552,7 +511,7 @@
         TimeSeries *ctlXValues = [self.timeSeriesCollection objectForKey:@"SAS1 ctl X solution"];
         TimeSeries *ctlYValues = [self.timeSeriesCollection objectForKey:@"SAS1 ctl Y solution"];
         
-        [[self.timeSeriesCollection objectForKey:@"SAS1 ctl R solution"] addPointWithTime:[self.packet getDate] :sqrtf(powf(60*60*[self.packet.CTLCommand pointValue].y,2) + powf(60*60*[self.packet.CTLCommand pointValue].y,2))];
+        //[[self.timeSeriesCollection objectForKey:@"SAS1 ctl R solution"] addPointWithTime:[self.packet getDate] :sqrtf(powf(60*60*[self.packet.CTLCommand pointValue].y,2) + powf(60*60*[self.packet.CTLCommand pointValue].y,2))];
         
         [self.PYASFCTLSigmaTextField setStringValue:[NSString stringWithFormat:@"%6.2f, %6.2f", ctlXValues.standardDeviation, ctlYValues.standardDeviation]];
         [self.PYASFCTLCmdEchoTextField setStringValue:[NSString stringWithFormat:@"%5.3f, %5.3f", [self.packet.CTLCommand pointValue].x, [self.packet.CTLCommand pointValue].y]];
@@ -574,7 +533,7 @@
                 if (self.packet.cameraTemperature != 0) {
                     [self.PYASFAutoFlipSwitch reset];
                 }
-                [[self.timeSeriesCollection objectForKey:@"PYAS-f camera temperature"] addPointWithTime:[self.packet getDate] :self.packet.cameraTemperature];
+                [[self.timeSeriesCollection objectForKey:@"PYAS-F camera temperature"] addPointWithTime:[self.packet getDate] :self.packet.cameraTemperature];
                 break;
             case 1:
                 [self.PYASFCameraTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", self.packet.cameraTemperature]];
@@ -665,7 +624,14 @@
         
         [[self.timeSeriesCollection objectForKey:@"SAS2 ctl X solution"] addPointWithTime:[self.packet getDate] :60*60*[self.packet.CTLCommand pointValue].x];
         [[self.timeSeriesCollection objectForKey:@"SAS2 ctl Y solution"] addPointWithTime:[self.packet getDate] :60*60*[self.packet.CTLCommand pointValue].y];
-        [[self.timeSeriesCollection objectForKey:@"SAS2 ctl R solution"] addPointWithTime:[self.packet getDate] :sqrtf(powf(60*60*[self.packet.CTLCommand pointValue].y,2) + powf(60*60*[self.packet.CTLCommand pointValue].y,2))];
+        //[[self.timeSeriesCollection objectForKey:@"SAS2 ctl R solution"] addPointWithTime:[self.packet getDate] :sqrtf(powf(60*60*[self.packet.CTLCommand pointValue].y,2) + powf(60*60*[self.packet.CTLCommand pointValue].y,2))];
+              
+        TimeSeries *ctlXValues = [self.timeSeriesCollection objectForKey:@"SAS2 ctl X solution"];
+        TimeSeries *ctlYValues = [self.timeSeriesCollection objectForKey:@"SAS2 ctl Y solution"];
+        
+        //[[self.timeSeriesCollection objectForKey:@"SAS1 ctl R solution"] addPointWithTime:[self.packet getDate] :sqrtf(powf(60*60*[self.packet.CTLCommand pointValue].y,2) + powf(60*60*[self.packet.CTLCommand pointValue].y,2))];
+        
+        [self.PYASRCTLSigmaTextField setStringValue:[NSString stringWithFormat:@"%6.2f, %6.2f", ctlXValues.standardDeviation, ctlYValues.standardDeviation]];
         
         switch (self.packet.frameNumber % 8) {
             case 0:
@@ -674,7 +640,7 @@
                 if (self.packet.cameraTemperature != 0) {
                     [self.PYASRAutoFlipSwitch reset];
                 }
-                [[self.timeSeriesCollection objectForKey:@"PYAS-f camera temperature"] addPointWithTime:[self.packet getDate] :self.packet.cameraTemperature];
+                [[self.timeSeriesCollection objectForKey:@"PYAS-R camera temperature"] addPointWithTime:[self.packet getDate] :self.packet.cameraTemperature];
                 break;
             case 1:
                 [[self.timeSeriesCollection objectForKey:@"RAS camera temperature"] addPointWithTime:[self.packet getDate] :self.packet.cameraTemperature];
@@ -749,16 +715,18 @@
     if ([self.PlotWindowsAvailable containsObject:userChoice]) {
         if ([self.PlotWindows objectForKey:userChoice] == nil) {
             if ([userChoice isEqualToString:@"camera temperature"]) {
+                
+                
                 //NSDictionary *PYASFData = [[NSDictionary alloc] initWithObjectsAndKeys:[self.PYASFtimeSeriesCollection objectForKey:@"time"], @"time", [self.PYASFtimeSeriesCollection objectForKey:userChoice], @"y", nil];
                 //NSDictionary *PYASRData = [[NSDictionary alloc] initWithObjectsAndKeys:[self.PYASRtimeSeriesCollection objectForKey:@"time"], @"time", [self.PYASRtimeSeriesCollection objectForKey:userChoice], @"y", nil];
                 //NSDictionary *RASData = [[NSDictionary alloc] initWithObjectsAndKeys:[self.RAStimeSeriesCollection objectForKey:@"time"], @"time", [self.RAStimeSeriesCollection objectForKey:userChoice], @"y", nil];
-                //NSDictionary *data = [[NSDictionary alloc] initWithObjectsAndKeys:
-                //                      PYASFData , @"PYAS-F",
-                //                      PYASRData , @"PYAS-R",
-                //                      RASData, @"RAS", nil];
-                //PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data];
-                //[newPlotWindow showWindow:self];
-                //[self.PlotWindows setObject:newPlotWindow forKey:userChoice];
+                NSDictionary *data = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                      [self.timeSeriesCollection objectForKey:@"PYAS-F camera temperature"], @"PYAS-F",
+                                      [self.timeSeriesCollection objectForKey:@"PYAS-R camera temperature"] , @"PYAS-R",
+                                      [self.timeSeriesCollection objectForKey:@"RAS camera temperature"], @"RAS", nil];
+                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data];
+                [newPlotWindow showWindow:self];
+                [self.PlotWindows setObject:newPlotWindow forKey:userChoice];
             } else {
                 //NSDictionary *PYASFData = [[NSDictionary alloc] initWithObjectsAndKeys:[self.PYASFtimeSeriesCollection objectForKey:@"time"], @"time", [self.PYASFtimeSeriesCollection objectForKey:userChoice], @"y", nil];
                 //NSDictionary *PYASRData = [[NSDictionary alloc] initWithObjectsAndKeys:[self.PYASRtimeSeriesCollection objectForKey:@"time"], @"time", [self.PYASRtimeSeriesCollection objectForKey:userChoice], @"y", nil];

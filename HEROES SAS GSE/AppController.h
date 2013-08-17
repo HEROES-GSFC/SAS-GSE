@@ -40,6 +40,8 @@
 @property (weak) IBOutlet NSTextField *RASImageMaxTextField;
 
 @property (weak) IBOutlet NSTextField *PYASFCTLSigmaTextField;
+@property (weak) IBOutlet NSTextField *PYASRCTLSigmaTextField;
+
 @property (weak) IBOutlet NSForm *PYASFTemperaturesForm;
 @property (weak) IBOutlet NSForm *PYASRTemperaturesForm;
 @property (weak) IBOutlet NSMenu *TimeProfileMenu;
