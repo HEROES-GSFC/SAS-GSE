@@ -21,14 +21,18 @@
     self = [super init]; // call our super’s designated initializer
     if (self) {
         // insert initializing here
-        self.count = 0;
-        self.ROIlength = 1;
-        self.ROI = NSMakeRange(0, self.ROIlength);
         if (_mytime == nil) {
             _mytime = [[NSMutableArray alloc] init];
         }
     }
     return self;
+}
+
+-(NSArray *)mytime{
+    if (_mytime == nil) {
+        _mytime = [[NSMutableArray alloc] init];
+    }
+    return _mytime;
 }
 
 - (void) addPointWithTime: (NSDate *) time :(float)newpoint{
@@ -37,7 +41,7 @@
     [self update];
 }
 
-- (NSDate *)earliestTime{
+- (NSDate *) earliestTime{
     if (self.ROIEnabled) {
         return [[self.time subarrayWithRange:self.ROI] objectAtIndex:0];
     } else {
@@ -45,7 +49,7 @@
     }
 }
 
-- (NSDate *)latestTime{
+- (NSDate *) latestTime{
     if (self.ROIEnabled) {
         return [[self.time subarrayWithRange:self.ROI] lastObject];
     } else {

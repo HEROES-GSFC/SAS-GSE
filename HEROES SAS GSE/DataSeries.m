@@ -32,18 +32,18 @@
     if (self) {
         // insert initializing here
         self.count = 0;
-        self.ROIlength = 1;
+        self.ROIlength = 10;
         self.ROI = NSMakeRange(0, self.ROIlength);
         self.ROIEnabled = NO;
-        if (_mydata == nil) {
-            _mydata = [[NSMutableArray alloc] init];
-        }
     }
     return self;
 }
 
--(NSUInteger) count{
-    return [[self data] count];
+-(NSArray *)mydata{
+    if (_mydata == nil) {
+        _mydata = [[NSMutableArray alloc] init];
+    }
+    return _mydata;
 }
 
 -(NSArray *) data{
@@ -61,6 +61,7 @@
 
 - (void) update{
     float latest_value = [self.mydata.lastObject floatValue];
+    self.count = [self.mydata count];
     if (self.count == 1){
         self.max = latest_value;
         self.min = latest_value;
@@ -70,7 +71,19 @@
     }
     self.average = [self calculateAverage];
     self.standardDeviation = [self calculateStandardDeviation];
-    self.ROI = NSMakeRange(self.count > self.ROIlength ? self.count - self.ROIlength - 1: 0, self.count < self.ROIlength ? self.count - 1: self.ROIlength );
+    NSInteger location = self.count - self.ROIlength - 1;
+    if (location < 0) {
+        location = 0;
+    } else {
+        location = self.count - self.ROIlength - 1;
+    }
+    NSUInteger length;
+    if (self.ROIlength > self.count){
+        length = self.count;
+    } else {
+        length = self.ROIlength;
+    }
+    self.ROI = NSMakeRange(location, length);
 }
 
 - (float) calculateAverage{

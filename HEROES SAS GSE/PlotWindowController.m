@@ -59,13 +59,13 @@
     if ([sender selectedSegment] == 0) {
         for (NSString *key in self.data) {
             TimeSeries *currentData = [self.data objectForKey:key];
-            currentData.ROIEnabled = NO;
+            currentData.ROIEnabled = YES;
         }
     }
     if ([sender selectedSegment] == 1) {
         for (NSString *key in self.data) {
             TimeSeries *currentData = [self.data objectForKey:key];
-            currentData.ROIEnabled = YES;
+            currentData.ROIEnabled = NO;
         }
     }
 

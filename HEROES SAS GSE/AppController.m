@@ -89,7 +89,7 @@
         }
         self.listOfCommands = plistDict;
         
-        self.PlotWindowsAvailable = [NSArray arrayWithObjects:@"time", @"camera temperature", @"cpu temperature", @"ctl X solution", @"ctl Y solution", @"ctl R solution", nil];
+        self.PlotWindowsAvailable = [NSArray arrayWithObjects:@"camera temperature", @"cpu temperature", @"ctl X solution", @"ctl Y solution", @"ctl R solution", nil];
         
         //NSArray *systemNames = [[NSArray alloc] initWithObjects:@"SAS-1", @"SAS-2", nil];
         //NSArray *cameraNames = [[NSArray alloc] initWithObjects:@"PYAS-F", "PYAS-R", "RAS", nil];
@@ -185,12 +185,11 @@
     }
     
     for (NSString *title in self.PlotWindowsAvailable) {
-        if (![title isEqualToString:@"time"]) {
             [self.TimeProfileMenu addItemWithTitle:title action:NULL keyEquivalent:@""];
             NSMenuItem *menuItem = [self.TimeProfileMenu itemWithTitle:title];
             [menuItem setTarget:self];
             [menuItem setAction:@selector(OpenWindow_WindowMenuItemAction:)];
-        }
+
     }
     // start the GetPathsOperation with the root path to start the search
     ParseDataOperation *parseOp = [[ParseDataOperation alloc] init];
@@ -527,14 +526,21 @@
         [self.SAS1CPUTemperatureLabel setBackgroundColor:[NSColor whiteColor]];
         
         switch (self.packet.frameNumber % 8) {
-            case 0:
-                [self.SAS1CPUTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", self.packet.cpuTemperature]];
+            case 0:{
+                NSString *string = [NSString stringWithFormat:@"%6.2f", self.packet.cpuTemperature];
+                NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] initWithString:string];
+                //[attrString applyFontTraits:NSBoldFontMask range:NSMakeRange(0,[string length])];
+                NSDictionary *sPrimaryAttribtues = [NSDictionary dictionaryWithObjectsAndKeys:
+                                                    [[NSFontManager sharedFontManager] convertFont:[NSFont systemFontOfSize:12.] toHaveTrait:NSBoldFontMask], NSFontAttributeName, nil];
+                [attrString addAttributes:sPrimaryAttribtues range:NSMakeRange(0, [string length])];
+
+                [self.SAS1CPUTemperatureLabel setAttributedStringValue:attrString];
                 [self.PYASFCameraTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", self.packet.cameraTemperature]];
                 if (self.packet.cameraTemperature != 0) {
                     [self.PYASFAutoFlipSwitch reset];
                 }
                 [[self.timeSeriesCollection objectForKey:@"PYAS-F camera temperature"] addPointWithTime:[self.packet getDate] :self.packet.cameraTemperature];
-                break;
+                break;}
             case 1:
                 [self.PYASFCameraTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", self.packet.cameraTemperature]];
                 if (self.packet.cameraTemperature != 0) {
@@ -624,14 +630,13 @@
         
         [[self.timeSeriesCollection objectForKey:@"SAS2 ctl X solution"] addPointWithTime:[self.packet getDate] :60*60*[self.packet.CTLCommand pointValue].x];
         [[self.timeSeriesCollection objectForKey:@"SAS2 ctl Y solution"] addPointWithTime:[self.packet getDate] :60*60*[self.packet.CTLCommand pointValue].y];
-        //[[self.timeSeriesCollection objectForKey:@"SAS2 ctl R solution"] addPointWithTime:[self.packet getDate] :sqrtf(powf(60*60*[self.packet.CTLCommand pointValue].y,2) + powf(60*60*[self.packet.CTLCommand pointValue].y,2))];
-              
+                
         TimeSeries *ctlXValues = [self.timeSeriesCollection objectForKey:@"SAS2 ctl X solution"];
         TimeSeries *ctlYValues = [self.timeSeriesCollection objectForKey:@"SAS2 ctl Y solution"];
         
-        //[[self.timeSeriesCollection objectForKey:@"SAS1 ctl R solution"] addPointWithTime:[self.packet getDate] :sqrtf(powf(60*60*[self.packet.CTLCommand pointValue].y,2) + powf(60*60*[self.packet.CTLCommand pointValue].y,2))];
-        
         [self.PYASRCTLSigmaTextField setStringValue:[NSString stringWithFormat:@"%6.2f, %6.2f", ctlXValues.standardDeviation, ctlYValues.standardDeviation]];
+        
+        //[[self.timeSeriesCollection objectForKey:@"SAS2 ctl R solution"] addPointWithTime:[self.packet getDate] :sqrtf(powf(60*60*[self.packet.CTLCommand pointValue].y,2) + powf(60*60*[self.packet.CTLCommand pointValue].y,2))];
         
         switch (self.packet.frameNumber % 8) {
             case 0:
@@ -715,8 +720,6 @@
     if ([self.PlotWindowsAvailable containsObject:userChoice]) {
         if ([self.PlotWindows objectForKey:userChoice] == nil) {
             if ([userChoice isEqualToString:@"camera temperature"]) {
-                
-                
                 //NSDictionary *PYASFData = [[NSDictionary alloc] initWithObjectsAndKeys:[self.PYASFtimeSeriesCollection objectForKey:@"time"], @"time", [self.PYASFtimeSeriesCollection objectForKey:userChoice], @"y", nil];
                 //NSDictionary *PYASRData = [[NSDictionary alloc] initWithObjectsAndKeys:[self.PYASRtimeSeriesCollection objectForKey:@"time"], @"time", [self.PYASRtimeSeriesCollection objectForKey:userChoice], @"y", nil];
                 //NSDictionary *RASData = [[NSDictionary alloc] initWithObjectsAndKeys:[self.RAStimeSeriesCollection objectForKey:@"time"], @"time", [self.RAStimeSeriesCollection objectForKey:userChoice], @"y", nil];
@@ -727,15 +730,38 @@
                 PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data];
                 [newPlotWindow showWindow:self];
                 [self.PlotWindows setObject:newPlotWindow forKey:userChoice];
-            } else {
-                //NSDictionary *PYASFData = [[NSDictionary alloc] initWithObjectsAndKeys:[self.PYASFtimeSeriesCollection objectForKey:@"time"], @"time", [self.PYASFtimeSeriesCollection objectForKey:userChoice], @"y", nil];
-                //NSDictionary *PYASRData = [[NSDictionary alloc] initWithObjectsAndKeys:[self.PYASRtimeSeriesCollection objectForKey:@"time"], @"time", [self.PYASRtimeSeriesCollection objectForKey:userChoice], @"y", nil];
-                //NSDictionary *data = [[NSDictionary alloc] initWithObjectsAndKeys:
-                //                      PYASFData , @"PYAS-F",
-                //                      PYASRData , @"PYAS-R", nil];
-                //PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data];
-                //[newPlotWindow showWindow:self];
-                //[self.PlotWindows setObject:newPlotWindow forKey:userChoice];
+            }
+            if ([userChoice isEqualToString:@"ctl X solution"]) {
+                NSDictionary *data = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                      [self.timeSeriesCollection objectForKey:@"SAS1 ctl X solution"], @"PYAS-F",
+                                      [self.timeSeriesCollection objectForKey:@"SAS2 ctl X solution"] , @"PYAS-R", nil];
+                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data];
+                [newPlotWindow showWindow:self];
+                [self.PlotWindows setObject:newPlotWindow forKey:userChoice];
+            }
+            if ([userChoice isEqualToString:@"ctl Y solution"]) {
+                NSDictionary *data = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                      [self.timeSeriesCollection objectForKey:@"SAS1 ctl Y solution"], @"PYAS-F",
+                                      [self.timeSeriesCollection objectForKey:@"SAS2 ctl Y solution"] , @"PYAS-R", nil];
+                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data];
+                [newPlotWindow showWindow:self];
+                [self.PlotWindows setObject:newPlotWindow forKey:userChoice];
+            }
+            if ([userChoice isEqualToString:@"ctl R solution"]) {
+                NSDictionary *data = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                      [self.timeSeriesCollection objectForKey:@"SAS1 ctl R solution"], @"PYAS-F",
+                                      [self.timeSeriesCollection objectForKey:@"SAS2 ctl R solution"] , @"PYAS-R", nil];
+                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data];
+                [newPlotWindow showWindow:self];
+                [self.PlotWindows setObject:newPlotWindow forKey:userChoice];
+            }
+            if ([userChoice isEqualToString:@"cpu temperature"]) {
+                NSDictionary *data = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                      [self.timeSeriesCollection objectForKey:@"SAS1 cpu temperature"], @"SAS-2",
+                                      [self.timeSeriesCollection objectForKey:@"SAS2 cpu temperature"] , @"SAS-1", nil];
+                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data];
+                [newPlotWindow showWindow:self];
+                [self.PlotWindows setObject:newPlotWindow forKey:userChoice];
             }
             [sender setState:1];
         } else {

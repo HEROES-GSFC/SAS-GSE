@@ -20,7 +20,6 @@
     return self;
 }
 
-
 - (NSString *)stringForObjectValue:(id)anObject {
     
     if (![anObject isKindOfClass:[NSNumber class]]) {
@@ -58,15 +57,15 @@
     {
         NSDictionary *firstAttributes = @{NSForegroundColorAttributeName: [NSColor whiteColor],
                                           NSBackgroundColorAttributeName: [NSColor blueColor]};
-        [attrString setAttributes:firstAttributes range:NSMakeRange(0, stringLength)];
+        [attrString addAttributes:firstAttributes range:NSMakeRange(0, stringLength)];
     }
     if ([[attrString string] floatValue] > self.maximum)
     {
         NSDictionary *firstAttributes = @{NSForegroundColorAttributeName: [NSColor whiteColor],
                                           NSBackgroundColorAttributeName: [NSColor redColor]};
-        [attrString setAttributes:firstAttributes range:NSMakeRange(0, stringLength)];
+        [attrString addAttributes:firstAttributes range:NSMakeRange(0, stringLength)];
     }
-    
+   
     return attrString;
 }
 
