@@ -21,7 +21,6 @@
 }
 
 - (NSString *)stringForObjectValue:(id)anObject {
-    
     if (![anObject isKindOfClass:[NSNumber class]]) {
         return nil;
     }
@@ -55,13 +54,13 @@
     
     if ([[attrString string] floatValue] < self.minimum)
     {
-        NSDictionary *firstAttributes = @{NSForegroundColorAttributeName: [NSColor whiteColor],
+        NSDictionary *firstAttributes = @{
                                           NSBackgroundColorAttributeName: [NSColor blueColor]};
         [attrString addAttributes:firstAttributes range:NSMakeRange(0, stringLength)];
     }
     if ([[attrString string] floatValue] > self.maximum)
     {
-        NSDictionary *firstAttributes = @{NSForegroundColorAttributeName: [NSColor whiteColor],
+        NSDictionary *firstAttributes = @{
                                           NSBackgroundColorAttributeName: [NSColor redColor]};
         [attrString addAttributes:firstAttributes range:NSMakeRange(0, stringLength)];
     }

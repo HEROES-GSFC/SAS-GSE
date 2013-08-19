@@ -42,8 +42,6 @@
 @property (weak) IBOutlet NSTextField *PYASFCTLSigmaTextField;
 @property (weak) IBOutlet NSTextField *PYASRCTLSigmaTextField;
 
-@property (weak) IBOutlet NSForm *PYASFTemperaturesForm;
-@property (weak) IBOutlet NSForm *PYASRTemperaturesForm;
 @property (weak) IBOutlet NSMenu *TimeProfileMenu;
 @property (unsafe_unretained) IBOutlet NSWindow *MainWindow;
 @property (weak) IBOutlet AutoFlipSwitch *SAS1AutoFlipSwitch;
@@ -53,6 +51,41 @@
 @property (weak) IBOutlet AutoFlipSwitch *RASAutoFlipSwitch;
 @property (weak) IBOutlet AutoFlipSwitch *SAS2AutoFlipSwitch;
 
+@property (weak) IBOutlet NSTextField *SAS1T0TextField;
+@property (weak) IBOutlet NSTextField *SAS1T1TextField;
+@property (weak) IBOutlet NSTextField *SAS1T2TextField;
+@property (weak) IBOutlet NSTextField *SAS1T3TextField;
+@property (weak) IBOutlet NSTextField *SAS1T4TextField;
+@property (weak) IBOutlet NSTextField *SAS1T5TextField;
+@property (weak) IBOutlet NSTextField *SAS1T6TextField;
+@property (weak) IBOutlet NSTextField *SAS1T7TextField;
+
+@property (weak) IBOutlet NSTextField *SAS1V0TextField;
+@property (weak) IBOutlet NSTextField *SAS1V1TextField;
+@property (weak) IBOutlet NSTextField *SAS1V2TextField;
+@property (weak) IBOutlet NSTextField *SAS1V3TextField;
+@property (weak) IBOutlet NSTextField *SAS1V4TextField;
+@property (weak) IBOutlet NSTextField *SAS1V5TextField;
+@property (weak) IBOutlet NSTextField *SAS1V6TextField;
+@property (weak) IBOutlet NSTextField *SAS1V7TextField;
+
+@property (weak) IBOutlet NSTextField *SAS2T0TextField;
+@property (weak) IBOutlet NSTextField *SAS2T1TextField;
+@property (weak) IBOutlet NSTextField *SAS2T2TextField;
+@property (weak) IBOutlet NSTextField *SAS2T3TextField;
+@property (weak) IBOutlet NSTextField *SAS2T4TextField;
+@property (weak) IBOutlet NSTextField *SAS2T5TextField;
+@property (weak) IBOutlet NSTextField *SAS2T6TextField;
+@property (weak) IBOutlet NSTextField *SAS2T7TextField;
+
+@property (weak) IBOutlet NSTextField *SAS2V0TextField;
+@property (weak) IBOutlet NSTextField *SAS2V1TextField;
+@property (weak) IBOutlet NSTextField *SAS2V2TextField;
+@property (weak) IBOutlet NSTextField *SAS2V3TextField;
+@property (weak) IBOutlet NSTextField *SAS2V4TextField;
+@property (weak) IBOutlet NSTextField *SAS2V5TextField;
+@property (weak) IBOutlet NSTextField *SAS2V6TextField;
+@property (weak) IBOutlet NSTextField *SAS2V7TextField;
 
 @property (weak) IBOutlet NSTextField *PYASRAspectErrorCodeTextField;
 @property (weak) IBOutlet NSTextField *PYASFAspectErrorCodeTextField;
@@ -62,10 +95,9 @@
 @property (weak) IBOutlet NSLevelIndicator *PYASFFoundSun_indicator;
 @property (weak) IBOutlet NSLevelIndicator *PYASRProvidingCTL_indicator;
 @property (weak) IBOutlet NSLevelIndicator *PYASFProvidingCTL_indicator;
-@property (weak) IBOutlet NSForm *PYASRVoltagesForm;
-@property (weak) IBOutlet NSForm *PYASFVoltagesForm;
 @property (weak) IBOutlet NSLevelIndicator *SAS1ClockSync_indicator;
 @property (weak) IBOutlet NSLevelIndicator *SAS2ClockSync_indicator;
+
 
 @property (nonatomic, strong) RASCameraViewWindow *rasCameraViewWindow;
 @property (nonatomic, strong) NSFileHandle *SAS1telemetrySaveFile;

@@ -188,26 +188,26 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                                     break;
                                 case 2:
                                     [self.dataPacket.i2cTemperatures replaceObjectAtIndex:1 withObject:[NSNumber numberWithInt:(int16_t)housekeeping1]];
-                                    [self.dataPacket.sbcVoltages replaceObjectAtIndex:0 withObject:[NSNumber numberWithInt:(int16_t)housekeeping2]];
+                                    [self.dataPacket.sbcVoltages replaceObjectAtIndex:0 withObject:[NSNumber numberWithFloat:Float2B(housekeeping2).value()/500.0]];
                                     break;
                                 case 3:
                                     [self.dataPacket.i2cTemperatures replaceObjectAtIndex:2 withObject:[NSNumber numberWithInt:(int16_t)housekeeping1]];
-                                    [self.dataPacket.sbcVoltages replaceObjectAtIndex:1 withObject:[NSNumber numberWithInt:(int16_t)housekeeping2]];
+                                    [self.dataPacket.sbcVoltages replaceObjectAtIndex:1 withObject:[NSNumber numberWithFloat:Float2B(housekeeping2).value()/500.0]];
                                     break;
                                 case 4:
                                     [self.dataPacket.i2cTemperatures replaceObjectAtIndex:3 withObject:[NSNumber numberWithInt:(int16_t)housekeeping1]];
-                                    [self.dataPacket.sbcVoltages replaceObjectAtIndex:2 withObject:[NSNumber numberWithInt:(int16_t)housekeeping2]];
+                                    [self.dataPacket.sbcVoltages replaceObjectAtIndex:2 withObject:[NSNumber numberWithFloat:Float2B(housekeeping2).value()/500.0]];
                                     break;
                                 case 5:
                                     [self.dataPacket.i2cTemperatures replaceObjectAtIndex:4 withObject:[NSNumber numberWithInt:(int16_t)housekeeping1]];
-                                    [self.dataPacket.sbcVoltages replaceObjectAtIndex:3 withObject:[NSNumber numberWithInt:(int16_t)housekeeping2]];
+                                    [self.dataPacket.sbcVoltages replaceObjectAtIndex:3 withObject:[NSNumber numberWithFloat:Float2B(housekeeping2).value()/500.0]];
                                     break;
                                 case 6:
                                     [self.dataPacket.i2cTemperatures replaceObjectAtIndex:5 withObject:[NSNumber numberWithInt:(int16_t)housekeeping1]];
-                                    [self.dataPacket.sbcVoltages replaceObjectAtIndex:4 withObject:[NSNumber numberWithInt:(int16_t)housekeeping2]];
+                                    [self.dataPacket.sbcVoltages replaceObjectAtIndex:4 withObject:[NSNumber numberWithFloat:Float2B(housekeeping2).value()/500.0]];
                                     break;
                                 case 7:
-                                    [self.dataPacket.i2cTemperatures replaceObjectAtIndex:6 withObject:[NSNumber numberWithInt:(int16_t)housekeeping1]];
+                                    [self.dataPacket.i2cTemperatures replaceObjectAtIndex:6 withObject:[NSNumber numberWithFloat:(int16_t)housekeeping1]];
                                     self.dataPacket.isSavingImages = housekeeping2;
                                 default:
                                     break;

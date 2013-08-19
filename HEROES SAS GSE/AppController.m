@@ -51,8 +51,7 @@
 @synthesize PYASRcameraView = _PYASRcameraView;
 @synthesize Commander_window = _Commander_window;
 @synthesize Console_window = _Console_window;
-@synthesize PYASFTemperaturesForm;
-@synthesize PYASRTemperaturesForm;
+
 @synthesize TimeProfileMenu;
 @synthesize PlotWindows = _PlotWindows;
 
@@ -123,66 +122,114 @@
 }
 
 -(void)awakeFromNib{
-    NSArray *temperatureNames = [NSArray arrayWithObjects:@"T0", @"T1", @"T2", @"T3", @"T4", @"T6", @"T7", @"T8", nil];
+    
     NumberInRangeFormatter *formatter;
     
-    NSInteger numberofCols = [self.PYASFTemperaturesForm numberOfColumns];
-    NSInteger numberofRows = [self.PYASFTemperaturesForm numberOfRows];
-    for (int i=0; i < numberofCols; i++) {
-        for (int j=0; j < numberofRows; j++){
-            NumberInRangeFormatter *formatter1 = [[NumberInRangeFormatter alloc] init];
-            formatter1.maximum = 100;
-            formatter1.minimum = -20;
-            
-            NSFormCell *cell = [self.PYASFTemperaturesForm cellAtRow:j column:i];
-            [cell setTitle:[temperatureNames objectAtIndex:i*numberofRows + j]];
-            [cell setIntegerValue:0];
-            [cell setEditable:NO];
-            [cell setPreferredTextFieldWidth:50.0];
-            [cell setFormatter:formatter1];
-            
-            NumberInRangeFormatter *formatter2 = [[NumberInRangeFormatter alloc] init];
-            formatter2.maximum = 100;
-            formatter2.minimum = -20;
-            cell = [self.PYASRTemperaturesForm cellAtRow:j column:i];
-            [cell setTitle:[temperatureNames objectAtIndex:i*numberofRows + j]];
-            [cell setIntegerValue:0];
-            [cell setEditable:NO];
-            [cell setPreferredTextFieldWidth:50.0];
-            [cell setFormatter:formatter1];
-        }
-    }
+    formatter = [self.SAS1CPUTemperatureLabel formatter];
+    formatter.maximum = 90;
+    formatter.minimum = -20;
+    formatter = [self.SAS2CPUTemperatureLabel formatter];
+    formatter.maximum = 90;
+    formatter.minimum = -20;
+    formatter = [self.PYASFCameraTemperatureLabel formatter];
+    formatter.maximum = 90;
+    formatter.minimum = -20;
+    formatter = [self.PYASRCameraTemperatureLabel formatter];
+    formatter.maximum = 90;
+    formatter.minimum = -20;
+    formatter = [self.RASCameraTemperatureLabel formatter];
+    formatter.maximum = 90;
+    formatter.minimum = -20;
+
+    NumberInRangeFormatter *TemperatureFormatter = [[NumberInRangeFormatter alloc] init];
+    TemperatureFormatter.maximum = 100;
+    TemperatureFormatter.minimum = -20;
     
-    NSArray *voltages = [NSArray arrayWithObjects:[NSNumber numberWithFloat:10.5], [NSNumber numberWithFloat:2.5], [NSNumber numberWithFloat:3.3], [NSNumber numberWithFloat:5.0], [NSNumber numberWithFloat:12.0], [NSNumber numberWithFloat:12.0], nil ];
-    NSArray *voltageNames = [NSArray arrayWithObjects:@"1.05V", @"2.5V", @"3.3V", @"5.0V", @"12.0V", @"", nil];
-    numberofCols = [self.PYASFVoltagesForm numberOfColumns];
-    numberofRows = [self.PYASFVoltagesForm numberOfRows];
+    formatter = [self.SAS1T0TextField formatter];
+    formatter.maximum = 100;
+    formatter.minimum = -20;
+    formatter = [self.SAS1T1TextField formatter];
+    formatter.maximum = 100;
+    formatter.minimum = -20;
+    formatter = [self.SAS1T2TextField formatter];
+    formatter.maximum = 100;
+    formatter.minimum = -20;
+    formatter = [self.SAS1T3TextField formatter];
+    formatter.maximum = 100;
+    formatter.minimum = -20;
+    formatter = [self.SAS1T4TextField formatter];
+    formatter.maximum = 100;
+    formatter.minimum = -20;
+    formatter = [self.SAS1T5TextField formatter];
+    formatter.maximum = 100;
+    formatter.minimum = -20;
+    formatter = [self.SAS1T6TextField formatter];
+    formatter.maximum = 100;
+    formatter.minimum = -20;
+    formatter = [self.SAS1T7TextField formatter];
+    formatter.maximum = 100;
+    formatter.minimum = -20;
     
-    for (NSInteger i = 0; i < numberofCols; i++) {
-        for (NSInteger j = 0; j < numberofRows; j++) {
-            NumberInRangeFormatter *formatter1 = [[NumberInRangeFormatter alloc] init];
-            formatter1.maximum = [[voltages objectAtIndex:(j + i*numberofRows)] floatValue] * 1.2;
-            formatter1.minimum = [[voltages objectAtIndex:(j + i*numberofRows)] floatValue] * 0.8;
-            
-            NSFormCell *cell = [self.PYASFVoltagesForm cellAtRow:j column:i];
-            [cell setTitle:[voltageNames objectAtIndex:(j + i*numberofRows)]];
-            [cell setIntegerValue:0];
-            [cell setEditable:NO];
-            [cell setPreferredTextFieldWidth:50.0];
-            [cell setFormatter:formatter1];
-            
-            NumberInRangeFormatter *formatter2 = [[NumberInRangeFormatter alloc] init];
-            formatter2.maximum = [[voltages objectAtIndex:(j + i*numberofRows)] floatValue] * 1.2;
-            formatter2.minimum = [[voltages objectAtIndex:(j + i*numberofRows)] floatValue] * 0.8;
-            
-            NSFormCell *cell2 = [self.PYASRVoltagesForm cellAtRow:j column:i];
-            [cell2 setTitle:[voltageNames objectAtIndex:(j + i*numberofRows)]];
-            [cell2 setIntegerValue:0];
-            [cell2 setEditable:NO];
-            [cell2 setPreferredTextFieldWidth:50.0];
-            [cell2 setFormatter:formatter2];
-        }
-    }
+    formatter = [self.SAS2T0TextField formatter];
+    formatter.maximum = 100;
+    formatter.minimum = -20;
+    formatter = [self.SAS2T1TextField formatter];
+    formatter.maximum = 100;
+    formatter.minimum = -20;
+    formatter = [self.SAS2T2TextField formatter];
+    formatter.maximum = 100;
+    formatter.minimum = -20;
+    formatter = [self.SAS2T3TextField formatter];
+    formatter.maximum = 100;
+    formatter.minimum = -20;
+    formatter = [self.SAS2T4TextField formatter];
+    formatter.maximum = 100;
+    formatter.minimum = -20;
+    formatter = [self.SAS2T5TextField formatter];
+    formatter.maximum = 100;
+    formatter.minimum = -20;
+    formatter = [self.SAS2T6TextField formatter];
+    formatter.maximum = 100;
+    formatter.minimum = -20;
+    formatter = [self.SAS2T7TextField formatter];
+    formatter.maximum = 100;
+    formatter.minimum = -20;
+    
+    formatter = [self.SAS1V0TextField formatter];
+    formatter.maximum = 1.05 * 1.2;
+    formatter.minimum = 1.05 * 1.2;
+    [self.SAS1V0TextField setFormatter:formatter];
+    formatter = [self.SAS2V0TextField formatter];
+    formatter.maximum = 1.05 * 1.20;
+    formatter.minimum = 1.05 * 0.80;
+    
+    formatter = [self.SAS1V1TextField formatter];
+    formatter.maximum = 2.5 * 1.20;
+    formatter.minimum = 2.5 * 0.80;
+    formatter = [self.SAS2V1TextField formatter];
+    formatter.maximum = 2.5 * 1.20;
+    formatter.minimum = 2.5 * 0.80;
+    
+    formatter = [self.SAS1V2TextField formatter];
+    formatter.maximum = 3.3 * 1.20;
+    formatter.minimum = 3.3 * 0.80;
+    formatter = [self.SAS2V2TextField formatter];
+    formatter.maximum = 3.3 * 1.20;
+    formatter.minimum = 3.3 * 0.80;
+    
+    formatter = [self.SAS1V3TextField formatter];
+    formatter.maximum = 5.0 * 1.20;
+    formatter.minimum = 5.0 * 0.80;
+    formatter = [self.SAS2V3TextField formatter];
+    formatter.maximum = 5.0 * 1.20;
+    formatter.minimum = 5.0 * 0.80;
+    
+    formatter = [self.SAS1V4TextField formatter];
+    formatter.maximum = 12.0 * 1.20;
+    formatter.minimum = 12.0 * 0.80;
+    formatter = [self.SAS2V4TextField formatter];
+    formatter.maximum = 12.0 * 1.20;
+    formatter.minimum = 12.0 * 0.80;
     
     for (NSString *title in self.PlotWindowsAvailable) {
             [self.TimeProfileMenu addItemWithTitle:title action:NULL keyEquivalent:@""];
@@ -212,22 +259,7 @@
                                                      name:kReceiveAndParseImageDidFinish
                                                    object:nil];
     }
-    formatter = [self.SAS1CPUTemperatureLabel formatter];
-    formatter.maximum = 90;
-    formatter.minimum = -20;
-    formatter = [self.SAS2CPUTemperatureLabel formatter];
-    formatter.maximum = 90;
-    formatter.minimum = -20;
-    formatter = [self.PYASFCameraTemperatureLabel formatter];
-    formatter.maximum = 90;
-    formatter.minimum = -20;
-    formatter = [self.PYASRCameraTemperatureLabel formatter];
-    formatter.maximum = 90;
-    formatter.minimum = -20;
-    formatter = [self.RASCameraTemperatureLabel formatter];
-    formatter.maximum = 90;
-    formatter.minimum = -20;
-    
+        
     [self OpenTelemetrySaveTextFiles];
     [self postToLogWindow:@"Application started"];
 }
@@ -482,6 +514,9 @@
     NSDictionary *notifData = [note userInfo];
     self.packet = [notifData valueForKey:@"packet"];
     
+    NSColor *FieldWasUpdatedColor = [NSColor blackColor];
+    NSColor *FieldIsStaleColor = [NSColor darkGrayColor];
+    
     Transform NorthTransform;
     double northAngle;
     
@@ -522,23 +557,34 @@
         [self.PYASFcameraView setScreenCenter:[self.packet.screenCenter pointValue].x :[self.packet.screenCenter pointValue].y];
         self.PYASFcameraView.screenRadius = self.packet.screenRadius;
         
-        [self.PYASFCameraTemperatureLabel setBackgroundColor:[NSColor whiteColor]];
-        [self.SAS1CPUTemperatureLabel setBackgroundColor:[NSColor whiteColor]];
-        
+        [self.SAS1CPUTemperatureLabel setTextColor:FieldIsStaleColor];
+        [self.PYASFCameraTemperatureLabel setTextColor:FieldIsStaleColor];
+        [self.SAS1T0TextField setTextColor:FieldIsStaleColor];
+        [self.SAS1T1TextField setTextColor:FieldIsStaleColor];
+        [self.SAS1T2TextField setTextColor:FieldIsStaleColor];
+        [self.SAS1T3TextField setTextColor:FieldIsStaleColor];
+        [self.SAS1T4TextField setTextColor:FieldIsStaleColor];
+        [self.SAS1T5TextField setTextColor:FieldIsStaleColor];
+        [self.SAS1T6TextField setTextColor:FieldIsStaleColor];
+
+        [self.SAS1V0TextField setTextColor:FieldIsStaleColor];
+        [self.SAS1V1TextField setTextColor:FieldIsStaleColor];
+        [self.SAS1V2TextField setTextColor:FieldIsStaleColor];
+        [self.SAS1V3TextField setTextColor:FieldIsStaleColor];
+        [self.SAS1V4TextField setTextColor:FieldIsStaleColor];
+        [self.SAS1V5TextField setTextColor:FieldIsStaleColor];
+                
         switch (self.packet.frameNumber % 8) {
             case 0:{
                 NSString *string = [NSString stringWithFormat:@"%6.2f", self.packet.cpuTemperature];
-                NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] initWithString:string];
-                //[attrString applyFontTraits:NSBoldFontMask range:NSMakeRange(0,[string length])];
-                NSDictionary *sPrimaryAttribtues = [NSDictionary dictionaryWithObjectsAndKeys:
-                                                    [[NSFontManager sharedFontManager] convertFont:[NSFont systemFontOfSize:12.] toHaveTrait:NSBoldFontMask], NSFontAttributeName, nil];
-                [attrString addAttributes:sPrimaryAttribtues range:NSMakeRange(0, [string length])];
-
-                [self.SAS1CPUTemperatureLabel setAttributedStringValue:attrString];
+                [self.SAS1CPUTemperatureLabel setStringValue:string];
+                [self.SAS1CPUTemperatureLabel setTextColor:FieldWasUpdatedColor];
+                
                 [self.PYASFCameraTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", self.packet.cameraTemperature]];
                 if (self.packet.cameraTemperature != 0) {
                     [self.PYASFAutoFlipSwitch reset];
                 }
+                [self.PYASFCameraTemperatureLabel setTextColor:FieldWasUpdatedColor];
                 [[self.timeSeriesCollection objectForKey:@"PYAS-F camera temperature"] addPointWithTime:[self.packet getDate] :self.packet.cameraTemperature];
                 break;}
             case 1:
@@ -546,31 +592,42 @@
                 if (self.packet.cameraTemperature != 0) {
                     [self.PYASFAutoFlipSwitch reset];
                 }
-                [[self.PYASFTemperaturesForm cellAtRow:0 column:0] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:0] floatValue]];
+                [self.SAS1T0TextField setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:0] floatValue]];
+                [self.SAS1T0TextField setTextColor:FieldWasUpdatedColor];
                 break;
             case 2:
-                [[self.PYASFTemperaturesForm cellAtRow:1 column:0] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:1] floatValue]];
-                [[self.PYASFVoltagesForm cellAtRow:0 column:0] setFloatValue:[[self.packet.sbcVoltages objectAtIndex:0] floatValue]];
+                [self.SAS1T1TextField setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:1] floatValue]];
+                [self.SAS1V0TextField setFloatValue:[[self.packet.sbcVoltages objectAtIndex:0] floatValue]];
+                [self.SAS1T1TextField setTextColor:FieldWasUpdatedColor];
+                [self.SAS1V0TextField setTextColor:FieldWasUpdatedColor];
                 break;
             case 3:
-                [[self.PYASFTemperaturesForm cellAtRow:2 column:0] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:2] floatValue]];
-                [[self.PYASFVoltagesForm cellAtRow:1 column:0] setFloatValue:[[self.packet.sbcVoltages objectAtIndex:1] floatValue]];
+                [self.SAS1T2TextField setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:2] floatValue]];
+                [self.SAS1V1TextField setFloatValue:[[self.packet.sbcVoltages objectAtIndex:1] floatValue]];
+                [self.SAS1T2TextField setTextColor:FieldWasUpdatedColor];
+                [self.SAS1V1TextField setTextColor:FieldWasUpdatedColor];
                 break;
             case 4:
-                [[self.PYASFTemperaturesForm cellAtRow:3 column:0] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:3] floatValue]];
-                [[self.PYASFVoltagesForm cellAtRow:2 column:0] setFloatValue:[[self.packet.sbcVoltages objectAtIndex:2] floatValue]];
+                [self.SAS1T3TextField setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:3] floatValue]];
+                [self.SAS1V2TextField setFloatValue:[[self.packet.sbcVoltages objectAtIndex:2] floatValue]];
+                [self.SAS1T3TextField setTextColor:FieldWasUpdatedColor];
+                [self.SAS1V2TextField setTextColor:FieldWasUpdatedColor];
                 break;
             case 5:
-                [[self.PYASFTemperaturesForm cellAtRow:0 column:1] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:4] floatValue]];
-                [[self.PYASFVoltagesForm cellAtRow:0 column:1] setFloatValue:[[self.packet.sbcVoltages objectAtIndex:3] floatValue]];
+                [self.SAS1T4TextField setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:4] floatValue]];
+                [self.SAS1V3TextField setFloatValue:[[self.packet.sbcVoltages objectAtIndex:3] floatValue]];
+                [self.SAS1T4TextField setTextColor:FieldWasUpdatedColor];
+                [self.SAS1V3TextField setTextColor:FieldWasUpdatedColor];
                 break;
             case 6:
-                [[self.PYASFTemperaturesForm cellAtRow:1 column:1] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:5] floatValue]];
-                [[self.PYASFVoltagesForm cellAtRow:1 column:1] setFloatValue:[[self.packet.sbcVoltages objectAtIndex:4] floatValue]];
+                [self.SAS1T5TextField setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:5] floatValue]];
+                [self.SAS1V4TextField setFloatValue:[[self.packet.sbcVoltages objectAtIndex:4] floatValue]];
+                [self.SAS1T5TextField setTextColor:FieldWasUpdatedColor];
+                [self.SAS1V4TextField setTextColor:FieldWasUpdatedColor];
                 break;
             case 7:
-                [[self.PYASFTemperaturesForm cellAtRow:2 column:1] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:6] floatValue]];
-                // add is image saving here
+                [self.SAS1T6TextField setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:6] floatValue]];
+                [self.SAS1T6TextField setTextColor:FieldWasUpdatedColor];
                 break;
             default:
                 break;
@@ -583,12 +640,6 @@
         [self.PYASFFoundSun_indicator setIntValue:1*self.packet.isSunFound];
         
         self.PYASFcameraView.northAngle = northAngle;
-        
-        NSInteger index = 0;
-        for (NSNumber *voltage in self.packet.sbcVoltages) {
-            [[self.PYASFVoltagesForm cellAtIndex:index] setIntegerValue:[voltage integerValue]];
-            index++;
-        }
         
         NSString *writeString = [NSString stringWithFormat:@"%@, %@, %@, %@, %@, %@\n",
                                  self.SAS1FrameTimeLabel.stringValue,
@@ -638,6 +689,26 @@
         
         //[[self.timeSeriesCollection objectForKey:@"SAS2 ctl R solution"] addPointWithTime:[self.packet getDate] :sqrtf(powf(60*60*[self.packet.CTLCommand pointValue].y,2) + powf(60*60*[self.packet.CTLCommand pointValue].y,2))];
         
+        [self.SAS2CPUTemperatureLabel setTextColor:FieldIsStaleColor];
+        [self.PYASRCameraTemperatureLabel setTextColor:FieldIsStaleColor];
+        [self.RASCameraTemperatureLabel setTextColor:FieldIsStaleColor];
+
+        [self.SAS2T0TextField setTextColor:FieldIsStaleColor];
+        [self.SAS2T1TextField setTextColor:FieldIsStaleColor];
+        [self.SAS2T2TextField setTextColor:FieldIsStaleColor];
+        [self.SAS2T3TextField setTextColor:FieldIsStaleColor];
+        [self.SAS2T4TextField setTextColor:FieldIsStaleColor];
+        [self.SAS2T5TextField setTextColor:FieldIsStaleColor];
+        [self.SAS2T6TextField setTextColor:FieldIsStaleColor];
+        
+        [self.SAS2V0TextField setTextColor:FieldIsStaleColor];
+        [self.SAS2V1TextField setTextColor:FieldIsStaleColor];
+        [self.SAS2V2TextField setTextColor:FieldIsStaleColor];
+        [self.SAS2V3TextField setTextColor:FieldIsStaleColor];
+        [self.SAS2V4TextField setTextColor:FieldIsStaleColor];
+        [self.SAS2V5TextField setTextColor:FieldIsStaleColor];
+
+        
         switch (self.packet.frameNumber % 8) {
             case 0:
                 [self.SAS2CPUTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", self.packet.cpuTemperature]];
@@ -645,6 +716,8 @@
                 if (self.packet.cameraTemperature != 0) {
                     [self.PYASRAutoFlipSwitch reset];
                 }
+                [self.SAS2CPUTemperatureLabel setTextColor:FieldWasUpdatedColor];
+                [self.PYASRCameraTemperatureLabel setTextColor:FieldWasUpdatedColor];
                 [[self.timeSeriesCollection objectForKey:@"PYAS-R camera temperature"] addPointWithTime:[self.packet getDate] :self.packet.cameraTemperature];
                 break;
             case 1:
@@ -653,35 +726,50 @@
                 if (self.packet.cameraTemperature != 0) {
                     [self.RASAutoFlipSwitch reset];
                 }
-                [[self.PYASRTemperaturesForm cellAtRow:0 column:0] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:0] floatValue]];
+                [self.RASCameraTemperatureLabel setTextColor:FieldWasUpdatedColor]; 
+                [self.SAS2T0TextField setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:0] floatValue]];
+                [self.SAS2T0TextField setTextColor:FieldWasUpdatedColor];
                 break;
             case 2:
-                [[self.PYASRTemperaturesForm cellAtRow:1 column:0] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:1] floatValue]];
-                [[self.PYASRVoltagesForm cellAtRow:0 column:0] setFloatValue:[[self.packet.sbcVoltages objectAtIndex:0] floatValue]];
+                [self.SAS2T1TextField setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:1] floatValue]];
+                [self.SAS2V0TextField setFloatValue:[[self.packet.sbcVoltages objectAtIndex:0] floatValue]];
+                [self.SAS2T1TextField setTextColor:FieldWasUpdatedColor];
+                [self.SAS2V0TextField setTextColor:FieldWasUpdatedColor];
                 break;
             case 3:
-                [[self.PYASRTemperaturesForm cellAtRow:2 column:0] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:2] floatValue]];
-                [[self.PYASRVoltagesForm cellAtRow:1 column:0] setFloatValue:[[self.packet.sbcVoltages objectAtIndex:1] floatValue]];
+                [self.SAS2T2TextField setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:2] floatValue]];
+                [self.SAS2V1TextField setFloatValue:[[self.packet.sbcVoltages objectAtIndex:1] floatValue]];
+                [self.SAS2T2TextField setTextColor:FieldWasUpdatedColor];
+                [self.SAS2V1TextField setTextColor:FieldWasUpdatedColor];
                 break;
             case 4:
-                [[self.PYASRTemperaturesForm cellAtRow:3 column:0] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:3] floatValue]];
-                [[self.PYASRVoltagesForm cellAtRow:2 column:0] setFloatValue:[[self.packet.sbcVoltages objectAtIndex:2] floatValue]];
+                [self.SAS2T3TextField setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:3] floatValue]];
+                [self.SAS2V2TextField setFloatValue:[[self.packet.sbcVoltages objectAtIndex:2] floatValue]];
+                [self.SAS2T3TextField setTextColor:FieldWasUpdatedColor];
+                [self.SAS2V2TextField setTextColor:[NSColor blackColor]];
                 break;
             case 5:
-                [[self.PYASRTemperaturesForm cellAtRow:0 column:1] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:4] floatValue]];
-                [[self.PYASRVoltagesForm cellAtRow:0 column:1] setFloatValue:[[self.packet.sbcVoltages objectAtIndex:3] floatValue]];
+                [self.SAS2T4TextField setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:4] floatValue]];
+                [self.SAS2V3TextField setFloatValue:[[self.packet.sbcVoltages objectAtIndex:3] floatValue]];
+                [self.SAS2T4TextField setTextColor:FieldWasUpdatedColor];
+                [self.SAS2V3TextField setTextColor:FieldWasUpdatedColor];
                 break;
             case 6:
-                [[self.PYASRTemperaturesForm cellAtRow:1 column:1] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:5] floatValue]];
-                [[self.PYASRVoltagesForm cellAtRow:1 column:1] setFloatValue:[[self.packet.sbcVoltages objectAtIndex:4] floatValue]];
+                [self.SAS2T5TextField setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:5] floatValue]];
+                [self.SAS2V4TextField setFloatValue:[[self.packet.sbcVoltages objectAtIndex:4] floatValue]];
+                [self.SAS2T5TextField setTextColor:FieldWasUpdatedColor];
+                [self.SAS2V4TextField setTextColor:FieldWasUpdatedColor];
                 break;
             case 7:
-                [[self.PYASRTemperaturesForm cellAtRow:2 column:1] setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:6] floatValue]];
+                [self.SAS2T6TextField setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:6] floatValue]];
+                [self.SAS2T6TextField setTextColor:FieldWasUpdatedColor];
+
                 // add is image saving here
                 break;
             default:
                 break;
         }
+
         
         //DataSeries *ctlYValues = [self.PYASRtimeSeriesCollection objectForKey:@"ctl X solution"];
         //DataSeries *ctlXValues = [self.PYASRtimeSeriesCollection objectForKey:@"ctl Y solution"];
