@@ -357,7 +357,7 @@
     unsigned char *pix;
     NSString *filenamePrefix;
     
-    if ([[sender title] isEqualToString:@"save PYAS-F"]) {
+    if ([[sender title] isEqualToString:@"Save PYAS-F"]) {
         filenamePrefix = @"PYASF";
         imagedata = self.PYASFcameraView.bkgImage;
         len = [self.PYASFcameraView.bkgImage length];
@@ -371,7 +371,7 @@
         
         memcpy(pix, [self.PYASFcameraView.bkgImage bytes], len);
     }
-    if ([[sender title] isEqualToString:@"save PYAS-R"]) {
+    if ([[sender title] isEqualToString:@"Save PYAS-R"]) {
         filenamePrefix = @"PYASR";
         imagedata = self.PYASRcameraView.bkgImage;
         len = [self.PYASRcameraView.bkgImage length];
