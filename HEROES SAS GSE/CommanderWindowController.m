@@ -74,21 +74,21 @@
     NSArray *sortedArray=[[self.plistDict allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
     
     [self.commandListcomboBox addItemsWithObjectValues:sortedArray];
-    [self.commandListcomboBox setNumberOfVisibleItems:10];
+    [self.commandListcomboBox setNumberOfVisibleItems:15];
     [self.commandListcomboBox setCompletes:YES];
     [self.Variables_Form setHidden:YES];
     [self.send_Button setEnabled:NO];
-    [self.confirm_Button setEnabled:NO];
+    [self.confirm_Button setEnabled:YES];
     [self.targetListcomboBox selectItemAtIndex:0];
     
     [self.destinationIP_textField setStringValue:@"192.168.1.32"];    
 }
 
 -(void)controlTextDidChange:(NSNotification *)notification {
-    NSLog(@"Ok");
     id ax = NSAccessibilityUnignoredDescendant(self.commandListcomboBox);
     [ax accessibilitySetValue: [NSNumber numberWithBool: YES]
-                 forAttribute: NSAccessibilityExpandedAttribute];}
+                 forAttribute: NSAccessibilityExpandedAttribute];
+}
 
 - (IBAction)ConfirmButtonPushed:(NSButton *)sender {
     [self.send_Button setEnabled:YES];
@@ -114,7 +114,6 @@
     for (int i = 0; i < numberOfVariablesCurrentlyDisplayed; i++) {
         [self.Variables_Form removeRow:0];
     }
-    //NSLog(@"%ld", (long)[self.Variables_Form numberOfRows]);
     if (numberOfVariablesNeeded == 0) {
         [self.Variables_Form setHidden:NO];
     } else {
@@ -126,7 +125,7 @@
     
     NSString *toolTip = (NSString *)[[self.plistDict valueForKey:user_choice] valueForKey:@"description"];
     [self.commandListcomboBox setToolTip:toolTip];
-    [self.confirm_Button setEnabled:YES];
+    //[self.confirm_Button setEnabled:YES];
 }
 
 - (IBAction)ChoseTargetSystem:(NSComboBox *)sender {
