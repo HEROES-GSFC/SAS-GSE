@@ -181,9 +181,7 @@
 	<key>Cmd all relays OFF</key>
 	<dict>
 		<key>var_names</key>
-		<array>
-			<string>value</string>
-		</array>
+		<array/>
 		<key>description</key>
 		<string>Turn all relays OFF (unpowered)</string>
 		<key>key</key>
