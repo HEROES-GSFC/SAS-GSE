@@ -70,28 +70,32 @@
 - (void)windowDidLoad
 {
     [super windowDidLoad];
+        
+    NSArray *sortedArray=[[self.plistDict allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
     
-    [self.commandListcomboBox addItemsWithObjectValues:[self.plistDict allKeys]];
+    [self.commandListcomboBox addItemsWithObjectValues:sortedArray];
     [self.commandListcomboBox setNumberOfVisibleItems:10];
     [self.commandListcomboBox setCompletes:YES];
     [self.Variables_Form setHidden:YES];
     [self.send_Button setEnabled:NO];
     [self.confirm_Button setEnabled:NO];
     [self.targetListcomboBox selectItemAtIndex:0];
-
+    
     [self.destinationIP_textField setStringValue:@"192.168.1.32"];    
 }
+
+-(void)controlTextDidChange:(NSNotification *)notification {
+    NSLog(@"Ok");
+    id ax = NSAccessibilityUnignoredDescendant(self.commandListcomboBox);
+    [ax accessibilitySetValue: [NSNumber numberWithBool: YES]
+                 forAttribute: NSAccessibilityExpandedAttribute];}
+
 - (IBAction)ConfirmButtonPushed:(NSButton *)sender {
     [self.send_Button setEnabled:YES];
     [self.confirm_Button setEnabled:NO];
     [self.commandListcomboBox setEnabled:NO];
 
-    //NSInteger numberOfVariablesCurrentlyDisplayed = (long)[self.Variables_Form numberOfRows];
-    // clear the form of all elements
-    //for (int i = 0; i < numberOfVariablesCurrentlyDisplayed; i++) {
-     //   [[self.Variables_Form cellAtIndex:i] setEditable:NO];
-    //}
-    //[self.destinationIP_textField setEditable:NO];
+    [self.commandListcomboBox setTextColor:[NSColor redColor]];
     [self.targetListcomboBox setEnabled:NO];
 }
 

@@ -197,11 +197,11 @@
     
     formatter = [self.SAS1V0TextField formatter];
     formatter.maximum = 1.05 * 1.2;
-    formatter.minimum = 1.05 * 1.2;
+    formatter.minimum = 0.80;
     [self.SAS1V0TextField setFormatter:formatter];
     formatter = [self.SAS2V0TextField formatter];
     formatter.maximum = 1.05 * 1.20;
-    formatter.minimum = 1.05 * 0.80;
+    formatter.minimum = 0.80;
     
     formatter = [self.SAS1V1TextField formatter];
     formatter.maximum = 2.5 * 1.20;

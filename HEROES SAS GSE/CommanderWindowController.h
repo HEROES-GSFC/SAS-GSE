@@ -8,7 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface CommanderWindowController : NSWindowController
+@interface CommanderWindowController : NSWindowController<NSTextViewDelegate>
 @property (weak) IBOutlet NSComboBox *commandListcomboBox;
 @property (weak) IBOutlet NSTextField *commandKey_textField;
 @property (weak) IBOutlet NSForm *Variables_Form;
