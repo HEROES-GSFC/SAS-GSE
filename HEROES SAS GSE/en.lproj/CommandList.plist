@@ -2,7 +2,7 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>Request RAS RAW Image</key>
+	<key>Get RAS Image</key>
 	<dict>
 		<key>var_names</key>
 		<array/>
@@ -11,7 +11,7 @@
 		<key>key</key>
 		<string>0x0910</string>
 	</dict>
-	<key>Send CTL Test Solutions</key>
+	<key>Cmd Send CTL Test Solutions</key>
 	<dict>
 		<key>var_names</key>
 		<array/>
@@ -22,7 +22,7 @@
 		<key>key</key>
 		<string>0x0081</string>
 	</dict>
-	<key>Shutdown</key>
+	<key>Cmd Shutdown</key>
 	<dict>
 		<key>var_names</key>
 		<array/>
@@ -31,7 +31,7 @@
 		<key>key</key>
 		<string>0x00f0</string>
 	</dict>
-	<key>Request PYAS Exposure</key>
+	<key>Get PYAS Exposure</key>
 	<dict>
 		<key>var_names</key>
 		<array/>
@@ -40,7 +40,7 @@
 		<key>key</key>
 		<string>0x0850</string>
 	</dict>
-	<key>Request RAS Exposure</key>
+	<key>Get RAS Exposure</key>
 	<dict>
 		<key>var_names</key>
 		<array/>
@@ -49,7 +49,7 @@
 		<key>key</key>
 		<string>0x0950</string>
 	</dict>
-	<key>Request PYAS Analog Gain</key>
+	<key>Get PYAS Analog Gain</key>
 	<dict>
 		<key>var_names</key>
 		<array/>
@@ -58,7 +58,7 @@
 		<key>key</key>
 		<string>0x0860</string>
 	</dict>
-	<key>Request RAS Analog Gain</key>
+	<key>Get RAS Analog Gain</key>
 	<dict>
 		<key>var_names</key>
 		<array/>
@@ -67,7 +67,7 @@
 		<key>key</key>
 		<string>0x0960</string>
 	</dict>
-	<key>Request PYAS Preamp Gain</key>
+	<key>Get PYAS Preamp Gain</key>
 	<dict>
 		<key>var_names</key>
 		<array/>
@@ -76,7 +76,7 @@
 		<key>key</key>
 		<string>0x0870</string>
 	</dict>
-	<key>Request RAS Preamp Gain</key>
+	<key>Get RAS Preamp Gain</key>
 	<dict>
 		<key>var_names</key>
 		<array/>
@@ -85,7 +85,7 @@
 		<key>key</key>
 		<string>0x0970</string>
 	</dict>
-	<key>Stop Outputting CTL</key>
+	<key>Cmd Stop Outputting CTL</key>
 	<dict>
 		<key>var_names</key>
 		<array/>
@@ -94,7 +94,7 @@
 		<key>key</key>
 		<string>0x0040</string>
 	</dict>
-	<key>Start Outputting CTL</key>
+	<key>Cmd Start Outputting CTL</key>
 	<dict>
 		<key>var_names</key>
 		<array/>
@@ -103,7 +103,7 @@
 		<key>key</key>
 		<string>0x0030</string>
 	</dict>
-	<key>Request Disk Usage</key>
+	<key>Get Disk Usage</key>
 	<dict>
 		<key>var_names</key>
 		<array>
@@ -114,7 +114,7 @@
 		<key>key</key>
 		<string>0x0881</string>
 	</dict>
-	<key>Start/Stop Saving Images</key>
+	<key>Cmd Start/Stop Saving Images</key>
 	<dict>
 		<key>var_names</key>
 		<array>
@@ -146,6 +146,48 @@
 		<string>Set the RAS preamp gain value</string>
 		<key>key</key>
 		<string>0x0591</string>
+	</dict>
+	<key>Cmd Relay ON</key>
+	<dict>
+		<key>var_names</key>
+		<array>
+			<string>relay number</string>
+		</array>
+		<key>description</key>
+		<string>Turn a relay ON (powered)</string>
+		<key>key</key>
+		<string>0x0101</string>
+	</dict>
+	<key>Cmd Relay OFF</key>
+	<dict>
+		<key>var_names</key>
+		<array>
+			<string>relay number</string>
+		</array>
+		<key>description</key>
+		<string>Turn a relay OFF (unpowered)</string>
+		<key>key</key>
+		<string>0x0111</string>
+	</dict>
+	<key>Cmd all relays ON</key>
+	<dict>
+		<key>var_names</key>
+		<array/>
+		<key>description</key>
+		<string>Turn all relays ON (powered)</string>
+		<key>key</key>
+		<string>0x0120</string>
+	</dict>
+	<key>Cmd all relays OFF</key>
+	<dict>
+		<key>var_names</key>
+		<array>
+			<string>value</string>
+		</array>
+		<key>description</key>
+		<string>Turn all relays OFF (unpowered)</string>
+		<key>key</key>
+		<string>0x0130</string>
 	</dict>
 	<key>Set PYAS Analog gain</key>
 	<dict>
@@ -203,7 +245,7 @@
 			<string>y</string>
 		</array>
 	</dict>
-	<key>Request PYAS RAW Image</key>
+	<key>Get PYAS RAW Image</key>
 	<dict>
 		<key>var_names</key>
 		<array/>
@@ -212,7 +254,7 @@
 		<key>key</key>
 		<string>0x0810</string>
 	</dict>
-	<key>Restart all Workers</key>
+	<key>Cmd Restart all Workers</key>
 	<dict>
 		<key>var_names</key>
 		<array/>
@@ -230,7 +272,7 @@
 		<key>description</key>
 		<string>send a test command (does nothing)</string>
 	</dict>
-	<key>Kill all Workers</key>
+	<key>Cmd Kill all Workers</key>
 	<dict>
 		<key>var_names</key>
 		<array/>

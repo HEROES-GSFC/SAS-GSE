@@ -10,12 +10,12 @@
 @interface DataSeries()
 -(float)calculateAverage;
 -(float)calculateStandardDeviation;
+@property (nonatomic, strong) NSMutableArray *mydata;
 @end
 
 @implementation DataSeries
 
 @synthesize standardDeviation;
-@synthesize data = _data;
 @synthesize min;
 @synthesize max;
 @synthesize count;
@@ -24,62 +24,85 @@
 @synthesize description;
 @synthesize name;
 @synthesize ROIlength;
+@synthesize ROIEnabled;
+@synthesize mydata = _mydata;
 
 -(id)init{
     self = [super init]; // call our super’s designated initializer
     if (self) {
         // insert initializing here
         self.count = 0;
-        self.ROIlength = 5;
+        self.ROIlength = 10;
         self.ROI = NSMakeRange(0, self.ROIlength);
+        self.ROIEnabled = NO;
     }
     return self;
 }
 
--(NSMutableArray *) data{
-    if (_data == nil) {
-        _data = [[NSMutableArray alloc] init];
+-(NSArray *)mydata{
+    if (_mydata == nil) {
+        _mydata = [[NSMutableArray alloc] init];
     }
-    return _data;
+    return _mydata;
 }
 
-- (NSArray *)ROIdata{
-    return [self.data subarrayWithRange:self.ROI];
+-(NSArray *) data{
+    if (self.ROIEnabled) {
+        return [self.mydata subarrayWithRange:self.ROI];
+    } else {
+        return [NSArray arrayWithArray:self.mydata];
+    }
 }
 
 - (void) addPoint: (float)newpoint{
-    [self.data addObject:[NSNumber numberWithFloat:newpoint]];
-    self.count++;
-    if (self.count == 1) {
-        self.max = newpoint;
-        self.min = newpoint;
+    [self.mydata addObject:[NSNumber numberWithFloat:newpoint]];
+    [self update];
+}
+
+- (void) update{
+    float latest_value = [self.mydata.lastObject floatValue];
+    self.count = [self.mydata count];
+    if (self.count == 1){
+        self.max = latest_value;
+        self.min = latest_value;
     } else {
-        if (self.max < newpoint){ self.max = newpoint; }
-        if (self.min > newpoint){ self.min = newpoint; }
+        if (self.max < latest_value){ self.max = latest_value; }
+        if (self.min > latest_value){ self.min = latest_value; }
     }
-    self.ROI = NSMakeRange(self.count > self.ROIlength ? self.count - self.ROIlength - 1: 0, self.count < self.ROIlength ? self.count : self.ROIlength );
-    
     self.average = [self calculateAverage];
     self.standardDeviation = [self calculateStandardDeviation];
+    NSInteger location = self.count - self.ROIlength - 1;
+    if (location < 0) {
+        location = 0;
+    } else {
+        location = self.count - self.ROIlength - 1;
+    }
+    NSUInteger length;
+    if (self.ROIlength > self.count){
+        length = self.count;
+    } else {
+        length = self.ROIlength;
+    }
+    self.ROI = NSMakeRange(location, length);
 }
 
--(float)calculateAverage{
-    NSArray *ROIArray = [self.data subarrayWithRange:self.ROI];
+- (float) calculateAverage{
+    NSArray *Array = [self data];
     float answer = 0;
-    for (NSNumber *number in ROIArray) {
+    for (NSNumber *number in Array) {
         answer += [number floatValue];
     }
-    return answer/[ROIArray count];
+    return answer/[Array count];
 }
 
--(float)calculateStandardDeviation{
-    NSArray *ROIArray = [self.data subarrayWithRange:self.ROI];
+- (float) calculateStandardDeviation{
+    NSArray *Array = [self data];
     float answer = 0;
     float localAverage = self.average;
-    for (NSNumber *number in ROIArray) {
+    for (NSNumber *number in Array) {
         answer += powf([number floatValue] - localAverage, 2);
     }
-    return sqrtf(answer/[ROIArray count]);
+    return sqrtf(answer/[Array count]);
 }
 
 @end
