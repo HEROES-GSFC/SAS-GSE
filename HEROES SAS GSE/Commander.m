@@ -11,10 +11,12 @@
 #include "Command.hpp"
 #include "UDPSender.hpp"
 
-#if false
-#define SAS_CMD_PORT 2001
+#define GROUND_NETWORK false /* Change this as appropriate */
+
+#if GROUND_NETWORK
+#define SAS_CMD_PORT 2001 /* The command port on the ground network */
 #else
-#define SAS_CMD_PORT 2000
+#define SAS_CMD_PORT 2000 /* The command port on the flight network */
 #endif
 
 @interface Commander(){
