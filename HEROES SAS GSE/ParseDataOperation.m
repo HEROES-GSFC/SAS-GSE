@@ -23,10 +23,12 @@
 
 #define PAYLOAD_SIZE 20
 
-#if true
-#define DEFAULT_PORT 2002 /* The default port to send on */
+#define GROUND_NETWORK false /* Change this as appropriate */
+
+#if GROUND_NETWORK
+#define DEFAULT_PORT 2003 /* The telemetry port on the ground network */
 #else
-#define DEFAULT_PORT 2002
+#define DEFAULT_PORT 2002 /* The telemetry port on the flight network */
 #endif
 
 #define SAS_TARGET_ID 0x30
@@ -179,35 +181,35 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                             
                             switch (frame_number % 8) {
                                 case 0:
-                                    self.dataPacket.cpuTemperature = (int16_t)housekeeping1;
-                                    self.dataPacket.cameraTemperature = Float2B(housekeeping2).value();
+                                    self.dataPacket.cpuTemperature = Float2B(housekeeping1).value()/10.;
+                                    self.dataPacket.cameraTemperature = Float2B(housekeeping2).value()/10.;
                                     break;
                                 case 1:
-                                    [self.dataPacket.i2cTemperatures replaceObjectAtIndex:0 withObject:[NSNumber numberWithInt:(int16_t)housekeeping1]];
+                                    [self.dataPacket.i2cTemperatures replaceObjectAtIndex:0 withObject:[NSNumber numberWithFloat:Float2B(housekeeping1).value()/10.]];
                                     self.dataPacket.cameraTemperature = Float2B(housekeeping2).value();
                                     break;
                                 case 2:
-                                    [self.dataPacket.i2cTemperatures replaceObjectAtIndex:1 withObject:[NSNumber numberWithInt:(int16_t)housekeeping1]];
+                                    [self.dataPacket.i2cTemperatures replaceObjectAtIndex:1 withObject:[NSNumber numberWithFloat:Float2B(housekeeping1).value()/10.]];
                                     [self.dataPacket.sbcVoltages replaceObjectAtIndex:0 withObject:[NSNumber numberWithFloat:Float2B(housekeeping2).value()/500.0]];
                                     break;
                                 case 3:
-                                    [self.dataPacket.i2cTemperatures replaceObjectAtIndex:2 withObject:[NSNumber numberWithInt:(int16_t)housekeeping1]];
+                                    [self.dataPacket.i2cTemperatures replaceObjectAtIndex:2 withObject:[NSNumber numberWithFloat:Float2B(housekeeping1).value()/10.]];
                                     [self.dataPacket.sbcVoltages replaceObjectAtIndex:1 withObject:[NSNumber numberWithFloat:Float2B(housekeeping2).value()/500.0]];
                                     break;
                                 case 4:
-                                    [self.dataPacket.i2cTemperatures replaceObjectAtIndex:3 withObject:[NSNumber numberWithInt:(int16_t)housekeeping1]];
+                                    [self.dataPacket.i2cTemperatures replaceObjectAtIndex:3 withObject:[NSNumber numberWithFloat:Float2B(housekeeping1).value()/10.]];
                                     [self.dataPacket.sbcVoltages replaceObjectAtIndex:2 withObject:[NSNumber numberWithFloat:Float2B(housekeeping2).value()/500.0]];
                                     break;
                                 case 5:
-                                    [self.dataPacket.i2cTemperatures replaceObjectAtIndex:4 withObject:[NSNumber numberWithInt:(int16_t)housekeeping1]];
+                                    [self.dataPacket.i2cTemperatures replaceObjectAtIndex:4 withObject:[NSNumber numberWithFloat:Float2B(housekeeping1).value()/10.]];
                                     [self.dataPacket.sbcVoltages replaceObjectAtIndex:3 withObject:[NSNumber numberWithFloat:Float2B(housekeeping2).value()/500.0]];
                                     break;
                                 case 6:
-                                    [self.dataPacket.i2cTemperatures replaceObjectAtIndex:5 withObject:[NSNumber numberWithInt:(int16_t)housekeeping1]];
+                                    [self.dataPacket.i2cTemperatures replaceObjectAtIndex:5 withObject:[NSNumber numberWithFloat:Float2B(housekeeping1).value()/10.]];
                                     [self.dataPacket.sbcVoltages replaceObjectAtIndex:4 withObject:[NSNumber numberWithFloat:Float2B(housekeeping2).value()/500.0]];
                                     break;
                                 case 7:
-                                    [self.dataPacket.i2cTemperatures replaceObjectAtIndex:6 withObject:[NSNumber numberWithFloat:(int16_t)housekeeping1]];
+                                    [self.dataPacket.i2cTemperatures replaceObjectAtIndex:6 withObject:[NSNumber numberWithFloat:(int16_t)housekeeping1]]; //doesn't exist
                                     self.dataPacket.isSavingImages = housekeeping2;
                                 default:
                                     break;
