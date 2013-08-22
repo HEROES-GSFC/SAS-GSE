@@ -626,8 +626,7 @@
                 [self.SAS1V4TextField setTextColor:FieldWasUpdatedColor];
                 break;
             case 7:
-                [self.SAS1T6TextField setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:6] floatValue]];
-                [self.SAS1T6TextField setTextColor:FieldWasUpdatedColor];
+                // add is image saving here
                 break;
             default:
                 break;
@@ -761,9 +760,6 @@
                 [self.SAS2V4TextField setTextColor:FieldWasUpdatedColor];
                 break;
             case 7:
-                [self.SAS2T6TextField setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:6] floatValue]];
-                [self.SAS2T6TextField setTextColor:FieldWasUpdatedColor];
-
                 // add is image saving here
                 break;
             default:

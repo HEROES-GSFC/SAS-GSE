@@ -209,7 +209,7 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                                     [self.dataPacket.sbcVoltages replaceObjectAtIndex:4 withObject:[NSNumber numberWithFloat:Float2B(housekeeping2).value()/500.0]];
                                     break;
                                 case 7:
-                                    [self.dataPacket.i2cTemperatures replaceObjectAtIndex:6 withObject:[NSNumber numberWithFloat:(int16_t)housekeeping1]]; //doesn't exist
+                                    //housekeeping1 is not currently used
                                     self.dataPacket.isSavingImages = housekeeping2;
                                 default:
                                     break;
