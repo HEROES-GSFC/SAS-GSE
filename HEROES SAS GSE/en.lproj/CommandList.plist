@@ -11,6 +11,28 @@
 		<key>key</key>
 		<string>0x0910</string>
 	</dict>
+	<key>Set Aspect Int Parameter</key>
+	<dict>
+		<key>var_names</key>
+		<array>
+			<string>value</string>
+		</array>
+		<key>description</key>
+		<string>Set an aspect parameter (int)</string>
+		<key>key</key>
+		<string>0x0712</string>
+	</dict>
+	<key>Set Aspect Float Parameter</key>
+	<dict>
+		<key>var_names</key>
+		<array>
+			<string>value</string>
+		</array>
+		<key>description</key>
+		<string>Set an aspect parameter (float)</string>
+		<key>key</key>
+		<string>0x0722</string>
+	</dict>
 	<key>Cmd Send CTL Test Solutions</key>
 	<dict>
 		<key>var_names</key>
