@@ -23,7 +23,7 @@
 
 #define PAYLOAD_SIZE 20
 
-#define GROUND_NETWORK false /* Change this as appropriate */
+#define GROUND_NETWORK true /* Change this as appropriate */
 
 #if GROUND_NETWORK
 #define DEFAULT_PORT 2003 /* The telemetry port on the ground network */
@@ -64,6 +64,14 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
     self = [super init]; // call our super’s designated initializer
     if (self) {
         tmReceiver = new TelemetryReceiver( DEFAULT_PORT );
+    }
+    return self;
+}
+
+- (id)initWithPort: (int)port{
+    self = [super init]; // call our super’s designated initializer
+    if (self) {
+        tmReceiver = new TelemetryReceiver( port );
     }
     return self;
 }
@@ -125,6 +133,7 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                 tmReceiver->close_connection();
                 free(tmReceiver);
                 [self.saveFile closeFile];
+                NSLog(@"Stopping UDP listener and parser");
                 break;	// user cancelled this operation
             }
             

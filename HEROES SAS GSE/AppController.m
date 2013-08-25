@@ -20,6 +20,11 @@
 #import "RASCameraViewWindow.h"
 #import "NumberInRangeFormatter.h"
 
+#define GROUND_NETWORK true /* Change this as appropriate */
+
+#define GROUND_NETWORK_PORT 2003 /* The telemetry port on the ground network */
+#define FLIGHT_NETWORK_PORT 2002 /* The telemetry port on the flight network */
+
 @interface AppController ()
 @property (nonatomic, strong) NSOperationQueue *queue;
 @property (nonatomic, strong) NSTimer *IndicatorFlipTimer;
@@ -29,6 +34,8 @@
 @property (nonatomic, strong) NSArray *IndicatorTimers;
 - (NSString *)createDateTimeString: (NSString *)type;
 - (void)OpenTelemetrySaveTextFiles;
+- (void)StartListeningForUDP: (int)port;
+- (void)StartListeningForTCP;
 @end
 
 @implementation AppController
@@ -188,12 +195,6 @@
     formatter = [self.SAS2T5TextField formatter];
     formatter.maximum = 100;
     formatter.minimum = -20;
-    formatter = [self.SAS2T6TextField formatter];
-    formatter.maximum = 100;
-    formatter.minimum = -20;
-    formatter = [self.SAS2T7TextField formatter];
-    formatter.maximum = 100;
-    formatter.minimum = -20;
     
     formatter = [self.SAS1V0TextField formatter];
     formatter.maximum = 1.05 * 1.2;
@@ -238,13 +239,17 @@
             [menuItem setAction:@selector(OpenWindow_WindowMenuItemAction:)];
 
     }
-    // start the GetPathsOperation with the root path to start the search
-    ParseDataOperation *parseOp = [[ParseDataOperation alloc] init];
-    ParseTCPOperation *parseTCP = [[ParseTCPOperation alloc] init];
     
+    [self StartListeningForUDP: FLIGHT_NETWORK_PORT];
+    [self StartListeningForTCP];
+            
+    [self OpenTelemetrySaveTextFiles];
+    [self postToLogWindow:@"Application started"];
+}
+
+- (void)StartListeningForUDP: (int)port {
+    ParseDataOperation *parseOp = [[ParseDataOperation alloc] initWithPort:port];
     [self.queue addOperation:parseOp];
-    [self.queue addOperation:parseTCP];
-    
     if([[self.queue operations] containsObject:parseOp]){
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(anyThread_handleData:)
@@ -252,6 +257,28 @@
                                                    object:nil];
         
     }
+}
+
+- (void)SetNewNetworkLocation:(NSPopUpButton *)sender{
+    NSLog(@"You chose %@", [sender titleOfSelectedItem]);
+    [self postToLogWindow:@"Stopping UDP and TCP listeners"];
+    [self.queue cancelAllOperations];
+    //[self.queue waitUntilAllOperationsAreFinished];
+    [self postToLogWindow:@"UDP and TCP listeners are stopped"];
+    if ([[sender titleOfSelectedItem] isEqualToString:@"Ground"]) {
+          [self StartListeningForUDP: GROUND_NETWORK_PORT];
+    }
+    if ([[sender titleOfSelectedItem] isEqualToString:@"Flight"]) {
+        [self StartListeningForUDP: FLIGHT_NETWORK_PORT];
+    }
+}
+
+- (void)StartListeningForTCP{
+    ParseTCPOperation *parseTCP = [[ParseTCPOperation alloc] init];
+    
+    [self.queue addOperation:parseTCP];
+    
+    
     
     if([[self.queue operations] containsObject:parseTCP]){
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -259,9 +286,6 @@
                                                      name:kReceiveAndParseImageDidFinish
                                                    object:nil];
     }
-        
-    [self OpenTelemetrySaveTextFiles];
-    [self postToLogWindow:@"Application started"];
 }
 
 - (CommanderWindowController *)Commander_window
@@ -572,8 +596,7 @@
         [self.SAS1V2TextField setTextColor:FieldIsStaleColor];
         [self.SAS1V3TextField setTextColor:FieldIsStaleColor];
         [self.SAS1V4TextField setTextColor:FieldIsStaleColor];
-        [self.SAS1V5TextField setTextColor:FieldIsStaleColor];
-                
+        
         switch (self.packet.frameNumber % 8) {
             case 0:{
                 NSString *string = [NSString stringWithFormat:@"%6.2f", self.packet.cpuTemperature];
@@ -698,15 +721,12 @@
         [self.SAS2T3TextField setTextColor:FieldIsStaleColor];
         [self.SAS2T4TextField setTextColor:FieldIsStaleColor];
         [self.SAS2T5TextField setTextColor:FieldIsStaleColor];
-        [self.SAS2T6TextField setTextColor:FieldIsStaleColor];
         
         [self.SAS2V0TextField setTextColor:FieldIsStaleColor];
         [self.SAS2V1TextField setTextColor:FieldIsStaleColor];
         [self.SAS2V2TextField setTextColor:FieldIsStaleColor];
         [self.SAS2V3TextField setTextColor:FieldIsStaleColor];
         [self.SAS2V4TextField setTextColor:FieldIsStaleColor];
-        [self.SAS2V5TextField setTextColor:FieldIsStaleColor];
-
         
         switch (self.packet.frameNumber % 8) {
             case 0:

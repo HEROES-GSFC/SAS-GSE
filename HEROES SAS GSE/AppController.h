@@ -65,9 +65,6 @@
 @property (weak) IBOutlet NSTextField *SAS1V2TextField;
 @property (weak) IBOutlet NSTextField *SAS1V3TextField;
 @property (weak) IBOutlet NSTextField *SAS1V4TextField;
-@property (weak) IBOutlet NSTextField *SAS1V5TextField;
-@property (weak) IBOutlet NSTextField *SAS1V6TextField;
-@property (weak) IBOutlet NSTextField *SAS1V7TextField;
 
 @property (weak) IBOutlet NSTextField *SAS2T0TextField;
 @property (weak) IBOutlet NSTextField *SAS2T1TextField;
@@ -75,17 +72,12 @@
 @property (weak) IBOutlet NSTextField *SAS2T3TextField;
 @property (weak) IBOutlet NSTextField *SAS2T4TextField;
 @property (weak) IBOutlet NSTextField *SAS2T5TextField;
-@property (weak) IBOutlet NSTextField *SAS2T6TextField;
-@property (weak) IBOutlet NSTextField *SAS2T7TextField;
 
 @property (weak) IBOutlet NSTextField *SAS2V0TextField;
 @property (weak) IBOutlet NSTextField *SAS2V1TextField;
 @property (weak) IBOutlet NSTextField *SAS2V2TextField;
 @property (weak) IBOutlet NSTextField *SAS2V3TextField;
 @property (weak) IBOutlet NSTextField *SAS2V4TextField;
-@property (weak) IBOutlet NSTextField *SAS2V5TextField;
-@property (weak) IBOutlet NSTextField *SAS2V6TextField;
-@property (weak) IBOutlet NSTextField *SAS2V7TextField;
 
 @property (weak) IBOutlet NSTextField *PYASRAspectErrorCodeTextField;
 @property (weak) IBOutlet NSTextField *PYASFAspectErrorCodeTextField;
@@ -97,7 +89,6 @@
 @property (weak) IBOutlet NSLevelIndicator *PYASFProvidingCTL_indicator;
 @property (weak) IBOutlet NSLevelIndicator *SAS1ClockSync_indicator;
 @property (weak) IBOutlet NSLevelIndicator *SAS2ClockSync_indicator;
-
 
 @property (nonatomic, strong) RASCameraViewWindow *rasCameraViewWindow;
 @property (nonatomic, strong) NSFileHandle *SAS1telemetrySaveFile;
@@ -112,6 +103,8 @@
 - (IBAction)PYASsaveImage_ButtonAction:(NSButton *)sender;
 - (IBAction)OpenWindow_WindowMenuItemAction:(NSMenuItem *)sender;
 - (IBAction)ClearPYASBkgImage:(NSButton *)sender;
+- (IBAction)SetNewNetworkLocation:(NSPopUpButton *)sender;
+
 
 - (void)postToLogWindow: (NSString *)message;
 
