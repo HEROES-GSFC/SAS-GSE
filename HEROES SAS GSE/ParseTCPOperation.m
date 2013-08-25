@@ -71,6 +71,7 @@ NSString *kReceiveAndParseImageDidFinish = @"ReceiveAndParseImageDidFinish";
                 tcpReceiver->close_connection();
                 tcpReceiver->close_listen();
                 free(tcpReceiver);
+                NSLog(@"Stopping TCP listener and parser");
                 break;	// user cancelled this operation
             }
             if((sock = tcpReceiver->accept_packet()) > 0){
@@ -96,7 +97,7 @@ NSString *kReceiveAndParseImageDidFinish = @"ReceiveAndParseImageDidFinish";
                     free(packet);
                     packet_count++;
                 }
-                if (packet_count > 0) {
+                if (packet_count > 1) {
                     NSString *cameraName;
                     
                     ImagePacketQueue ipq;

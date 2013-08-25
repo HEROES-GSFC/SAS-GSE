@@ -19,11 +19,16 @@
 #import "Transform.hpp"
 #import "RASCameraViewWindow.h"
 #import "NumberInRangeFormatter.h"
+#import "UDPSender.hpp"
+#import "TCPSender.hpp"
+#import "Packet.hpp"
 
 #define GROUND_NETWORK true /* Change this as appropriate */
 
 #define GROUND_NETWORK_PORT 2003 /* The telemetry port on the ground network */
 #define FLIGHT_NETWORK_PORT 2002 /* The telemetry port on the flight network */
+#define TPCPORT_FOR_IMAGE_DATA 2013
+#define IP_LOOPBACK "127.0.0.1"
 
 @interface AppController ()
 @property (nonatomic, strong) NSOperationQueue *queue;
@@ -260,16 +265,47 @@
 }
 
 - (void)SetNewNetworkLocation:(NSPopUpButton *)sender{
+    
     NSLog(@"You chose %@", [sender titleOfSelectedItem]);
     [self postToLogWindow:@"Stopping UDP and TCP listeners"];
     [self.queue cancelAllOperations];
+    
     //[self.queue waitUntilAllOperationsAreFinished];
     [self postToLogWindow:@"UDP and TCP listeners are stopped"];
     if ([[sender titleOfSelectedItem] isEqualToString:@"Ground"]) {
-          [self StartListeningForUDP: GROUND_NETWORK_PORT];
+        UDPSender udpSender = UDPSender(IP_LOOPBACK, FLIGHT_NETWORK_PORT);
+        udpSender.init_connection();
+        uint8_t temp[1];
+        Packet packet = Packet(temp,(uint16_t)1);
+        udpSender.send(&packet);
+        udpSender.close_connection();
+        
+        ImagePacket imagePacket = ImagePacket(1, 1);
+        TCPSender tcpSender = TCPSender(IP_LOOPBACK, TPCPORT_FOR_IMAGE_DATA);
+        tcpSender.init_connection();
+        tcpSender.send_packet(&imagePacket);
+        tcpSender.close_connection();
+        [self.queue waitUntilAllOperationsAreFinished];
+        [self StartListeningForUDP: GROUND_NETWORK_PORT];
+        [self StartListeningForTCP];
     }
     if ([[sender titleOfSelectedItem] isEqualToString:@"Flight"]) {
+        UDPSender udpSender = UDPSender(IP_LOOPBACK, GROUND_NETWORK_PORT);
+        udpSender.init_connection();
+        uint8_t temp[1];
+        Packet packet = Packet(temp,(uint16_t)1);
+        udpSender.send(&packet);
+        udpSender.close_connection();
+        
+        ImagePacket imagePacket = ImagePacket(1, 1);
+        TCPSender tcpSender = TCPSender(IP_LOOPBACK, TPCPORT_FOR_IMAGE_DATA);
+        tcpSender.init_connection();
+        tcpSender.send_packet(&imagePacket);
+        tcpSender.close_connection();
+        [self.queue waitUntilAllOperationsAreFinished];
         [self StartListeningForUDP: FLIGHT_NETWORK_PORT];
+        [self StartListeningForTCP];
+
     }
 }
 
