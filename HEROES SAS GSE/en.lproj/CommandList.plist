@@ -36,11 +36,11 @@
 	<key>Cmd Send CTL Test Solutions</key>
 	<dict>
 		<key>var_names</key>
-		<array/>
-		<key>Item 0</key>
-		<string>type</string>
+		<array>
+			<string>value</string>
+		</array>
 		<key>description</key>
-		<string>Send a set of three identifical solutions to the CTL</string>
+		<string>Send a linearly decreasing pulse of CTL solutions</string>
 		<key>key</key>
 		<string>0x0081</string>
 	</dict>
