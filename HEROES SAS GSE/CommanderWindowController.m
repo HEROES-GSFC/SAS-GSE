@@ -11,8 +11,9 @@
 #import "AppController.h"
 
 @interface CommanderWindowController ()
-@property (nonatomic,retain) NSDictionary *plistDict;
+@property (nonatomic, strong) NSDictionary *plistDict;
 @property (nonatomic, strong) Commander *commander;
+@property (nonatomic, strong) NSString *lastCommand;
 - (void)updateCommandKeyBasedonTargetSystem:(NSString *)target_system;
 @end
 
@@ -22,7 +23,6 @@
 @synthesize commandKey_textField;
 @synthesize Variables_Form;
 @synthesize destinationIP_textField;
-@synthesize plistDict = _plistDict;
 @synthesize commander = _commander;
 @synthesize send_Button;
 @synthesize targetListcomboBox;
@@ -46,11 +46,11 @@
         // read command list dictionary from the CommandList.plist resource file
         NSString *errorDesc = nil;
         NSPropertyListFormat format;
-        
+        self.lastCommand = @"empty";
         NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"CommandList" ofType:@"plist"];
         
         NSData *plistXML = [[NSFileManager defaultManager] contentsAtPath:plistPath];
-        
+        self.plistDict = [[NSDictionary alloc] init];
         self.plistDict = (NSDictionary *)[NSPropertyListSerialization
                                       propertyListFromData:plistXML
                                       mutabilityOption:NSPropertyListMutableContainersAndLeaves
@@ -60,28 +60,23 @@
     return self;
 }
 
-- (NSDictionary *)plistDict{
-    if (_plistDict == nil) {
-        _plistDict = [[NSDictionary alloc] init];
-    }
-    return _plistDict;
-}
-
 - (void)windowDidLoad
 {
     [super windowDidLoad];
         
     NSArray *sortedArray=[[self.plistDict allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
-    
     [self.commandListcomboBox addItemsWithObjectValues:sortedArray];
     [self.commandListcomboBox setNumberOfVisibleItems:15];
     [self.commandListcomboBox setCompletes:YES];
-    [self.Variables_Form setHidden:YES];
+    
     [self.send_Button setEnabled:NO];
     [self.confirm_Button setEnabled:YES];
     [self.targetListcomboBox selectItemAtIndex:0];
-    
     [self.destinationIP_textField setStringValue:@"192.168.0.100"];
+    
+    for (int i = 0; i < [self.Variables_Form numberOfRows]; i++) {
+        [[self.Variables_Form cellAtIndex:i] setEnabled:NO];
+    }
 }
 
 -(void)controlTextDidChange:(NSNotification *)notification {
@@ -94,38 +89,38 @@
     [self.send_Button setEnabled:YES];
     [self.confirm_Button setEnabled:NO];
     [self.commandListcomboBox setEnabled:NO];
-
     [self.commandListcomboBox setTextColor:[NSColor redColor]];
     [self.targetListcomboBox setEnabled:NO];
 }
 
 - (IBAction)commandList_action:(NSComboBox *)sender {
     NSString *user_choice = [self.commandListcomboBox stringValue];
-    NSString *command_key = [[self.plistDict valueForKey:user_choice] valueForKey:@"key"];
-    [self.commandKey_textField setStringValue: command_key];
-    
+    if ([user_choice isEqualToString:self.lastCommand]) {
+        NSLog(@"you've done this before!");
+    } else {
+        NSString *command_key = [[self.plistDict valueForKey:user_choice] valueForKey:@"key"];
+        [self.commandKey_textField setStringValue: command_key];
+    }
     [self updateCommandKeyBasedonTargetSystem:[self.targetListcomboBox stringValue]];
     
     NSArray *variable_names = [[self.plistDict valueForKey:user_choice] valueForKey:@"var_names"];
     NSInteger numberOfVariablesNeeded = [variable_names count];
-    NSInteger numberOfVariablesCurrentlyDisplayed = (long)[self.Variables_Form numberOfRows];
 
     // clear the form of all elements
-    for (int i = 0; i < numberOfVariablesCurrentlyDisplayed; i++) {
-        [self.Variables_Form removeRow:0];
-    }
-    if (numberOfVariablesNeeded == 0) {
-        [self.Variables_Form setHidden:NO];
-    } else {
-        for (NSString *name in variable_names) {
-            [self.Variables_Form addEntry:name];
+    for (int i = 0; i < [self.Variables_Form numberOfRows]; i++) {
+        [[self.Variables_Form cellAtIndex:i] setEnabled:NO];
+        [[self.Variables_Form cellAtIndex:i] setTitle:[NSString stringWithFormat:@"Field %i", i]];
+        if (i < numberOfVariablesNeeded) {
+            [[self.Variables_Form cellAtIndex:i] setEnabled:YES];
+            [[self.Variables_Form cellAtIndex:i] setTitle:[variable_names objectAtIndex:i]];
         }
-        [self.Variables_Form setHidden:NO];
     }
     
     NSString *toolTip = (NSString *)[[self.plistDict valueForKey:user_choice] valueForKey:@"description"];
     [self.commandListcomboBox setToolTip:toolTip];
     [self.confirm_Button setEnabled:YES];
+    // update the last command
+    self.lastCommand = user_choice;
 }
 
 - (IBAction)ChoseTargetSystem:(NSComboBox *)sender {
@@ -139,8 +134,6 @@
         self.commandKey_textField.stringValue = [command_key stringByReplacingCharactersInRange:NSMakeRange(2, 1) withString:@"1"];
     }
     if ([target_system isEqualToString:@"SAS 2"]) {
-        NSLog(@"%@", target_system);
-
         self.commandKey_textField.stringValue = [command_key stringByReplacingCharactersInRange:NSMakeRange(2, 1) withString:@"2"];
     }
     if ([target_system isEqualToString:@"Both"]) {
@@ -162,7 +155,7 @@
         for (NSInteger i = 0; i < numberOfVariables; i++) {
             [variables addObject:[NSNumber numberWithInt:[[self.Variables_Form cellAtIndex:i] intValue]]];
         }
-        command_sequence_number = [self.commander send:(uint16_t)command_key :variables :[self.destinationIP_textField stringValue]];
+        command_sequence_number = [self.commander send:(uint16_t)command_key :[variables copy]:[self.destinationIP_textField stringValue]];
     }
 
     NSString *msg = [NSString stringWithFormat:@"sending (0x%04x, %@) command", (uint16_t)command_key, [self.commandListcomboBox stringValue]];
@@ -177,6 +170,7 @@
     [self.destinationIP_textField setEnabled:YES];
     [self.commandListcomboBox setTextColor:[NSColor blackColor]];
 }
+
 - (IBAction)cancel_Button:(NSButton *)sender {
     [self.send_Button setEnabled:NO];
     [self.confirm_Button setEnabled:NO];

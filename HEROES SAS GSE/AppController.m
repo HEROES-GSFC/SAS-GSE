@@ -544,16 +544,13 @@
     //
     NSDictionary *notifData = [note userInfo];
     
-    DataPacket *packet = [[DataPacket alloc] init];
-    packet = [notifData valueForKey:@"packet"];
-    
+    DataPacket *packet = [notifData valueForKey:@"packet"];
     NSColor *FieldWasUpdatedColor = [NSColor blackColor];
     NSColor *FieldIsStaleColor = [NSColor darkGrayColor];
     
     Transform NorthTransform;
     double northAngle;
-    
-    //calculate the solar north angle here and pass it to PYASFcameraView
+    //calculate the solar north angle here and pass it to
     NorthTransform.getSunAzEl();
     northAngle = NorthTransform.getOrientation();
     //this code assumes that up on the screen is the zenith (which it is not)

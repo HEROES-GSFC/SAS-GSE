@@ -45,8 +45,7 @@
 // NSNotification name to tell the Window controller an image file as found
 NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
 
-@interface ParseDataOperation(){
-}
+@interface ParseDataOperation()
 @property (nonatomic, strong) NSFileHandle *saveFile;
 - (void)postToLogWindow: (NSString *)message;
 @property int port;
