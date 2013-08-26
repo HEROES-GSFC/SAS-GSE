@@ -245,7 +245,7 @@
 
     }
     
-    [self StartListeningForUDP: FLIGHT_NETWORK_PORT];
+    [self StartListeningForUDP: GROUND_NETWORK_PORT];
     [self StartListeningForTCP];
             
     [self OpenTelemetrySaveTextFiles];
@@ -696,6 +696,7 @@
         [self.PYASFProvidingCTL_indicator setIntValue:1*self.packet.isOutputting];
         [self.SAS1ClockSync_indicator setIntValue:1*self.packet.isClockSynced];
         [self.PYASFFoundSun_indicator setIntValue:1*self.packet.isSunFound];
+        [self.SAS1isSavingImages setIntValue:1*self.packet.isSavingImages];
         
         self.PYASFcameraView.northAngle = northAngle;
         
@@ -839,7 +840,8 @@
         [self.PYASRProvidingCTL_indicator setIntValue:1*self.packet.isOutputting];
         [self.SAS2ClockSync_indicator setIntValue:1*self.packet.isClockSynced];
         [self.PYASRFoundSun_indicator setIntValue:1*self.packet.isSunFound];
-        
+        [self.SAS2isSavingImages setIntValue:1*self.packet.isSavingImages];
+
         [self.PYASRcameraView draw];
     }
     // Update the plot windows

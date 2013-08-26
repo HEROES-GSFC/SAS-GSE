@@ -89,6 +89,8 @@
 @property (weak) IBOutlet NSLevelIndicator *PYASFProvidingCTL_indicator;
 @property (weak) IBOutlet NSLevelIndicator *SAS1ClockSync_indicator;
 @property (weak) IBOutlet NSLevelIndicator *SAS2ClockSync_indicator;
+@property (weak) IBOutlet NSLevelIndicator *SAS2isSavingImages;
+@property (weak) IBOutlet NSLevelIndicator *SAS1isSavingImages;
 
 @property (nonatomic, strong) RASCameraViewWindow *rasCameraViewWindow;
 @property (nonatomic, strong) NSFileHandle *SAS1telemetrySaveFile;
