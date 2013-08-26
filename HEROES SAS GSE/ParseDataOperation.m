@@ -93,7 +93,6 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
 {
     TelemetryReceiver tmReceiver = TelemetryReceiver( self.port );
     @autoreleasepool {
-        DataPacket *dataPacket = [[DataPacket alloc] init];
         tmReceiver.init_connection();
         [self OpenSaveFile];
         
@@ -108,6 +107,8 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
             
             uint16_t packet_length = tmReceiver.listen();
             if( packet_length != 0){
+                DataPacket *dataPacket = [[DataPacket alloc] init];
+
                 uint8_t *packet = new uint8_t[packet_length];
                 tmReceiver.get_packet( packet );
                 
@@ -251,14 +252,14 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                     }
                 }
                 delete packet;
+                @autoreleasepool {
+                    NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys: dataPacket, @"packet", nil];
+                    if (![self isCancelled])
+                        [[NSNotificationCenter defaultCenter] postNotificationName:kReceiveAndParseDataDidFinish object:nil userInfo:info];
+                }
             }
             // to make sure that info is released and does not cause a memory leak
-            @autoreleasepool {
-                NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys: dataPacket, @"packet", nil];
-                if (![self isCancelled])
-                    [[NSNotificationCenter defaultCenter] postNotificationName:kReceiveAndParseDataDidFinish object:nil userInfo:info];
-            }
-        }
+                    }
     }
 }
 
