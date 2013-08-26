@@ -46,10 +46,10 @@
 NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
 
 @interface ParseDataOperation(){
-    UDPReceiver *tmReceiver;
 }
 @property (nonatomic, strong) NSFileHandle *saveFile;
 - (void)postToLogWindow: (NSString *)message;
+@property int port;
 @end
 
 @implementation ParseDataOperation
@@ -59,7 +59,7 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
 - (id)initWithPort: (int)port{
     self = [super init]; // call our super’s designated initializer
     if (self) {
-        tmReceiver = new TelemetryReceiver( port );
+        self.port = port;
         self.saveFile = [[NSFileHandle alloc] init];
     }
     return self;
@@ -92,25 +92,25 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
 // -------------------------------------------------------------------------------
 - (void)main
 {
+    TelemetryReceiver tmReceiver = TelemetryReceiver( self.port );
     @autoreleasepool {
         DataPacket *dataPacket = [[DataPacket alloc] init];
-        tmReceiver->init_connection();
+        tmReceiver.init_connection();
         [self OpenSaveFile];
         
         while (1) {
             if ([self isCancelled])
             {
-                tmReceiver->close_connection();
-                free(tmReceiver);
+                tmReceiver.close_connection();
                 [self.saveFile closeFile];
                 NSLog(@"Stopping UDP listener and parser");
                 break;	// user cancelled this operation
             }
             
-            uint16_t packet_length = tmReceiver->listen();
+            uint16_t packet_length = tmReceiver.listen();
             if( packet_length != 0){
                 uint8_t *packet = new uint8_t[packet_length];
-                tmReceiver->get_packet( packet );
+                tmReceiver.get_packet( packet );
                 
                 //save to file
                 [self.saveFile writeData:[NSData dataWithBytes:packet length:packet_length]];
