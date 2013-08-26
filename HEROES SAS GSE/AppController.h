@@ -57,8 +57,6 @@
 @property (weak) IBOutlet NSTextField *SAS1T3TextField;
 @property (weak) IBOutlet NSTextField *SAS1T4TextField;
 @property (weak) IBOutlet NSTextField *SAS1T5TextField;
-@property (weak) IBOutlet NSTextField *SAS1T6TextField;
-@property (weak) IBOutlet NSTextField *SAS1T7TextField;
 
 @property (weak) IBOutlet NSTextField *SAS1V0TextField;
 @property (weak) IBOutlet NSTextField *SAS1V1TextField;

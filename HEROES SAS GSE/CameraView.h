@@ -10,8 +10,8 @@
 
 @interface CameraView : NSOpenGLView
 
-@property (nonatomic, strong) NSMutableArray *fiducialPoints;
-@property (nonatomic, strong) NSMutableArray *chordCrossingPoints;
+@property (nonatomic, strong) NSArray *fiducialPoints;
+@property (nonatomic, strong) NSArray *chordCrossingPoints;
 @property (nonatomic) double northAngle;
 @property (nonatomic, strong) NSData *bkgImage;
 @property (nonatomic) BOOL turnOnBkgImage;

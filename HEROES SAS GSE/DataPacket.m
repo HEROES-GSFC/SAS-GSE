@@ -49,6 +49,9 @@
     self = [super init]; // call our super’s designated initializer
     if (self) {
         self.frameMilliseconds = 0;
+        self.fiducialPoints = [[NSMutableArray alloc] init];
+        self.chordPoints = [[NSMutableArray alloc] init];
+        
         self.sunCenter = [NSValue valueWithPoint:NSMakePoint(0.0f, 0.0f)];
         for (int i = 0; i < MAX_CHORDS; i++) {
             [self.chordPoints addObject:[NSValue valueWithPoint:NSMakePoint(0,0)]];
@@ -66,12 +69,9 @@
     return self;
 }
 
-- (NSMutableArray *)chordPoints
+- (NSArray *)getChordPoints
 {
-    if (_chordPoints == nil) {
-        _chordPoints = [[NSMutableArray alloc] init];
-    }
-    return _chordPoints;
+    return [self.chordPoints copy];
 }
 
 - (NSMutableArray *) i2cTemperatures
@@ -90,12 +90,9 @@
     return _sbcVoltages;
 }
 
-- (NSMutableArray *)fiducialPoints
+- (NSArray *)getFiducialPoints
 {
-    if (_fiducialPoints == nil) {
-        _fiducialPoints = [[NSMutableArray alloc] init];
-    }
-    return _fiducialPoints;
+    return [self.fiducialPoints copy];
 }
 
 - (NSValue *)sunCenter
