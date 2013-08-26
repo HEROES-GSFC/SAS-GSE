@@ -48,24 +48,13 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
 @interface ParseDataOperation(){
     UDPReceiver *tmReceiver;
 }
-
 @property (nonatomic, strong) NSFileHandle *saveFile;
-
 - (void)postToLogWindow: (NSString *)message;
 @end
 
 @implementation ParseDataOperation
 
 @synthesize saveFile;
-
-- (id)init{
-    self = [super init]; // call our super’s designated initializer
-    if (self) {
-        tmReceiver = new TelemetryReceiver( DEFAULT_PORT );
-        self.saveFile = [[NSFileHandle alloc] init];
-    }
-    return self;
-}
 
 - (id)initWithPort: (int)port{
     self = [super init]; // call our super’s designated initializer
@@ -81,8 +70,6 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
 }
 
 - (void)OpenSaveFile{
-    // Open a file to save the telemetry stream to
-    
     // Create a time string for the filename
     NSDate *currDate = [NSDate date];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
@@ -97,7 +84,6 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
         [[NSFileManager defaultManager] createFileAtPath:filePath contents:nil attributes:nil];
         self.saveFile = [NSFileHandle fileHandleForWritingAtPath:filePath];
     }
-    //say to handle where's the file to write
     [self.saveFile truncateFileAtOffset:[self.saveFile seekToEndOfFile]];
 }
 
@@ -129,15 +115,14 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                 //save to file
                 [self.saveFile writeData:[NSData dataWithBytes:packet length:packet_length]];
                 
-                TelemetryPacket *tm_packet;
-                tm_packet = new TelemetryPacket( packet, packet_length);
+                TelemetryPacket tm_packet = TelemetryPacket( packet, packet_length );
                 
-                if (tm_packet->valid())
+                if (tm_packet.valid())
                 {
-                    if (tm_packet->getSourceID() == SAS_TARGET_ID){
-                        if (tm_packet->getTypeID() == SAS_TM_TYPE) {
+                    if (tm_packet.getSourceID() == SAS_TARGET_ID){
+                        if (tm_packet.getTypeID() == SAS_TM_TYPE) {
                             
-                            switch (tm_packet->getSAS()) {
+                            switch (tm_packet.getSAS()) {
                                 case 1:
                                     dataPacket.isSAS1 = TRUE;
                                     break;
@@ -149,12 +134,12 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                                     break;
                             }
                             
-                            [dataPacket setFrameSeconds: tm_packet->getSeconds()];
+                            [dataPacket setFrameSeconds: tm_packet.getSeconds()];
                             
                             uint32_t frame_number;
-                            *(tm_packet) >> frame_number;
+                            tm_packet >> frame_number;
                             uint8_t status_bitfield;
-                            *(tm_packet) >> status_bitfield;
+                            tm_packet >> status_bitfield;
                             
                             [dataPacket setFrameNumber: frame_number];
                             
@@ -166,11 +151,11 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                             dataPacket.aspectErrorCode = status_bitfield & 0xf;
                             
                             uint16_t command_key;
-                            *(tm_packet) >> command_key;
+                            tm_packet >> command_key;
                             [dataPacket setCommandKey: command_key];
                             
                             uint16_t housekeeping1, housekeeping2;
-                            *(tm_packet) >> housekeeping1 >> housekeeping2;
+                            tm_packet >> housekeeping1 >> housekeeping2;
                             
                             switch (frame_number % 8) {
                                 case 0:
@@ -209,72 +194,64 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                             }
                             
                             Pair3B sunCenter, sunCenterError;
-                            *(tm_packet) >> sunCenter >> sunCenterError;
+                            tm_packet >> sunCenter >> sunCenterError;
                             
                             [dataPacket setSunCenter:[NSValue valueWithPoint:NSMakePoint(sunCenter.x(), sunCenter.y())]];
                             
                             for (int i = 0; i < NUM_LIMBS; i++) {
                                 Pair3B limb;
-                                *(tm_packet) >> limb;
+                                tm_packet >> limb;
                                 [dataPacket addChordPoint:NSMakePoint(limb.x(),limb.y()) :i];
                             }
                             
                             uint8_t nFiducials;
-                            *(tm_packet) >> nFiducials;
+                            tm_packet >> nFiducials;
                             
                             uint8_t nLimbs;
-                            *(tm_packet) >> nLimbs;
+                            tm_packet >> nLimbs;
                             
                             for (int i = 0; i < NUM_FIDUCIALS; i++) {
                                 Pair3B fiducial;
-                                *(tm_packet) >> fiducial;
+                                tm_packet >> fiducial;
                                 [dataPacket addFiducialPoint:NSMakePoint(fiducial.x(),fiducial.y()) :i];
                             }
                             
                             float x_intercept, x_slope;
-                            *(tm_packet) >> x_intercept >> x_slope;
+                            tm_packet >> x_intercept >> x_slope;
                             
                             float y_intercept, y_slope;
-                            *(tm_packet) >> y_intercept >> y_slope;
+                            tm_packet >> y_intercept >> y_slope;
                             
                             dataPacket.screenCenter = [NSValue valueWithPoint:NSMakePoint(-x_intercept/x_slope, -y_intercept/y_slope)];
                             dataPacket.screenRadius = 0.5* ((3000.0/fabs(x_slope)) + (3000.0/fabs(y_slope)));
                             
                             uint8_t image_max;
-                            *(tm_packet) >> image_max;
-                            
+                            tm_packet >> image_max;
                             dataPacket.ImageMax = image_max;
                             
                             float ctl_xvalue, ctl_yvalue;
-                            *(tm_packet) >> ctl_xvalue >> ctl_yvalue;
+                            tm_packet >> ctl_xvalue >> ctl_yvalue;
                             [dataPacket setCTLCommand:[NSValue valueWithPoint:NSMakePoint(ctl_xvalue, ctl_yvalue)]];
                         }
                         
-                        if (tm_packet->getTypeID() == SAS_CM_ACK_TYPE) {
-                            uint16_t sequence_number = 0;
-                            *tm_packet >> sequence_number;
-                            
+                        if (tm_packet.getTypeID() == SAS_CM_ACK_TYPE) {
+                            uint16_t sequence_number;
+                            tm_packet >> sequence_number;
                             NSString *msg = [NSString stringWithFormat:@"Received ACK for command number %u", sequence_number];
                             [self postToLogWindow:msg];
                         }
                         
-                        if (tm_packet->getTypeID() == SAS_CM_PROC_ACK_TYPE) {
-                            uint16_t sequence_number = 0;
-                            *tm_packet >> sequence_number;
-                            
-                            uint16_t command_key = 0;
-                            *tm_packet >> command_key;
-                            
-                            uint16_t return_code;
-                            *tm_packet >> return_code;
-                            //
+                        if (tm_packet.getTypeID() == SAS_CM_PROC_ACK_TYPE) {
+                            uint16_t sequence_number, command_key, return_code;
+                            tm_packet >> sequence_number;
+                            tm_packet >> command_key;
+                            tm_packet >> return_code;
                             NSString *msg = [NSString stringWithFormat:@"Received PROC ACK for command number %u, command key 0x%X, return code %u", sequence_number, command_key, return_code];
                             [self postToLogWindow:msg];
                         }
                     }
                 }
-                free(packet);
-                free(tm_packet);
+                delete packet;
             }
             // to make sure that info is released and does not cause a memory leak
             @autoreleasepool {
