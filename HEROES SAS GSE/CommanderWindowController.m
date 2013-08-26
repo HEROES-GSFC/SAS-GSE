@@ -175,6 +175,7 @@
     [self.commandListcomboBox setEnabled:YES];
     [self.targetListcomboBox setEnabled:YES];
     [self.destinationIP_textField setEnabled:YES];
+    [self.commandListcomboBox setTextColor:[NSColor blackColor]];
 }
 - (IBAction)cancel_Button:(NSButton *)sender {
     [self.send_Button setEnabled:NO];
