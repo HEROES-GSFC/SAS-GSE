@@ -49,7 +49,6 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
     UDPReceiver *tmReceiver;
 }
 
-@property (nonatomic, strong) DataPacket *dataPacket;
 @property (nonatomic, strong) NSFileHandle *saveFile;
 
 - (void)postToLogWindow: (NSString *)message;
@@ -57,13 +56,13 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
 
 @implementation ParseDataOperation
 
-@synthesize dataPacket = _dataPacket;
-@synthesize saveFile = _saveFile;
+@synthesize saveFile;
 
 - (id)init{
     self = [super init]; // call our super’s designated initializer
     if (self) {
         tmReceiver = new TelemetryReceiver( DEFAULT_PORT );
+        self.saveFile = [[NSFileHandle alloc] init];
     }
     return self;
 }
@@ -72,25 +71,9 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
     self = [super init]; // call our super’s designated initializer
     if (self) {
         tmReceiver = new TelemetryReceiver( port );
+        self.saveFile = [[NSFileHandle alloc] init];
     }
     return self;
-}
-
-- (DataPacket *)dataPacket
-{
-    if (_dataPacket == nil) {
-        _dataPacket = [[DataPacket alloc] init];
-    }
-    return _dataPacket;
-}
-
-- (NSFileHandle *)saveFile
-{
-    if (_saveFile == nil)
-    {
-        _saveFile = [[NSFileHandle alloc] init];
-    }
-    return _saveFile;
 }
 
 - (void)postToLogWindow: (NSString *)message{
@@ -124,6 +107,7 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
 - (void)main
 {
     @autoreleasepool {
+        DataPacket *dataPacket = [[DataPacket alloc] init];
         tmReceiver->init_connection();
         [self OpenSaveFile];
         
@@ -155,71 +139,71 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                             
                             switch (tm_packet->getSAS()) {
                                 case 1:
-                                    self.dataPacket.isSAS1 = TRUE;
+                                    dataPacket.isSAS1 = TRUE;
                                     break;
                                 case 2:
-                                    self.dataPacket.isSAS2 = TRUE;
+                                    dataPacket.isSAS2 = TRUE;
                                     break;
                                 default:
-                                    self.dataPacket.isSAS1 = TRUE;
+                                    dataPacket.isSAS1 = TRUE;
                                     break;
                             }
                             
-                            [self.dataPacket setFrameSeconds: tm_packet->getSeconds()];
+                            [dataPacket setFrameSeconds: tm_packet->getSeconds()];
                             
                             uint32_t frame_number;
                             *(tm_packet) >> frame_number;
                             uint8_t status_bitfield;
                             *(tm_packet) >> status_bitfield;
                             
-                            [self.dataPacket setFrameNumber: frame_number];
+                            [dataPacket setFrameNumber: frame_number];
                             
                             //parse this bit field
-                            self.dataPacket.isTracking = (bool)((status_bitfield & 128) >> 7);
-                            self.dataPacket.isSunFound = (bool)((status_bitfield & 64) >> 6);
-                            self.dataPacket.isOutputting = (bool)((status_bitfield & 32) >> 5);
-                            self.dataPacket.isClockSynced = (bool)((status_bitfield & 16) >> 4);
-                            self.dataPacket.aspectErrorCode = status_bitfield & 0xf;
+                            dataPacket.isTracking = (bool)((status_bitfield & 128) >> 7);
+                            dataPacket.isSunFound = (bool)((status_bitfield & 64) >> 6);
+                            dataPacket.isOutputting = (bool)((status_bitfield & 32) >> 5);
+                            dataPacket.isClockSynced = (bool)((status_bitfield & 16) >> 4);
+                            dataPacket.aspectErrorCode = status_bitfield & 0xf;
                             
                             uint16_t command_key;
                             *(tm_packet) >> command_key;
-                            [self.dataPacket setCommandKey: command_key];
+                            [dataPacket setCommandKey: command_key];
                             
                             uint16_t housekeeping1, housekeeping2;
                             *(tm_packet) >> housekeeping1 >> housekeeping2;
                             
                             switch (frame_number % 8) {
                                 case 0:
-                                    self.dataPacket.cpuTemperature = Float2B(housekeeping1).value()/10.;
-                                    self.dataPacket.cameraTemperature = Float2B(housekeeping2).value()/10.;
+                                    dataPacket.cpuTemperature = Float2B(housekeeping1).value()/10.;
+                                    dataPacket.cameraTemperature = Float2B(housekeeping2).value()/10.;
                                     break;
                                 case 1:
-                                    [self.dataPacket.i2cTemperatures replaceObjectAtIndex:0 withObject:[NSNumber numberWithFloat:Float2B(housekeeping1).value()/10.]];
-                                    self.dataPacket.cameraTemperature = Float2B(housekeeping2).value()/10.;
+                                    [dataPacket.i2cTemperatures replaceObjectAtIndex:0 withObject:[NSNumber numberWithFloat:Float2B(housekeeping1).value()/10.]];
+                                    dataPacket.cameraTemperature = Float2B(housekeeping2).value()/10.;
                                     break;
                                 case 2:
-                                    [self.dataPacket.i2cTemperatures replaceObjectAtIndex:1 withObject:[NSNumber numberWithFloat:Float2B(housekeeping1).value()/10.]];
-                                    [self.dataPacket.sbcVoltages replaceObjectAtIndex:0 withObject:[NSNumber numberWithFloat:Float2B(housekeeping2).value()/500.0]];
+                                    [dataPacket.i2cTemperatures replaceObjectAtIndex:1 withObject:[NSNumber numberWithFloat:Float2B(housekeeping1).value()/10.]];
+                                    [dataPacket.sbcVoltages replaceObjectAtIndex:0 withObject:[NSNumber numberWithFloat:Float2B(housekeeping2).value()/500.0]];
                                     break;
                                 case 3:
-                                    [self.dataPacket.i2cTemperatures replaceObjectAtIndex:2 withObject:[NSNumber numberWithFloat:Float2B(housekeeping1).value()/10.]];
-                                    [self.dataPacket.sbcVoltages replaceObjectAtIndex:1 withObject:[NSNumber numberWithFloat:Float2B(housekeeping2).value()/500.0]];
+                                    [dataPacket.i2cTemperatures replaceObjectAtIndex:2 withObject:[NSNumber numberWithFloat:Float2B(housekeeping1).value()/10.]];
+                                    [dataPacket.sbcVoltages replaceObjectAtIndex:1 withObject:[NSNumber numberWithFloat:Float2B(housekeeping2).value()/500.0]];
                                     break;
                                 case 4:
-                                    [self.dataPacket.i2cTemperatures replaceObjectAtIndex:3 withObject:[NSNumber numberWithFloat:Float2B(housekeeping1).value()/10.]];
-                                    [self.dataPacket.sbcVoltages replaceObjectAtIndex:2 withObject:[NSNumber numberWithFloat:Float2B(housekeeping2).value()/500.0]];
+                                    [dataPacket.i2cTemperatures replaceObjectAtIndex:3 withObject:[NSNumber numberWithFloat:Float2B(housekeeping1).value()/10.]];
+                                    [dataPacket.sbcVoltages replaceObjectAtIndex:2 withObject:[NSNumber numberWithFloat:Float2B(housekeeping2).value()/500.0]];
                                     break;
                                 case 5:
-                                    [self.dataPacket.i2cTemperatures replaceObjectAtIndex:4 withObject:[NSNumber numberWithFloat:Float2B(housekeeping1).value()/10.]];
-                                    [self.dataPacket.sbcVoltages replaceObjectAtIndex:3 withObject:[NSNumber numberWithFloat:Float2B(housekeeping2).value()/500.0]];
+                                    [dataPacket.i2cTemperatures replaceObjectAtIndex:4 withObject:[NSNumber numberWithFloat:Float2B(housekeeping1).value()/10.]];
+                                    [dataPacket.sbcVoltages replaceObjectAtIndex:3 withObject:[NSNumber numberWithFloat:Float2B(housekeeping2).value()/500.0]];
                                     break;
                                 case 6:
-                                    [self.dataPacket.i2cTemperatures replaceObjectAtIndex:5 withObject:[NSNumber numberWithFloat:Float2B(housekeeping1).value()/10.]];
-                                    [self.dataPacket.sbcVoltages replaceObjectAtIndex:4 withObject:[NSNumber numberWithFloat:Float2B(housekeeping2).value()/500.0]];
+                                    [dataPacket.i2cTemperatures replaceObjectAtIndex:5 withObject:[NSNumber numberWithFloat:Float2B(housekeeping1).value()/10.]];
+                                    [dataPacket.sbcVoltages replaceObjectAtIndex:4 withObject:[NSNumber numberWithFloat:Float2B(housekeeping2).value()/500.0]];
                                     break;
                                 case 7:
                                     //housekeeping1 is not currently used
-                                    self.dataPacket.isSavingImages = housekeeping2;
+                                    dataPacket.isSavingImages = housekeeping2;
                                 default:
                                     break;
                             }
@@ -227,12 +211,12 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                             Pair3B sunCenter, sunCenterError;
                             *(tm_packet) >> sunCenter >> sunCenterError;
                             
-                            [self.dataPacket setSunCenter:[NSValue valueWithPoint:NSMakePoint(sunCenter.x(), sunCenter.y())]];
+                            [dataPacket setSunCenter:[NSValue valueWithPoint:NSMakePoint(sunCenter.x(), sunCenter.y())]];
                             
                             for (int i = 0; i < NUM_LIMBS; i++) {
                                 Pair3B limb;
                                 *(tm_packet) >> limb;
-                                [self.dataPacket addChordPoint:NSMakePoint(limb.x(),limb.y()) :i];
+                                [dataPacket addChordPoint:NSMakePoint(limb.x(),limb.y()) :i];
                             }
                             
                             uint8_t nFiducials;
@@ -244,7 +228,7 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                             for (int i = 0; i < NUM_FIDUCIALS; i++) {
                                 Pair3B fiducial;
                                 *(tm_packet) >> fiducial;
-                                [self.dataPacket addFiducialPoint:NSMakePoint(fiducial.x(),fiducial.y()) :i];
+                                [dataPacket addFiducialPoint:NSMakePoint(fiducial.x(),fiducial.y()) :i];
                             }
                             
                             float x_intercept, x_slope;
@@ -253,17 +237,17 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                             float y_intercept, y_slope;
                             *(tm_packet) >> y_intercept >> y_slope;
                             
-                            self.dataPacket.screenCenter = [NSValue valueWithPoint:NSMakePoint(-x_intercept/x_slope, -y_intercept/y_slope)];
-                            self.dataPacket.screenRadius = 0.5* ((3000.0/fabs(x_slope)) + (3000.0/fabs(y_slope)));
+                            dataPacket.screenCenter = [NSValue valueWithPoint:NSMakePoint(-x_intercept/x_slope, -y_intercept/y_slope)];
+                            dataPacket.screenRadius = 0.5* ((3000.0/fabs(x_slope)) + (3000.0/fabs(y_slope)));
                             
                             uint8_t image_max;
                             *(tm_packet) >> image_max;
                             
-                            self.dataPacket.ImageMax = image_max;
+                            dataPacket.ImageMax = image_max;
                             
                             float ctl_xvalue, ctl_yvalue;
                             *(tm_packet) >> ctl_xvalue >> ctl_yvalue;
-                            [self.dataPacket setCTLCommand:[NSValue valueWithPoint:NSMakePoint(ctl_xvalue, ctl_yvalue)]];
+                            [dataPacket setCTLCommand:[NSValue valueWithPoint:NSMakePoint(ctl_xvalue, ctl_yvalue)]];
                         }
                         
                         if (tm_packet->getTypeID() == SAS_CM_ACK_TYPE) {
@@ -292,9 +276,12 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                 free(packet);
                 free(tm_packet);
             }
-            NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys: self.dataPacket, @"packet", nil];
-            if (![self isCancelled])
-                [[NSNotificationCenter defaultCenter] postNotificationName:kReceiveAndParseDataDidFinish object:nil userInfo:info];
+            // to make sure that info is released and does not cause a memory leak
+            @autoreleasepool {
+                NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys: dataPacket, @"packet", nil];
+                if (![self isCancelled])
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kReceiveAndParseDataDidFinish object:nil userInfo:info];
+            }
         }
     }
 }
