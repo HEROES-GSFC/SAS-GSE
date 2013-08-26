@@ -11,7 +11,7 @@
 #include "Command.hpp"
 #include "UDPSender.hpp"
 
-#define GROUND_NETWORK false /* Change this as appropriate */
+#define GROUND_NETWORK true /* Change this as appropriate */
 
 #if GROUND_NETWORK
 #define SAS_CMD_PORT 2001 /* The command port on the ground network */

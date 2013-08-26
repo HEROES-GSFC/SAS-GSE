@@ -81,7 +81,7 @@
     [self.confirm_Button setEnabled:YES];
     [self.targetListcomboBox selectItemAtIndex:0];
     
-    [self.destinationIP_textField setStringValue:@"192.168.1.32"];    
+    [self.destinationIP_textField setStringValue:@"192.168.0.100"];
 }
 
 -(void)controlTextDidChange:(NSNotification *)notification {
@@ -125,7 +125,7 @@
     
     NSString *toolTip = (NSString *)[[self.plistDict valueForKey:user_choice] valueForKey:@"description"];
     [self.commandListcomboBox setToolTip:toolTip];
-    //[self.confirm_Button setEnabled:YES];
+    [self.confirm_Button setEnabled:YES];
 }
 
 - (IBAction)ChoseTargetSystem:(NSComboBox *)sender {

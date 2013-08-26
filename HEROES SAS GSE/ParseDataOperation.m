@@ -195,7 +195,7 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                                     break;
                                 case 1:
                                     [self.dataPacket.i2cTemperatures replaceObjectAtIndex:0 withObject:[NSNumber numberWithFloat:Float2B(housekeeping1).value()/10.]];
-                                    self.dataPacket.cameraTemperature = Float2B(housekeeping2).value();
+                                    self.dataPacket.cameraTemperature = Float2B(housekeeping2).value()/10.;
                                     break;
                                 case 2:
                                     [self.dataPacket.i2cTemperatures replaceObjectAtIndex:1 withObject:[NSNumber numberWithFloat:Float2B(housekeeping1).value()/10.]];
