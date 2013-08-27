@@ -31,7 +31,7 @@
 @property (nonatomic) BOOL isOutputting;
 @property (nonatomic) BOOL isClockSynced;
 @property (nonatomic) BOOL isSavingImages;
-@property (nonatomic) int aspectErrorCode;
+@property (nonatomic) NSString *aspectErrorCode;
 @property (nonatomic) float clockingAngle;
 @property (nonatomic) NSValue *screenCenterOffset;
 
