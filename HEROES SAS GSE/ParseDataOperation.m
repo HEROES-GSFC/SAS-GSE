@@ -20,6 +20,7 @@
 #import "UDPReceiver.hpp"
 #import "Telemetry.hpp"
 #import "types.hpp"
+#import "AspectError.hpp"
 
 #define PAYLOAD_SIZE 20
 
@@ -144,11 +145,11 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                             [dataPacket setFrameNumber: frame_number];
                             
                             //parse this bit field
-                            dataPacket.isTracking = (bool)((status_bitfield & 128) >> 7);
-                            dataPacket.isSunFound = (bool)((status_bitfield & 64) >> 6);
-                            dataPacket.isOutputting = (bool)((status_bitfield & 32) >> 5);
-                            dataPacket.isClockSynced = (bool)((status_bitfield & 16) >> 4);
-                            dataPacket.aspectErrorCode = status_bitfield & 0xf;
+                            dataPacket.isTracking = (bool)bitread(&status_bitfield, 7, 1);
+                            dataPacket.isSunFound = (bool)bitread(&status_bitfield, 6, 1);
+                            dataPacket.isOutputting = (bool)bitread(&status_bitfield, 5, 1);
+                            AspectCode result = (AspectCode)bitread(&status_bitfield, 0, 5);
+                            dataPacket.aspectErrorCode = [NSString stringWithCString:GetMessage(result)];
                             
                             uint16_t command_key;
                             tm_packet >> command_key;
@@ -187,7 +188,7 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                                     [dataPacket.sbcVoltages replaceObjectAtIndex:4 withObject:[NSNumber numberWithFloat:Float2B(housekeeping2).value()/500.0]];
                                     break;
                                 case 7:
-                                    //housekeeping1 is not currently used
+                                    dataPacket.isClockSynced = housekeeping1;
                                     dataPacket.isSavingImages = housekeeping2;
                                 default:
                                     break;
@@ -232,6 +233,14 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                             float ctl_xvalue, ctl_yvalue;
                             tm_packet >> ctl_xvalue >> ctl_yvalue;
                             [dataPacket setCTLCommand:[NSValue valueWithPoint:NSMakePoint(ctl_xvalue, ctl_yvalue)]];
+
+                            for (int i = 0; i < NUM_FIDUCIALS; i++) {
+                                uint8_t temp;
+                                tm_packet >> temp;
+                                int x_ID = ((int8_t)bitread(&temp,0,4))-7;
+                                int y_ID = ((int8_t)bitread(&temp,4,4))-7;
+                                [dataPacket addFiducialID:NSMakePoint(x_ID,y_ID) :i];
+                            }
                         }
                         
                         if (tm_packet.getTypeID() == SAS_CM_ACK_TYPE) {

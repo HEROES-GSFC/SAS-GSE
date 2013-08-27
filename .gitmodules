@@ -1,3 +1,3 @@
 [submodule "HEROES SAS GSE/lib/SAS-aspect"]
 	path = HEROES SAS GSE/lib/SAS-aspect
-	url = git://github.com/ehsteve/SAS.git
+	url = git://github.com/HEROES-GSFC/SAS.git

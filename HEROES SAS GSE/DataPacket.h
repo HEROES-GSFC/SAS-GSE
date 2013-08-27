@@ -31,15 +31,17 @@
 @property (nonatomic) BOOL isOutputting;
 @property (nonatomic) BOOL isClockSynced;
 @property (nonatomic) BOOL isSavingImages;
-@property (nonatomic) int aspectErrorCode;
+@property (nonatomic) NSString *aspectErrorCode;
 @property (nonatomic) float clockingAngle;
 @property (nonatomic) NSValue *screenCenterOffset;
 
 -(NSString *) getframeTimeString;
 -(void) addChordPoint: (NSPoint) point :(int) index;
 -(void) addFiducialPoint: (NSPoint) point :(int) index;
+-(void) addFiducialID: (NSPoint) ID :(int) index;
 -(NSArray *) getChordPoints;
 -(NSArray *) getFiducialPoints;
+-(NSArray *) getFiducialIDs;
 -(NSDate *) getDate;
 
 @end
