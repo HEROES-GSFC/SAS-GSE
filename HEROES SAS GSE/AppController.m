@@ -12,7 +12,6 @@
 #import "DataPacket.h"
 #import "lib_crc.h"
 #import "CameraView.h"
-#import "CommanderWindowController.h"
 #import "ConsoleWindowController.h"
 #import "DataSeries.h"
 #import "TimeSeries.h"
@@ -60,7 +59,6 @@
 @synthesize MainWindow;
 @synthesize PYASFcameraView = _PYASFcameraView;
 @synthesize PYASRcameraView = _PYASRcameraView;
-@synthesize Commander_window = _Commander_window;
 @synthesize Console_window = _Console_window;
 
 @synthesize TimeProfileMenu;
@@ -120,9 +118,6 @@
         self.PYASRcameraView = [[CameraView alloc] init];
 
         self.timeSeriesCollection = [NSDictionary dictionaryWithObjects:allTimeSeries forKeys:timeSeriesNames];
-        
-        [self.Commander_window showWindow:nil];
-        [self.Commander_window.window orderFront:self];
         
         [self.Console_window showWindow:nil];
         [self.Console_window.window orderFront:self];
@@ -319,14 +314,7 @@
     }
 }
 
-- (CommanderWindowController *)Commander_window
-{
-    if (_Commander_window == nil)
-    {
-        _Commander_window = [[CommanderWindowController alloc] init];
-    }
-    return _Commander_window;
-}
+
 - (NSMutableDictionary *)PlotWindows
 {
     if (_PlotWindows == nil)
@@ -822,9 +810,6 @@
 - (IBAction)OpenWindow_WindowMenuItemAction:(NSMenuItem *)sender {
     NSString *userChoice = [sender title];
     
-    if ([userChoice isEqual: @"Commander"]) {
-        [self.Commander_window showWindow:nil];
-    }
     if ([userChoice isEqual: @"Console"]) {
         [self.Console_window showWindow:nil];
     }

@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		8605B2FD173610700094566C /* CorePlot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8605B2FC173610700094566C /* CorePlot.framework */; };
 		8605B2FE1736107A0094566C /* CorePlot.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8605B2FC173610700094566C /* CorePlot.framework */; };
-		8609D8C716D57CD2007D1FA6 /* CommandList.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8609D8C516D57CD2007D1FA6 /* CommandList.plist */; };
 		860EF32C163605D300B46E35 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 860EF32B163605D300B46E35 /* Cocoa.framework */; };
 		860EF336163605D300B46E35 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 860EF334163605D300B46E35 /* InfoPlist.strings */; };
 		860EF338163605D300B46E35 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 860EF337163605D300B46E35 /* main.m */; };
@@ -21,8 +20,6 @@
 		860EF356163605D400B46E35 /* HEROES_SAS_GSETests.m in Sources */ = {isa = PBXBuildFile; fileRef = 860EF355163605D400B46E35 /* HEROES_SAS_GSETests.m */; };
 		860EF3611636060100B46E35 /* AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = 860EF3601636060100B46E35 /* AppController.m */; };
 		86159E6A16DB1D7B00E79C27 /* ParseTCPOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 86159E6916DB1D7B00E79C27 /* ParseTCPOperation.m */; };
-		86159E7E16DED4FB00E79C27 /* CommanderWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 86159E7C16DED4FB00E79C27 /* CommanderWindowController.m */; };
-		86159E7F16DED4FB00E79C27 /* CommanderWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 86159E7D16DED4FB00E79C27 /* CommanderWindowController.xib */; };
 		86159E8316DEFA7A00E79C27 /* ConsoleWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 86159E8116DEFA7A00E79C27 /* ConsoleWindowController.m */; };
 		86159E8416DEFA7A00E79C27 /* ConsoleWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 86159E8216DEFA7A00E79C27 /* ConsoleWindowController.xib */; };
 		862B2DFE17BD88D70054EB0E /* TimeSeries.m in Sources */ = {isa = PBXBuildFile; fileRef = 862B2DFD17BD88D70054EB0E /* TimeSeries.m */; };
@@ -40,7 +37,6 @@
 		8643B00D1745506B003052A6 /* Command.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8643AFDF17454F44003052A6 /* Command.cpp */; };
 		8660983B16B398DD00BE26D1 /* icon.iconset in Resources */ = {isa = PBXBuildFile; fileRef = 8660983A16B398DD00BE26D1 /* icon.iconset */; };
 		8666A002169254AE00B0DACE /* DataPacket.m in Sources */ = {isa = PBXBuildFile; fileRef = 8666A001169254AE00B0DACE /* DataPacket.m */; };
-		8666E3C416A3BA6600A9DD85 /* Commander.m in Sources */ = {isa = PBXBuildFile; fileRef = 8666E3C316A3BA6600A9DD85 /* Commander.m */; };
 		86672DF916F7D2BD00F36110 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86672DF816F7D2BD00F36110 /* GLUT.framework */; };
 		8670FBA717068B6100F9C2DC /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8670FBA917068B6100F9C2DC /* AppDelegate.m */; };
 		8685690B174C2CB300104789 /* AutoFlipSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = 8685690A174C2CB300104789 /* AutoFlipSwitch.m */; };
@@ -83,7 +79,6 @@
 /* Begin PBXFileReference section */
 		8605B2FC173610700094566C /* CorePlot.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CorePlot.framework; path = "HEROES SAS GSE/Frameworks/CorePlot.framework"; sourceTree = "<group>"; };
 		8605B2FF1736116B0094566C /* CorePlot.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CorePlot.framework; path = "HEROES SAS GSE/Frameworks/CorePlot.framework"; sourceTree = "<group>"; };
-		8609D8C616D57CD2007D1FA6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = en; path = en.lproj/CommandList.plist; sourceTree = "<group>"; };
 		860EF327163605D300B46E35 /* HEROES SAS GSE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "HEROES SAS GSE.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		860EF32B163605D300B46E35 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		860EF32E163605D300B46E35 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -106,9 +101,6 @@
 		860EF3601636060100B46E35 /* AppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppController.m; sourceTree = "<group>"; };
 		86159E6816DB1D7B00E79C27 /* ParseTCPOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParseTCPOperation.h; sourceTree = "<group>"; };
 		86159E6916DB1D7B00E79C27 /* ParseTCPOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParseTCPOperation.m; sourceTree = "<group>"; };
-		86159E7B16DED4FA00E79C27 /* CommanderWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommanderWindowController.h; sourceTree = "<group>"; };
-		86159E7C16DED4FB00E79C27 /* CommanderWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommanderWindowController.m; sourceTree = "<group>"; };
-		86159E7D16DED4FB00E79C27 /* CommanderWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CommanderWindowController.xib; sourceTree = "<group>"; };
 		86159E8016DEFA7A00E79C27 /* ConsoleWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConsoleWindowController.h; sourceTree = "<group>"; };
 		86159E8116DEFA7A00E79C27 /* ConsoleWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConsoleWindowController.m; sourceTree = "<group>"; };
 		86159E8216DEFA7A00E79C27 /* ConsoleWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ConsoleWindowController.xib; sourceTree = "<group>"; };
@@ -141,8 +133,6 @@
 		8660983A16B398DD00BE26D1 /* icon.iconset */ = {isa = PBXFileReference; lastKnownFileType = folder.iconset; name = icon.iconset; path = ../icon.iconset; sourceTree = "<group>"; };
 		8666A000169254AE00B0DACE /* DataPacket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataPacket.h; sourceTree = "<group>"; };
 		8666A001169254AE00B0DACE /* DataPacket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataPacket.m; sourceTree = "<group>"; };
-		8666E3C216A3BA6600A9DD85 /* Commander.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Commander.h; sourceTree = "<group>"; };
-		8666E3C316A3BA6600A9DD85 /* Commander.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Commander.m; sourceTree = "<group>"; };
 		86672DF816F7D2BD00F36110 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
 		8670FBA817068B6100F9C2DC /* en */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = en; path = en.lproj/AppDelegate.m; sourceTree = "<group>"; };
 		86856909174C2CB300104789 /* AutoFlipSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoFlipSwitch.h; sourceTree = "<group>"; };
@@ -247,8 +237,6 @@
 				860EF3601636060100B46E35 /* AppController.m */,
 				86159E6816DB1D7B00E79C27 /* ParseTCPOperation.h */,
 				86159E6916DB1D7B00E79C27 /* ParseTCPOperation.m */,
-				8666E3C216A3BA6600A9DD85 /* Commander.h */,
-				8666E3C316A3BA6600A9DD85 /* Commander.m */,
 				86B31626173AFBC900EF5104 /* NIB Files */,
 				86159E7516DED0D400E79C27 /* Windows Controllers */,
 				8693D5E416C5BAC500985DDB /* Externals */,
@@ -262,7 +250,6 @@
 			children = (
 				8660983A16B398DD00BE26D1 /* icon.iconset */,
 				868C540E171F7FED00518819 /* README.md */,
-				8609D8C516D57CD2007D1FA6 /* CommandList.plist */,
 				860EF333163605D300B46E35 /* HEROES SAS GSE-Info.plist */,
 				860EF334163605D300B46E35 /* InfoPlist.strings */,
 				860EF337163605D300B46E35 /* main.m */,
@@ -298,8 +285,6 @@
 				86BA70791745580300B02AE4 /* RASCameraViewWindow.m */,
 				8635E283171B0A1B00F69CD2 /* PlotWindowController.h */,
 				8635E284171B0A1B00F69CD2 /* PlotWindowController.m */,
-				86159E7B16DED4FA00E79C27 /* CommanderWindowController.h */,
-				86159E7C16DED4FB00E79C27 /* CommanderWindowController.m */,
 				86159E8016DEFA7A00E79C27 /* ConsoleWindowController.h */,
 				86159E8116DEFA7A00E79C27 /* ConsoleWindowController.m */,
 			);
@@ -372,7 +357,6 @@
 			isa = PBXGroup;
 			children = (
 				860EF340163605D300B46E35 /* MainMenu.xib */,
-				86159E7D16DED4FB00E79C27 /* CommanderWindowController.xib */,
 				8635E285171B0A1B00F69CD2 /* PlotWindowController.xib */,
 				86BA707A1745580300B02AE4 /* RASCameraViewWindow.xib */,
 				86159E8216DEFA7A00E79C27 /* ConsoleWindowController.xib */,
@@ -477,8 +461,6 @@
 				860EF342163605D300B46E35 /* MainMenu.xib in Resources */,
 				86E1D84F1695ED1B0079303F /* lib_crc.txt in Resources */,
 				8660983B16B398DD00BE26D1 /* icon.iconset in Resources */,
-				8609D8C716D57CD2007D1FA6 /* CommandList.plist in Resources */,
-				86159E7F16DED4FB00E79C27 /* CommanderWindowController.xib in Resources */,
 				86159E8416DEFA7A00E79C27 /* ConsoleWindowController.xib in Resources */,
 				8635E287171B0A1C00F69CD2 /* PlotWindowController.xib in Resources */,
 				868C540F171F7FED00518819 /* README.md in Resources */,
@@ -525,9 +507,7 @@
 				86A62FE7164D7EE10049527C /* CameraView.m in Sources */,
 				8666A002169254AE00B0DACE /* DataPacket.m in Sources */,
 				86E1D84E1695ED1B0079303F /* lib_crc.c in Sources */,
-				8666E3C416A3BA6600A9DD85 /* Commander.m in Sources */,
 				86159E6A16DB1D7B00E79C27 /* ParseTCPOperation.m in Sources */,
-				86159E7E16DED4FB00E79C27 /* CommanderWindowController.m in Sources */,
 				86159E8316DEFA7A00E79C27 /* ConsoleWindowController.m in Sources */,
 				86A9642B171869BC00C16663 /* DataSeries.m in Sources */,
 				8643AFFB17455021003052A6 /* TCPReceiver.cpp in Sources */,
@@ -566,14 +546,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		8609D8C516D57CD2007D1FA6 /* CommandList.plist */ = {
-			isa = PBXVariantGroup;
-			children = (
-				8609D8C616D57CD2007D1FA6 /* en */,
-			);
-			name = CommandList.plist;
-			sourceTree = "<group>";
-		};
 		860EF334163605D300B46E35 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (

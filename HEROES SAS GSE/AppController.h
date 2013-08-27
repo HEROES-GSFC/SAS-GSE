@@ -11,7 +11,6 @@
 
 #import "DataPacket.h"
 #import "ConsoleWindowController.h"
-#import "CommanderWindowController.h"
 #import "PlotWindowController.h"
 #import "RASCameraViewWindow.h"
 #import "AutoFlipSwitch.h"
@@ -95,7 +94,6 @@
 @property (nonatomic, strong) NSFileHandle *SAS2telemetrySaveFile;
 @property (nonatomic, strong) NSDictionary *timeSeriesCollection;
 
-@property (nonatomic, readonly) CommanderWindowController *Commander_window;
 @property (nonatomic, readonly) ConsoleWindowController *Console_window;
 @property (nonatomic, strong) NSMutableDictionary *PlotWindows;
 

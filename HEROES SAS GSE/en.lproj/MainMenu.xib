@@ -1261,15 +1261,6 @@
 									<reference key="NSOnImage" ref="35465992"/>
 									<reference key="NSMixedImage" ref="502551668"/>
 								</object>
-								<object class="NSMenuItem" id="787453455">
-									<reference key="NSMenu" ref="835318025"/>
-									<string key="NSTitle">Commander</string>
-									<string key="NSKeyEquiv">1</string>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="35465992"/>
-									<reference key="NSMixedImage" ref="502551668"/>
-								</object>
 								<object class="NSMenuItem" id="810799746">
 									<reference key="NSMenu" ref="835318025"/>
 									<string key="NSTitle">Console</string>
@@ -5324,14 +5315,6 @@
 					<int key="connectionID">1821</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">OpenWindow_WindowMenuItemAction:</string>
-						<reference key="source" ref="1011726000"/>
-						<reference key="destination" ref="787453455"/>
-					</object>
-					<int key="connectionID">1822</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">PYASFCTLCmdEchoTextField</string>
 						<reference key="source" ref="1011726000"/>
@@ -6277,7 +6260,6 @@
 							<reference ref="625202149"/>
 							<reference ref="575023229"/>
 							<reference ref="1011231497"/>
-							<reference ref="787453455"/>
 							<reference ref="810799746"/>
 							<reference ref="596615178"/>
 						</array>
@@ -9692,11 +9674,6 @@
 						<int key="objectID">1588</int>
 						<reference key="object" ref="477890468"/>
 						<reference key="parent" ref="987448104"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">1817</int>
-						<reference key="object" ref="787453455"/>
-						<reference key="parent" ref="835318025"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">1819</int>
@@ -17726,7 +17703,6 @@
 				<boolean value="NO" key="1795.IBNSViewMetadataTranslatesAutoresizingMaskIntoConstraints"/>
 				<string key="1795.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="1796.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="1817.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="1819.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="19.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<array class="NSMutableArray" key="1935.IBNSViewMetadataConstraints">
