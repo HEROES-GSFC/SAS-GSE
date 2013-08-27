@@ -5,30 +5,39 @@
 //  Created by Steven Christe on 10/22/12.
 //  Copyright (c) 2012 GSFC. All rights reserved.
 //
-#define GROUND_NETWORK true
 #import "AppController.h"
 #import "ParseDataOperation.h"
 #import "ParseTCPOperation.h"
 #import "DataPacket.h"
 #import "lib_crc.h"
 #import "CameraView.h"
-#import "CommanderWindowController.h"
 #import "ConsoleWindowController.h"
 #import "DataSeries.h"
 #import "TimeSeries.h"
 #import "Transform.hpp"
 #import "RASCameraViewWindow.h"
 #import "NumberInRangeFormatter.h"
+#import "UDPSender.hpp"
+#import "TCPSender.hpp"
+#import "Packet.hpp"
+
+#define GROUND_NETWORK true /* Change this as appropriate */
+
+#define GROUND_NETWORK_PORT 2003 /* The telemetry port on the ground network */
+#define FLIGHT_NETWORK_PORT 2002 /* The telemetry port on the flight network */
+#define TPCPORT_FOR_IMAGE_DATA 2013
+#define IP_LOOPBACK "127.0.0.1"
 
 @interface AppController ()
 @property (nonatomic, strong) NSOperationQueue *queue;
 @property (nonatomic, strong) NSTimer *IndicatorFlipTimer;
 @property (nonatomic, strong) NSDictionary *listOfCommands;
-@property (nonatomic, strong) DataPacket *packet;
 @property (nonatomic, strong) NSArray *PlotWindowsAvailable;
 @property (nonatomic, strong) NSArray *IndicatorTimers;
 - (NSString *)createDateTimeString: (NSString *)type;
 - (void)OpenTelemetrySaveTextFiles;
+- (void)StartListeningForUDP: (int)port;
+- (void)StartListeningForTCP;
 @end
 
 @implementation AppController
@@ -49,7 +58,6 @@
 @synthesize MainWindow;
 @synthesize PYASFcameraView = _PYASFcameraView;
 @synthesize PYASRcameraView = _PYASRcameraView;
-@synthesize Commander_window = _Commander_window;
 @synthesize Console_window = _Console_window;
 
 @synthesize TimeProfileMenu;
@@ -58,7 +66,6 @@
 @synthesize IndicatorFlipTimer = _IndicatorFlipTimer;
 @synthesize listOfCommands = _listOfCommands;
 @synthesize queue = _queue;
-@synthesize packet = _packet;
 @synthesize SAS1telemetrySaveFile = _SAS1telemetrySaveFile;
 @synthesize SAS2telemetrySaveFile = _SAS2telemetrySaveFile;
 @synthesize timeSeriesCollection = _timeSeriesCollection;
@@ -106,10 +113,10 @@
             [allTimeSeries addObject:timeSeries];
         }
         
+        self.PYASFcameraView = [[CameraView alloc] init];
+        self.PYASRcameraView = [[CameraView alloc] init];
+
         self.timeSeriesCollection = [NSDictionary dictionaryWithObjects:allTimeSeries forKeys:timeSeriesNames];
-        
-        [self.Commander_window showWindow:nil];
-        [self.Commander_window.window orderFront:self];
         
         [self.Console_window showWindow:nil];
         [self.Console_window.window orderFront:self];
@@ -163,12 +170,6 @@
     formatter = [self.SAS1T5TextField formatter];
     formatter.maximum = 100;
     formatter.minimum = -20;
-    formatter = [self.SAS1T6TextField formatter];
-    formatter.maximum = 100;
-    formatter.minimum = -20;
-    formatter = [self.SAS1T7TextField formatter];
-    formatter.maximum = 100;
-    formatter.minimum = -20;
     
     formatter = [self.SAS2T0TextField formatter];
     formatter.maximum = 100;
@@ -186,12 +187,6 @@
     formatter.maximum = 100;
     formatter.minimum = -20;
     formatter = [self.SAS2T5TextField formatter];
-    formatter.maximum = 100;
-    formatter.minimum = -20;
-    formatter = [self.SAS2T6TextField formatter];
-    formatter.maximum = 100;
-    formatter.minimum = -20;
-    formatter = [self.SAS2T7TextField formatter];
     formatter.maximum = 100;
     formatter.minimum = -20;
     
@@ -238,13 +233,17 @@
             [menuItem setAction:@selector(OpenWindow_WindowMenuItemAction:)];
 
     }
-    // start the GetPathsOperation with the root path to start the search
-    ParseDataOperation *parseOp = [[ParseDataOperation alloc] init];
-    ParseTCPOperation *parseTCP = [[ParseTCPOperation alloc] init];
     
+    [self StartListeningForUDP: GROUND_NETWORK_PORT];
+    [self StartListeningForTCP];
+            
+    [self OpenTelemetrySaveTextFiles];
+    [self postToLogWindow:@"Application started"];
+}
+
+- (void)StartListeningForUDP: (int)port {
+    ParseDataOperation *parseOp = [[ParseDataOperation alloc] initWithPort:port];
     [self.queue addOperation:parseOp];
-    [self.queue addOperation:parseTCP];
-    
     if([[self.queue operations] containsObject:parseOp]){
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(anyThread_handleData:)
@@ -252,6 +251,59 @@
                                                    object:nil];
         
     }
+}
+
+- (void)SetNewNetworkLocation:(NSPopUpButton *)sender{
+    
+    NSLog(@"You chose %@", [sender titleOfSelectedItem]);
+    [self postToLogWindow:@"Stopping UDP and TCP listeners"];
+    [self.queue cancelAllOperations];
+    
+    //[self.queue waitUntilAllOperationsAreFinished];
+    [self postToLogWindow:@"UDP and TCP listeners are stopped"];
+    if ([[sender titleOfSelectedItem] isEqualToString:@"Ground"]) {
+        UDPSender udpSender = UDPSender(IP_LOOPBACK, FLIGHT_NETWORK_PORT);
+        udpSender.init_connection();
+        uint8_t temp[1];
+        Packet packet = Packet(temp,(uint16_t)1);
+        udpSender.send(&packet);
+        udpSender.close_connection();
+        
+        ImagePacket imagePacket = ImagePacket(1, 1);
+        TCPSender tcpSender = TCPSender(IP_LOOPBACK, TPCPORT_FOR_IMAGE_DATA);
+        tcpSender.init_connection();
+        tcpSender.send_packet(&imagePacket);
+        tcpSender.close_connection();
+        [self.queue waitUntilAllOperationsAreFinished];
+        [self StartListeningForUDP: GROUND_NETWORK_PORT];
+        [self StartListeningForTCP];
+    }
+    if ([[sender titleOfSelectedItem] isEqualToString:@"Flight"]) {
+        UDPSender udpSender = UDPSender(IP_LOOPBACK, GROUND_NETWORK_PORT);
+        udpSender.init_connection();
+        uint8_t temp[1];
+        Packet packet = Packet(temp,(uint16_t)1);
+        udpSender.send(&packet);
+        udpSender.close_connection();
+        
+        ImagePacket imagePacket = ImagePacket(1, 1);
+        TCPSender tcpSender = TCPSender(IP_LOOPBACK, TPCPORT_FOR_IMAGE_DATA);
+        tcpSender.init_connection();
+        tcpSender.send_packet(&imagePacket);
+        tcpSender.close_connection();
+        [self.queue waitUntilAllOperationsAreFinished];
+        [self StartListeningForUDP: FLIGHT_NETWORK_PORT];
+        [self StartListeningForTCP];
+
+    }
+}
+
+- (void)StartListeningForTCP{
+    ParseTCPOperation *parseTCP = [[ParseTCPOperation alloc] init];
+    
+    [self.queue addOperation:parseTCP];
+    
+    
     
     if([[self.queue operations] containsObject:parseTCP]){
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -259,19 +311,9 @@
                                                      name:kReceiveAndParseImageDidFinish
                                                    object:nil];
     }
-        
-    [self OpenTelemetrySaveTextFiles];
-    [self postToLogWindow:@"Application started"];
 }
 
-- (CommanderWindowController *)Commander_window
-{
-    if (_Commander_window == nil)
-    {
-        _Commander_window = [[CommanderWindowController alloc] init];
-    }
-    return _Commander_window;
-}
+
 - (NSMutableDictionary *)PlotWindows
 {
     if (_PlotWindows == nil)
@@ -322,30 +364,6 @@
         _listOfCommands = [[NSDictionary alloc] init];
     }
     return _listOfCommands;
-}
-
-- (CameraView *)PYASRcameraView
-{
-    if (_PYASRcameraView == nil) {
-        _PYASRcameraView = [[CameraView alloc] init];
-    }
-    return _PYASRcameraView;
-}
-
-- (CameraView *)PYASFcameraView
-{
-    if (_PYASFcameraView == nil) {
-        _PYASFcameraView = [[CameraView alloc] init];
-    }
-    return _PYASFcameraView;
-}
-
-- (DataPacket *)packet
-{
-    if (_packet == nil) {
-        _packet = [[DataPacket alloc] init];
-    }
-    return _packet;
 }
 
 - (IBAction)PYASsaveImage_ButtonAction:(NSButton *)sender {
@@ -512,15 +530,14 @@
     // Otherwise, we let any remaining notifications drain out.
     //
     NSDictionary *notifData = [note userInfo];
-    self.packet = [notifData valueForKey:@"packet"];
     
+    DataPacket *packet = [notifData valueForKey:@"packet"];
     NSColor *FieldWasUpdatedColor = [NSColor blackColor];
     NSColor *FieldIsStaleColor = [NSColor darkGrayColor];
     
     Transform NorthTransform;
     double northAngle;
-    
-    //calculate the solar north angle here and pass it to PYASFcameraView
+    //calculate the solar north angle here and pass it to
     NorthTransform.getSunAzEl();
     northAngle = NorthTransform.getOrientation();
     //this code assumes that up on the screen is the zenith (which it is not)
@@ -531,31 +548,33 @@
         northAngle = 540 - northAngle;
     }
     
-    if (self.packet.isSAS1) {
+    if (packet.isSAS1) {
         [self.SAS1AutoFlipSwitch reset];
-        [self.SAS1FrameNumberLabel setIntegerValue:[self.packet frameNumber]];
-        [self.SAS1FrameTimeLabel setStringValue:[self.packet getframeTimeString]];
+        [self.SAS1FrameNumberLabel setIntegerValue:[packet frameNumber]];
+        [self.SAS1FrameTimeLabel setStringValue:[packet getframeTimeString]];
         
-        [self.SAS1CmdKeyTextField setStringValue:[NSString stringWithFormat:@"0x%04x", [self.packet commandKey]]];
+        [self.SAS1CmdKeyTextField setStringValue:[NSString stringWithFormat:@"0x%04x", [packet commandKey]]];
         
-        [[self.timeSeriesCollection objectForKey:@"SAS1 ctl X solution"] addPointWithTime:[self.packet getDate] :60*60*[self.packet.CTLCommand pointValue].x];
-        [[self.timeSeriesCollection objectForKey:@"SAS1 ctl Y solution"] addPointWithTime:[self.packet getDate] :60*60*[self.packet.CTLCommand pointValue].y];
-        //[[self.timeSeriesCollection objectForKey:@"SAS1 ctl R solution"] addPointWithTime:[self.packet getDate] :sqrtf(powf(60*60*[self.packet.CTLCommand pointValue].y,2) + powf(60*60*[self.packet.CTLCommand pointValue].y,2))];
+        [[self.timeSeriesCollection objectForKey:@"SAS1 ctl X solution"] addPointWithTime:[packet getDate] :60*60*[packet.CTLCommand pointValue].x];
+        [[self.timeSeriesCollection objectForKey:@"SAS1 ctl Y solution"] addPointWithTime:[packet getDate] :60*60*[packet.CTLCommand pointValue].y];
+        //[[self.timeSeriesCollection objectForKey:@"SAS1 ctl R solution"] addPointWithTime:[packet getDate] :sqrtf(powf(60*60*[packet.CTLCommand pointValue].y,2) + powf(60*60*[packet.CTLCommand pointValue].y,2))];
         
         TimeSeries *ctlXValues = [self.timeSeriesCollection objectForKey:@"SAS1 ctl X solution"];
         TimeSeries *ctlYValues = [self.timeSeriesCollection objectForKey:@"SAS1 ctl Y solution"];
         
-        //[[self.timeSeriesCollection objectForKey:@"SAS1 ctl R solution"] addPointWithTime:[self.packet getDate] :sqrtf(powf(60*60*[self.packet.CTLCommand pointValue].y,2) + powf(60*60*[self.packet.CTLCommand pointValue].y,2))];
+        //[[self.timeSeriesCollection objectForKey:@"SAS1 ctl R solution"] addPointWithTime:[packet getDate] :sqrtf(powf(60*60*[packet.CTLCommand pointValue].y,2) + powf(60*60*[packet.CTLCommand pointValue].y,2))];
         
         [self.PYASFCTLSigmaTextField setStringValue:[NSString stringWithFormat:@"%6.2f, %6.2f", ctlXValues.standardDeviation, ctlYValues.standardDeviation]];
-        [self.PYASFCTLCmdEchoTextField setStringValue:[NSString stringWithFormat:@"%5.3f, %5.3f", [self.packet.CTLCommand pointValue].x, [self.packet.CTLCommand pointValue].y]];
-        self.PYASFImageMaxTextField.intValue = self.packet.ImageMax;
+        [self.PYASFCTLCmdEchoTextField setStringValue:[NSString stringWithFormat:@"%5.3f, %5.3f", [packet.CTLCommand pointValue].x, [packet.CTLCommand pointValue].y]];
+        self.PYASFImageMaxTextField.intValue = packet.ImageMax;
         
-        [self.PYASFcameraView setCircleCenter:[self.packet.sunCenter pointValue].x :[self.packet.sunCenter pointValue].y];
-        self.PYASFcameraView.chordCrossingPoints = self.packet.chordPoints;
-        self.PYASFcameraView.fiducialPoints = self.packet.fiducialPoints;
-        [self.PYASFcameraView setScreenCenter:[self.packet.screenCenter pointValue].x :[self.packet.screenCenter pointValue].y];
-        self.PYASFcameraView.screenRadius = self.packet.screenRadius;
+        [self.PYASFcameraView setCircleCenter:[packet.sunCenter pointValue].x :[packet.sunCenter pointValue].y];
+        self.PYASFcameraView.chordCrossingPoints = [packet getChordPoints];
+        self.PYASFcameraView.fiducialPoints = [packet getFiducialPoints];
+        self.PYASFcameraView.fiducialIDs = [packet getFiducialIDs];
+        [self.PYASFcameraView setScreenCenter:[packet.screenCenter pointValue].x :[packet.screenCenter pointValue].y];
+        self.PYASFcameraView.screenRadius = packet.screenRadius;
+        self.PYASFcameraView.clockingAngle = packet.clockingAngle;
         
         [self.SAS1CPUTemperatureLabel setTextColor:FieldIsStaleColor];
         [self.PYASFCameraTemperatureLabel setTextColor:FieldIsStaleColor];
@@ -565,78 +584,76 @@
         [self.SAS1T3TextField setTextColor:FieldIsStaleColor];
         [self.SAS1T4TextField setTextColor:FieldIsStaleColor];
         [self.SAS1T5TextField setTextColor:FieldIsStaleColor];
-        [self.SAS1T6TextField setTextColor:FieldIsStaleColor];
 
         [self.SAS1V0TextField setTextColor:FieldIsStaleColor];
         [self.SAS1V1TextField setTextColor:FieldIsStaleColor];
         [self.SAS1V2TextField setTextColor:FieldIsStaleColor];
         [self.SAS1V3TextField setTextColor:FieldIsStaleColor];
         [self.SAS1V4TextField setTextColor:FieldIsStaleColor];
-        [self.SAS1V5TextField setTextColor:FieldIsStaleColor];
-                
-        switch (self.packet.frameNumber % 8) {
+        
+        switch (packet.frameNumber % 8) {
             case 0:{
-                NSString *string = [NSString stringWithFormat:@"%6.2f", self.packet.cpuTemperature];
+                NSString *string = [NSString stringWithFormat:@"%6.2f", packet.cpuTemperature];
                 [self.SAS1CPUTemperatureLabel setStringValue:string];
                 [self.SAS1CPUTemperatureLabel setTextColor:FieldWasUpdatedColor];
                 
-                [self.PYASFCameraTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", self.packet.cameraTemperature]];
-                if (self.packet.cameraTemperature != 0) {
+                [self.PYASFCameraTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", packet.cameraTemperature]];
+                if (packet.cameraTemperature != 0) {
                     [self.PYASFAutoFlipSwitch reset];
                 }
                 [self.PYASFCameraTemperatureLabel setTextColor:FieldWasUpdatedColor];
-                [[self.timeSeriesCollection objectForKey:@"PYAS-F camera temperature"] addPointWithTime:[self.packet getDate] :self.packet.cameraTemperature];
+                [[self.timeSeriesCollection objectForKey:@"PYAS-F camera temperature"] addPointWithTime:[packet getDate] :packet.cameraTemperature];
                 break;}
             case 1:
-                [self.PYASFCameraTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", self.packet.cameraTemperature]];
-                if (self.packet.cameraTemperature != 0) {
+                [self.PYASFCameraTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", packet.cameraTemperature]];
+                if (packet.cameraTemperature != 0) {
                     [self.PYASFAutoFlipSwitch reset];
                 }
-                [self.SAS1T0TextField setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:0] floatValue]];
+                [self.SAS1T0TextField setFloatValue:[[packet.i2cTemperatures objectAtIndex:0] floatValue]];
                 [self.SAS1T0TextField setTextColor:FieldWasUpdatedColor];
                 break;
             case 2:
-                [self.SAS1T1TextField setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:1] floatValue]];
-                [self.SAS1V0TextField setFloatValue:[[self.packet.sbcVoltages objectAtIndex:0] floatValue]];
+                [self.SAS1T1TextField setFloatValue:[[packet.i2cTemperatures objectAtIndex:1] floatValue]];
+                [self.SAS1V0TextField setFloatValue:[[packet.sbcVoltages objectAtIndex:0] floatValue]];
                 [self.SAS1T1TextField setTextColor:FieldWasUpdatedColor];
                 [self.SAS1V0TextField setTextColor:FieldWasUpdatedColor];
                 break;
             case 3:
-                [self.SAS1T2TextField setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:2] floatValue]];
-                [self.SAS1V1TextField setFloatValue:[[self.packet.sbcVoltages objectAtIndex:1] floatValue]];
+                [self.SAS1T2TextField setFloatValue:[[packet.i2cTemperatures objectAtIndex:2] floatValue]];
+                [self.SAS1V1TextField setFloatValue:[[packet.sbcVoltages objectAtIndex:1] floatValue]];
                 [self.SAS1T2TextField setTextColor:FieldWasUpdatedColor];
                 [self.SAS1V1TextField setTextColor:FieldWasUpdatedColor];
                 break;
             case 4:
-                [self.SAS1T3TextField setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:3] floatValue]];
-                [self.SAS1V2TextField setFloatValue:[[self.packet.sbcVoltages objectAtIndex:2] floatValue]];
+                [self.SAS1T3TextField setFloatValue:[[packet.i2cTemperatures objectAtIndex:3] floatValue]];
+                [self.SAS1V2TextField setFloatValue:[[packet.sbcVoltages objectAtIndex:2] floatValue]];
                 [self.SAS1T3TextField setTextColor:FieldWasUpdatedColor];
                 [self.SAS1V2TextField setTextColor:FieldWasUpdatedColor];
                 break;
             case 5:
-                [self.SAS1T4TextField setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:4] floatValue]];
-                [self.SAS1V3TextField setFloatValue:[[self.packet.sbcVoltages objectAtIndex:3] floatValue]];
+                [self.SAS1T4TextField setFloatValue:[[packet.i2cTemperatures objectAtIndex:4] floatValue]];
+                [self.SAS1V3TextField setFloatValue:[[packet.sbcVoltages objectAtIndex:3] floatValue]];
                 [self.SAS1T4TextField setTextColor:FieldWasUpdatedColor];
                 [self.SAS1V3TextField setTextColor:FieldWasUpdatedColor];
                 break;
             case 6:
-                [self.SAS1T5TextField setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:5] floatValue]];
-                [self.SAS1V4TextField setFloatValue:[[self.packet.sbcVoltages objectAtIndex:4] floatValue]];
+                [self.SAS1T5TextField setFloatValue:[[packet.i2cTemperatures objectAtIndex:5] floatValue]];
+                [self.SAS1V4TextField setFloatValue:[[packet.sbcVoltages objectAtIndex:4] floatValue]];
                 [self.SAS1T5TextField setTextColor:FieldWasUpdatedColor];
                 [self.SAS1V4TextField setTextColor:FieldWasUpdatedColor];
                 break;
             case 7:
-                // add is image saving here
+                [self.SAS1ClockSync_indicator setIntValue:1*packet.isClockSynced];
+                [self.SAS1isSavingImages setIntValue:1*packet.isSavingImages];
                 break;
             default:
                 break;
         }
         
-        [self.PYASFAspectErrorCodeTextField setIntegerValue:self.packet.aspectErrorCode];
-        [self.PYASFisTracking_indicator setIntValue:1*self.packet.isTracking];
-        [self.PYASFProvidingCTL_indicator setIntValue:1*self.packet.isOutputting];
-        [self.SAS1ClockSync_indicator setIntValue:1*self.packet.isClockSynced];
-        [self.PYASFFoundSun_indicator setIntValue:1*self.packet.isSunFound];
+        [self.PYASFAspectErrorCodeTextField setStringValue:packet.aspectErrorCode];
+        [self.PYASFisTracking_indicator setIntValue:1*packet.isTracking];
+        [self.PYASFProvidingCTL_indicator setIntValue:1*packet.isOutputting];
+        [self.PYASFFoundSun_indicator setIntValue:1*packet.isSunFound];
         
         self.PYASFcameraView.northAngle = northAngle;
         
@@ -645,48 +662,50 @@
                                  self.SAS1FrameNumberLabel.stringValue,
                                  self.PYASFCameraTemperatureLabel.stringValue,
                                  self.SAS1CPUTemperatureLabel.stringValue,
-                                 [NSString stringWithFormat:@"%f, %f", [self.packet.sunCenter pointValue].x,
-                                  [self.packet.sunCenter pointValue].y],
-                                 [NSString stringWithFormat:@"%f, %f", [self.packet.CTLCommand pointValue].x,
-                                  [self.packet.CTLCommand pointValue].y]
+                                 [NSString stringWithFormat:@"%f, %f", [packet.sunCenter pointValue].x,
+                                  [packet.sunCenter pointValue].y],
+                                 [NSString stringWithFormat:@"%f, %f", [packet.CTLCommand pointValue].x,
+                                  [packet.CTLCommand pointValue].y]
                                  ];
         [self.SAS1telemetrySaveFile writeData:[writeString dataUsingEncoding:NSUTF8StringEncoding]];
         
         [self.PYASFcameraView draw];
     }
     
-    if (self.packet.isSAS2) {
+    if (packet.isSAS2) {
         [self.SAS2AutoFlipSwitch reset];
-        [self.SAS2FrameNumberLabel setIntegerValue:[self.packet frameNumber]];
-        [self.SAS2FrameTimeLabel setStringValue:[self.packet getframeTimeString]];
-        [self.SAS2CmdKeyTextField setStringValue:[NSString stringWithFormat:@"0x%04x", [self.packet commandKey]]];
+        [self.SAS2FrameNumberLabel setIntegerValue:[packet frameNumber]];
+        [self.SAS2FrameTimeLabel setStringValue:[packet getframeTimeString]];
+        [self.SAS2CmdKeyTextField setStringValue:[NSString stringWithFormat:@"0x%04x", [packet commandKey]]];
         
-        [self.PYASRCTLCmdEchoTextField setStringValue:[NSString stringWithFormat:@"%5.3f, %5.3f", [self.packet.CTLCommand pointValue].x, [self.packet.CTLCommand pointValue].y]];
+        [self.PYASRCTLCmdEchoTextField setStringValue:[NSString stringWithFormat:@"%5.3f, %5.3f", [packet.CTLCommand pointValue].x, [packet.CTLCommand pointValue].y]];
         
-        [self.PYASRcameraView setCircleCenter:[self.packet.sunCenter pointValue].x :[self.packet.sunCenter pointValue].y];
-        self.PYASRcameraView.chordCrossingPoints = self.packet.chordPoints;
-        self.PYASRcameraView.fiducialPoints = self.packet.fiducialPoints;
-        [self.PYASRcameraView setScreenCenter:[self.packet.screenCenter pointValue].x :[self.packet.screenCenter pointValue].y];
-        self.PYASRcameraView.screenRadius = self.packet.screenRadius;
+        [self.PYASRcameraView setCircleCenter:[packet.sunCenter pointValue].x :[packet.sunCenter pointValue].y];
+        self.PYASRcameraView.chordCrossingPoints = [packet getChordPoints];
+        self.PYASRcameraView.fiducialPoints = [packet getFiducialPoints];
+        [self.PYASRcameraView setScreenCenter:[packet.screenCenter pointValue].x :[packet.screenCenter pointValue].y];
+        self.PYASRcameraView.screenRadius = packet.screenRadius;
+        self.PYASRcameraView.clockingAngle = packet.clockingAngle;
+        self.PYASRcameraView.fiducialIDs = [packet getFiducialIDs];
         
-        if (self.packet.frameNumber % 2) {
-            self.RASImageMaxTextField.intValue = self.packet.ImageMax;
+        if (packet.frameNumber % 2) {
+            self.RASImageMaxTextField.intValue = packet.ImageMax;
         } else {
-            self.PYASRImageMaxTextField.intValue = self.packet.ImageMax;
+            self.PYASRImageMaxTextField.intValue = packet.ImageMax;
         }
         
         [self.PYASFCameraTemperatureLabel setBackgroundColor:[NSColor whiteColor]];
         [self.SAS1CPUTemperatureLabel setBackgroundColor:[NSColor whiteColor]];
         
-        [[self.timeSeriesCollection objectForKey:@"SAS2 ctl X solution"] addPointWithTime:[self.packet getDate] :60*60*[self.packet.CTLCommand pointValue].x];
-        [[self.timeSeriesCollection objectForKey:@"SAS2 ctl Y solution"] addPointWithTime:[self.packet getDate] :60*60*[self.packet.CTLCommand pointValue].y];
+        [[self.timeSeriesCollection objectForKey:@"SAS2 ctl X solution"] addPointWithTime:[packet getDate] :60*60*[packet.CTLCommand pointValue].x];
+        [[self.timeSeriesCollection objectForKey:@"SAS2 ctl Y solution"] addPointWithTime:[packet getDate] :60*60*[packet.CTLCommand pointValue].y];
                 
         TimeSeries *ctlXValues = [self.timeSeriesCollection objectForKey:@"SAS2 ctl X solution"];
         TimeSeries *ctlYValues = [self.timeSeriesCollection objectForKey:@"SAS2 ctl Y solution"];
         
         [self.PYASRCTLSigmaTextField setStringValue:[NSString stringWithFormat:@"%6.2f, %6.2f", ctlXValues.standardDeviation, ctlYValues.standardDeviation]];
         
-        //[[self.timeSeriesCollection objectForKey:@"SAS2 ctl R solution"] addPointWithTime:[self.packet getDate] :sqrtf(powf(60*60*[self.packet.CTLCommand pointValue].y,2) + powf(60*60*[self.packet.CTLCommand pointValue].y,2))];
+        //[[self.timeSeriesCollection objectForKey:@"SAS2 ctl R solution"] addPointWithTime:[packet getDate] :sqrtf(powf(60*60*[packet.CTLCommand pointValue].y,2) + powf(60*60*[packet.CTLCommand pointValue].y,2))];
         
         [self.SAS2CPUTemperatureLabel setTextColor:FieldIsStaleColor];
         [self.PYASRCameraTemperatureLabel setTextColor:FieldIsStaleColor];
@@ -698,69 +717,67 @@
         [self.SAS2T3TextField setTextColor:FieldIsStaleColor];
         [self.SAS2T4TextField setTextColor:FieldIsStaleColor];
         [self.SAS2T5TextField setTextColor:FieldIsStaleColor];
-        [self.SAS2T6TextField setTextColor:FieldIsStaleColor];
         
         [self.SAS2V0TextField setTextColor:FieldIsStaleColor];
         [self.SAS2V1TextField setTextColor:FieldIsStaleColor];
         [self.SAS2V2TextField setTextColor:FieldIsStaleColor];
         [self.SAS2V3TextField setTextColor:FieldIsStaleColor];
         [self.SAS2V4TextField setTextColor:FieldIsStaleColor];
-        [self.SAS2V5TextField setTextColor:FieldIsStaleColor];
-
         
-        switch (self.packet.frameNumber % 8) {
+        switch (packet.frameNumber % 8) {
             case 0:
-                [self.SAS2CPUTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", self.packet.cpuTemperature]];
-                [self.PYASRCameraTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", self.packet.cameraTemperature]];
-                if (self.packet.cameraTemperature != 0) {
+                [self.SAS2CPUTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", packet.cpuTemperature]];
+                [self.PYASRCameraTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", packet.cameraTemperature]];
+                if (packet.cameraTemperature != 0) {
                     [self.PYASRAutoFlipSwitch reset];
                 }
                 [self.SAS2CPUTemperatureLabel setTextColor:FieldWasUpdatedColor];
                 [self.PYASRCameraTemperatureLabel setTextColor:FieldWasUpdatedColor];
-                [[self.timeSeriesCollection objectForKey:@"PYAS-R camera temperature"] addPointWithTime:[self.packet getDate] :self.packet.cameraTemperature];
+                [[self.timeSeriesCollection objectForKey:@"PYAS-R camera temperature"] addPointWithTime:[packet getDate] :packet.cameraTemperature];
                 break;
             case 1:
-                [[self.timeSeriesCollection objectForKey:@"RAS camera temperature"] addPointWithTime:[self.packet getDate] :self.packet.cameraTemperature];
-                [self.RASCameraTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", self.packet.cameraTemperature]];
-                if (self.packet.cameraTemperature != 0) {
+                [[self.timeSeriesCollection objectForKey:@"RAS camera temperature"] addPointWithTime:[packet getDate] :packet.cameraTemperature];
+                [self.RASCameraTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", packet.cameraTemperature]];
+                if (packet.cameraTemperature != 0) {
                     [self.RASAutoFlipSwitch reset];
                 }
                 [self.RASCameraTemperatureLabel setTextColor:FieldWasUpdatedColor]; 
-                [self.SAS2T0TextField setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:0] floatValue]];
+                [self.SAS2T0TextField setFloatValue:[[packet.i2cTemperatures objectAtIndex:0] floatValue]];
                 [self.SAS2T0TextField setTextColor:FieldWasUpdatedColor];
                 break;
             case 2:
-                [self.SAS2T1TextField setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:1] floatValue]];
-                [self.SAS2V0TextField setFloatValue:[[self.packet.sbcVoltages objectAtIndex:0] floatValue]];
+                [self.SAS2T1TextField setFloatValue:[[packet.i2cTemperatures objectAtIndex:1] floatValue]];
+                [self.SAS2V0TextField setFloatValue:[[packet.sbcVoltages objectAtIndex:0] floatValue]];
                 [self.SAS2T1TextField setTextColor:FieldWasUpdatedColor];
                 [self.SAS2V0TextField setTextColor:FieldWasUpdatedColor];
                 break;
             case 3:
-                [self.SAS2T2TextField setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:2] floatValue]];
-                [self.SAS2V1TextField setFloatValue:[[self.packet.sbcVoltages objectAtIndex:1] floatValue]];
+                [self.SAS2T2TextField setFloatValue:[[packet.i2cTemperatures objectAtIndex:2] floatValue]];
+                [self.SAS2V1TextField setFloatValue:[[packet.sbcVoltages objectAtIndex:1] floatValue]];
                 [self.SAS2T2TextField setTextColor:FieldWasUpdatedColor];
                 [self.SAS2V1TextField setTextColor:FieldWasUpdatedColor];
                 break;
             case 4:
-                [self.SAS2T3TextField setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:3] floatValue]];
-                [self.SAS2V2TextField setFloatValue:[[self.packet.sbcVoltages objectAtIndex:2] floatValue]];
+                [self.SAS2T3TextField setFloatValue:[[packet.i2cTemperatures objectAtIndex:3] floatValue]];
+                [self.SAS2V2TextField setFloatValue:[[packet.sbcVoltages objectAtIndex:2] floatValue]];
                 [self.SAS2T3TextField setTextColor:FieldWasUpdatedColor];
                 [self.SAS2V2TextField setTextColor:[NSColor blackColor]];
                 break;
             case 5:
-                [self.SAS2T4TextField setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:4] floatValue]];
-                [self.SAS2V3TextField setFloatValue:[[self.packet.sbcVoltages objectAtIndex:3] floatValue]];
+                [self.SAS2T4TextField setFloatValue:[[packet.i2cTemperatures objectAtIndex:4] floatValue]];
+                [self.SAS2V3TextField setFloatValue:[[packet.sbcVoltages objectAtIndex:3] floatValue]];
                 [self.SAS2T4TextField setTextColor:FieldWasUpdatedColor];
                 [self.SAS2V3TextField setTextColor:FieldWasUpdatedColor];
                 break;
             case 6:
-                [self.SAS2T5TextField setFloatValue:[[self.packet.i2cTemperatures objectAtIndex:5] floatValue]];
-                [self.SAS2V4TextField setFloatValue:[[self.packet.sbcVoltages objectAtIndex:4] floatValue]];
+                [self.SAS2T5TextField setFloatValue:[[packet.i2cTemperatures objectAtIndex:5] floatValue]];
+                [self.SAS2V4TextField setFloatValue:[[packet.sbcVoltages objectAtIndex:4] floatValue]];
                 [self.SAS2T5TextField setTextColor:FieldWasUpdatedColor];
                 [self.SAS2V4TextField setTextColor:FieldWasUpdatedColor];
                 break;
             case 7:
-                // add is image saving here
+                [self.SAS2ClockSync_indicator setIntValue:1*packet.isClockSynced];
+                [self.SAS2isSavingImages setIntValue:1*packet.isSavingImages];
                 break;
             default:
                 break;
@@ -770,20 +787,19 @@
         //DataSeries *ctlYValues = [self.PYASRtimeSeriesCollection objectForKey:@"ctl X solution"];
         //DataSeries *ctlXValues = [self.PYASRtimeSeriesCollection objectForKey:@"ctl Y solution"];
         
-        //[[self.PYASRtimeSeriesCollection objectForKey:@"time"] addObject:[self.packet getDate]];
-        //[[self.PYASRtimeSeriesCollection objectForKey:@"cpu temperature"] addPoint:self.packet.cpuTemperature];
-        //[[self.PYASRtimeSeriesCollection objectForKey:@"ctl X solution"] addPoint:60*60*[self.packet.CTLCommand pointValue].x];
-        //[[self.PYASRtimeSeriesCollection objectForKey:@"ctl Y solution"] addPoint:60*60*[self.packet.CTLCommand pointValue].y];
-        //[[self.PYASRtimeSeriesCollection objectForKey:@"ctl R solution"] addPoint:sqrtf(powf([self.packet.CTLCommand pointValue].y - ctlXValues.average,2) + powf([self.packet.CTLCommand pointValue].y - ctlYValues.average,2))];
+        //[[self.PYASRtimeSeriesCollection objectForKey:@"time"] addObject:[packet getDate]];
+        //[[self.PYASRtimeSeriesCollection objectForKey:@"cpu temperature"] addPoint:packet.cpuTemperature];
+        //[[self.PYASRtimeSeriesCollection objectForKey:@"ctl X solution"] addPoint:60*60*[packet.CTLCommand pointValue].x];
+        //[[self.PYASRtimeSeriesCollection objectForKey:@"ctl Y solution"] addPoint:60*60*[packet.CTLCommand pointValue].y];
+        //[[self.PYASRtimeSeriesCollection objectForKey:@"ctl R solution"] addPoint:sqrtf(powf([packet.CTLCommand pointValue].y - ctlXValues.average,2) + powf([packet.CTLCommand pointValue].y - ctlYValues.average,2))];
         
         self.PYASRcameraView.northAngle = northAngle;
         
-        [self.PYASRAspectErrorCodeTextField setIntegerValue:self.packet.aspectErrorCode];
-        [self.PYASRisTracking_indicator setIntValue:1*self.packet.isTracking];
-        [self.PYASRProvidingCTL_indicator setIntValue:1*self.packet.isOutputting];
-        [self.SAS2ClockSync_indicator setIntValue:1*self.packet.isClockSynced];
-        [self.PYASRFoundSun_indicator setIntValue:1*self.packet.isSunFound];
-        
+        [self.PYASRAspectErrorCodeTextField setStringValue:packet.aspectErrorCode];
+        [self.PYASRisTracking_indicator setIntValue:1*packet.isTracking];
+        [self.PYASRProvidingCTL_indicator setIntValue:1*packet.isOutputting];
+        [self.PYASRFoundSun_indicator setIntValue:1*packet.isSunFound];
+
         [self.PYASRcameraView draw];
     }
     // Update the plot windows
@@ -795,9 +811,6 @@
 - (IBAction)OpenWindow_WindowMenuItemAction:(NSMenuItem *)sender {
     NSString *userChoice = [sender title];
     
-    if ([userChoice isEqual: @"Commander"]) {
-        [self.Commander_window showWindow:nil];
-    }
     if ([userChoice isEqual: @"Console"]) {
         [self.Console_window showWindow:nil];
     }

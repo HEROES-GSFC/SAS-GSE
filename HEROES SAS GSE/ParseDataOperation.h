@@ -13,4 +13,6 @@ extern NSString *kReceiveAndParseDataDidFinish;
 
 @interface ParseDataOperation : NSOperation
 
+- (id)initWithPort: (int)port;
+
 @end
