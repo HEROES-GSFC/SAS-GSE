@@ -655,6 +655,7 @@
                 break;
             case 7:
                 // add is image saving here
+                [self.SAS1isSavingImages setIntValue:1*packet.isSavingImages];
                 break;
             default:
                 break;
@@ -665,7 +666,6 @@
         [self.PYASFProvidingCTL_indicator setIntValue:1*packet.isOutputting];
         [self.SAS1ClockSync_indicator setIntValue:1*packet.isClockSynced];
         [self.PYASFFoundSun_indicator setIntValue:1*packet.isSunFound];
-        [self.SAS1isSavingImages setIntValue:1*packet.isSavingImages];
         
         self.PYASFcameraView.northAngle = northAngle;
         
@@ -787,6 +787,7 @@
                 break;
             case 7:
                 // add is image saving here
+                [self.SAS2isSavingImages setIntValue:1*packet.isSavingImages];
                 break;
             default:
                 break;
@@ -809,7 +810,6 @@
         [self.PYASRProvidingCTL_indicator setIntValue:1*packet.isOutputting];
         [self.SAS2ClockSync_indicator setIntValue:1*packet.isClockSynced];
         [self.PYASRFoundSun_indicator setIntValue:1*packet.isSunFound];
-        [self.SAS2isSavingImages setIntValue:1*packet.isSavingImages];
 
         [self.PYASRcameraView draw];
     }

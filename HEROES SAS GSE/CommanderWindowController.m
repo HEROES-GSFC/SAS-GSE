@@ -146,13 +146,17 @@
     unsigned command_key;
     NSScanner *scanner = [NSScanner scannerWithString:[self.commandKey_textField stringValue]];
     [scanner scanHexInt:&command_key];
-        
+    
+    NSString *user_choice = [self.commandListcomboBox stringValue];
+    NSArray *variable_names = [[self.plistDict valueForKey:user_choice] valueForKey:@"var_names"];
+    NSInteger numberOfVariablesNeeded = [variable_names count];
+    
     NSInteger numberOfVariables = [self.Variables_Form numberOfRows];
     if (numberOfVariables == 0) {
         command_sequence_number = [self.commander send:(uint16_t)command_key :nil :[self.destinationIP_textField stringValue]];
     } else {
         NSMutableArray *variables = [[NSMutableArray alloc] init];
-        for (NSInteger i = 0; i < numberOfVariables; i++) {
+        for (NSInteger i = 0; i < numberOfVariablesNeeded; i++) {
             [variables addObject:[NSNumber numberWithInt:[[self.Variables_Form cellAtIndex:i] intValue]]];
         }
         command_sequence_number = [self.commander send:(uint16_t)command_key :[variables copy]:[self.destinationIP_textField stringValue]];
