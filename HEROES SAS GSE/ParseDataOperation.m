@@ -232,6 +232,14 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                             float ctl_xvalue, ctl_yvalue;
                             tm_packet >> ctl_xvalue >> ctl_yvalue;
                             [dataPacket setCTLCommand:[NSValue valueWithPoint:NSMakePoint(ctl_xvalue, ctl_yvalue)]];
+
+                            for (int i = 0; i < NUM_FIDUCIALS; i++) {
+                                uint8_t temp;
+                                tm_packet >> temp;
+                                int x_ID = ((int8_t)bitread(&temp,0,4))-7;
+                                int y_ID = ((int8_t)bitread(&temp,4,4))-7;
+                                [dataPacket addFiducialID:NSMakePoint(x_ID,y_ID) :i];
+                            }
                         }
                         
                         if (tm_packet.getTypeID() == SAS_CM_ACK_TYPE) {

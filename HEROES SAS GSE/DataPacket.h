@@ -38,8 +38,10 @@
 -(NSString *) getframeTimeString;
 -(void) addChordPoint: (NSPoint) point :(int) index;
 -(void) addFiducialPoint: (NSPoint) point :(int) index;
+-(void) addFiducialID: (NSPoint) ID :(int) index;
 -(NSArray *) getChordPoints;
 -(NSArray *) getFiducialPoints;
+-(NSArray *) getFiducialIDs;
 -(NSDate *) getDate;
 
 @end

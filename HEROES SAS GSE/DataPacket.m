@@ -25,6 +25,7 @@
 @interface DataPacket()
 @property (nonatomic, strong) NSMutableArray *chordPoints;
 @property (nonatomic, strong) NSMutableArray *fiducialPoints;
+@property (nonatomic, strong) NSMutableArray *fiducialIDs;
 @end
 
 @implementation DataPacket
@@ -36,6 +37,7 @@
 @synthesize commandKey = _commandKey;
 @synthesize chordPoints = _chordPoints;
 @synthesize fiducialPoints = _fiducialPoints;
+@synthesize fiducialIDs = _fiducialIDs;
 @synthesize sunCenter = _sunCenter;
 @synthesize screenCenter = _screenCenter;
 @synthesize CTLCommand = _CTLCommand;
@@ -60,6 +62,7 @@
     if (self) {
         self.frameMilliseconds = 0;
         self.fiducialPoints = [[NSMutableArray alloc] init];
+        self.fiducialIDs = [[NSMutableArray alloc] init];
         self.chordPoints = [[NSMutableArray alloc] init];
         
         self.sunCenter = [NSValue valueWithPoint:NSMakePoint(0.0f, 0.0f)];
@@ -68,6 +71,9 @@
         }
         for (int i = 0; i < MAX_FIDUCIALS; i++) {
             [self.fiducialPoints addObject:[NSValue valueWithPoint:NSMakePoint(0,0)]];
+        }
+        for (int i = 0; i < MAX_FIDUCIALS; i++) {
+            [self.fiducialIDs addObject:[NSValue valueWithPoint:NSMakePoint(0,0)]];
         }
         for (int i = 0; i < NUM_I2C_SENSORS; i++) {
             [self.i2cTemperatures addObject:[NSNumber numberWithInt:-1]];
@@ -103,6 +109,11 @@
 - (NSArray *)getFiducialPoints
 {
     return [self.fiducialPoints copy];
+}
+
+- (NSArray *)getFiducialIDs
+{
+    return [self.fiducialIDs copy];
 }
 
 - (NSValue *)sunCenter
@@ -150,6 +161,10 @@
 
 -(void) addFiducialPoint:(NSPoint)point :(int) index{
     [self.fiducialPoints replaceObjectAtIndex:index withObject:[NSValue valueWithPoint:point]];
+}
+
+-(void) addFiducialID:(NSPoint)ID :(int) index{
+    [self.fiducialIDs replaceObjectAtIndex:index withObject:[NSValue valueWithPoint:ID]];
 }
 
 -(void)setIsSAS1:(BOOL)isSAS1{
