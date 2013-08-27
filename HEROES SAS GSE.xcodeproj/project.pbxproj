@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		46415E1917CD3F8600B3FD35 /* AspectError.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46415E1717CD3F8600B3FD35 /* AspectError.cpp */; };
 		8605B2FD173610700094566C /* CorePlot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8605B2FC173610700094566C /* CorePlot.framework */; };
 		8605B2FE1736107A0094566C /* CorePlot.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8605B2FC173610700094566C /* CorePlot.framework */; };
 		860EF32C163605D300B46E35 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 860EF32B163605D300B46E35 /* Cocoa.framework */; };
@@ -77,6 +78,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		46415E1717CD3F8600B3FD35 /* AspectError.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AspectError.cpp; path = "SAS-aspect/aspect/AspectError.cpp"; sourceTree = "<group>"; };
+		46415E1817CD3F8600B3FD35 /* AspectError.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = AspectError.hpp; path = "SAS-aspect/aspect/AspectError.hpp"; sourceTree = "<group>"; };
 		8605B2FC173610700094566C /* CorePlot.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CorePlot.framework; path = "HEROES SAS GSE/Frameworks/CorePlot.framework"; sourceTree = "<group>"; };
 		8605B2FF1736116B0094566C /* CorePlot.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CorePlot.framework; path = "HEROES SAS GSE/Frameworks/CorePlot.framework"; sourceTree = "<group>"; };
 		860EF327163605D300B46E35 /* HEROES SAS GSE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "HEROES SAS GSE.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -321,6 +324,8 @@
 		8643AFDE17454F30003052A6 /* SAS lib */ = {
 			isa = PBXGroup;
 			children = (
+				46415E1717CD3F8600B3FD35 /* AspectError.cpp */,
+				46415E1817CD3F8600B3FD35 /* AspectError.hpp */,
 				8643B00F17455079003052A6 /* Image.hpp */,
 				8643AFF417454F88003052A6 /* TCPReceiver.cpp */,
 				8643AFF517454F88003052A6 /* TCPReceiver.hpp */,
@@ -524,6 +529,7 @@
 				8685690B174C2CB300104789 /* AutoFlipSwitch.m in Sources */,
 				86B185A7174F13AF00FE4316 /* NumberInRangeFormatter.m in Sources */,
 				862B2DFE17BD88D70054EB0E /* TimeSeries.m in Sources */,
+				46415E1917CD3F8600B3FD35 /* AspectError.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

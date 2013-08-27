@@ -5,7 +5,6 @@
 //  Created by Steven Christe on 10/22/12.
 //  Copyright (c) 2012 GSFC. All rights reserved.
 //
-#define GROUND_NETWORK true
 #import "AppController.h"
 #import "ParseDataOperation.h"
 #import "ParseTCPOperation.h"
@@ -643,17 +642,16 @@
                 [self.SAS1V4TextField setTextColor:FieldWasUpdatedColor];
                 break;
             case 7:
-                // add is image saving here
+                [self.SAS1ClockSync_indicator setIntValue:1*packet.isClockSynced];
                 [self.SAS1isSavingImages setIntValue:1*packet.isSavingImages];
                 break;
             default:
                 break;
         }
         
-        [self.PYASFAspectErrorCodeTextField setIntegerValue:packet.aspectErrorCode];
+        [self.PYASFAspectErrorCodeTextField setStringValue:packet.aspectErrorCode];
         [self.PYASFisTracking_indicator setIntValue:1*packet.isTracking];
         [self.PYASFProvidingCTL_indicator setIntValue:1*packet.isOutputting];
-        [self.SAS1ClockSync_indicator setIntValue:1*packet.isClockSynced];
         [self.PYASFFoundSun_indicator setIntValue:1*packet.isSunFound];
         
         self.PYASFcameraView.northAngle = northAngle;
@@ -776,7 +774,7 @@
                 [self.SAS2V4TextField setTextColor:FieldWasUpdatedColor];
                 break;
             case 7:
-                // add is image saving here
+                [self.SAS2ClockSync_indicator setIntValue:1*packet.isClockSynced];
                 [self.SAS2isSavingImages setIntValue:1*packet.isSavingImages];
                 break;
             default:
@@ -795,10 +793,9 @@
         
         self.PYASRcameraView.northAngle = northAngle;
         
-        [self.PYASRAspectErrorCodeTextField setIntegerValue:packet.aspectErrorCode];
+        [self.PYASRAspectErrorCodeTextField setStringValue:packet.aspectErrorCode];
         [self.PYASRisTracking_indicator setIntValue:1*packet.isTracking];
         [self.PYASRProvidingCTL_indicator setIntValue:1*packet.isOutputting];
-        [self.SAS2ClockSync_indicator setIntValue:1*packet.isClockSynced];
         [self.PYASRFoundSun_indicator setIntValue:1*packet.isSunFound];
 
         [self.PYASRcameraView draw];
