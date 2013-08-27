@@ -14,6 +14,14 @@
 #define NUM_I2C_SENSORS 8
 #define NUM_VOLTAGE_READINGS 5
 
+//Calibrated parameters
+#define CLOCKING_ANGLE_PYASF -33.26
+#define CENTER_X_PYASF 0
+#define CENTER_Y_PYASF 0
+#define CLOCKING_ANGLE_PYASR -53.26
+#define CENTER_X_PYASR 0
+#define CENTER_Y_PYASR 0
+
 @interface DataPacket()
 @property (nonatomic, strong) NSMutableArray *chordPoints;
 @property (nonatomic, strong) NSMutableArray *fiducialPoints;
@@ -44,6 +52,8 @@
 @synthesize isSunFound;
 @synthesize isTracking;
 @synthesize aspectErrorCode;
+@synthesize clockingAngle;
+@synthesize screenCenterOffset;
 
 -(id)init{
     self = [super init]; // call our super’s designated initializer
@@ -145,11 +155,21 @@
 -(void)setIsSAS1:(BOOL)isSAS1{
     _isSAS1 = isSAS1;
     _isSAS2 = !isSAS1;
+    if (isSAS1) {
+        self.clockingAngle = CLOCKING_ANGLE_PYASF;
+    } else {
+        self.clockingAngle = CLOCKING_ANGLE_PYASR;
+    }
 }
 
 -(void)setIsSAS2:(BOOL)isSAS2{
     _isSAS2 = isSAS2;
     _isSAS1 = !isSAS2;
+    if (isSAS2) {
+        self.clockingAngle = CLOCKING_ANGLE_PYASR;
+    } else {
+        self.clockingAngle = CLOCKING_ANGLE_PYASF;
+    }
 }
 
 @end

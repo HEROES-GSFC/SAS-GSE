@@ -32,6 +32,8 @@
 @property (nonatomic) BOOL isClockSynced;
 @property (nonatomic) BOOL isSavingImages;
 @property (nonatomic) int aspectErrorCode;
+@property (nonatomic) float clockingAngle;
+@property (nonatomic) NSValue *screenCenterOffset;
 
 -(NSString *) getframeTimeString;
 -(void) addChordPoint: (NSPoint) point :(int) index;

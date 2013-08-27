@@ -149,6 +149,8 @@
     glColor3f(0.0f, 1.0f, 0.0f);
     [self drawALine:sunCenter :213.0 :self.northAngle];
     
+    
+    
     // fit the chord crossing to the chord crossing and show that
     //NSDictionary *circleFitResult = [[NSDictionary alloc] init];
     //circleFitResult = [self fitCircle:self.chordCrossingPoints];
@@ -159,6 +161,12 @@
     [self drawAFewPoints:self.chordCrossingPoints];
     glColor3f(0.0f, 1.0f, 1.0f);
     [self drawAFewCrosses:self.fiducialPoints];
+    
+    
+    glColor3f(0.0f, 1.0f, 1.0f);
+    [self drawALine:NSMakePoint(50, 50) :50 :20];
+    glColor3f(0.0f, 1.0f, 1.0f);
+    [self drawALine:NSMakePoint(50, 50) :50 :20+90];
     
     if (self.mouseLocation.x != -1) {
         //NSLog(@"mouse lcoation is %f, %f", self.mouseLocation.x, self.mouseLocation.y);
