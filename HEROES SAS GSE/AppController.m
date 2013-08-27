@@ -571,6 +571,7 @@
         [self.PYASFcameraView setCircleCenter:[packet.sunCenter pointValue].x :[packet.sunCenter pointValue].y];
         self.PYASFcameraView.chordCrossingPoints = [packet getChordPoints];
         self.PYASFcameraView.fiducialPoints = [packet getFiducialPoints];
+        self.PYASFcameraView.fiducialIDs = [packet getFiducialIDs];
         [self.PYASFcameraView setScreenCenter:[packet.screenCenter pointValue].x :[packet.screenCenter pointValue].y];
         self.PYASFcameraView.screenRadius = packet.screenRadius;
         self.PYASFcameraView.clockingAngle = packet.clockingAngle;
@@ -685,6 +686,7 @@
         [self.PYASRcameraView setScreenCenter:[packet.screenCenter pointValue].x :[packet.screenCenter pointValue].y];
         self.PYASRcameraView.screenRadius = packet.screenRadius;
         self.PYASRcameraView.clockingAngle = packet.clockingAngle;
+        self.PYASRcameraView.fiducialIDs = [packet getFiducialIDs];
         
         if (packet.frameNumber % 2) {
             self.RASImageMaxTextField.intValue = packet.ImageMax;

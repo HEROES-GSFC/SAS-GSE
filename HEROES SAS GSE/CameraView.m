@@ -25,8 +25,8 @@
 - (void) prepareOpenGL;
 - (void) drawACross: (NSPoint) center :(float) widthAsPercentOfScreen;
 - (void) drawACircle: (NSPoint) center :(float) radius;
-- (void) drawAFewPoints: (NSMutableArray *)points;
-- (void) drawAFewCrosses: (NSMutableArray *)centers;
+- (void) drawAFewPoints: (NSArray *)points;
+- (void) drawAFewCrosses: (NSArray *)centers;
 - (void) drawOverlay;
 - (void) drawRect: (NSRect) dirtyRect;
 - (void) drawImage;
@@ -56,6 +56,7 @@
 @synthesize screenX;
 @synthesize screenY;
 @synthesize clockingAngle;
+@synthesize fiducialIDs = _fiducialIDs;
 
 -(id) initWithFrame:(NSRect)frameRect
 {
@@ -102,18 +103,27 @@
     return _imageExists;
 }
 
-- (NSMutableArray *)fiducialPoints
+
+- (NSArray *)fiducialIDs
+{
+    if (_fiducialIDs == nil) {
+        _fiducialIDs = [[NSArray alloc] init];
+    }
+    return _fiducialIDs;
+}
+
+- (NSArray *)fiducialPoints
 {
     if (_fiducialPoints == nil) {
-        _fiducialPoints = [[NSMutableArray alloc] init];
+        _fiducialPoints = [[NSArray alloc] init];
     }
     return _fiducialPoints;
 }
 
-- (NSMutableArray *)chordCrossingPoints
+- (NSArray *)chordCrossingPoints
 {
     if (_chordCrossingPoints == nil) {
-        _chordCrossingPoints = [[NSMutableArray alloc] init];
+        _chordCrossingPoints = [[NSArray alloc] init];
     }
     return _chordCrossingPoints;
 }
@@ -154,24 +164,21 @@
     [self drawALine:sunCenter :213.0 :self.northAngle];
     
     
-    
-    // fit the chord crossing to the chord crossing and show that
-    //NSDictionary *circleFitResult = [[NSDictionary alloc] init];
-    //circleFitResult = [self fitCircle:self.chordCrossingPoints];
-    //[self drawACross:[[circleFitResult objectForKey:@"centroid"] pointValue]];
-    //[self drawACircle:[[circleFitResult objectForKey:@"centroid"] pointValue]:[[circleFitResult objectForKey:@"radius"] floatValue]];
-    
     glColor3f(1.0f, 1.0f, 1.0f);
     [self drawAFewPoints:self.chordCrossingPoints];
     glColor3f(0.0f, 1.0f, 1.0f);
-    [self drawAFewCrosses:self.fiducialPoints];
+    [self drawAFewCrosses:self.fiducialPoints WithLabels:self.fiducialIDs];
     
-    
+    // draw elevation/azimuth coordinates
     glColor3f(0.0f, 1.0f, 1.0f);
     [self drawALine:NSMakePoint(50, 50) :50 :self.clockingAngle];
-    glColor3f(0.0f, 1.0f, 1.0f);
+    [self drawText:NSMakePoint(100, 60) :@"El"];
+
+    glColor3f(1.0f, 1.0f, 1.0f);
     [self drawALine:NSMakePoint(50, 50) :50 :self.clockingAngle + 90];
+    [self drawText:NSMakePoint(100, 90) :@"Az"];
     
+    // draw mouse location if screen is clicked
     if (self.mouseLocation.x != -1) {
         //NSLog(@"mouse lcoation is %f, %f", self.mouseLocation.x, self.mouseLocation.y);
         [self drawACross:self.mouseLocation :0.02];
@@ -352,10 +359,9 @@
 
 -(void) drawText: (NSPoint) origin :(NSString *)text
 {
-    glColor3f( 1, 1, 1 );
     glRasterPos2f(origin.x, origin.y);
     for (int i = 0; i < [text length]; i++) {
-        glutBitmapCharacter(GLUT_BITMAP_8_BY_13, [text characterAtIndex:i]);
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_10, [text characterAtIndex:i]);
     }
 }
 
@@ -369,7 +375,7 @@
     glEnd();
 }
 
-- (void) drawAFewPoints: (NSMutableArray *)points
+- (void) drawAFewPoints: (NSArray *)points
 {
     glBegin(GL_POINTS);
     
@@ -380,10 +386,22 @@
     glEnd();
 }
 
-- (void) drawAFewCrosses: (NSMutableArray *)centers{    
+- (void) drawAFewCrosses: (NSArray *)centers WithLabels: (NSArray *)labels
+{
+    float currentColor[4];
+    glGetFloatv(GL_CURRENT_COLOR,currentColor);
+    int i = 0;
     for (NSValue *value in centers){
         NSPoint currentPoint = [value pointValue];
         [self drawACross:currentPoint :0.01];
+        if (labels != nil) {
+            glColor3f(0.5, 0.5, 0.5);
+            NSPoint currentLabel = [[labels objectAtIndex:i] pointValue];
+            NSString *label = [NSString stringWithFormat:@"%d%d", (int)currentLabel.x, (int)currentLabel.y];
+            [self drawText:NSMakePoint(currentPoint.x-35, currentPoint.y-10) :label];
+            glColor3f(currentColor[0], currentColor[1], currentColor[2]);
+        }
+        i++;
     }
     glEnd();
 }

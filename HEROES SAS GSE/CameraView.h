@@ -12,6 +12,7 @@
 
 @property (nonatomic, strong) NSArray *fiducialPoints;
 @property (nonatomic, strong) NSArray *chordCrossingPoints;
+@property (nonatomic, strong) NSArray *fiducialIDs;
 @property (nonatomic) double northAngle;
 @property (nonatomic, strong) NSData *bkgImage;
 @property (nonatomic) BOOL turnOnBkgImage;
