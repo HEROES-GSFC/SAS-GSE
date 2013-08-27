@@ -13,14 +13,13 @@
 #include <math.h>
 #include <stdlib.h>
 
-@interface CameraView(){
-    float circleX;
-    float circleY;
-    float screenX;
-    float screenY;
-}
+@interface CameraView()
 @property (nonatomic, strong) NSNumber *numberXPixels;
 @property (nonatomic, strong) NSNumber *numberYPixels;
+@property (nonatomic) float circleX;
+@property (nonatomic) float circleY;
+@property (nonatomic) float screenX;
+@property (nonatomic) float screenY;
 
 // declaration of private methods as needed
 - (void) prepareOpenGL;
@@ -52,16 +51,21 @@
 @synthesize imageYSize;
 @synthesize mouseLocation = _mouseLocation;
 @synthesize screenRadius;
+@synthesize circleX;
+@synthesize circleY;
+@synthesize screenX;
+@synthesize screenY;
+@synthesize clockingAngle;
 
 -(id) initWithFrame:(NSRect)frameRect
 {
     self = [super initWithFrame:frameRect];
     if (self) {
         //initialization
-        circleX = 0.0;
-        circleY = 0.0;
-        screenX = 500.0;
-        screenY = 500.0;
+        self.circleX = 0.0;
+        self.circleY = 0.0;
+        self.screenX = 500.0;
+        self.screenY = 500.0;
         self.turnOnBkgImage = NO;
         self.imageExists = NO;
         self.mouseLocation = NSMakePoint(-1, -1);
@@ -83,10 +87,10 @@
 
 - (void) setScreenCenter: (float)x :(float)y{
     if ((x < [self.numberXPixels floatValue]) && (x > 0)) {
-        screenX = x;
+        self.screenX = x;
     }
     if ((y < [self.numberYPixels floatValue]) && (y > 0)) {
-        screenY = y;
+        self.screenY = y;
     }
 }
 
@@ -132,8 +136,8 @@
 
 - (void) drawOverlay
 {
-    NSPoint sunCenter = NSMakePoint(circleX, circleY);
-    NSPoint screenCenter = NSMakePoint(screenX, screenY);
+    NSPoint sunCenter = NSMakePoint(self.circleX, self.circleY);
+    NSPoint screenCenter = NSMakePoint(self.screenX, self.screenY);
         
     glColor3f(1.0f, 0.0f, 0.0f);
     [self drawACross: sunCenter:0.02];
@@ -164,9 +168,9 @@
     
     
     glColor3f(0.0f, 1.0f, 1.0f);
-    [self drawALine:NSMakePoint(50, 50) :50 :20];
+    [self drawALine:NSMakePoint(50, 50) :50 :self.clockingAngle];
     glColor3f(0.0f, 1.0f, 1.0f);
-    [self drawALine:NSMakePoint(50, 50) :50 :20+90];
+    [self drawALine:NSMakePoint(50, 50) :50 :self.clockingAngle + 90];
     
     if (self.mouseLocation.x != -1) {
         //NSLog(@"mouse lcoation is %f, %f", self.mouseLocation.x, self.mouseLocation.y);
@@ -183,8 +187,8 @@
 }
 
 - (void) setCircleCenter: (float)x :(float)y{
-    circleX = x;
-    circleY = y;
+    self.circleX = x;
+    self.circleY = y;
 }
 
 - (void)awakeFromNib

@@ -574,6 +574,7 @@
         self.PYASFcameraView.fiducialPoints = [packet getFiducialPoints];
         [self.PYASFcameraView setScreenCenter:[packet.screenCenter pointValue].x :[packet.screenCenter pointValue].y];
         self.PYASFcameraView.screenRadius = packet.screenRadius;
+        self.PYASFcameraView.clockingAngle = packet.clockingAngle;
         
         [self.SAS1CPUTemperatureLabel setTextColor:FieldIsStaleColor];
         [self.PYASFCameraTemperatureLabel setTextColor:FieldIsStaleColor];
@@ -685,6 +686,7 @@
         self.PYASRcameraView.fiducialPoints = [packet getFiducialPoints];
         [self.PYASRcameraView setScreenCenter:[packet.screenCenter pointValue].x :[packet.screenCenter pointValue].y];
         self.PYASRcameraView.screenRadius = packet.screenRadius;
+        self.PYASRcameraView.clockingAngle = packet.clockingAngle;
         
         if (packet.frameNumber % 2) {
             self.RASImageMaxTextField.intValue = packet.ImageMax;

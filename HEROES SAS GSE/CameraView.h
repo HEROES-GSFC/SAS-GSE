@@ -19,6 +19,7 @@
 @property (nonatomic) GLsizei imageYSize;
 @property (nonatomic) BOOL imageExists;
 @property (nonatomic) float screenRadius;
+@property (nonatomic) float clockingAngle;
 
 - (void) CameraViewWillTerminate:(NSNotification *)notification;
 - (void) draw;
