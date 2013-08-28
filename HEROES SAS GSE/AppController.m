@@ -561,7 +561,6 @@
 
     NSString *CTLString = [NSString stringWithFormat:@"%3.0f %2.0f' %4.2f'',%3.0f %2.0f' %4.2f'' ", [[CTLDegMinSecX objectAtIndex:0] floatValue],
                            [[CTLDegMinSecX objectAtIndex:1] floatValue], [[CTLDegMinSecX objectAtIndex:2] floatValue], [[CTLDegMinSecY objectAtIndex:0] floatValue], [[CTLDegMinSecY objectAtIndex:1] floatValue], [[CTLDegMinSecY objectAtIndex:2] floatValue]];
-    NSLog(@"%f", [packet.CTLCommand pointValue].y);
     if (packet.isSAS1) {
         [self.SAS1AutoFlipSwitch reset];
         
@@ -675,14 +674,14 @@
 
         NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] initWithString:packet.aspectErrorCode];
         if ([packet.aspectErrorCode isNotEqualTo:@"No error"]) {
-            NSDictionary *firstAttributes = @{NSBackgroundColorAttributeName: [NSColor redColor]};
+            NSDictionary *firstAttributes = @{NSForegroundColorAttributeName: [NSColor redColor]};
             [attrString addAttributes:firstAttributes range:NSMakeRange(0, [packet.aspectErrorCode length])];
         } else {
-            NSDictionary *firstAttributes = @{NSBackgroundColorAttributeName: [NSColor blackColor]};
+            NSDictionary *firstAttributes = @{NSForegroundColorAttributeName: [NSColor blackColor]};
             [attrString addAttributes:firstAttributes range:NSMakeRange(0, [packet.aspectErrorCode length])];
         }
         
-        [self.PYASFAspectErrorCodeTextField setStringValue:packet.aspectErrorCode];
+        [self.PYASFAspectErrorCodeTextField setAttributedStringValue:attrString];
         [self.PYASFisTracking_indicator setIntValue:1*packet.isTracking];
         [self.PYASFProvidingCTL_indicator setIntValue:1*packet.isOutputting];
         
@@ -839,15 +838,15 @@
         self.PYASRcameraView.northAngle = northAngle;
         
         NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] initWithString:packet.aspectErrorCode];
-        if ([packet.aspectErrorCode isNotEqualTo:@"No Error"]) {
-            NSDictionary *firstAttributes = @{NSBackgroundColorAttributeName: [NSColor redColor]};
+        if ([packet.aspectErrorCode isNotEqualTo:@"No error"]) {
+            NSDictionary *firstAttributes = @{NSForegroundColorAttributeName: [NSColor redColor]};
             [attrString addAttributes:firstAttributes range:NSMakeRange(0, [packet.aspectErrorCode length])];
         } else {
-            NSDictionary *firstAttributes = @{NSBackgroundColorAttributeName: [NSColor blackColor]};
+            NSDictionary *firstAttributes = @{NSForegroundColorAttributeName: [NSColor blackColor]};
             [attrString addAttributes:firstAttributes range:NSMakeRange(0, [packet.aspectErrorCode length])];
         }
         
-        [self.PYASRAspectErrorCodeTextField setStringValue:packet.aspectErrorCode];
+        [self.PYASRAspectErrorCodeTextField setAttributedStringValue:attrString];
         [self.PYASRisTracking_indicator setIntValue:1*packet.isTracking];
         [self.PYASRProvidingCTL_indicator setIntValue:1*packet.isOutputting];
 
