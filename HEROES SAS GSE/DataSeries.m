@@ -39,9 +39,9 @@
     return self;
 }
 
--(NSArray *)mydata{
+-(NSMutableArray *)mydata{
     if (_mydata == nil) {
-        _mydata = [[NSMutableArray alloc] init];
+        _mydata = [[NSMutableArray alloc] initWithCapacity:2000];
     }
     return _mydata;
 }
@@ -56,6 +56,9 @@
 
 - (void) addPoint: (float)newpoint{
     [self.mydata addObject:[NSNumber numberWithFloat:newpoint]];
+    if ([self.mydata count] == 2000) {
+        [self.mydata removeLastObject];
+    }
     [self update];
 }
 

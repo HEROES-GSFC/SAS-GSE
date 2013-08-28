@@ -37,6 +37,7 @@
 @property (weak) IBOutlet NSTextField *PYASFImageMaxTextField;
 @property (weak) IBOutlet NSTextField *PYASRImageMaxTextField;
 @property (weak) IBOutlet NSTextField *RASImageMaxTextField;
+@property (weak) IBOutlet NSButton *ConsoleDisplayACKToggle;
 
 @property (weak) IBOutlet NSTextField *PYASFCTLSigmaTextField;
 @property (weak) IBOutlet NSTextField *PYASRCTLSigmaTextField;
@@ -80,14 +81,17 @@
 @property (weak) IBOutlet NSTextField *PYASFAspectErrorCodeTextField;
 @property (weak) IBOutlet NSLevelIndicator *PYASRisTracking_indicator;
 @property (weak) IBOutlet NSLevelIndicator *PYASFisTracking_indicator;
-@property (weak) IBOutlet NSLevelIndicator *PYASRFoundSun_indicator;
-@property (weak) IBOutlet NSLevelIndicator *PYASFFoundSun_indicator;
 @property (weak) IBOutlet NSLevelIndicator *PYASRProvidingCTL_indicator;
 @property (weak) IBOutlet NSLevelIndicator *PYASFProvidingCTL_indicator;
 @property (weak) IBOutlet NSLevelIndicator *SAS1ClockSync_indicator;
 @property (weak) IBOutlet NSLevelIndicator *SAS2ClockSync_indicator;
 @property (weak) IBOutlet NSLevelIndicator *SAS2isSavingImages;
 @property (weak) IBOutlet NSLevelIndicator *SAS1isSavingImages;
+@property (weak) IBOutlet NSTextField *SAS1DroppedFrameTextField;
+@property (weak) IBOutlet NSTextField *SAS2DroppedFrameTextField;
+
+@property (nonatomic) NSUInteger SAS1MissedFrameCount;
+@property (nonatomic) NSUInteger SAS2MissedFrameCount;
 
 @property (nonatomic, strong) RASCameraViewWindow *rasCameraViewWindow;
 @property (nonatomic, strong) NSFileHandle *SAS1telemetrySaveFile;
@@ -102,8 +106,9 @@
 - (IBAction)OpenWindow_WindowMenuItemAction:(NSMenuItem *)sender;
 - (IBAction)ClearPYASBkgImage:(NSButton *)sender;
 - (IBAction)SetNewNetworkLocation:(NSPopUpButton *)sender;
-
+- (IBAction)ConsoleSurpressACKToggle:(NSButton *)sender;
 
 - (void)postToLogWindow: (NSString *)message;
+- (NSArray *)convertDegreesToDegMinSec: (float)value;
 
 @end

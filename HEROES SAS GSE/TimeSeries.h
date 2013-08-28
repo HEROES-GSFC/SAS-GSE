@@ -10,8 +10,6 @@
 
 @interface TimeSeries : DataSeries
 
-@property (nonatomic, strong) NSMutableArray *time;
-
 - (void) addPointWithTime: (NSDate *) time :(float)newpoint;
 - (NSDate *) earliestTime;
 - (NSDate *) latestTime;

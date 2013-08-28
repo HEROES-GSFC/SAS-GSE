@@ -11,11 +11,9 @@
 
 @interface PlotWindowController : NSWindowController<CPTPlotDataSource> {
     CPTXYGraph *graph;
-    NSArray *plotData;
 }
 
 @property (nonatomic, strong) IBOutlet CPTGraphHostingView *hostView;
-@property (nonatomic, strong) NSDictionary *data;
 - (IBAction)YminClicked:(NSSegmentedControl *)sender;
 - (IBAction)YmaxClicked:(NSSegmentedControl *)sender;
 - (IBAction)XaxisClicked:(NSSegmentedControl *)sender;
@@ -26,6 +24,8 @@
 @property (weak) IBOutlet NSSegmentedControl *XaxisChoice;
 @property (strong) IBOutlet NSWindow *MainWindow;
 - (IBAction)TextFieldUpdated:(NSTextField *)sender;
+
+@property (nonatomic, strong) NSDictionary *data;
 
 -(void) update;
 - (id)initWithData:(NSDictionary *)inputdata;

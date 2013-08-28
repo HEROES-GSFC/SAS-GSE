@@ -21,23 +21,23 @@
     self = [super init]; // call our super’s designated initializer
     if (self) {
         // insert initializing here
-        if (_mytime == nil) {
-            _mytime = [[NSMutableArray alloc] init];
-        }
     }
     return self;
 }
 
--(NSArray *)mytime{
+-(NSMutableArray *)mytime{
     if (_mytime == nil) {
-        _mytime = [[NSMutableArray alloc] init];
+        _mytime = [[NSMutableArray alloc] initWithCapacity:2000];
     }
     return _mytime;
 }
 
-- (void) addPointWithTime: (NSDate *) time :(float)newpoint{
-    [self addPoint:newpoint];
-    [self.mytime addObject:time];
+- (void) addPointWithTime: (NSDate *) newTime :(float)newPoint{
+    [self addPoint:newPoint];
+    [self.mytime addObject:newTime];
+    if ([self.mytime count] == 2000) {
+        [self.mytime removeLastObject];
+    }
     [self update];
 }
 

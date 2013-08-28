@@ -14,8 +14,11 @@
 
 @implementation ConsoleWindowController
 
+@synthesize surpressACK;
+
 - (id)init{
     lineNumber = 1;
+    self.surpressACK = TRUE;
     return [super initWithWindowNibName:@"ConsoleWindowController"];
 }
 
@@ -24,8 +27,9 @@
     self = [super initWithWindow:window];
     if (self) {
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(print_notification:) name:@"LogMessage" object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(print_notification:) name:@"LogMessageACK" object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(print_notification:) name:@"LogMessagePROCACK" object:nil];
     }
-    
     return self;
 }
 
@@ -45,7 +49,7 @@
 }
 
 - (IBAction)test_button:(NSButton *)sender {
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"LogMessage" object:nil userInfo:[NSDictionary dictionaryWithObject:@"My Test button was pushed" forKey:@"message"]];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"LogMessageACK" object:nil userInfo:[NSDictionary dictionaryWithObject:@"My Test button was pushed" forKey:@"message"]];
 }
 
 - (void) log:(NSString*) msg
@@ -78,9 +82,15 @@
 
 - (void) print_notification:(NSNotification *)note{
     NSDictionary *notifData = [note userInfo];
+    NSString *name = [note name];
     NSString *message;
     message = [notifData valueForKey:@"message"];
-    [self log:message];
+    if ([name isEqualToString:@"LogMessageACK"] && !self.surpressACK) {
+        [self log:message];
+    }
+    if ([name isNotEqualTo:@"LogMessageACK"]) {
+        [self log:message];
+    }
 }
 
 -(void)copyToClipboard:(NSString*)str

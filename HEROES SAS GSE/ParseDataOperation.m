@@ -48,7 +48,7 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
 
 @interface ParseDataOperation()
 @property (nonatomic, strong) NSFileHandle *saveFile;
-- (void)postToLogWindow: (NSString *)message;
+- (void)postToLogWindow: (NSString *)message :(NSString *)name;
 @property int port;
 @end
 
@@ -65,8 +65,8 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
     return self;
 }
 
-- (void)postToLogWindow: (NSString *)message{
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"LogMessage" object:nil userInfo:[NSDictionary dictionaryWithObject:message forKey:@"message"]];
+- (void)postToLogWindow: (NSString *)message :(NSString *)name{
+    [[NSNotificationCenter defaultCenter] postNotificationName:name object:nil userInfo:[NSDictionary dictionaryWithObject:message forKey:@"message"]];
 }
 
 - (void)OpenSaveFile{
@@ -122,7 +122,6 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                 {
                     if (tm_packet.getSourceID() == SAS_TARGET_ID){
                         if (tm_packet.getTypeID() == SAS_TM_TYPE) {
-                            
                             switch (tm_packet.getSAS()) {
                                 case 1:
                                     dataPacket.isSAS1 = TRUE;
@@ -149,7 +148,9 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                             dataPacket.isSunFound = (bool)bitread(&status_bitfield, 6, 1);
                             dataPacket.isOutputting = (bool)bitread(&status_bitfield, 5, 1);
                             AspectCode result = (AspectCode)bitread(&status_bitfield, 0, 5);
-                            dataPacket.aspectErrorCode = [NSString stringWithCString:GetMessage(result)];
+                            dataPacket.aspectErrorCode = [NSString stringWithCString:GetMessage(result) encoding:NSUTF8StringEncoding];
+                            
+                            dataPacket.frameMilliseconds = tm_packet.getNanoseconds() / 1e6;
                             
                             uint16_t command_key;
                             tm_packet >> command_key;
@@ -241,13 +242,18 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                                 int y_ID = ((int8_t)bitread(&temp,4,4))-7;
                                 [dataPacket addFiducialID:NSMakePoint(x_ID,y_ID) :i];
                             }
+                            @autoreleasepool {
+                                NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys: dataPacket, @"packet", nil];
+                                if (![self isCancelled])
+                                    [[NSNotificationCenter defaultCenter] postNotificationName:kReceiveAndParseDataDidFinish object:nil userInfo:info];
+                            }
                         }
                         
                         if (tm_packet.getTypeID() == SAS_CM_ACK_TYPE) {
                             uint16_t sequence_number;
                             tm_packet >> sequence_number;
                             NSString *msg = [NSString stringWithFormat:@"Received ACK for command number %u", sequence_number];
-                            [self postToLogWindow:msg];
+                            [self postToLogWindow:msg:@"LogMessageACK"];
                         }
                         
                         if (tm_packet.getTypeID() == SAS_CM_PROC_ACK_TYPE) {
@@ -255,17 +261,13 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                             tm_packet >> sequence_number;
                             tm_packet >> command_key;
                             tm_packet >> return_code;
-                            NSString *msg = [NSString stringWithFormat:@"Received PROC ACK for command number %u, command key 0x%X, return code %u", sequence_number, command_key, return_code];
-                            [self postToLogWindow:msg];
+                            NSString *msg = [NSString stringWithFormat:@"Received PROC ACK for command number %u, command key 0x%X, return code %d %u %f", sequence_number, command_key, (int16_t)return_code, return_code, Float2B(return_code).value()];
+                            [self postToLogWindow:msg:@"LogMessagePROCACK"];
                         }
                     }
                 }
                 delete packet;
-                @autoreleasepool {
-                    NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys: dataPacket, @"packet", nil];
-                    if (![self isCancelled])
-                        [[NSNotificationCenter defaultCenter] postNotificationName:kReceiveAndParseDataDidFinish object:nil userInfo:info];
-                }
+                
             }
             // to make sure that info is released and does not cause a memory leak
                     }

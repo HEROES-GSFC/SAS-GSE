@@ -12,6 +12,9 @@
 IBOutlet NSTextView *Console_TextView;
     int lineNumber;
 }
+
+@property (nonatomic) BOOL surpressACK;
+
 - (IBAction)clear_button:(NSButton *)sender;
 - (IBAction)copy_button:(NSButton*)sender;
 - (IBAction)test_button:(NSButton *)sender;
