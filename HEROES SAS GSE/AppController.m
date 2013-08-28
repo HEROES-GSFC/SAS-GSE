@@ -559,9 +559,9 @@
     NSArray *CTLDegMinSecX = [self convertDegreesToDegMinSec:[packet.CTLCommand pointValue].x];
     NSArray *CTLDegMinSecY = [self convertDegreesToDegMinSec:[packet.CTLCommand pointValue].y];
 
-    NSString *CTLString = [NSString stringWithFormat:@"%3.0f %2.0f'%4.2f'',%4.0f %2.0f'%6.2f''", [[CTLDegMinSecX objectAtIndex:0] floatValue],
+    NSString *CTLString = [NSString stringWithFormat:@"%3.0f %2.0f' %4.2f'',%3.0f %2.0f' %4.2f'' ", [[CTLDegMinSecX objectAtIndex:0] floatValue],
                            [[CTLDegMinSecX objectAtIndex:1] floatValue], [[CTLDegMinSecX objectAtIndex:2] floatValue], [[CTLDegMinSecY objectAtIndex:0] floatValue], [[CTLDegMinSecY objectAtIndex:1] floatValue], [[CTLDegMinSecY objectAtIndex:2] floatValue]];
-    NSLog(@"%f", [packet.CTLCommand pointValue].x);
+    NSLog(@"%f", [packet.CTLCommand pointValue].y);
     if (packet.isSAS1) {
         [self.SAS1AutoFlipSwitch reset];
         
@@ -984,9 +984,9 @@
 
 - (NSArray *)convertDegreesToDegMinSec: (float)value{
     float degrees, minutes, seconds;
-    degrees = floorf(value);
-    minutes = floorf((value - degrees) * 60.0);
-    seconds = (value - degrees - minutes/60.0) * 60.0;
+    degrees = ((value < 0) ? -1 : 1) * floorf(abs(value));
+    minutes = floorf((fabs(value) - degrees) * 60.0);
+    seconds = (fabs(value) - degrees - minutes/60.0) * 60.0 * 60.0;
     return [NSArray arrayWithObjects:[NSNumber numberWithFloat:degrees], [NSNumber numberWithFloat:minutes], [NSNumber numberWithFloat:seconds], nil];
 }
 
