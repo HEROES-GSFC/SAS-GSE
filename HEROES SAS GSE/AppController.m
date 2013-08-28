@@ -75,6 +75,9 @@
 @synthesize SAS2AutoFlipSwitch;
 @synthesize IndicatorTimers;
 
+@synthesize SAS1MissedFrameCount;
+@synthesize SAS2MissedFrameCount;
+
 - (id)init
 {
 	self = [super init];
@@ -554,6 +557,13 @@
     
     if (packet.isSAS1) {
         [self.SAS1AutoFlipSwitch reset];
+        
+        NSUInteger lastFrameNumber = [self.SAS1FrameNumberLabel integerValue];
+        if (([packet frameNumber] - lastFrameNumber) != 1) {
+            self.SAS1MissedFrameCount++;
+            [self.SAS1DroppedFrameTextField setIntegerValue:self.SAS1MissedFrameCount];
+        }
+        
         [self.SAS1FrameNumberLabel setIntegerValue:[packet frameNumber]];
         [self.SAS1FrameTimeLabel setStringValue:[packet getframeTimeString]];
         
@@ -690,7 +700,15 @@
     
     if (packet.isSAS2) {
         [self.SAS2AutoFlipSwitch reset];
+        
+        NSUInteger lastFrameNumber = [self.SAS2FrameNumberLabel integerValue];
+        if (([packet frameNumber] - lastFrameNumber) != 1) {
+            self.SAS2MissedFrameCount++;
+            [self.SAS2DroppedFrameTextField setIntegerValue:self.SAS2MissedFrameCount];
+        }
+        
         [self.SAS2FrameNumberLabel setIntegerValue:[packet frameNumber]];
+        
         [self.SAS2FrameTimeLabel setStringValue:[packet getframeTimeString]];
         [self.SAS2CmdKeyTextField setStringValue:[NSString stringWithFormat:@"0x%04x", [packet commandKey]]];
         

@@ -86,6 +86,11 @@
 @property (weak) IBOutlet NSLevelIndicator *SAS2ClockSync_indicator;
 @property (weak) IBOutlet NSLevelIndicator *SAS2isSavingImages;
 @property (weak) IBOutlet NSLevelIndicator *SAS1isSavingImages;
+@property (weak) IBOutlet NSTextField *SAS1DroppedFrameTextField;
+@property (weak) IBOutlet NSTextField *SAS2DroppedFrameTextField;
+
+@property (nonatomic) NSUInteger SAS1MissedFrameCount;
+@property (nonatomic) NSUInteger SAS2MissedFrameCount;
 
 @property (nonatomic, strong) RASCameraViewWindow *rasCameraViewWindow;
 @property (nonatomic, strong) NSFileHandle *SAS1telemetrySaveFile;
