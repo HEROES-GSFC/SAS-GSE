@@ -557,8 +557,11 @@
         northAngle = 540 - northAngle;
     }
     
-    //float CTL = packet.CTLCommand
-    //float CTLdegrees =
+    NSArray *CTLDegMinSecX = [self convertDegreesToDegMinSec:[packet.CTLCommand pointValue].x];
+    NSArray *CTLDegMinSecY = [self convertDegreesToDegMinSec:[packet.CTLCommand pointValue].y];
+
+    NSString *CTLString = [NSString stringWithFormat:@"%2f %2f %6.2f, %2f %2f %6.2f", [[CTLDegMinSecX objectAtIndex:0] floatValue],
+                           [[CTLDegMinSecX objectAtIndex:1] floatValue], [[CTLDegMinSecX objectAtIndex:2] floatValue], [[CTLDegMinSecY objectAtIndex:0] floatValue], [[CTLDegMinSecY objectAtIndex:1] floatValue], [[CTLDegMinSecY objectAtIndex:2] floatValue]];
     
     if (packet.isSAS1) {
         [self.SAS1AutoFlipSwitch reset];
@@ -584,10 +587,8 @@
         //[[self.timeSeriesCollection objectForKey:@"SAS1 ctl R solution"] addPointWithTime:[packet getDate] :sqrtf(powf(60*60*[packet.CTLCommand pointValue].y,2) + powf(60*60*[packet.CTLCommand pointValue].y,2))];
         
         [self.PYASFCTLSigmaTextField setStringValue:[NSString stringWithFormat:@"%6.2f, %6.2f", ctlXValues.standardDeviation, ctlYValues.standardDeviation]];
-        
-        
-        
-        [self.PYASFCTLCmdEchoTextField setStringValue:[NSString stringWithFormat:@"%5.3f, %5.3f", [packet.CTLCommand pointValue].x, [packet.CTLCommand pointValue].y]];
+                
+        [self.PYASFCTLCmdEchoTextField setStringValue:CTLString];
         
         self.PYASFImageMaxTextField.intValue = packet.ImageMax;
         
@@ -721,8 +722,8 @@
         [self.SAS2FrameTimeLabel setStringValue:[packet getframeTimeString]];
         [self.SAS2CmdKeyTextField setStringValue:[NSString stringWithFormat:@"0x%04x", [packet commandKey]]];
         
-        [self.PYASRCTLCmdEchoTextField setStringValue:[NSString stringWithFormat:@"%5.3f, %5.3f", [packet.CTLCommand pointValue].x, [packet.CTLCommand pointValue].y]];
-        
+        [self.PYASRCTLCmdEchoTextField setStringValue:CTLString];
+
         [self.PYASRcameraView setCircleCenter:[packet.sunCenter pointValue].x :[packet.sunCenter pointValue].y];
         self.PYASRcameraView.chordCrossingPoints = [packet getChordPoints];
         self.PYASRcameraView.fiducialPoints = [packet getFiducialPoints];
@@ -980,6 +981,14 @@
     for (id key in self.PlotWindows) {
         [[self.PlotWindows objectForKey:key] update];
     }
+}
+
+- (NSArray *)convertDegreesToDegMinSec: (float)value{
+    float degrees, minutes, seconds;
+    degrees = floorf(value);
+    minutes = floorf((value - degrees) * 60.0);
+    seconds = (value - degrees - minutes/60.0) * 60.0;
+    return [NSArray arrayWithObjects:[NSNumber numberWithFloat:degrees], [NSNumber numberWithFloat:minutes], [NSNumber numberWithFloat:seconds], nil];
 }
 
 @end

@@ -109,5 +109,6 @@
 - (IBAction)ConsoleSurpressACKToggle:(NSButton *)sender;
 
 - (void)postToLogWindow: (NSString *)message;
+- (NSArray *)convertDegreesToDegMinSec: (float)value;
 
 @end
