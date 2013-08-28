@@ -122,7 +122,6 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                 {
                     if (tm_packet.getSourceID() == SAS_TARGET_ID){
                         if (tm_packet.getTypeID() == SAS_TM_TYPE) {
-                            
                             switch (tm_packet.getSAS()) {
                                 case 1:
                                     dataPacket.isSAS1 = TRUE;
@@ -243,6 +242,11 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                                 int y_ID = ((int8_t)bitread(&temp,4,4))-7;
                                 [dataPacket addFiducialID:NSMakePoint(x_ID,y_ID) :i];
                             }
+                            @autoreleasepool {
+                                NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys: dataPacket, @"packet", nil];
+                                if (![self isCancelled])
+                                    [[NSNotificationCenter defaultCenter] postNotificationName:kReceiveAndParseDataDidFinish object:nil userInfo:info];
+                            }
                         }
                         
                         if (tm_packet.getTypeID() == SAS_CM_ACK_TYPE) {
@@ -263,11 +267,7 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                     }
                 }
                 delete packet;
-                @autoreleasepool {
-                    NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys: dataPacket, @"packet", nil];
-                    if (![self isCancelled])
-                        [[NSNotificationCenter defaultCenter] postNotificationName:kReceiveAndParseDataDidFinish object:nil userInfo:info];
-                }
+                
             }
             // to make sure that info is released and does not cause a memory leak
                     }

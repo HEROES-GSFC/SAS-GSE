@@ -3810,7 +3810,6 @@
 											<string key="NSFrame">{{59, 22}, {56, 22}}</string>
 											<reference key="NSSuperview" ref="348958171"/>
 											<reference key="NSWindow"/>
-											<reference key="NSNextKeyView"/>
 											<string key="NSReuseIdentifierKey">_NS:1535</string>
 											<string key="NSAntiCompressionPriority">{1000, 750}</string>
 											<bool key="NSEnabled">YES</bool>
@@ -4028,7 +4027,7 @@
 											<string key="NSReuseIdentifierKey">_NS:9</string>
 											<bool key="NSEnabled">YES</bool>
 											<object class="NSButtonCell" key="NSCell" id="814089167">
-												<int key="NSCellFlags">67108864</int>
+												<int key="NSCellFlags">603979776</int>
 												<int key="NSCellFlags2">134217728</int>
 												<string key="NSContents">Save PYAS-F</string>
 												<reference key="NSSupport" ref="540291167"/>
@@ -4053,7 +4052,7 @@
 											<string key="NSReuseIdentifierKey">_NS:9</string>
 											<bool key="NSEnabled">YES</bool>
 											<object class="NSButtonCell" key="NSCell" id="643927698">
-												<int key="NSCellFlags">67108864</int>
+												<int key="NSCellFlags">603979776</int>
 												<int key="NSCellFlags2">134217728</int>
 												<string key="NSContents">Clear PYAS-F Image</string>
 												<reference key="NSSupport" ref="540291167"/>
@@ -4128,7 +4127,7 @@
 											<string key="NSReuseIdentifierKey">_NS:9</string>
 											<bool key="NSEnabled">YES</bool>
 											<object class="NSButtonCell" key="NSCell" id="531137724">
-												<int key="NSCellFlags">67108864</int>
+												<int key="NSCellFlags">603979776</int>
 												<int key="NSCellFlags2">134217728</int>
 												<string key="NSContents">Save PYAS-R</string>
 												<reference key="NSSupport" ref="540291167"/>
@@ -4153,7 +4152,7 @@
 											<string key="NSReuseIdentifierKey">_NS:9</string>
 											<bool key="NSEnabled">YES</bool>
 											<object class="NSButtonCell" key="NSCell" id="1008052501">
-												<int key="NSCellFlags">67108864</int>
+												<int key="NSCellFlags">603979776</int>
 												<int key="NSCellFlags2">134217728</int>
 												<string key="NSContents">Clear PYAS-R Image</string>
 												<reference key="NSSupport" ref="540291167"/>

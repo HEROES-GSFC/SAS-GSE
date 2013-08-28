@@ -297,7 +297,6 @@
         [self.queue waitUntilAllOperationsAreFinished];
         [self StartListeningForUDP: FLIGHT_NETWORK_PORT];
         [self StartListeningForTCP];
-
     }
 }
 
@@ -560,9 +559,9 @@
     NSArray *CTLDegMinSecX = [self convertDegreesToDegMinSec:[packet.CTLCommand pointValue].x];
     NSArray *CTLDegMinSecY = [self convertDegreesToDegMinSec:[packet.CTLCommand pointValue].y];
 
-    NSString *CTLString = [NSString stringWithFormat:@"%2f %2f %6.2f, %2f %2f %6.2f", [[CTLDegMinSecX objectAtIndex:0] floatValue],
+    NSString *CTLString = [NSString stringWithFormat:@"%3.0f %2.0f'%4.2f'',%4.0f %2.0f'%6.2f''", [[CTLDegMinSecX objectAtIndex:0] floatValue],
                            [[CTLDegMinSecX objectAtIndex:1] floatValue], [[CTLDegMinSecX objectAtIndex:2] floatValue], [[CTLDegMinSecY objectAtIndex:0] floatValue], [[CTLDegMinSecY objectAtIndex:1] floatValue], [[CTLDegMinSecY objectAtIndex:2] floatValue]];
-    
+    NSLog(@"%f", [packet.CTLCommand pointValue].x);
     if (packet.isSAS1) {
         [self.SAS1AutoFlipSwitch reset];
         
