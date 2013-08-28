@@ -301,12 +301,14 @@
     }
 }
 
+- (IBAction)ConsoleSurpressACKToggle:(NSButton *)sender {
+    self.Console_window.surpressACK = ([sender state] == NSOnState);
+}
+
 - (void)StartListeningForTCP{
     ParseTCPOperation *parseTCP = [[ParseTCPOperation alloc] init];
     
     [self.queue addOperation:parseTCP];
-    
-    
     
     if([[self.queue operations] containsObject:parseTCP]){
         [[NSNotificationCenter defaultCenter] addObserver:self

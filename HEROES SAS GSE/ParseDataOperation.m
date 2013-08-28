@@ -48,7 +48,7 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
 
 @interface ParseDataOperation()
 @property (nonatomic, strong) NSFileHandle *saveFile;
-- (void)postToLogWindow: (NSString *)message;
+- (void)postToLogWindow: (NSString *)message :(NSString *)name;
 @property int port;
 @end
 
@@ -65,8 +65,8 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
     return self;
 }
 
-- (void)postToLogWindow: (NSString *)message{
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"LogMessage" object:nil userInfo:[NSDictionary dictionaryWithObject:message forKey:@"message"]];
+- (void)postToLogWindow: (NSString *)message :(NSString *)name{
+    [[NSNotificationCenter defaultCenter] postNotificationName:name object:nil userInfo:[NSDictionary dictionaryWithObject:message forKey:@"message"]];
 }
 
 - (void)OpenSaveFile{
@@ -249,7 +249,7 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                             uint16_t sequence_number;
                             tm_packet >> sequence_number;
                             NSString *msg = [NSString stringWithFormat:@"Received ACK for command number %u", sequence_number];
-                            [self postToLogWindow:msg];
+                            [self postToLogWindow:msg:@"LogMessageACK"];
                         }
                         
                         if (tm_packet.getTypeID() == SAS_CM_PROC_ACK_TYPE) {
@@ -258,7 +258,7 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                             tm_packet >> command_key;
                             tm_packet >> return_code;
                             NSString *msg = [NSString stringWithFormat:@"Received PROC ACK for command number %u, command key 0x%X, return code %u", sequence_number, command_key, return_code];
-                            [self postToLogWindow:msg];
+                            [self postToLogWindow:msg:@"LogMessagePROCACK"];
                         }
                     }
                 }

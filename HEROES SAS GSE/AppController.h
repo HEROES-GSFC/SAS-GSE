@@ -37,6 +37,7 @@
 @property (weak) IBOutlet NSTextField *PYASFImageMaxTextField;
 @property (weak) IBOutlet NSTextField *PYASRImageMaxTextField;
 @property (weak) IBOutlet NSTextField *RASImageMaxTextField;
+@property (weak) IBOutlet NSButton *ConsoleDisplayACKToggle;
 
 @property (weak) IBOutlet NSTextField *PYASFCTLSigmaTextField;
 @property (weak) IBOutlet NSTextField *PYASRCTLSigmaTextField;
@@ -105,7 +106,7 @@
 - (IBAction)OpenWindow_WindowMenuItemAction:(NSMenuItem *)sender;
 - (IBAction)ClearPYASBkgImage:(NSButton *)sender;
 - (IBAction)SetNewNetworkLocation:(NSPopUpButton *)sender;
-
+- (IBAction)ConsoleSurpressACKToggle:(NSButton *)sender;
 
 - (void)postToLogWindow: (NSString *)message;
 
