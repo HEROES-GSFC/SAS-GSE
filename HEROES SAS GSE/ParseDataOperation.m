@@ -257,7 +257,7 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                             tm_packet >> sequence_number;
                             tm_packet >> command_key;
                             tm_packet >> return_code;
-                            NSString *msg = [NSString stringWithFormat:@"Received PROC ACK for command number %u, command key 0x%X, return code %u", sequence_number, command_key, return_code];
+                            NSString *msg = [NSString stringWithFormat:@"Received PROC ACK for command number %u, command key 0x%X, return code %d %u %f", sequence_number, command_key, (int16_t)return_code, return_code, Float2B(return_code).value()];
                             [self postToLogWindow:msg:@"LogMessagePROCACK"];
                         }
                     }
