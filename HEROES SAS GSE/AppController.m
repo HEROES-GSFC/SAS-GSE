@@ -653,11 +653,19 @@
             default:
                 break;
         }
+
+        NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] initWithString:packet.aspectErrorCode];
+        if ([packet.aspectErrorCode isNotEqualTo:@"No error"]) {
+            NSDictionary *firstAttributes = @{NSBackgroundColorAttributeName: [NSColor redColor]};
+            [attrString addAttributes:firstAttributes range:NSMakeRange(0, [packet.aspectErrorCode length])];
+        } else {
+            NSDictionary *firstAttributes = @{NSBackgroundColorAttributeName: [NSColor blackColor]};
+            [attrString addAttributes:firstAttributes range:NSMakeRange(0, [packet.aspectErrorCode length])];
+        }
         
         [self.PYASFAspectErrorCodeTextField setStringValue:packet.aspectErrorCode];
         [self.PYASFisTracking_indicator setIntValue:1*packet.isTracking];
         [self.PYASFProvidingCTL_indicator setIntValue:1*packet.isOutputting];
-        [self.PYASFFoundSun_indicator setIntValue:1*packet.isSunFound];
         
         self.PYASFcameraView.northAngle = northAngle;
         
@@ -803,10 +811,18 @@
         
         self.PYASRcameraView.northAngle = northAngle;
         
+        NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] initWithString:packet.aspectErrorCode];
+        if ([packet.aspectErrorCode isNotEqualTo:@"No Error"]) {
+            NSDictionary *firstAttributes = @{NSBackgroundColorAttributeName: [NSColor redColor]};
+            [attrString addAttributes:firstAttributes range:NSMakeRange(0, [packet.aspectErrorCode length])];
+        } else {
+            NSDictionary *firstAttributes = @{NSBackgroundColorAttributeName: [NSColor blackColor]};
+            [attrString addAttributes:firstAttributes range:NSMakeRange(0, [packet.aspectErrorCode length])];
+        }
+        
         [self.PYASRAspectErrorCodeTextField setStringValue:packet.aspectErrorCode];
         [self.PYASRisTracking_indicator setIntValue:1*packet.isTracking];
         [self.PYASRProvidingCTL_indicator setIntValue:1*packet.isOutputting];
-        [self.PYASRFoundSun_indicator setIntValue:1*packet.isSunFound];
 
         [self.PYASRcameraView draw];
         

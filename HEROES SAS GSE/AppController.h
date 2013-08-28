@@ -80,8 +80,6 @@
 @property (weak) IBOutlet NSTextField *PYASFAspectErrorCodeTextField;
 @property (weak) IBOutlet NSLevelIndicator *PYASRisTracking_indicator;
 @property (weak) IBOutlet NSLevelIndicator *PYASFisTracking_indicator;
-@property (weak) IBOutlet NSLevelIndicator *PYASRFoundSun_indicator;
-@property (weak) IBOutlet NSLevelIndicator *PYASFFoundSun_indicator;
 @property (weak) IBOutlet NSLevelIndicator *PYASRProvidingCTL_indicator;
 @property (weak) IBOutlet NSLevelIndicator *PYASFProvidingCTL_indicator;
 @property (weak) IBOutlet NSLevelIndicator *SAS1ClockSync_indicator;
