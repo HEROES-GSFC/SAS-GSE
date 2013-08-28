@@ -230,7 +230,6 @@
 		860EF331163605D300B46E35 /* HEROES SAS GSE */ = {
 			isa = PBXGroup;
 			children = (
-				862B2DFB17BD6BBD0054EB0E /* Window Controllers */,
 				862B2DFA17BD6B940054EB0E /* Classes */,
 				860EF33D163605D300B46E35 /* AppDelegate.h */,
 				8670FBA917068B6100F9C2DC /* AppDelegate.m */,
@@ -311,14 +310,6 @@
 				862B2DFD17BD88D70054EB0E /* TimeSeries.m */,
 			);
 			name = Classes;
-			sourceTree = "<group>";
-		};
-		862B2DFB17BD6BBD0054EB0E /* Window Controllers */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "Window Controllers";
-			path = ..;
 			sourceTree = "<group>";
 		};
 		8643AFDE17454F30003052A6 /* SAS lib */ = {

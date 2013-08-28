@@ -103,7 +103,7 @@
 
         self.timeSeriesCollection = [[NSDictionary alloc] init];
 
-        NSArray *timeSeriesNames = [NSArray arrayWithObjects:@"SAS1 cpu temperature", @"SAS2 cpu temperature", @"PYAS-F camera temperature", @"PYAS-F camera temperature", @"RAS camera temperature", @"SAS1 ctl X solution", @"SAS1 ctl Y solution", @"SAS1 ctl R solution", @"SAS2 ctl X solution", @"SAS2 ctl Y solution", @"SAS2 ctl R solution", nil];
+        NSArray *timeSeriesNames = [NSArray arrayWithObjects:@"SAS1 cpu temperature", @"SAS2 cpu temperature", @"PYAS-F camera temperature", @"PYAS-R camera temperature", @"RAS camera temperature", @"SAS1 ctl X solution", @"SAS1 ctl Y solution", @"SAS1 ctl R solution", @"SAS2 ctl X solution", @"SAS2 ctl Y solution", @"SAS2 ctl R solution", nil];
         
         NSMutableArray *allTimeSeries = [[NSMutableArray alloc] init];
         
@@ -538,7 +538,11 @@
     Transform NorthTransform;
     double northAngle;
     //calculate the solar north angle here and pass it to
-    NorthTransform.getSunAzEl();
+    
+    timespec tspec;
+    tspec.tv_sec = packet.frameSeconds;
+    tspec.tv_nsec = packet.frameMilliseconds * 1e6;
+    NorthTransform.calculate(tspec);
     northAngle = NorthTransform.getOrientation();
     //this code assumes that up on the screen is the zenith (which it is not)
     if (northAngle <= 180){  //should add a check for <0 degrees or >360 degrees
@@ -669,6 +673,10 @@
                                  ];
         [self.SAS1telemetrySaveFile writeData:[writeString dataUsingEncoding:NSUTF8StringEncoding]];
         
+        // Update the plot windows
+        for (id key in self.PlotWindows) {
+            [[self.PlotWindows objectForKey:key] update];
+        }
         [self.PYASFcameraView draw];
     }
     
@@ -801,11 +809,13 @@
         [self.PYASRFoundSun_indicator setIntValue:1*packet.isSunFound];
 
         [self.PYASRcameraView draw];
+        
+        // Update the plot windows
+        for (id key in self.PlotWindows) {
+            [[self.PlotWindows objectForKey:key] update];
+        }
     }
-    // Update the plot windows
-    for (id key in self.PlotWindows) {
-        [[self.PlotWindows objectForKey:key] update];
-    }
+
 }
 
 - (IBAction)OpenWindow_WindowMenuItemAction:(NSMenuItem *)sender {
@@ -820,10 +830,9 @@
                 //NSDictionary *PYASFData = [[NSDictionary alloc] initWithObjectsAndKeys:[self.PYASFtimeSeriesCollection objectForKey:@"time"], @"time", [self.PYASFtimeSeriesCollection objectForKey:userChoice], @"y", nil];
                 //NSDictionary *PYASRData = [[NSDictionary alloc] initWithObjectsAndKeys:[self.PYASRtimeSeriesCollection objectForKey:@"time"], @"time", [self.PYASRtimeSeriesCollection objectForKey:userChoice], @"y", nil];
                 //NSDictionary *RASData = [[NSDictionary alloc] initWithObjectsAndKeys:[self.RAStimeSeriesCollection objectForKey:@"time"], @"time", [self.RAStimeSeriesCollection objectForKey:userChoice], @"y", nil];
-                NSDictionary *data = [[NSDictionary alloc] initWithObjectsAndKeys:
-                                      [self.timeSeriesCollection objectForKey:@"PYAS-F camera temperature"], @"PYAS-F",
-                                      [self.timeSeriesCollection objectForKey:@"PYAS-R camera temperature"] , @"PYAS-R",
-                                      [self.timeSeriesCollection objectForKey:@"RAS camera temperature"], @"RAS", nil];
+                NSArray *objs = [NSArray arrayWithObjects:[self.timeSeriesCollection objectForKey:@"PYAS-F camera temperature"], [self.timeSeriesCollection objectForKey:@"PYAS-R camera temperature"], [self.timeSeriesCollection objectForKey:@"RAS camera temperature"] ,nil];
+                NSArray *keys = [NSArray arrayWithObjects:@"PYAS-F", @"PYAS-R", @"RAS", nil];
+                NSDictionary *data = [[NSDictionary alloc] initWithObjects:objs forKeys:keys];
                 PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data];
                 [newPlotWindow showWindow:self];
                 [self.PlotWindows setObject:newPlotWindow forKey:userChoice];
@@ -880,31 +889,31 @@
 }
 
 - (IBAction)RunTest:(id)sender {
-    int xpixels = 1296;
-    int ypixels = 966;
-    NSUInteger len = xpixels * ypixels;
-    Byte *pixels = (Byte *)malloc(len);
-    for (int ix = 0; ix < xpixels; ix++) {
-        for (int iy = 0; iy < ypixels; iy++) {
-            pixels[ix + iy*xpixels] = pow(pow(ix - xpixels/2.0,2) + pow(iy - ypixels/2.0,2),0.5)/1616.0 * 255;
-        }
-    }
-    
-    NSData *data = [NSData dataWithBytes:pixels length:sizeof(uint8_t) * xpixels * ypixels];
-    
-    self.PYASFcameraView.bkgImage = data;
-    self.PYASFcameraView.imageXSize = xpixels;
-    self.PYASFcameraView.imageYSize = ypixels;
-    self.PYASFcameraView.imageExists = YES;
-    self.PYASFcameraView.turnOnBkgImage = YES;
-    [self.PYASFcameraView draw];
-    
-    [self postToLogWindow:@"test string"];
-    free(pixels);
-    [self.PYASFCameraTemperatureLabel setIntegerValue:-30];
-    [self.PYASRCameraTemperatureLabel setIntegerValue:-30];
-    [self.SAS1CPUTemperatureLabel setIntegerValue:100];
-    
+//    int xpixels = 1296;
+//    int ypixels = 966;
+//    NSUInteger len = xpixels * ypixels;
+//    Byte *pixels = (Byte *)malloc(len);
+//    for (int ix = 0; ix < xpixels; ix++) {
+//        for (int iy = 0; iy < ypixels; iy++) {
+//            pixels[ix + iy*xpixels] = pow(pow(ix - xpixels/2.0,2) + pow(iy - ypixels/2.0,2),0.5)/1616.0 * 255;
+//        }
+//    }
+//    
+//    NSData *data = [NSData dataWithBytes:pixels length:sizeof(uint8_t) * xpixels * ypixels];
+//    
+//    self.PYASFcameraView.bkgImage = data;
+//    self.PYASFcameraView.imageXSize = xpixels;
+//    self.PYASFcameraView.imageYSize = ypixels;
+//    self.PYASFcameraView.imageExists = YES;
+//    self.PYASFcameraView.turnOnBkgImage = YES;
+//    [self.PYASFcameraView draw];
+//    
+//    [self postToLogWindow:@"test string"];
+//    free(pixels);
+//    [self.PYASFCameraTemperatureLabel setIntegerValue:-30];
+//    [self.PYASRCameraTemperatureLabel setIntegerValue:-30];
+//    [self.SAS1CPUTemperatureLabel setIntegerValue:100];
+//    
     //DataSeries *PYASFcamTemp = [self.PYASFtimeSeriesCollection objectForKey:@"camera temperature"];
     //DataSeries *PYASRcamTemp = [self.PYASRtimeSeriesCollection objectForKey:@"camera temperature"];
     //DataSeries *RAScamTemp = [self.RAStimeSeriesCollection objectForKey:@"camera temperature"];
@@ -915,6 +924,15 @@
         //[PYASRcamTemp addPoint:(float)rand()/RAND_MAX * 5];
         //[RAScamTemp addPoint:(float)rand()/RAND_MAX * 5];
    // }
+    
+    for (int i = 0; i < 1000; i++) {
+        float temp = 10 * (float)rand()/RAND_MAX + 20.0;
+        NSDate *time = [NSDate dateWithTimeInterval:i sinceDate:[NSDate date]];
+        [[self.timeSeriesCollection objectForKey:@"PYAS-R camera temperature"] addPointWithTime:time :temp];
+        [[self.timeSeriesCollection objectForKey:@"PYAS-F camera temperature"] addPointWithTime:time :temp+10];
+        [[self.timeSeriesCollection objectForKey:@"RAS camera temperature"] addPointWithTime:time :temp+15];
+    }
+    NSLog(@"test");
     // Update the plot windows
     for (id key in self.PlotWindows) {
         [[self.PlotWindows objectForKey:key] update];

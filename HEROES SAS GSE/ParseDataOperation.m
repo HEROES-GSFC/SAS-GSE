@@ -149,7 +149,9 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                             dataPacket.isSunFound = (bool)bitread(&status_bitfield, 6, 1);
                             dataPacket.isOutputting = (bool)bitread(&status_bitfield, 5, 1);
                             AspectCode result = (AspectCode)bitread(&status_bitfield, 0, 5);
-                            dataPacket.aspectErrorCode = [NSString stringWithCString:GetMessage(result)];
+                            dataPacket.aspectErrorCode = [NSString stringWithCString:GetMessage(result) encoding:NSUTF8StringEncoding];
+                            
+                            dataPacket.frameMilliseconds = tm_packet.getNanoseconds() / 1e6;
                             
                             uint16_t command_key;
                             tm_packet >> command_key;
