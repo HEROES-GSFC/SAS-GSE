@@ -148,14 +148,25 @@
 {
     NSPoint sunCenter = NSMakePoint(self.circleX, self.circleY);
     NSPoint screenCenter = NSMakePoint(self.screenX, self.screenY);
-        
+    
+    // draw the Sun (circle and cross)
     glColor3f(1.0f, 0.0f, 0.0f);
     [self drawACross: sunCenter:0.02];
     [self drawACircle: sunCenter: 92];
     
+    // draw Sun distances
+    glColor3f(0.3f, 0.3f, 0.3f);
+    [self drawACircle: sunCenter: 92*2];
+    [self drawACircle: sunCenter: 92*3];
+    [self drawACircle: sunCenter: 92*4];
+    [self drawACircle: sunCenter: 92*5];
+    
+    
+    // draw the screen center
     glColor3f(0.7f, 0.7f, 0.7f);
     [self drawACross:screenCenter :0.02];
 
+    // draw the screen outline
     glColor3f(0.7f, 0.7f, 0.7f);
     [self drawACircle:screenCenter :self.screenRadius];
     
@@ -163,7 +174,7 @@
     glColor3f(0.0f, 1.0f, 0.0f);
     [self drawALine:sunCenter :213.0 :self.northAngle];
     
-    
+    // draw the fiducials
     glColor3f(1.0f, 1.0f, 1.0f);
     [self drawAFewPoints:self.chordCrossingPoints];
     glColor3f(0.0f, 1.0f, 1.0f);

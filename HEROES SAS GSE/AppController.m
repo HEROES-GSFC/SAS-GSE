@@ -557,6 +557,9 @@
         northAngle = 540 - northAngle;
     }
     
+    //float CTL = packet.CTLCommand
+    //float CTLdegrees =
+    
     if (packet.isSAS1) {
         [self.SAS1AutoFlipSwitch reset];
         
@@ -581,7 +584,11 @@
         //[[self.timeSeriesCollection objectForKey:@"SAS1 ctl R solution"] addPointWithTime:[packet getDate] :sqrtf(powf(60*60*[packet.CTLCommand pointValue].y,2) + powf(60*60*[packet.CTLCommand pointValue].y,2))];
         
         [self.PYASFCTLSigmaTextField setStringValue:[NSString stringWithFormat:@"%6.2f, %6.2f", ctlXValues.standardDeviation, ctlYValues.standardDeviation]];
+        
+        
+        
         [self.PYASFCTLCmdEchoTextField setStringValue:[NSString stringWithFormat:@"%5.3f, %5.3f", [packet.CTLCommand pointValue].x, [packet.CTLCommand pointValue].y]];
+        
         self.PYASFImageMaxTextField.intValue = packet.ImageMax;
         
         [self.PYASFcameraView setCircleCenter:[packet.sunCenter pointValue].x :[packet.sunCenter pointValue].y];
