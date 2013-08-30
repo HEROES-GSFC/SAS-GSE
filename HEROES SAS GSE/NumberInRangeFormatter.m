@@ -24,11 +24,10 @@
     if (![anObject isKindOfClass:[NSNumber class]]) {
         return nil;
     }
-    return [NSString stringWithFormat:@"%.2f", [anObject  floatValue]];
+    return [NSString stringWithFormat:@"%.2f", [anObject floatValue]];
 }
 
 - (BOOL)getObjectValue:(id *)obj forString:(NSString *)string errorDescription:(NSString  **)error {
-    
     float floatResult;
     NSScanner *scanner;
     BOOL returnValue = NO;

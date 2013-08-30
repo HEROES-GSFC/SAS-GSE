@@ -201,6 +201,18 @@
     formatter.maximum = 1.05 * 1.20;
     formatter.minimum = 0.80;
     
+    formatter = [self.PYASFImageMaxTextField formatter];
+    formatter.maximum = 220;
+    formatter.minimum = 75;
+    
+    formatter = [self.PYASRImageMaxTextField formatter];
+    formatter.maximum = 220;
+    formatter.minimum = 75;
+    
+    formatter = [self.RASImageMaxTextField formatter];
+    formatter.maximum = 220;
+    formatter.minimum = 75;
+    
     formatter = [self.SAS1V1TextField formatter];
     formatter.maximum = 2.5 * 1.20;
     formatter.minimum = 2.5 * 0.80;
@@ -559,9 +571,8 @@
     NSArray *CTLDegMinSecX = [self convertDegreesToDegMinSec:[packet.CTLCommand pointValue].x];
     NSArray *CTLDegMinSecY = [self convertDegreesToDegMinSec:[packet.CTLCommand pointValue].y];
 
-    NSString *CTLString = [NSString stringWithFormat:@"%3.0f %2.0f' %4.2f'',%3.0f %2.0f' %4.2f'' ", [[CTLDegMinSecX objectAtIndex:0] floatValue],
+    NSString *CTLString = [NSString stringWithFormat:@"%3.0f°%2.0f' %4.2f'',%3.0f°%2.0f' %4.2f'' ", [[CTLDegMinSecX objectAtIndex:0] floatValue],
                            [[CTLDegMinSecX objectAtIndex:1] floatValue], [[CTLDegMinSecX objectAtIndex:2] floatValue], [[CTLDegMinSecY objectAtIndex:0] floatValue], [[CTLDegMinSecY objectAtIndex:1] floatValue], [[CTLDegMinSecY objectAtIndex:2] floatValue]];
-    NSLog(@"%f", [packet.CTLCommand pointValue].y);
     if (packet.isSAS1) {
         [self.SAS1AutoFlipSwitch reset];
         
@@ -675,14 +686,14 @@
 
         NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] initWithString:packet.aspectErrorCode];
         if ([packet.aspectErrorCode isNotEqualTo:@"No error"]) {
-            NSDictionary *firstAttributes = @{NSBackgroundColorAttributeName: [NSColor redColor]};
+            NSDictionary *firstAttributes = @{NSForegroundColorAttributeName: [NSColor redColor]};
             [attrString addAttributes:firstAttributes range:NSMakeRange(0, [packet.aspectErrorCode length])];
         } else {
-            NSDictionary *firstAttributes = @{NSBackgroundColorAttributeName: [NSColor blackColor]};
+            NSDictionary *firstAttributes = @{NSForegroundColorAttributeName: [NSColor blackColor]};
             [attrString addAttributes:firstAttributes range:NSMakeRange(0, [packet.aspectErrorCode length])];
         }
         
-        [self.PYASFAspectErrorCodeTextField setStringValue:packet.aspectErrorCode];
+        [self.PYASFAspectErrorCodeTextField setAttributedStringValue:attrString];
         [self.PYASFisTracking_indicator setIntValue:1*packet.isTracking];
         [self.PYASFProvidingCTL_indicator setIntValue:1*packet.isOutputting];
         
@@ -839,15 +850,15 @@
         self.PYASRcameraView.northAngle = northAngle;
         
         NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] initWithString:packet.aspectErrorCode];
-        if ([packet.aspectErrorCode isNotEqualTo:@"No Error"]) {
-            NSDictionary *firstAttributes = @{NSBackgroundColorAttributeName: [NSColor redColor]};
+        if ([packet.aspectErrorCode isNotEqualTo:@"No error"]) {
+            NSDictionary *firstAttributes = @{NSForegroundColorAttributeName: [NSColor redColor]};
             [attrString addAttributes:firstAttributes range:NSMakeRange(0, [packet.aspectErrorCode length])];
         } else {
-            NSDictionary *firstAttributes = @{NSBackgroundColorAttributeName: [NSColor blackColor]};
+            NSDictionary *firstAttributes = @{NSForegroundColorAttributeName: [NSColor blackColor]};
             [attrString addAttributes:firstAttributes range:NSMakeRange(0, [packet.aspectErrorCode length])];
         }
         
-        [self.PYASRAspectErrorCodeTextField setStringValue:packet.aspectErrorCode];
+        [self.PYASRAspectErrorCodeTextField setAttributedStringValue:attrString];
         [self.PYASRisTracking_indicator setIntValue:1*packet.isTracking];
         [self.PYASRProvidingCTL_indicator setIntValue:1*packet.isOutputting];
 
@@ -985,8 +996,8 @@
 - (NSArray *)convertDegreesToDegMinSec: (float)value{
     float degrees, minutes, seconds;
     degrees = ((value < 0) ? -1 : 1) * floorf(abs(value));
-    minutes = floorf((fabs(value) - degrees) * 60.0);
-    seconds = (fabs(value) - degrees - minutes/60.0) * 60.0 * 60.0;
+    minutes = floorf((fabs(value) - fabs(degrees)) * 60.0);
+    seconds = (fabs(value) - fabs(degrees) - minutes/60.0) * 60.0 * 60.0;
     return [NSArray arrayWithObjects:[NSNumber numberWithFloat:degrees], [NSNumber numberWithFloat:minutes], [NSNumber numberWithFloat:seconds], nil];
 }
 
