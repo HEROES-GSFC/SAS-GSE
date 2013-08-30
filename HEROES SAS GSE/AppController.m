@@ -213,12 +213,6 @@
     formatter.maximum = 220;
     formatter.minimum = 75;
     
-    
-    
-    formatter = [self.PYASFImageMaxTextField formatter];
-    formatter.maximum = 100;
-    formatter.minimum = -20;
-    
     formatter = [self.SAS1V1TextField formatter];
     formatter.maximum = 2.5 * 1.20;
     formatter.minimum = 2.5 * 0.80;
