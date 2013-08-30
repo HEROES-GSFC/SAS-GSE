@@ -18,9 +18,11 @@
 #define CLOCKING_ANGLE_PYASF -33.26
 #define CENTER_X_PYASF 0
 #define CENTER_Y_PYASF 0
-#define CLOCKING_ANGLE_PYASR -53.26
-#define CENTER_X_PYASR 0
-#define CENTER_Y_PYASR 0
+#define TWIST_PYASF 180.0
+#define CLOCKING_ANGLE_PYASR -53.00
+#define CENTER_X_PYASR -210
+#define CENTER_Y_PYASR 56
+#define TWIST_PYASR 0.0
 
 @interface DataPacket()
 @property (nonatomic, strong) NSMutableArray *chordPoints;
@@ -171,9 +173,9 @@
     _isSAS1 = isSAS1;
     _isSAS2 = !isSAS1;
     if (isSAS1) {
-        self.clockingAngle = CLOCKING_ANGLE_PYASF;
+        self.clockingAngle = CLOCKING_ANGLE_PYASF+TWIST_PYASF+180;
     } else {
-        self.clockingAngle = CLOCKING_ANGLE_PYASR;
+        self.clockingAngle = CLOCKING_ANGLE_PYASR+TWIST_PYASR+180;
     }
 }
 
@@ -181,9 +183,9 @@
     _isSAS2 = isSAS2;
     _isSAS1 = !isSAS2;
     if (isSAS2) {
-        self.clockingAngle = CLOCKING_ANGLE_PYASR;
+        self.clockingAngle = CLOCKING_ANGLE_PYASR+TWIST_PYASR+180;
     } else {
-        self.clockingAngle = CLOCKING_ANGLE_PYASF;
+        self.clockingAngle = CLOCKING_ANGLE_PYASF+TWIST_PYASF+180;
     }
 }
 
