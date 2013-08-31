@@ -553,20 +553,12 @@
     
     Transform NorthTransform;
     double northAngle;
-    //calculate the solar north angle here and pass it to
     
     timespec tspec;
     tspec.tv_sec = packet.frameSeconds;
     tspec.tv_nsec = packet.frameMilliseconds * 1e6;
     NorthTransform.calculate(tspec);
-    northAngle = NorthTransform.getOrientation();
-    //this code assumes that up on the screen is the zenith (which it is not)
-    if (northAngle <= 180){  //should add a check for <0 degrees or >360 degrees
-        northAngle = 180 - northAngle;
-    }
-    else {
-        northAngle = 540 - northAngle;
-    }
+    northAngle = packet.clockingAngle+NorthTransform.getOrientation();
     
     NSArray *CTLDegMinSecX = [self convertDegreesToDegMinSec:[packet.CTLCommand pointValue].x];
     NSArray *CTLDegMinSecY = [self convertDegreesToDegMinSec:[packet.CTLCommand pointValue].y];
