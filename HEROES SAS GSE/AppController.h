@@ -26,9 +26,9 @@
 @property (weak) IBOutlet NSTextField *PYASFCameraTemperatureLabel;
 @property (weak) IBOutlet NSTextField *PYASRCameraTemperatureLabel;
 @property (weak) IBOutlet NSTextField *RASCameraTemperatureLabel;
-@property (weak) IBOutlet NSTextField *SAS1CmdCountTextField;
+
 @property (weak) IBOutlet NSTextField *SAS1CmdKeyTextField;
-@property (weak) IBOutlet NSTextField *SAS2CmdCountTextField;
+
 @property (weak) IBOutlet NSTextField *SAS2CmdKeyTextField;
 @property (nonatomic, strong) IBOutlet CameraView *PYASRcameraView;
 @property (nonatomic, strong) IBOutlet CameraView *PYASFcameraView;

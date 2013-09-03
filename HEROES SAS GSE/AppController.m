@@ -53,8 +53,6 @@
 @synthesize SAS2FrameNumberLabel;
 @synthesize SAS2FrameTimeLabel;
 
-@synthesize SAS1CmdCountTextField;
-@synthesize SAS1CmdKeyTextField;
 @synthesize MainWindow;
 @synthesize PYASFcameraView = _PYASFcameraView;
 @synthesize PYASRcameraView = _PYASRcameraView;
