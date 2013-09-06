@@ -96,7 +96,7 @@
         }
         self.listOfCommands = plistDict;
         
-        self.PlotWindowsAvailable = [NSArray arrayWithObjects:@"camera temperature", @"cpu temperature", @"ctl X solution", @"ctl Y solution", @"ctl R solution", nil];
+        self.PlotWindowsAvailable = [NSArray arrayWithObjects:@"camera temperature", @"sas-1 temperatures", @"sas-2 temperatures", @"cpu temperature", @"ctl X solution", @"ctl Y solution", @"ctl R solution", nil];
         
         //NSArray *systemNames = [[NSArray alloc] initWithObjects:@"SAS-1", @"SAS-2", nil];
         //NSArray *cameraNames = [[NSArray alloc] initWithObjects:@"PYAS-F", "PYAS-R", "RAS", nil];
@@ -635,36 +635,47 @@
                 }
                 [self.SAS1CPUHeatSinkTemp setFloatValue:[[packet.i2cTemperatures objectAtIndex:0] floatValue]];
                 [self.SAS1CPUHeatSinkTemp setTextColor:FieldWasUpdatedColor];
+                [[self.timeSeriesCollection objectForKey:@"SAS1 cpuheatsink temperature"] addPointWithTime:[packet getDate] :[[packet.i2cTemperatures objectAtIndex:0] floatValue]];
                 break;
             case 2:
                 [self.SAS1CanTemp setFloatValue:[[packet.i2cTemperatures objectAtIndex:1] floatValue]];
                 [self.SAS1V1p05Voltage setFloatValue:[[packet.sbcVoltages objectAtIndex:0] floatValue]];
                 [self.SAS1CanTemp setTextColor:FieldWasUpdatedColor];
                 [self.SAS1V1p05Voltage setTextColor:FieldWasUpdatedColor];
+                [[self.timeSeriesCollection objectForKey:@"SAS1 can temperature"] addPointWithTime:[packet getDate] :[[packet.i2cTemperatures objectAtIndex:1] floatValue]];
+                [[self.timeSeriesCollection objectForKey:@"SAS1 1.05V"] addPointWithTime:[packet getDate] :[[packet.sbcVoltages objectAtIndex:0] floatValue]];
                 break;
             case 3:
                 [self.SAS1HDDTemp setFloatValue:[[packet.i2cTemperatures objectAtIndex:2] floatValue]];
                 [self.SAS1V2p5Voltage setFloatValue:[[packet.sbcVoltages objectAtIndex:1] floatValue]];
                 [self.SAS1HDDTemp setTextColor:FieldWasUpdatedColor];
                 [self.SAS1V2p5Voltage setTextColor:FieldWasUpdatedColor];
+                [[self.timeSeriesCollection objectForKey:@"SAS1 hdd temperature"] addPointWithTime:[packet getDate] :[[packet.i2cTemperatures objectAtIndex:2] floatValue]];
+                [[self.timeSeriesCollection objectForKey:@"SAS1 2.5V"] addPointWithTime:[packet getDate] :[[packet.sbcVoltages objectAtIndex:1] floatValue]];
                 break;
             case 4:
                 [self.SAS1HeaterPlateTemp setFloatValue:[[packet.i2cTemperatures objectAtIndex:3] floatValue]];
                 [self.SAS1V3p3Voltage setFloatValue:[[packet.sbcVoltages objectAtIndex:2] floatValue]];
                 [self.SAS1HeaterPlateTemp setTextColor:FieldWasUpdatedColor];
                 [self.SAS1V3p3Voltage setTextColor:FieldWasUpdatedColor];
+                [[self.timeSeriesCollection objectForKey:@"SAS1 heater plate temperature"] addPointWithTime:[packet getDate] :[[packet.i2cTemperatures objectAtIndex:3] floatValue]];
+                [[self.timeSeriesCollection objectForKey:@"SAS1 3.3V"] addPointWithTime:[packet getDate] :[[packet.sbcVoltages objectAtIndex:2] floatValue]];
                 break;
             case 5:
                 [self.SAS1AirTemp setFloatValue:[[packet.i2cTemperatures objectAtIndex:4] floatValue]];
                 [self.SAS1V5Votlage setFloatValue:[[packet.sbcVoltages objectAtIndex:3] floatValue]];
                 [self.SAS1AirTemp setTextColor:FieldWasUpdatedColor];
                 [self.SAS1V5Votlage setTextColor:FieldWasUpdatedColor];
+                [[self.timeSeriesCollection objectForKey:@"SAS1 air temperature"] addPointWithTime:[packet getDate] :[[packet.i2cTemperatures objectAtIndex:4] floatValue]];
+                [[self.timeSeriesCollection objectForKey:@"SAS1 5.0V"] addPointWithTime:[packet getDate] :[[packet.sbcVoltages objectAtIndex:3] floatValue]];
                 break;
             case 6:
                 [self.SAS1RailTemp setFloatValue:[[packet.i2cTemperatures objectAtIndex:5] floatValue]];
                 [self.SAS1V12Voltage setFloatValue:[[packet.sbcVoltages objectAtIndex:4] floatValue]];
                 [self.SAS1RailTemp setTextColor:FieldWasUpdatedColor];
                 [self.SAS1V12Voltage setTextColor:FieldWasUpdatedColor];
+                [[self.timeSeriesCollection objectForKey:@"SAS1 rail temperature"] addPointWithTime:[packet getDate] :[[packet.i2cTemperatures objectAtIndex:5] floatValue]];
+                [[self.timeSeriesCollection objectForKey:@"SAS1 12.0V"] addPointWithTime:[packet getDate] :[[packet.sbcVoltages objectAtIndex:4] floatValue]];
                 break;
             case 7:
                 [self.SAS1ClockSync_indicator setIntValue:1*packet.isClockSynced];
@@ -781,44 +792,55 @@
                 [[self.timeSeriesCollection objectForKey:@"PYAS-R camera temperature"] addPointWithTime:[packet getDate] :packet.cameraTemperature];
                 break;
             case 1:
-                [[self.timeSeriesCollection objectForKey:@"RAS camera temperature"] addPointWithTime:[packet getDate] :packet.cameraTemperature];
                 [self.RASCameraTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", packet.cameraTemperature]];
                 if (packet.cameraTemperature != 0) {
                     [self.RASAutoFlipSwitch reset];
                 }
-                [self.RASCameraTemperatureLabel setTextColor:FieldWasUpdatedColor]; 
-                [self.SAS2CPUHeatSinkTemp setFloatValue:[[packet.i2cTemperatures objectAtIndex:0] floatValue]];
+                [self.RASCameraTemperatureLabel setTextColor:FieldWasUpdatedColor];
                 [self.SAS2CPUHeatSinkTemp setTextColor:FieldWasUpdatedColor];
+                [self.SAS2CPUHeatSinkTemp setFloatValue:[[packet.i2cTemperatures objectAtIndex:0] floatValue]];
+                [[self.timeSeriesCollection objectForKey:@"RAS camera temperature"] addPointWithTime:[packet getDate] :packet.cameraTemperature];
+                [[self.timeSeriesCollection objectForKey:@"SAS2 cpuheatsink temperature"] addPointWithTime:[packet getDate] :[[packet.i2cTemperatures objectAtIndex:0] floatValue]];
                 break;
             case 2:
                 [self.SAS2CanTemp setFloatValue:[[packet.i2cTemperatures objectAtIndex:1] floatValue]];
                 [self.SAS2V1p05Voltage setFloatValue:[[packet.sbcVoltages objectAtIndex:0] floatValue]];
                 [self.SAS2CanTemp setTextColor:FieldWasUpdatedColor];
                 [self.SAS2V1p05Voltage setTextColor:FieldWasUpdatedColor];
+                [[self.timeSeriesCollection objectForKey:@"SAS2 can temperature"] addPointWithTime:[packet getDate] :[[packet.i2cTemperatures objectAtIndex:1] floatValue]];
+                [[self.timeSeriesCollection objectForKey:@"SAS2 1.05V"] addPointWithTime:[packet getDate] :[[packet.sbcVoltages objectAtIndex:0] floatValue]];
                 break;
             case 3:
                 [self.SAS2HDDTemp setFloatValue:[[packet.i2cTemperatures objectAtIndex:2] floatValue]];
                 [self.SAS2V2p5Voltage setFloatValue:[[packet.sbcVoltages objectAtIndex:1] floatValue]];
                 [self.SAS2HDDTemp setTextColor:FieldWasUpdatedColor];
                 [self.SAS2V2p5Voltage setTextColor:FieldWasUpdatedColor];
+                [[self.timeSeriesCollection objectForKey:@"SAS2 hdd temperature"] addPointWithTime:[packet getDate] :[[packet.i2cTemperatures objectAtIndex:2] floatValue]];
+                [[self.timeSeriesCollection objectForKey:@"SAS2 2.5V"] addPointWithTime:[packet getDate] :[[packet.sbcVoltages objectAtIndex:1] floatValue]];
                 break;
             case 4:
                 [self.SAS2HeaterPlateTemp setFloatValue:[[packet.i2cTemperatures objectAtIndex:3] floatValue]];
                 [self.SAS2V3p3Voltage setFloatValue:[[packet.sbcVoltages objectAtIndex:2] floatValue]];
                 [self.SAS2HeaterPlateTemp setTextColor:FieldWasUpdatedColor];
                 [self.SAS2V3p3Voltage setTextColor:[NSColor blackColor]];
+                [[self.timeSeriesCollection objectForKey:@"SAS2 heater plate temperature"] addPointWithTime:[packet getDate] :[[packet.i2cTemperatures objectAtIndex:3] floatValue]];
+                [[self.timeSeriesCollection objectForKey:@"SAS2 3.3V"] addPointWithTime:[packet getDate] :[[packet.sbcVoltages objectAtIndex:2] floatValue]];
                 break;
             case 5:
                 [self.SAS2AirTemp setFloatValue:[[packet.i2cTemperatures objectAtIndex:4] floatValue]];
                 [self.SAS2V5Votlage setFloatValue:[[packet.sbcVoltages objectAtIndex:3] floatValue]];
                 [self.SAS2AirTemp setTextColor:FieldWasUpdatedColor];
                 [self.SAS2V5Votlage setTextColor:FieldWasUpdatedColor];
+                [[self.timeSeriesCollection objectForKey:@"SAS2 air temperature"] addPointWithTime:[packet getDate] :[[packet.i2cTemperatures objectAtIndex:4] floatValue]];
+                [[self.timeSeriesCollection objectForKey:@"SAS2 5.0V"] addPointWithTime:[packet getDate] :[[packet.sbcVoltages objectAtIndex:3] floatValue]];
                 break;
             case 6:
                 [self.SAS2RailTemp setFloatValue:[[packet.i2cTemperatures objectAtIndex:5] floatValue]];
                 [self.SAS2V12Voltage setFloatValue:[[packet.sbcVoltages objectAtIndex:4] floatValue]];
                 [self.SAS2RailTemp setTextColor:FieldWasUpdatedColor];
                 [self.SAS2V12Voltage setTextColor:FieldWasUpdatedColor];
+                [[self.timeSeriesCollection objectForKey:@"SAS2 rail temperature"] addPointWithTime:[packet getDate] :[[packet.i2cTemperatures objectAtIndex:5] floatValue]];
+                [[self.timeSeriesCollection objectForKey:@"SAS2 12.0V"] addPointWithTime:[packet getDate] :[[packet.sbcVoltages objectAtIndex:4] floatValue]];
                 break;
             case 7:
                 [self.SAS2ClockSync_indicator setIntValue:1*packet.isClockSynced];
@@ -828,16 +850,6 @@
                 break;
         }
 
-        
-        //DataSeries *ctlYValues = [self.PYASRtimeSeriesCollection objectForKey:@"ctl X solution"];
-        //DataSeries *ctlXValues = [self.PYASRtimeSeriesCollection objectForKey:@"ctl Y solution"];
-        
-        //[[self.PYASRtimeSeriesCollection objectForKey:@"time"] addObject:[packet getDate]];
-        //[[self.PYASRtimeSeriesCollection objectForKey:@"cpu temperature"] addPoint:packet.cpuTemperature];
-        //[[self.PYASRtimeSeriesCollection objectForKey:@"ctl X solution"] addPoint:60*60*[packet.CTLCommand pointValue].x];
-        //[[self.PYASRtimeSeriesCollection objectForKey:@"ctl Y solution"] addPoint:60*60*[packet.CTLCommand pointValue].y];
-        //[[self.PYASRtimeSeriesCollection objectForKey:@"ctl R solution"] addPoint:sqrtf(powf([packet.CTLCommand pointValue].y - ctlXValues.average,2) + powf([packet.CTLCommand pointValue].y - ctlYValues.average,2))];
-        
         self.PYASRcameraView.northAngle = northAngle;
         
         NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] initWithString:packet.aspectErrorCode];
@@ -872,9 +884,6 @@
     if ([self.PlotWindowsAvailable containsObject:userChoice]) {
         if ([self.PlotWindows objectForKey:userChoice] == nil) {
             if ([userChoice isEqualToString:@"camera temperature"]) {
-                //NSDictionary *PYASFData = [[NSDictionary alloc] initWithObjectsAndKeys:[self.PYASFtimeSeriesCollection objectForKey:@"time"], @"time", [self.PYASFtimeSeriesCollection objectForKey:userChoice], @"y", nil];
-                //NSDictionary *PYASRData = [[NSDictionary alloc] initWithObjectsAndKeys:[self.PYASRtimeSeriesCollection objectForKey:@"time"], @"time", [self.PYASRtimeSeriesCollection objectForKey:userChoice], @"y", nil];
-                //NSDictionary *RASData = [[NSDictionary alloc] initWithObjectsAndKeys:[self.RAStimeSeriesCollection objectForKey:@"time"], @"time", [self.RAStimeSeriesCollection objectForKey:userChoice], @"y", nil];
                 NSArray *objs = [NSArray arrayWithObjects:[self.timeSeriesCollection objectForKey:@"PYAS-F camera temperature"], [self.timeSeriesCollection objectForKey:@"PYAS-R camera temperature"], [self.timeSeriesCollection objectForKey:@"RAS camera temperature"] ,nil];
                 NSArray *keys = [NSArray arrayWithObjects:@"PYAS-F", @"PYAS-R", @"RAS", nil];
                 NSDictionary *data = [[NSDictionary alloc] initWithObjects:objs forKeys:keys];
@@ -916,8 +925,28 @@
             }
             if ([userChoice isEqualToString:@"sas-1 temperatures"]) {
                 NSDictionary *data = [[NSDictionary alloc] initWithObjectsAndKeys:
-                                      [self.timeSeriesCollection objectForKey:@"SAS1 cpu temperature"], @"SAS-2",
-                                      [self.timeSeriesCollection objectForKey:@"SAS2 cpu temperature"] , @"SAS-1", nil];
+                                      [self.timeSeriesCollection objectForKey:@"SAS1 cpu temperature"], @"cpu",
+                                      [self.timeSeriesCollection objectForKey:@"SAS1 cpuheatsink temperature"] , @"heat sink",
+                                      [self.timeSeriesCollection objectForKey:@"SAS1 can temperature"] , @"can",
+                                      [self.timeSeriesCollection objectForKey:@"SAS1 hdd temperature"] , @"hdd",
+                                      [self.timeSeriesCollection objectForKey:@"SAS1 heater temperature"] , @"heater",
+                                      [self.timeSeriesCollection objectForKey:@"SAS1 air temperature"] , @"air",
+                                      [self.timeSeriesCollection objectForKey:@"SAS1 rail temperature"] , @"rail",
+                                      nil];
+                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data];
+                [newPlotWindow showWindow:self];
+                [self.PlotWindows setObject:newPlotWindow forKey:userChoice];
+            }
+            if ([userChoice isEqualToString:@"sas-2 temperatures"]) {
+                NSDictionary *data = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                      [self.timeSeriesCollection objectForKey:@"SAS2 cpu temperature"], @"cpu",
+                                      [self.timeSeriesCollection objectForKey:@"SAS2 cpuheatsink temperature"] , @"heat sink",
+                                      [self.timeSeriesCollection objectForKey:@"SAS2 can temperature"] , @"can",
+                                      [self.timeSeriesCollection objectForKey:@"SAS2 hdd temperature"] , @"hdd",
+                                      [self.timeSeriesCollection objectForKey:@"SAS2 heater temperature"] , @"heater",
+                                      [self.timeSeriesCollection objectForKey:@"SAS2 air temperature"] , @"air",
+                                      [self.timeSeriesCollection objectForKey:@"SAS2 rail temperature"] , @"rail",
+                                      nil];
                 PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data];
                 [newPlotWindow showWindow:self];
                 [self.PlotWindows setObject:newPlotWindow forKey:userChoice];
