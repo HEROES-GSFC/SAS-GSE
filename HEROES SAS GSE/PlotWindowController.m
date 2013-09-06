@@ -197,8 +197,8 @@
 
             if (currentData.count != 0) {
                 if (i == 0) {
-                    ymin = currentData.min;
-                    ymax = currentData.max;
+                    ymin = currentData.min * 0.8;
+                    ymax = currentData.max * 1.2;
                     
                     self.earliestTime = [currentData earliestTime];
                     

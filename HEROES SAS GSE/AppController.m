@@ -104,7 +104,7 @@
 
         self.timeSeriesCollection = [[NSDictionary alloc] init];
 
-        NSArray *timeSeriesNames = [NSArray arrayWithObjects:@"SAS1 cpu temperature", @"SAS2 cpu temperature", @"PYAS-F camera temperature", @"PYAS-R camera temperature", @"RAS camera temperature", @"SAS1 ctl X solution", @"SAS1 ctl Y solution", @"SAS1 ctl R solution", @"SAS2 ctl X solution", @"SAS2 ctl Y solution", @"SAS2 ctl R solution", nil];
+        NSArray *timeSeriesNames = [NSArray arrayWithObjects:@"SAS1 cpu temperature", @"SAS2 cpu temperature", @"PYAS-F camera temperature", @"PYAS-R camera temperature", @"RAS camera temperature", @"SAS1 ctl X solution", @"SAS1 ctl Y solution", @"SAS1 ctl R solution", @"SAS2 ctl X solution", @"SAS2 ctl Y solution", @"SAS2 ctl R solution", @"SAS1 cpuheatsink temperature", @"SAS2 cpuheatsink temperature", @"SAS1 hdd temperature", @"SAS2 hdd temperature", @"SAS1 heater plate temperature", @"SAS2 heater plate temperature", @"SAS1 can temperature", @"SAS2 can temperature", @"SAS1 air temperature", @"SAS2 air temperature", @"SAS1 rail temperature", @"SAS2 rail temperature", @"SAS1 1.05V", @"SAS2 1.05V", @"SAS1 5.0V", @"SAS2 5.0V", @"SAS1 12.0V", @"SAS2 12.0V", @"SAS1 3.3V", @"SAS2 3.3V", @"SAS1 2.5V", @"SAS2 2.5V", nil];
         
         NSMutableArray *allTimeSeries = [[NSMutableArray alloc] init];
         
@@ -153,49 +153,49 @@
     TemperatureFormatter.maximum = 100;
     TemperatureFormatter.minimum = -20;
     
-    formatter = [self.SAS1T0TextField formatter];
+    formatter = [self.SAS1CPUHeatSinkTemp formatter];
     formatter.maximum = 100;
     formatter.minimum = -20;
-    formatter = [self.SAS1T1TextField formatter];
+    formatter = [self.SAS1CanTemp formatter];
     formatter.maximum = 100;
     formatter.minimum = -20;
-    formatter = [self.SAS1T2TextField formatter];
+    formatter = [self.SAS1HDDTemp formatter];
     formatter.maximum = 100;
     formatter.minimum = -20;
-    formatter = [self.SAS1T3TextField formatter];
+    formatter = [self.SAS1HeaterPlateTemp formatter];
     formatter.maximum = 100;
     formatter.minimum = -20;
-    formatter = [self.SAS1T4TextField formatter];
+    formatter = [self.SAS1AirTemp formatter];
     formatter.maximum = 100;
     formatter.minimum = -20;
-    formatter = [self.SAS1T5TextField formatter];
-    formatter.maximum = 100;
-    formatter.minimum = -20;
-    
-    formatter = [self.SAS2T0TextField formatter];
-    formatter.maximum = 100;
-    formatter.minimum = -20;
-    formatter = [self.SAS2T1TextField formatter];
-    formatter.maximum = 100;
-    formatter.minimum = -20;
-    formatter = [self.SAS2T2TextField formatter];
-    formatter.maximum = 100;
-    formatter.minimum = -20;
-    formatter = [self.SAS2T3TextField formatter];
-    formatter.maximum = 100;
-    formatter.minimum = -20;
-    formatter = [self.SAS2T4TextField formatter];
-    formatter.maximum = 100;
-    formatter.minimum = -20;
-    formatter = [self.SAS2T5TextField formatter];
+    formatter = [self.SAS1RailTemp formatter];
     formatter.maximum = 100;
     formatter.minimum = -20;
     
-    formatter = [self.SAS1V0TextField formatter];
+    formatter = [self.SAS2CPUHeatSinkTemp formatter];
+    formatter.maximum = 100;
+    formatter.minimum = -20;
+    formatter = [self.SAS2CanTemp formatter];
+    formatter.maximum = 100;
+    formatter.minimum = -20;
+    formatter = [self.SAS2HDDTemp formatter];
+    formatter.maximum = 100;
+    formatter.minimum = -20;
+    formatter = [self.SAS2HeaterPlateTemp formatter];
+    formatter.maximum = 100;
+    formatter.minimum = -20;
+    formatter = [self.SAS2AirTemp formatter];
+    formatter.maximum = 100;
+    formatter.minimum = -20;
+    formatter = [self.SAS2RailTemp formatter];
+    formatter.maximum = 100;
+    formatter.minimum = -20;
+    
+    formatter = [self.SAS1V1p05Voltage formatter];
     formatter.maximum = 1.05 * 1.2;
     formatter.minimum = 0.80;
-    [self.SAS1V0TextField setFormatter:formatter];
-    formatter = [self.SAS2V0TextField formatter];
+    [self.SAS1V1p05Voltage setFormatter:formatter];
+    formatter = [self.SAS2V1p05Voltage formatter];
     formatter.maximum = 1.05 * 1.20;
     formatter.minimum = 0.80;
     
@@ -211,31 +211,31 @@
     formatter.maximum = 220;
     formatter.minimum = 75;
     
-    formatter = [self.SAS1V1TextField formatter];
+    formatter = [self.SAS1V2p5Voltage formatter];
     formatter.maximum = 2.5 * 1.20;
     formatter.minimum = 2.5 * 0.80;
-    formatter = [self.SAS2V1TextField formatter];
+    formatter = [self.SAS2V2p5Voltage formatter];
     formatter.maximum = 2.5 * 1.20;
     formatter.minimum = 2.5 * 0.80;
     
-    formatter = [self.SAS1V2TextField formatter];
+    formatter = [self.SAS1V3p3Voltage formatter];
     formatter.maximum = 3.3 * 1.20;
     formatter.minimum = 3.3 * 0.80;
-    formatter = [self.SAS2V2TextField formatter];
+    formatter = [self.SAS2V3p3Voltage formatter];
     formatter.maximum = 3.3 * 1.20;
     formatter.minimum = 3.3 * 0.80;
     
-    formatter = [self.SAS1V3TextField formatter];
+    formatter = [self.SAS1V5Votlage formatter];
     formatter.maximum = 5.0 * 1.20;
     formatter.minimum = 5.0 * 0.80;
-    formatter = [self.SAS2V3TextField formatter];
+    formatter = [self.SAS2V5Votlage formatter];
     formatter.maximum = 5.0 * 1.20;
     formatter.minimum = 5.0 * 0.80;
     
-    formatter = [self.SAS1V4TextField formatter];
+    formatter = [self.SAS1V12Voltage formatter];
     formatter.maximum = 12.0 * 1.20;
     formatter.minimum = 12.0 * 0.80;
-    formatter = [self.SAS2V4TextField formatter];
+    formatter = [self.SAS2V12Voltage formatter];
     formatter.maximum = 12.0 * 1.20;
     formatter.minimum = 12.0 * 0.80;
     
@@ -602,25 +602,25 @@
         
         [self.SAS1CPUTemperatureLabel setTextColor:FieldIsStaleColor];
         [self.PYASFCameraTemperatureLabel setTextColor:FieldIsStaleColor];
-        [self.SAS1T0TextField setTextColor:FieldIsStaleColor];
-        [self.SAS1T1TextField setTextColor:FieldIsStaleColor];
-        [self.SAS1T2TextField setTextColor:FieldIsStaleColor];
-        [self.SAS1T3TextField setTextColor:FieldIsStaleColor];
-        [self.SAS1T4TextField setTextColor:FieldIsStaleColor];
-        [self.SAS1T5TextField setTextColor:FieldIsStaleColor];
+        [self.SAS1CPUHeatSinkTemp setTextColor:FieldIsStaleColor];
+        [self.SAS1CanTemp setTextColor:FieldIsStaleColor];
+        [self.SAS1HDDTemp setTextColor:FieldIsStaleColor];
+        [self.SAS1HeaterPlateTemp setTextColor:FieldIsStaleColor];
+        [self.SAS1AirTemp setTextColor:FieldIsStaleColor];
+        [self.SAS1RailTemp setTextColor:FieldIsStaleColor];
 
-        [self.SAS1V0TextField setTextColor:FieldIsStaleColor];
-        [self.SAS1V1TextField setTextColor:FieldIsStaleColor];
-        [self.SAS1V2TextField setTextColor:FieldIsStaleColor];
-        [self.SAS1V3TextField setTextColor:FieldIsStaleColor];
-        [self.SAS1V4TextField setTextColor:FieldIsStaleColor];
+        [self.SAS1V1p05Voltage setTextColor:FieldIsStaleColor];
+        [self.SAS1V2p5Voltage setTextColor:FieldIsStaleColor];
+        [self.SAS1V3p3Voltage setTextColor:FieldIsStaleColor];
+        [self.SAS1V5Votlage setTextColor:FieldIsStaleColor];
+        [self.SAS1V12Voltage setTextColor:FieldIsStaleColor];
         
         switch (packet.frameNumber % 8) {
             case 0:{
                 NSString *string = [NSString stringWithFormat:@"%6.2f", packet.cpuTemperature];
                 [self.SAS1CPUTemperatureLabel setStringValue:string];
                 [self.SAS1CPUTemperatureLabel setTextColor:FieldWasUpdatedColor];
-                
+                [[self.timeSeriesCollection objectForKey:@"SAS1 cpu temperature"] addPointWithTime:[packet getDate] :packet.cpuTemperature];
                 [self.PYASFCameraTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", packet.cameraTemperature]];
                 if (packet.cameraTemperature != 0) {
                     [self.PYASFAutoFlipSwitch reset];
@@ -633,38 +633,38 @@
                 if (packet.cameraTemperature != 0) {
                     [self.PYASFAutoFlipSwitch reset];
                 }
-                [self.SAS1T0TextField setFloatValue:[[packet.i2cTemperatures objectAtIndex:0] floatValue]];
-                [self.SAS1T0TextField setTextColor:FieldWasUpdatedColor];
+                [self.SAS1CPUHeatSinkTemp setFloatValue:[[packet.i2cTemperatures objectAtIndex:0] floatValue]];
+                [self.SAS1CPUHeatSinkTemp setTextColor:FieldWasUpdatedColor];
                 break;
             case 2:
-                [self.SAS1T1TextField setFloatValue:[[packet.i2cTemperatures objectAtIndex:1] floatValue]];
-                [self.SAS1V0TextField setFloatValue:[[packet.sbcVoltages objectAtIndex:0] floatValue]];
-                [self.SAS1T1TextField setTextColor:FieldWasUpdatedColor];
-                [self.SAS1V0TextField setTextColor:FieldWasUpdatedColor];
+                [self.SAS1CanTemp setFloatValue:[[packet.i2cTemperatures objectAtIndex:1] floatValue]];
+                [self.SAS1V1p05Voltage setFloatValue:[[packet.sbcVoltages objectAtIndex:0] floatValue]];
+                [self.SAS1CanTemp setTextColor:FieldWasUpdatedColor];
+                [self.SAS1V1p05Voltage setTextColor:FieldWasUpdatedColor];
                 break;
             case 3:
-                [self.SAS1T2TextField setFloatValue:[[packet.i2cTemperatures objectAtIndex:2] floatValue]];
-                [self.SAS1V1TextField setFloatValue:[[packet.sbcVoltages objectAtIndex:1] floatValue]];
-                [self.SAS1T2TextField setTextColor:FieldWasUpdatedColor];
-                [self.SAS1V1TextField setTextColor:FieldWasUpdatedColor];
+                [self.SAS1HDDTemp setFloatValue:[[packet.i2cTemperatures objectAtIndex:2] floatValue]];
+                [self.SAS1V2p5Voltage setFloatValue:[[packet.sbcVoltages objectAtIndex:1] floatValue]];
+                [self.SAS1HDDTemp setTextColor:FieldWasUpdatedColor];
+                [self.SAS1V2p5Voltage setTextColor:FieldWasUpdatedColor];
                 break;
             case 4:
-                [self.SAS1T3TextField setFloatValue:[[packet.i2cTemperatures objectAtIndex:3] floatValue]];
-                [self.SAS1V2TextField setFloatValue:[[packet.sbcVoltages objectAtIndex:2] floatValue]];
-                [self.SAS1T3TextField setTextColor:FieldWasUpdatedColor];
-                [self.SAS1V2TextField setTextColor:FieldWasUpdatedColor];
+                [self.SAS1HeaterPlateTemp setFloatValue:[[packet.i2cTemperatures objectAtIndex:3] floatValue]];
+                [self.SAS1V3p3Voltage setFloatValue:[[packet.sbcVoltages objectAtIndex:2] floatValue]];
+                [self.SAS1HeaterPlateTemp setTextColor:FieldWasUpdatedColor];
+                [self.SAS1V3p3Voltage setTextColor:FieldWasUpdatedColor];
                 break;
             case 5:
-                [self.SAS1T4TextField setFloatValue:[[packet.i2cTemperatures objectAtIndex:4] floatValue]];
-                [self.SAS1V3TextField setFloatValue:[[packet.sbcVoltages objectAtIndex:3] floatValue]];
-                [self.SAS1T4TextField setTextColor:FieldWasUpdatedColor];
-                [self.SAS1V3TextField setTextColor:FieldWasUpdatedColor];
+                [self.SAS1AirTemp setFloatValue:[[packet.i2cTemperatures objectAtIndex:4] floatValue]];
+                [self.SAS1V5Votlage setFloatValue:[[packet.sbcVoltages objectAtIndex:3] floatValue]];
+                [self.SAS1AirTemp setTextColor:FieldWasUpdatedColor];
+                [self.SAS1V5Votlage setTextColor:FieldWasUpdatedColor];
                 break;
             case 6:
-                [self.SAS1T5TextField setFloatValue:[[packet.i2cTemperatures objectAtIndex:5] floatValue]];
-                [self.SAS1V4TextField setFloatValue:[[packet.sbcVoltages objectAtIndex:4] floatValue]];
-                [self.SAS1T5TextField setTextColor:FieldWasUpdatedColor];
-                [self.SAS1V4TextField setTextColor:FieldWasUpdatedColor];
+                [self.SAS1RailTemp setFloatValue:[[packet.i2cTemperatures objectAtIndex:5] floatValue]];
+                [self.SAS1V12Voltage setFloatValue:[[packet.sbcVoltages objectAtIndex:4] floatValue]];
+                [self.SAS1RailTemp setTextColor:FieldWasUpdatedColor];
+                [self.SAS1V12Voltage setTextColor:FieldWasUpdatedColor];
                 break;
             case 7:
                 [self.SAS1ClockSync_indicator setIntValue:1*packet.isClockSynced];
@@ -755,22 +755,23 @@
         [self.PYASRCameraTemperatureLabel setTextColor:FieldIsStaleColor];
         [self.RASCameraTemperatureLabel setTextColor:FieldIsStaleColor];
 
-        [self.SAS2T0TextField setTextColor:FieldIsStaleColor];
-        [self.SAS2T1TextField setTextColor:FieldIsStaleColor];
-        [self.SAS2T2TextField setTextColor:FieldIsStaleColor];
-        [self.SAS2T3TextField setTextColor:FieldIsStaleColor];
-        [self.SAS2T4TextField setTextColor:FieldIsStaleColor];
-        [self.SAS2T5TextField setTextColor:FieldIsStaleColor];
+        [self.SAS2CPUHeatSinkTemp setTextColor:FieldIsStaleColor];
+        [self.SAS2CanTemp setTextColor:FieldIsStaleColor];
+        [self.SAS2HDDTemp setTextColor:FieldIsStaleColor];
+        [self.SAS2HeaterPlateTemp setTextColor:FieldIsStaleColor];
+        [self.SAS2AirTemp setTextColor:FieldIsStaleColor];
+        [self.SAS2RailTemp setTextColor:FieldIsStaleColor];
         
-        [self.SAS2V0TextField setTextColor:FieldIsStaleColor];
-        [self.SAS2V1TextField setTextColor:FieldIsStaleColor];
-        [self.SAS2V2TextField setTextColor:FieldIsStaleColor];
-        [self.SAS2V3TextField setTextColor:FieldIsStaleColor];
-        [self.SAS2V4TextField setTextColor:FieldIsStaleColor];
+        [self.SAS2V1p05Voltage setTextColor:FieldIsStaleColor];
+        [self.SAS2V2p5Voltage setTextColor:FieldIsStaleColor];
+        [self.SAS2V3p3Voltage setTextColor:FieldIsStaleColor];
+        [self.SAS2V5Votlage setTextColor:FieldIsStaleColor];
+        [self.SAS2V12Voltage setTextColor:FieldIsStaleColor];
         
         switch (packet.frameNumber % 8) {
             case 0:
                 [self.SAS2CPUTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", packet.cpuTemperature]];
+                [[self.timeSeriesCollection objectForKey:@"SAS2 cpu temperature"] addPointWithTime:[packet getDate] :packet.cpuTemperature];
                 [self.PYASRCameraTemperatureLabel setStringValue:[NSString stringWithFormat:@"%6.2f", packet.cameraTemperature]];
                 if (packet.cameraTemperature != 0) {
                     [self.PYASRAutoFlipSwitch reset];
@@ -786,38 +787,38 @@
                     [self.RASAutoFlipSwitch reset];
                 }
                 [self.RASCameraTemperatureLabel setTextColor:FieldWasUpdatedColor]; 
-                [self.SAS2T0TextField setFloatValue:[[packet.i2cTemperatures objectAtIndex:0] floatValue]];
-                [self.SAS2T0TextField setTextColor:FieldWasUpdatedColor];
+                [self.SAS2CPUHeatSinkTemp setFloatValue:[[packet.i2cTemperatures objectAtIndex:0] floatValue]];
+                [self.SAS2CPUHeatSinkTemp setTextColor:FieldWasUpdatedColor];
                 break;
             case 2:
-                [self.SAS2T1TextField setFloatValue:[[packet.i2cTemperatures objectAtIndex:1] floatValue]];
-                [self.SAS2V0TextField setFloatValue:[[packet.sbcVoltages objectAtIndex:0] floatValue]];
-                [self.SAS2T1TextField setTextColor:FieldWasUpdatedColor];
-                [self.SAS2V0TextField setTextColor:FieldWasUpdatedColor];
+                [self.SAS2CanTemp setFloatValue:[[packet.i2cTemperatures objectAtIndex:1] floatValue]];
+                [self.SAS2V1p05Voltage setFloatValue:[[packet.sbcVoltages objectAtIndex:0] floatValue]];
+                [self.SAS2CanTemp setTextColor:FieldWasUpdatedColor];
+                [self.SAS2V1p05Voltage setTextColor:FieldWasUpdatedColor];
                 break;
             case 3:
-                [self.SAS2T2TextField setFloatValue:[[packet.i2cTemperatures objectAtIndex:2] floatValue]];
-                [self.SAS2V1TextField setFloatValue:[[packet.sbcVoltages objectAtIndex:1] floatValue]];
-                [self.SAS2T2TextField setTextColor:FieldWasUpdatedColor];
-                [self.SAS2V1TextField setTextColor:FieldWasUpdatedColor];
+                [self.SAS2HDDTemp setFloatValue:[[packet.i2cTemperatures objectAtIndex:2] floatValue]];
+                [self.SAS2V2p5Voltage setFloatValue:[[packet.sbcVoltages objectAtIndex:1] floatValue]];
+                [self.SAS2HDDTemp setTextColor:FieldWasUpdatedColor];
+                [self.SAS2V2p5Voltage setTextColor:FieldWasUpdatedColor];
                 break;
             case 4:
-                [self.SAS2T3TextField setFloatValue:[[packet.i2cTemperatures objectAtIndex:3] floatValue]];
-                [self.SAS2V2TextField setFloatValue:[[packet.sbcVoltages objectAtIndex:2] floatValue]];
-                [self.SAS2T3TextField setTextColor:FieldWasUpdatedColor];
-                [self.SAS2V2TextField setTextColor:[NSColor blackColor]];
+                [self.SAS2HeaterPlateTemp setFloatValue:[[packet.i2cTemperatures objectAtIndex:3] floatValue]];
+                [self.SAS2V3p3Voltage setFloatValue:[[packet.sbcVoltages objectAtIndex:2] floatValue]];
+                [self.SAS2HeaterPlateTemp setTextColor:FieldWasUpdatedColor];
+                [self.SAS2V3p3Voltage setTextColor:[NSColor blackColor]];
                 break;
             case 5:
-                [self.SAS2T4TextField setFloatValue:[[packet.i2cTemperatures objectAtIndex:4] floatValue]];
-                [self.SAS2V3TextField setFloatValue:[[packet.sbcVoltages objectAtIndex:3] floatValue]];
-                [self.SAS2T4TextField setTextColor:FieldWasUpdatedColor];
-                [self.SAS2V3TextField setTextColor:FieldWasUpdatedColor];
+                [self.SAS2AirTemp setFloatValue:[[packet.i2cTemperatures objectAtIndex:4] floatValue]];
+                [self.SAS2V5Votlage setFloatValue:[[packet.sbcVoltages objectAtIndex:3] floatValue]];
+                [self.SAS2AirTemp setTextColor:FieldWasUpdatedColor];
+                [self.SAS2V5Votlage setTextColor:FieldWasUpdatedColor];
                 break;
             case 6:
-                [self.SAS2T5TextField setFloatValue:[[packet.i2cTemperatures objectAtIndex:5] floatValue]];
-                [self.SAS2V4TextField setFloatValue:[[packet.sbcVoltages objectAtIndex:4] floatValue]];
-                [self.SAS2T5TextField setTextColor:FieldWasUpdatedColor];
-                [self.SAS2V4TextField setTextColor:FieldWasUpdatedColor];
+                [self.SAS2RailTemp setFloatValue:[[packet.i2cTemperatures objectAtIndex:5] floatValue]];
+                [self.SAS2V12Voltage setFloatValue:[[packet.sbcVoltages objectAtIndex:4] floatValue]];
+                [self.SAS2RailTemp setTextColor:FieldWasUpdatedColor];
+                [self.SAS2V12Voltage setTextColor:FieldWasUpdatedColor];
                 break;
             case 7:
                 [self.SAS2ClockSync_indicator setIntValue:1*packet.isClockSynced];
@@ -906,6 +907,14 @@
                 [self.PlotWindows setObject:newPlotWindow forKey:userChoice];
             }
             if ([userChoice isEqualToString:@"cpu temperature"]) {
+                NSDictionary *data = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                      [self.timeSeriesCollection objectForKey:@"SAS1 cpu temperature"], @"SAS-2",
+                                      [self.timeSeriesCollection objectForKey:@"SAS2 cpu temperature"] , @"SAS-1", nil];
+                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data];
+                [newPlotWindow showWindow:self];
+                [self.PlotWindows setObject:newPlotWindow forKey:userChoice];
+            }
+            if ([userChoice isEqualToString:@"sas-1 temperatures"]) {
                 NSDictionary *data = [[NSDictionary alloc] initWithObjectsAndKeys:
                                       [self.timeSeriesCollection objectForKey:@"SAS1 cpu temperature"], @"SAS-2",
                                       [self.timeSeriesCollection objectForKey:@"SAS2 cpu temperature"] , @"SAS-1", nil];

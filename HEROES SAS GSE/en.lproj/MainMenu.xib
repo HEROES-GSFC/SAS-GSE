@@ -2,9 +2,9 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">1080</int>
-		<string key="IBDocument.SystemVersion">12E55</string>
+		<string key="IBDocument.SystemVersion">12D78</string>
 		<string key="IBDocument.InterfaceBuilderVersion">3084</string>
-		<string key="IBDocument.AppKitVersion">1187.39</string>
+		<string key="IBDocument.AppKitVersion">1187.37</string>
 		<string key="IBDocument.HIToolboxVersion">626.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1968,7 +1968,6 @@
 											<string key="NSFrame">{{64, 597}, {193, 22}}</string>
 											<reference key="NSSuperview" ref="259097874"/>
 											<reference key="NSWindow"/>
-											<reference key="NSNextKeyView"/>
 											<string key="NSReuseIdentifierKey">_NS:1535</string>
 											<string key="NSAntiCompressionPriority">{1000, 750}</string>
 											<bool key="NSEnabled">YES</bool>
@@ -2777,7 +2776,6 @@
 											<string key="NSFrame">{{70, 598}, {179, 22}}</string>
 											<reference key="NSSuperview" ref="348958171"/>
 											<reference key="NSWindow"/>
-											<reference key="NSNextKeyView"/>
 											<string key="NSReuseIdentifierKey">_NS:1535</string>
 											<bool key="NSEnabled">YES</bool>
 											<object class="NSTextFieldCell" key="NSCell" id="1043920966">
@@ -4535,7 +4533,7 @@
 					<reference key="NSWindow"/>
 					<reference key="NSNextKeyView" ref="127552508"/>
 				</object>
-				<string key="NSScreenRect">{{0, 0}, {1280, 778}}</string>
+				<string key="NSScreenRect">{{0, 0}, {2560, 1418}}</string>
 				<string key="NSMaxSize">{10000000000000, 10000000000000}</string>
 				<bool key="NSWindowIsRestorable">NO</bool>
 			</object>
@@ -5806,6 +5804,182 @@
 						<reference key="destination" ref="122983595"/>
 					</object>
 					<int key="connectionID">6332</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">SAS1CanTemp</string>
+						<reference key="source" ref="1011726000"/>
+						<reference key="destination" ref="111807074"/>
+					</object>
+					<int key="connectionID">6374</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">SAS1HDDTemp</string>
+						<reference key="source" ref="1011726000"/>
+						<reference key="destination" ref="31296668"/>
+					</object>
+					<int key="connectionID">6375</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">SAS1HeaterPlateTemp</string>
+						<reference key="source" ref="1011726000"/>
+						<reference key="destination" ref="751248897"/>
+					</object>
+					<int key="connectionID">6376</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">SAS1RailTemp</string>
+						<reference key="source" ref="1011726000"/>
+						<reference key="destination" ref="64314687"/>
+					</object>
+					<int key="connectionID">6377</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">SAS1V1p05Voltage</string>
+						<reference key="source" ref="1011726000"/>
+						<reference key="destination" ref="383668771"/>
+					</object>
+					<int key="connectionID">6378</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">SAS1AirTemp</string>
+						<reference key="source" ref="1011726000"/>
+						<reference key="destination" ref="620839038"/>
+					</object>
+					<int key="connectionID">6379</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">SAS1V2p5Voltage</string>
+						<reference key="source" ref="1011726000"/>
+						<reference key="destination" ref="874015349"/>
+					</object>
+					<int key="connectionID">6380</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">SAS1V3p3Voltage</string>
+						<reference key="source" ref="1011726000"/>
+						<reference key="destination" ref="190781786"/>
+					</object>
+					<int key="connectionID">6381</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">SAS1V5Votlage</string>
+						<reference key="source" ref="1011726000"/>
+						<reference key="destination" ref="404953053"/>
+					</object>
+					<int key="connectionID">6382</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">SAS1V12Voltage</string>
+						<reference key="source" ref="1011726000"/>
+						<reference key="destination" ref="9557246"/>
+					</object>
+					<int key="connectionID">6383</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">SAS2CanTemp</string>
+						<reference key="source" ref="1011726000"/>
+						<reference key="destination" ref="339464207"/>
+					</object>
+					<int key="connectionID">6385</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">SAS2HDDTemp</string>
+						<reference key="source" ref="1011726000"/>
+						<reference key="destination" ref="277267513"/>
+					</object>
+					<int key="connectionID">6386</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">SAS2HeaterPlateTemp</string>
+						<reference key="source" ref="1011726000"/>
+						<reference key="destination" ref="621832940"/>
+					</object>
+					<int key="connectionID">6387</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">SAS2AirTemp</string>
+						<reference key="source" ref="1011726000"/>
+						<reference key="destination" ref="542607930"/>
+					</object>
+					<int key="connectionID">6388</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">SAS2RailTemp</string>
+						<reference key="source" ref="1011726000"/>
+						<reference key="destination" ref="533907321"/>
+					</object>
+					<int key="connectionID">6389</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">SAS2V1p05Voltage</string>
+						<reference key="source" ref="1011726000"/>
+						<reference key="destination" ref="49695146"/>
+					</object>
+					<int key="connectionID">6390</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">SAS2V2p5Voltage</string>
+						<reference key="source" ref="1011726000"/>
+						<reference key="destination" ref="749842136"/>
+					</object>
+					<int key="connectionID">6391</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">SAS2V3p3Voltage</string>
+						<reference key="source" ref="1011726000"/>
+						<reference key="destination" ref="333837526"/>
+					</object>
+					<int key="connectionID">6392</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">SAS2V5Votlage</string>
+						<reference key="source" ref="1011726000"/>
+						<reference key="destination" ref="18236272"/>
+					</object>
+					<int key="connectionID">6393</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">SAS2V12Voltage</string>
+						<reference key="source" ref="1011726000"/>
+						<reference key="destination" ref="620256073"/>
+					</object>
+					<int key="connectionID">6394</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">SAS1CPUHeatSinkTemp</string>
+						<reference key="source" ref="1011726000"/>
+						<reference key="destination" ref="21264566"/>
+					</object>
+					<int key="connectionID">6395</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">SAS2CPUHeatSinkTemp</string>
+						<reference key="source" ref="1011726000"/>
+						<reference key="destination" ref="359222750"/>
+					</object>
+					<int key="connectionID">6396</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -9216,7 +9390,6 @@
 							<reference ref="111807074"/>
 							<reference ref="31296668"/>
 							<reference ref="751248897"/>
-							<reference ref="620839038"/>
 							<reference ref="64314687"/>
 							<reference ref="796201656"/>
 							<reference ref="534599165"/>
@@ -9260,6 +9433,7 @@
 							<reference ref="176656499"/>
 							<reference ref="987448104"/>
 							<reference ref="763423999"/>
+							<reference ref="620839038"/>
 						</array>
 						<reference key="parent" ref="439893737"/>
 					</object>
@@ -18784,7 +18958,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">6372</int>
+			<int key="maxID">6396</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -18826,7 +19000,6 @@
 						</object>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
-						<string key="ConsoleDisplayACKToggle">NSButton</string>
 						<string key="MainWindow">NSWindow</string>
 						<string key="PYASFAspectErrorCodeTextField">NSTextField</string>
 						<string key="PYASFAutoFlipSwitch">AutoFlipSwitch</string>
@@ -18849,53 +19022,47 @@
 						<string key="RASAutoFlipSwitch">AutoFlipSwitch</string>
 						<string key="RASCameraTemperatureLabel">NSTextField</string>
 						<string key="RASImageMaxTextField">NSTextField</string>
+						<string key="SAS1AirTemp">NSTextField</string>
 						<string key="SAS1AutoFlipSwitch">AutoFlipSwitch</string>
+						<string key="SAS1CPUHeatSinkTemp">NSTextField</string>
 						<string key="SAS1CPUTemperatureLabel">NSTextField</string>
+						<string key="SAS1CanTemp">NSTextField</string>
 						<string key="SAS1ClockSync_indicator">NSLevelIndicator</string>
-						<string key="SAS1CmdCountTextField">NSTextField</string>
 						<string key="SAS1CmdKeyTextField">NSTextField</string>
 						<string key="SAS1DroppedFrameTextField">NSTextField</string>
 						<string key="SAS1FrameNumberLabel">NSTextField</string>
 						<string key="SAS1FrameTimeLabel">NSTextField</string>
-						<string key="SAS1T0TextField">NSTextField</string>
-						<string key="SAS1T1TextField">NSTextField</string>
-						<string key="SAS1T2TextField">NSTextField</string>
-						<string key="SAS1T3TextField">NSTextField</string>
-						<string key="SAS1T4TextField">NSTextField</string>
-						<string key="SAS1T5TextField">NSTextField</string>
-						<string key="SAS1V0TextField">NSTextField</string>
-						<string key="SAS1V1TextField">NSTextField</string>
-						<string key="SAS1V2TextField">NSTextField</string>
-						<string key="SAS1V3TextField">NSTextField</string>
-						<string key="SAS1V4TextField">NSTextField</string>
+						<string key="SAS1HDDTemp">NSTextField</string>
+						<string key="SAS1HeaterPlateTemp">NSTextField</string>
+						<string key="SAS1RailTemp">NSTextField</string>
+						<string key="SAS1V12Voltage">NSTextField</string>
+						<string key="SAS1V1p05Voltage">NSTextField</string>
+						<string key="SAS1V2p5Voltage">NSTextField</string>
+						<string key="SAS1V3p3Voltage">NSTextField</string>
+						<string key="SAS1V5Votlage">NSTextField</string>
 						<string key="SAS1isSavingImages">NSLevelIndicator</string>
+						<string key="SAS2AirTemp">NSTextField</string>
 						<string key="SAS2AutoFlipSwitch">AutoFlipSwitch</string>
+						<string key="SAS2CPUHeatSinkTemp">NSTextField</string>
 						<string key="SAS2CPUTemperatureLabel">NSTextField</string>
+						<string key="SAS2CanTemp">NSTextField</string>
 						<string key="SAS2ClockSync_indicator">NSLevelIndicator</string>
-						<string key="SAS2CmdCountTextField">NSTextField</string>
 						<string key="SAS2CmdKeyTextField">NSTextField</string>
 						<string key="SAS2DroppedFrameTextField">NSTextField</string>
 						<string key="SAS2FrameNumberLabel">NSTextField</string>
 						<string key="SAS2FrameTimeLabel">NSTextField</string>
-						<string key="SAS2T0TextField">NSTextField</string>
-						<string key="SAS2T1TextField">NSTextField</string>
-						<string key="SAS2T2TextField">NSTextField</string>
-						<string key="SAS2T3TextField">NSTextField</string>
-						<string key="SAS2T4TextField">NSTextField</string>
-						<string key="SAS2T5TextField">NSTextField</string>
-						<string key="SAS2V0TextField">NSTextField</string>
-						<string key="SAS2V1TextField">NSTextField</string>
-						<string key="SAS2V2TextField">NSTextField</string>
-						<string key="SAS2V3TextField">NSTextField</string>
-						<string key="SAS2V4TextField">NSTextField</string>
+						<string key="SAS2HDDTemp">NSTextField</string>
+						<string key="SAS2HeaterPlateTemp">NSTextField</string>
+						<string key="SAS2RailTemp">NSTextField</string>
+						<string key="SAS2V12Voltage">NSTextField</string>
+						<string key="SAS2V1p05Voltage">NSTextField</string>
+						<string key="SAS2V2p5Voltage">NSTextField</string>
+						<string key="SAS2V3p3Voltage">NSTextField</string>
+						<string key="SAS2V5Votlage">NSTextField</string>
 						<string key="SAS2isSavingImages">NSLevelIndicator</string>
 						<string key="TimeProfileMenu">NSMenu</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<object class="IBToOneOutletInfo" key="ConsoleDisplayACKToggle">
-							<string key="name">ConsoleDisplayACKToggle</string>
-							<string key="candidateClassName">NSButton</string>
-						</object>
 						<object class="IBToOneOutletInfo" key="MainWindow">
 							<string key="name">MainWindow</string>
 							<string key="candidateClassName">NSWindow</string>
@@ -18984,21 +19151,29 @@
 							<string key="name">RASImageMaxTextField</string>
 							<string key="candidateClassName">NSTextField</string>
 						</object>
+						<object class="IBToOneOutletInfo" key="SAS1AirTemp">
+							<string key="name">SAS1AirTemp</string>
+							<string key="candidateClassName">NSTextField</string>
+						</object>
 						<object class="IBToOneOutletInfo" key="SAS1AutoFlipSwitch">
 							<string key="name">SAS1AutoFlipSwitch</string>
 							<string key="candidateClassName">AutoFlipSwitch</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="SAS1CPUHeatSinkTemp">
+							<string key="name">SAS1CPUHeatSinkTemp</string>
+							<string key="candidateClassName">NSTextField</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="SAS1CPUTemperatureLabel">
 							<string key="name">SAS1CPUTemperatureLabel</string>
 							<string key="candidateClassName">NSTextField</string>
 						</object>
+						<object class="IBToOneOutletInfo" key="SAS1CanTemp">
+							<string key="name">SAS1CanTemp</string>
+							<string key="candidateClassName">NSTextField</string>
+						</object>
 						<object class="IBToOneOutletInfo" key="SAS1ClockSync_indicator">
 							<string key="name">SAS1ClockSync_indicator</string>
 							<string key="candidateClassName">NSLevelIndicator</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="SAS1CmdCountTextField">
-							<string key="name">SAS1CmdCountTextField</string>
-							<string key="candidateClassName">NSTextField</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="SAS1CmdKeyTextField">
 							<string key="name">SAS1CmdKeyTextField</string>
@@ -19016,69 +19191,65 @@
 							<string key="name">SAS1FrameTimeLabel</string>
 							<string key="candidateClassName">NSTextField</string>
 						</object>
-						<object class="IBToOneOutletInfo" key="SAS1T0TextField">
-							<string key="name">SAS1T0TextField</string>
+						<object class="IBToOneOutletInfo" key="SAS1HDDTemp">
+							<string key="name">SAS1HDDTemp</string>
 							<string key="candidateClassName">NSTextField</string>
 						</object>
-						<object class="IBToOneOutletInfo" key="SAS1T1TextField">
-							<string key="name">SAS1T1TextField</string>
+						<object class="IBToOneOutletInfo" key="SAS1HeaterPlateTemp">
+							<string key="name">SAS1HeaterPlateTemp</string>
 							<string key="candidateClassName">NSTextField</string>
 						</object>
-						<object class="IBToOneOutletInfo" key="SAS1T2TextField">
-							<string key="name">SAS1T2TextField</string>
+						<object class="IBToOneOutletInfo" key="SAS1RailTemp">
+							<string key="name">SAS1RailTemp</string>
 							<string key="candidateClassName">NSTextField</string>
 						</object>
-						<object class="IBToOneOutletInfo" key="SAS1T3TextField">
-							<string key="name">SAS1T3TextField</string>
+						<object class="IBToOneOutletInfo" key="SAS1V12Voltage">
+							<string key="name">SAS1V12Voltage</string>
 							<string key="candidateClassName">NSTextField</string>
 						</object>
-						<object class="IBToOneOutletInfo" key="SAS1T4TextField">
-							<string key="name">SAS1T4TextField</string>
+						<object class="IBToOneOutletInfo" key="SAS1V1p05Voltage">
+							<string key="name">SAS1V1p05Voltage</string>
 							<string key="candidateClassName">NSTextField</string>
 						</object>
-						<object class="IBToOneOutletInfo" key="SAS1T5TextField">
-							<string key="name">SAS1T5TextField</string>
+						<object class="IBToOneOutletInfo" key="SAS1V2p5Voltage">
+							<string key="name">SAS1V2p5Voltage</string>
 							<string key="candidateClassName">NSTextField</string>
 						</object>
-						<object class="IBToOneOutletInfo" key="SAS1V0TextField">
-							<string key="name">SAS1V0TextField</string>
+						<object class="IBToOneOutletInfo" key="SAS1V3p3Voltage">
+							<string key="name">SAS1V3p3Voltage</string>
 							<string key="candidateClassName">NSTextField</string>
 						</object>
-						<object class="IBToOneOutletInfo" key="SAS1V1TextField">
-							<string key="name">SAS1V1TextField</string>
-							<string key="candidateClassName">NSTextField</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="SAS1V2TextField">
-							<string key="name">SAS1V2TextField</string>
-							<string key="candidateClassName">NSTextField</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="SAS1V3TextField">
-							<string key="name">SAS1V3TextField</string>
-							<string key="candidateClassName">NSTextField</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="SAS1V4TextField">
-							<string key="name">SAS1V4TextField</string>
+						<object class="IBToOneOutletInfo" key="SAS1V5Votlage">
+							<string key="name">SAS1V5Votlage</string>
 							<string key="candidateClassName">NSTextField</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="SAS1isSavingImages">
 							<string key="name">SAS1isSavingImages</string>
 							<string key="candidateClassName">NSLevelIndicator</string>
 						</object>
+						<object class="IBToOneOutletInfo" key="SAS2AirTemp">
+							<string key="name">SAS2AirTemp</string>
+							<string key="candidateClassName">NSTextField</string>
+						</object>
 						<object class="IBToOneOutletInfo" key="SAS2AutoFlipSwitch">
 							<string key="name">SAS2AutoFlipSwitch</string>
 							<string key="candidateClassName">AutoFlipSwitch</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="SAS2CPUHeatSinkTemp">
+							<string key="name">SAS2CPUHeatSinkTemp</string>
+							<string key="candidateClassName">NSTextField</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="SAS2CPUTemperatureLabel">
 							<string key="name">SAS2CPUTemperatureLabel</string>
 							<string key="candidateClassName">NSTextField</string>
 						</object>
+						<object class="IBToOneOutletInfo" key="SAS2CanTemp">
+							<string key="name">SAS2CanTemp</string>
+							<string key="candidateClassName">NSTextField</string>
+						</object>
 						<object class="IBToOneOutletInfo" key="SAS2ClockSync_indicator">
 							<string key="name">SAS2ClockSync_indicator</string>
 							<string key="candidateClassName">NSLevelIndicator</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="SAS2CmdCountTextField">
-							<string key="name">SAS2CmdCountTextField</string>
-							<string key="candidateClassName">NSTextField</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="SAS2CmdKeyTextField">
 							<string key="name">SAS2CmdKeyTextField</string>
@@ -19096,48 +19267,36 @@
 							<string key="name">SAS2FrameTimeLabel</string>
 							<string key="candidateClassName">NSTextField</string>
 						</object>
-						<object class="IBToOneOutletInfo" key="SAS2T0TextField">
-							<string key="name">SAS2T0TextField</string>
+						<object class="IBToOneOutletInfo" key="SAS2HDDTemp">
+							<string key="name">SAS2HDDTemp</string>
 							<string key="candidateClassName">NSTextField</string>
 						</object>
-						<object class="IBToOneOutletInfo" key="SAS2T1TextField">
-							<string key="name">SAS2T1TextField</string>
+						<object class="IBToOneOutletInfo" key="SAS2HeaterPlateTemp">
+							<string key="name">SAS2HeaterPlateTemp</string>
 							<string key="candidateClassName">NSTextField</string>
 						</object>
-						<object class="IBToOneOutletInfo" key="SAS2T2TextField">
-							<string key="name">SAS2T2TextField</string>
+						<object class="IBToOneOutletInfo" key="SAS2RailTemp">
+							<string key="name">SAS2RailTemp</string>
 							<string key="candidateClassName">NSTextField</string>
 						</object>
-						<object class="IBToOneOutletInfo" key="SAS2T3TextField">
-							<string key="name">SAS2T3TextField</string>
+						<object class="IBToOneOutletInfo" key="SAS2V12Voltage">
+							<string key="name">SAS2V12Voltage</string>
 							<string key="candidateClassName">NSTextField</string>
 						</object>
-						<object class="IBToOneOutletInfo" key="SAS2T4TextField">
-							<string key="name">SAS2T4TextField</string>
+						<object class="IBToOneOutletInfo" key="SAS2V1p05Voltage">
+							<string key="name">SAS2V1p05Voltage</string>
 							<string key="candidateClassName">NSTextField</string>
 						</object>
-						<object class="IBToOneOutletInfo" key="SAS2T5TextField">
-							<string key="name">SAS2T5TextField</string>
+						<object class="IBToOneOutletInfo" key="SAS2V2p5Voltage">
+							<string key="name">SAS2V2p5Voltage</string>
 							<string key="candidateClassName">NSTextField</string>
 						</object>
-						<object class="IBToOneOutletInfo" key="SAS2V0TextField">
-							<string key="name">SAS2V0TextField</string>
+						<object class="IBToOneOutletInfo" key="SAS2V3p3Voltage">
+							<string key="name">SAS2V3p3Voltage</string>
 							<string key="candidateClassName">NSTextField</string>
 						</object>
-						<object class="IBToOneOutletInfo" key="SAS2V1TextField">
-							<string key="name">SAS2V1TextField</string>
-							<string key="candidateClassName">NSTextField</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="SAS2V2TextField">
-							<string key="name">SAS2V2TextField</string>
-							<string key="candidateClassName">NSTextField</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="SAS2V3TextField">
-							<string key="name">SAS2V3TextField</string>
-							<string key="candidateClassName">NSTextField</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="SAS2V4TextField">
-							<string key="name">SAS2V4TextField</string>
+						<object class="IBToOneOutletInfo" key="SAS2V5Votlage">
+							<string key="name">SAS2V5Votlage</string>
 							<string key="candidateClassName">NSTextField</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="SAS2isSavingImages">

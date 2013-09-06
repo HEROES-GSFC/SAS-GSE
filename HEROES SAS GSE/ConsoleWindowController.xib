@@ -2,9 +2,9 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">1080</int>
-		<string key="IBDocument.SystemVersion">12D78</string>
+		<string key="IBDocument.SystemVersion">12E55</string>
 		<string key="IBDocument.InterfaceBuilderVersion">3084</string>
-		<string key="IBDocument.AppKitVersion">1187.37</string>
+		<string key="IBDocument.AppKitVersion">1187.39</string>
 		<string key="IBDocument.HIToolboxVersion">626.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -62,7 +62,7 @@
 										<object class="NSTextView" id="345190000">
 											<reference key="NSNextResponder" ref="908732267"/>
 											<int key="NSvFlags">2322</int>
-											<string key="NSFrameSize">{852, 229}</string>
+											<string key="NSFrameSize">{882, 229}</string>
 											<reference key="NSSuperview" ref="908732267"/>
 											<reference key="NSNextKeyView" ref="1012789663"/>
 											<string key="NSReuseIdentifierKey">_NS:13</string>
@@ -81,7 +81,7 @@
 													<nil key="NSDelegate"/>
 												</object>
 												<reference key="NSTextView" ref="345190000"/>
-												<double key="NSWidth">852</double>
+												<double key="NSWidth">882</double>
 												<int key="NSTCFlags">1</int>
 											</object>
 											<object class="NSTextViewSharedData" key="NSSharedData">
@@ -130,11 +130,10 @@
 											</object>
 											<int key="NSTVFlags">6</int>
 											<string key="NSMaxSize">{882, 10000000}</string>
-											<string key="NSMinize">{867, 229}</string>
 											<nil key="NSDelegate"/>
 										</object>
 									</array>
-									<string key="NSFrame">{{1, 1}, {867, 229}}</string>
+									<string key="NSFrame">{{1, 1}, {882, 229}}</string>
 									<reference key="NSSuperview" ref="161096526"/>
 									<reference key="NSNextKeyView" ref="345190000"/>
 									<string key="NSReuseIdentifierKey">_NS:11</string>
@@ -298,7 +297,7 @@ wGw</bytes>
 								<object class="NSScroller" id="1066838380">
 									<reference key="NSNextResponder" ref="161096526"/>
 									<int key="NSvFlags">256</int>
-									<string key="NSFrame">{{868, 1}, {15, 229}}</string>
+									<string key="NSFrame">{{867, 1}, {16, 229}}</string>
 									<reference key="NSSuperview" ref="161096526"/>
 									<string key="NSReuseIdentifierKey">_NS:83</string>
 									<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
