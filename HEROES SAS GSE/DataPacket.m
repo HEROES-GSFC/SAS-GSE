@@ -53,7 +53,7 @@
 @synthesize isClockSynced;
 @synthesize isOutputting;
 @synthesize isSavingImages;
-@synthesize isSunFound;
+@synthesize isReceivingGPS;
 @synthesize isTracking;
 @synthesize aspectErrorCode;
 @synthesize clockingAngle;

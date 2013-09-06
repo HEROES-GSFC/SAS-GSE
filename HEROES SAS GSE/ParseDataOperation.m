@@ -145,7 +145,7 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                             
                             //parse this bit field
                             dataPacket.isTracking = (bool)bitread(&status_bitfield, 7, 1);
-                            dataPacket.isSunFound = (bool)bitread(&status_bitfield, 6, 1);
+                            dataPacket.isReceivingGPS = (bool)bitread(&status_bitfield, 6, 1);
                             dataPacket.isOutputting = (bool)bitread(&status_bitfield, 5, 1);
                             AspectCode result = (AspectCode)bitread(&status_bitfield, 0, 5);
                             dataPacket.aspectErrorCode = [NSString stringWithCString:GetMessage(result) encoding:NSUTF8StringEncoding];

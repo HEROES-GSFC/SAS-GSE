@@ -88,6 +88,9 @@
 @property (weak) IBOutlet NSLevelIndicator *SAS1isSavingImages;
 @property (weak) IBOutlet NSTextField *SAS1DroppedFrameTextField;
 @property (weak) IBOutlet NSTextField *SAS2DroppedFrameTextField;
+@property (weak) IBOutlet NSLevelIndicator *SAS1ReceivingGPS_indicator;
+@property (weak) IBOutlet NSLevelIndicator *SAS2ReceivingGPS_indicator;
+
 
 @property (nonatomic) NSUInteger SAS1MissedFrameCount;
 @property (nonatomic) NSUInteger SAS2MissedFrameCount;
