@@ -96,7 +96,7 @@
         }
         self.listOfCommands = plistDict;
         
-        self.PlotWindowsAvailable = [NSArray arrayWithObjects:@"camera temperature", @"sas-1 temperatures", @"sas-2 temperatures", @"cpu temperature", @"ctl X solution", @"ctl Y solution", @"ctl R solution", nil];
+        self.PlotWindowsAvailable = [NSArray arrayWithObjects:@"camera temperature", @"sas-1 temperatures", @"sas-2 temperatures", @"sas-1 voltages", @"sas-2 voltages", @"ctl X solution", @"ctl Y solution", @"ctl R solution", nil];
         
         //NSArray *systemNames = [[NSArray alloc] initWithObjects:@"SAS-1", @"SAS-2", nil];
         //NSArray *cameraNames = [[NSArray alloc] initWithObjects:@"PYAS-F", "PYAS-R", "RAS", nil];
@@ -946,6 +946,30 @@
                                       [self.timeSeriesCollection objectForKey:@"SAS2 heater plate temperature"] , @"heater",
                                       [self.timeSeriesCollection objectForKey:@"SAS2 air temperature"] , @"air",
                                       [self.timeSeriesCollection objectForKey:@"SAS2 rail temperature"] , @"rail",
+                                      nil];
+                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data];
+                [newPlotWindow showWindow:self];
+                [self.PlotWindows setObject:newPlotWindow forKey:userChoice];
+            }
+            if ([userChoice isEqualToString:@"sas-1 voltages"]) {
+                NSDictionary *data = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                      [self.timeSeriesCollection objectForKey:@"SAS1 1.05V"], @"1.05V",
+                                      [self.timeSeriesCollection objectForKey:@"SAS1 2.5V"] , @"2.5V",
+                                      [self.timeSeriesCollection objectForKey:@"SAS1 3.3V"] , @"3.3V",
+                                      [self.timeSeriesCollection objectForKey:@"SAS1 5.0V"] , @"5.0V",
+                                      [self.timeSeriesCollection objectForKey:@"SAS1 12.0V"] , @"12.0V",
+                                      nil];
+                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data];
+                [newPlotWindow showWindow:self];
+                [self.PlotWindows setObject:newPlotWindow forKey:userChoice];
+            }
+            if ([userChoice isEqualToString:@"sas-2 voltages"]) {
+                NSDictionary *data = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                      [self.timeSeriesCollection objectForKey:@"SAS2 1.05V"], @"1.05V",
+                                      [self.timeSeriesCollection objectForKey:@"SAS2 2.5V"] , @"2.5V",
+                                      [self.timeSeriesCollection objectForKey:@"SAS2 3.3V"] , @"3.3V",
+                                      [self.timeSeriesCollection objectForKey:@"SAS2 5.0V"] , @"5.0V",
+                                      [self.timeSeriesCollection objectForKey:@"SAS2 12.0V"] , @"12.0V",
                                       nil];
                 PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data];
                 [newPlotWindow showWindow:self];
