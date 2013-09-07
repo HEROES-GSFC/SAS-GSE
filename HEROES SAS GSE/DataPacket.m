@@ -143,17 +143,17 @@
 }
 
 - (NSString *) getframeTimeString{
-    NSDate *date = [NSDate dateWithTimeIntervalSince1970:self.frameSeconds];
+    NSDate *date = [self getDate];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     NSTimeZone *zone = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
     [dateFormatter setTimeZone:zone];
-    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS"];
     NSString *dateString = [dateFormatter stringFromDate: date];
     return dateString;
 }
 
 - (NSDate *) getDate{
-    NSDate *date = [NSDate dateWithTimeIntervalSince1970:self.frameSeconds];
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:(self.frameSeconds + (double)self.frameMilliseconds/1e3)];
     return date;
 }
 

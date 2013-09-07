@@ -35,7 +35,7 @@
 @property (nonatomic, strong) NSArray *PlotWindowsAvailable;
 @property (nonatomic, strong) NSArray *IndicatorTimers;
 - (NSString *)createDateTimeString: (NSString *)type;
-- (void)OpenTelemetrySaveTextFiles;
+- (NSFileHandle *)OpenTelemetrySaveTextFiles: (NSString *)filename_prefix;
 - (void)StartListeningForUDP: (int)port;
 - (void)StartListeningForTCP;
 @end
@@ -250,7 +250,9 @@
     [self StartListeningForUDP: GROUND_NETWORK_PORT];
     [self StartListeningForTCP];
             
-    [self OpenTelemetrySaveTextFiles];
+    self.SAS1telemetrySaveFile = [self OpenTelemetrySaveTextFiles: @"HEROES_SAS1"];
+    self.SAS2telemetrySaveFile = [self OpenTelemetrySaveTextFiles: @"HEROES_SAS2"];
+
     [self postToLogWindow:@"Application started"];
 }
 
@@ -510,27 +512,28 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:@"LogMessage" object:nil userInfo:[NSDictionary dictionaryWithObject:message forKey:@"message"]];
 }
 
-- (void)OpenTelemetrySaveTextFiles{
+- (NSFileHandle *)OpenTelemetrySaveTextFiles: (NSString *)filename_prefix{
     // Open a file to save the telemetry stream to
     // The file is a csv file
-    //
+    
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *filename = [NSString stringWithFormat:@"HEROES_SAS1_tmlog_%@.txt", [self createDateTimeString:@"file"]];
+    NSString *filename = [NSString stringWithFormat:@"%@_tmlog_%@.txt", filename_prefix, [self createDateTimeString:@"file"]];
     
     NSString *filePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:filename];
     // open file to save data stream
-    self.SAS1telemetrySaveFile = [NSFileHandle fileHandleForWritingAtPath: filePath ];
-    if (self.SAS1telemetrySaveFile == nil) {
+    NSFileHandle *theFileHandle = [NSFileHandle fileHandleForWritingAtPath: filePath ];
+    if (theFileHandle == nil) {
         [[NSFileManager defaultManager] createFileAtPath:filePath contents:nil attributes:nil];
-        self.SAS1telemetrySaveFile = [NSFileHandle fileHandleForWritingAtPath:filePath];
+        theFileHandle = [NSFileHandle fileHandleForWritingAtPath:filePath];
     }
     //say to handle where's the file fo write
-    [self.SAS1telemetrySaveFile truncateFileAtOffset:[self.SAS1telemetrySaveFile seekToEndOfFile]];
-    NSString *writeString = [NSString stringWithFormat:@"HEROES SAS1 Telemetry Log File %@\n", [self createDateTimeString:nil]];
+    [theFileHandle truncateFileAtOffset:[self.SAS1telemetrySaveFile seekToEndOfFile]];
+    NSString *writeString = [NSString stringWithFormat:@"%@ Telemetry Log File %@\n", [filename_prefix stringByReplacingOccurrencesOfString:@"_" withString:@" "], [self createDateTimeString:nil]];
     //position handle cursor to the end of file
-    [self.SAS1telemetrySaveFile writeData:[writeString dataUsingEncoding:NSUTF8StringEncoding]];
+    [theFileHandle writeData:[writeString dataUsingEncoding:NSUTF8StringEncoding]];
     writeString = [NSString stringWithFormat:@"doy time, frame number, camera temp, cpu temp, suncenter x, suncenter y, CTL x, CTL y\n"];
-    [self.SAS1telemetrySaveFile writeData:[writeString dataUsingEncoding:NSUTF8StringEncoding]];
+    [theFileHandle writeData:[writeString dataUsingEncoding:NSUTF8StringEncoding]];
+    return theFileHandle;
 }
 
 - (void)mainThread_handleData:(NSNotification *)note
@@ -866,6 +869,18 @@
         [self.PYASRProvidingCTL_indicator setIntValue:1*packet.isOutputting];
 
         [self.PYASRcameraView draw];
+        
+        NSString *writeString = [NSString stringWithFormat:@"%@, %@, %@, %@, %@, %@\n",
+                                 self.SAS1FrameTimeLabel.stringValue,
+                                 self.SAS1FrameNumberLabel.stringValue,
+                                 self.PYASFCameraTemperatureLabel.stringValue,
+                                 self.SAS1CPUTemperatureLabel.stringValue,
+                                 [NSString stringWithFormat:@"%f, %f", [packet.sunCenter pointValue].x,
+                                  [packet.sunCenter pointValue].y],
+                                 [NSString stringWithFormat:@"%f, %f", [packet.CTLCommand pointValue].x,
+                                  [packet.CTLCommand pointValue].y]
+                                 ];
+        [self.SAS2telemetrySaveFile writeData:[writeString dataUsingEncoding:NSUTF8StringEncoding]];
         
         // Update the plot windows
         for (id key in self.PlotWindows) {

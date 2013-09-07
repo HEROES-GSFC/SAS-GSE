@@ -195,7 +195,7 @@
         for (NSString *key in self.data) {
             TimeSeries *currentData = [self.data objectForKey:key];
 
-            if (currentData.count != 0) {
+            if ([[currentData data]count] != 0) {
                 if (i == 0) {
                     ymin = currentData.min * 0.8;
                     ymax = currentData.max * 1.2;
@@ -262,7 +262,7 @@
 {
     NSString *plot_name = plot.identifier;
     TimeSeries *currentData = [self.data objectForKey:plot_name];
-    return currentData.count;
+    return [[currentData data] count];
 }
 
 @end

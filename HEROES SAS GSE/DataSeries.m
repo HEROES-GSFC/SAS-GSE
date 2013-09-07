@@ -7,10 +7,14 @@
 //
 
 #import "DataSeries.h"
+
+#define MAX_CAPACITY 1000
+
 @interface DataSeries()
 -(float)calculateAverage;
 -(float)calculateStandardDeviation;
 @property (nonatomic, strong) NSMutableArray *mydata;
+@property (nonatomic) NSUInteger count;
 @end
 
 @implementation DataSeries
@@ -41,7 +45,7 @@
 
 -(NSMutableArray *)mydata{
     if (_mydata == nil) {
-        _mydata = [[NSMutableArray alloc] initWithCapacity:2000];
+        _mydata = [[NSMutableArray alloc] initWithCapacity:MAX_CAPACITY];
     }
     return _mydata;
 }
@@ -56,15 +60,15 @@
 
 - (void) addPoint: (float)newpoint{
     [self.mydata addObject:[NSNumber numberWithFloat:newpoint]];
-    if ([self.mydata count] == 2000) {
-        [self.mydata removeLastObject];
+    if ([self.mydata count] == MAX_CAPACITY) {
+        [self.mydata removeObjectAtIndex:0];
     }
     [self update];
 }
 
 - (void) update{
     float latest_value = [self.mydata.lastObject floatValue];
-    self.count = [self.mydata count];
+    self.count = [[self data] count];
     if (self.count == 1){
         self.max = latest_value;
         self.min = latest_value;
