@@ -929,7 +929,7 @@
                                       [self.timeSeriesCollection objectForKey:@"SAS1 cpuheatsink temperature"] , @"heat sink",
                                       [self.timeSeriesCollection objectForKey:@"SAS1 can temperature"] , @"can",
                                       [self.timeSeriesCollection objectForKey:@"SAS1 hdd temperature"] , @"hdd",
-                                      [self.timeSeriesCollection objectForKey:@"SAS1 heater temperature"] , @"heater",
+                                      [self.timeSeriesCollection objectForKey:@"SAS1 heater plate temperature"] , @"heater",
                                       [self.timeSeriesCollection objectForKey:@"SAS1 air temperature"] , @"air",
                                       [self.timeSeriesCollection objectForKey:@"SAS1 rail temperature"] , @"rail",
                                       nil];
@@ -943,7 +943,7 @@
                                       [self.timeSeriesCollection objectForKey:@"SAS2 cpuheatsink temperature"] , @"heat sink",
                                       [self.timeSeriesCollection objectForKey:@"SAS2 can temperature"] , @"can",
                                       [self.timeSeriesCollection objectForKey:@"SAS2 hdd temperature"] , @"hdd",
-                                      [self.timeSeriesCollection objectForKey:@"SAS2 heater temperature"] , @"heater",
+                                      [self.timeSeriesCollection objectForKey:@"SAS2 heater plate temperature"] , @"heater",
                                       [self.timeSeriesCollection objectForKey:@"SAS2 air temperature"] , @"air",
                                       [self.timeSeriesCollection objectForKey:@"SAS2 rail temperature"] , @"rail",
                                       nil];
@@ -1006,19 +1006,6 @@
         //[PYASRcamTemp addPoint:(float)rand()/RAND_MAX * 5];
         //[RAScamTemp addPoint:(float)rand()/RAND_MAX * 5];
    // }
-    
-    for (int i = 0; i < 1000; i++) {
-        float temp = 10 * (float)rand()/RAND_MAX + 20.0;
-        NSDate *time = [NSDate dateWithTimeInterval:i sinceDate:[NSDate date]];
-        [[self.timeSeriesCollection objectForKey:@"PYAS-R camera temperature"] addPointWithTime:time :temp];
-        [[self.timeSeriesCollection objectForKey:@"PYAS-F camera temperature"] addPointWithTime:time :temp+10];
-        [[self.timeSeriesCollection objectForKey:@"RAS camera temperature"] addPointWithTime:time :temp+15];
-    }
-    NSLog(@"test");
-    // Update the plot windows
-    for (id key in self.PlotWindows) {
-        [[self.PlotWindows objectForKey:key] update];
-    }
 }
 
 - (NSArray *)convertDegreesToDegMinSec: (float)value{
