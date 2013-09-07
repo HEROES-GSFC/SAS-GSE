@@ -38,6 +38,7 @@
 - (NSFileHandle *)OpenTelemetrySaveTextFiles: (NSString *)filename_prefix;
 - (void)StartListeningForUDP: (int)port;
 - (void)StartListeningForTCP;
+- (void)updateTelemetrySaveFile: (NSFileHandle *)fileHandle :(DataPacket *)packet;
 @end
 
 @implementation AppController
@@ -531,7 +532,7 @@
     NSString *writeString = [NSString stringWithFormat:@"%@ Telemetry Log File %@\n", [filename_prefix stringByReplacingOccurrencesOfString:@"_" withString:@" "], [self createDateTimeString:nil]];
     //position handle cursor to the end of file
     [theFileHandle writeData:[writeString dataUsingEncoding:NSUTF8StringEncoding]];
-    writeString = [NSString stringWithFormat:@"doy time, frame number, camera temp, cpu temp, suncenter x, suncenter y, CTL x, CTL y\n"];
+    writeString = [NSString stringWithFormat:@"time, frame number, camera temp, cpu temp, suncenter x, suncenter y, CTL x, CTL y\n"];
     [theFileHandle writeData:[writeString dataUsingEncoding:NSUTF8StringEncoding]];
     return theFileHandle;
 }
@@ -703,18 +704,7 @@
         
         self.PYASFcameraView.northAngle = northAngle;
         
-        NSString *writeString = [NSString stringWithFormat:@"%@, %@, %@, %@, %@, %@\n",
-                                 self.SAS1FrameTimeLabel.stringValue,
-                                 self.SAS1FrameNumberLabel.stringValue,
-                                 self.PYASFCameraTemperatureLabel.stringValue,
-                                 self.SAS1CPUTemperatureLabel.stringValue,
-                                 [NSString stringWithFormat:@"%f, %f", [packet.sunCenter pointValue].x,
-                                  [packet.sunCenter pointValue].y],
-                                 [NSString stringWithFormat:@"%f, %f", [packet.CTLCommand pointValue].x,
-                                  [packet.CTLCommand pointValue].y]
-                                 ];
-        [self.SAS1telemetrySaveFile writeData:[writeString dataUsingEncoding:NSUTF8StringEncoding]];
-        
+        [self updateTelemetrySaveFile: self.SAS2telemetrySaveFile: packet];        
         // Update the plot windows
         for (id key in self.PlotWindows) {
             [[self.PlotWindows objectForKey:key] update];
@@ -869,19 +859,9 @@
         [self.PYASRProvidingCTL_indicator setIntValue:1*packet.isOutputting];
 
         [self.PYASRcameraView draw];
-        
-        NSString *writeString = [NSString stringWithFormat:@"%@, %@, %@, %@, %@, %@\n",
-                                 self.SAS1FrameTimeLabel.stringValue,
-                                 self.SAS1FrameNumberLabel.stringValue,
-                                 self.PYASFCameraTemperatureLabel.stringValue,
-                                 self.SAS1CPUTemperatureLabel.stringValue,
-                                 [NSString stringWithFormat:@"%f, %f", [packet.sunCenter pointValue].x,
-                                  [packet.sunCenter pointValue].y],
-                                 [NSString stringWithFormat:@"%f, %f", [packet.CTLCommand pointValue].x,
-                                  [packet.CTLCommand pointValue].y]
-                                 ];
-        [self.SAS2telemetrySaveFile writeData:[writeString dataUsingEncoding:NSUTF8StringEncoding]];
-        
+    
+        [self updateTelemetrySaveFile: self.SAS2telemetrySaveFile: packet];
+                
         // Update the plot windows
         for (id key in self.PlotWindows) {
             [[self.PlotWindows objectForKey:key] update];
@@ -1008,6 +988,37 @@
         self.PYASRcameraView.imageExists = NO;
     }
 }
+
+- (void)updateTelemetrySaveFile: (NSFileHandle *)fileHandle :(DataPacket *)packet{
+    
+    NSString *writeString = [NSString stringWithFormat:@"%@,%d,%.2f,%.2f,%.2f,%.2f,%.2f %.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%d\n",
+                                                        [packet getframeTimeString],
+                                                        [packet frameNumber],
+                                                        [packet cpuTemperature],
+                                                        [packet cameraTemperature],
+                                                        [[packet.i2cTemperatures objectAtIndex:0] floatValue],
+                                                        [[packet.i2cTemperatures objectAtIndex:1] floatValue],
+                                                        [[packet.i2cTemperatures objectAtIndex:2] floatValue],
+                                                        [[packet.i2cTemperatures objectAtIndex:3] floatValue],
+                                                        [[packet.i2cTemperatures objectAtIndex:4] floatValue],
+                                                        [[packet.i2cTemperatures objectAtIndex:5] floatValue],
+                                                        [[packet.sbcVoltages objectAtIndex:0] floatValue],
+                                                        [[packet.sbcVoltages objectAtIndex:1] floatValue],
+                                                        [[packet.sbcVoltages objectAtIndex:2] floatValue],
+                                                        [[packet.sbcVoltages objectAtIndex:3] floatValue],
+                                                        [[packet.sbcVoltages objectAtIndex:4] floatValue],
+                                                        [packet.sunCenter pointValue].x,
+                                                        [packet.sunCenter pointValue].y,
+                                                        [packet.screenCenter pointValue].x,
+                                                        [packet.screenCenter pointValue].y,
+                                                        packet.screenRadius,
+                                                        [packet.CTLCommand pointValue].x,
+                                                        [packet.CTLCommand pointValue].y,
+                                                        packet.ImageMax];
+                             
+    [fileHandle writeData:[writeString dataUsingEncoding:NSUTF8StringEncoding]];
+}
+
 
 - (IBAction)RunTest:(id)sender {
 //    int xpixels = 1296;
