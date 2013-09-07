@@ -190,7 +190,8 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                                     break;
                                 case 7:
                                     dataPacket.isClockSynced = housekeeping1;
-                                    dataPacket.isSavingImages = housekeeping2;
+                                    dataPacket.isPYASSavingImages = (bool)bitread(&housekeeping2, 0, 1);
+                                    dataPacket.isRASSavingImages = (bool)bitread(&housekeeping2, 1, 1);
                                 default:
                                     break;
                             }

@@ -668,7 +668,7 @@
                 break;
             case 7:
                 [self.SAS1ClockSync_indicator setIntValue:1*packet.isClockSynced];
-                [self.SAS1isSavingImages setIntValue:1*packet.isSavingImages];
+                [self.SAS1isPYASSavingImages setIntValue:1*packet.isPYASSavingImages];
                 break;
             default:
                 break;
@@ -822,8 +822,9 @@
                 [self.SAS2V12Voltage setTextColor:FieldWasUpdatedColor];
                 break;
             case 7:
-                [self.SAS2ClockSync_indicator setIntValue:1*packet.isClockSynced];
-                [self.SAS2isSavingImages setIntValue:1*packet.isSavingImages];
+                [self.SAS2ClockSync_indicator setIntValue:packet.isClockSynced];
+                [self.SAS2isPYASSavingImages setIntValue:packet.isPYASSavingImages];
+                [self.SAS2isRASSavingImages setIntValue:packet.isRASSavingImages];
                 break;
             default:
                 break;

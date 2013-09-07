@@ -52,7 +52,8 @@
 @synthesize i2cTemperatures = _i2cTemperatures;
 @synthesize isClockSynced;
 @synthesize isOutputting;
-@synthesize isSavingImages;
+@synthesize isPYASSavingImages;
+@synthesize isRASSavingImages;
 @synthesize isReceivingGPS;
 @synthesize isTracking;
 @synthesize aspectErrorCode;
