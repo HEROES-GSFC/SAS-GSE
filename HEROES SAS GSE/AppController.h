@@ -84,10 +84,14 @@
 @property (weak) IBOutlet NSLevelIndicator *PYASFProvidingCTL_indicator;
 @property (weak) IBOutlet NSLevelIndicator *SAS1ClockSync_indicator;
 @property (weak) IBOutlet NSLevelIndicator *SAS2ClockSync_indicator;
-@property (weak) IBOutlet NSLevelIndicator *SAS2isSavingImages;
-@property (weak) IBOutlet NSLevelIndicator *SAS1isSavingImages;
+@property (weak) IBOutlet NSLevelIndicator *SAS2isPYASSavingImages;
+@property (weak) IBOutlet NSLevelIndicator *SAS1isPYASSavingImages;
+@property (weak) IBOutlet NSLevelIndicator *SAS2isRASSavingImages;
 @property (weak) IBOutlet NSTextField *SAS1DroppedFrameTextField;
 @property (weak) IBOutlet NSTextField *SAS2DroppedFrameTextField;
+@property (weak) IBOutlet NSLevelIndicator *SAS1ReceivingGPS_indicator;
+@property (weak) IBOutlet NSLevelIndicator *SAS2ReceivingGPS_indicator;
+
 
 @property (nonatomic) NSUInteger SAS1MissedFrameCount;
 @property (nonatomic) NSUInteger SAS2MissedFrameCount;

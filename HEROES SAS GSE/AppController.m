@@ -683,7 +683,7 @@
                 break;
             case 7:
                 [self.SAS1ClockSync_indicator setIntValue:1*packet.isClockSynced];
-                [self.SAS1isSavingImages setIntValue:1*packet.isSavingImages];
+                [self.SAS1isPYASSavingImages setIntValue:1*packet.isPYASSavingImages];
                 break;
             default:
                 break;
@@ -699,9 +699,10 @@
         }
         
         [self.PYASFAspectErrorCodeTextField setAttributedStringValue:attrString];
-        [self.PYASFisTracking_indicator setIntValue:1*packet.isTracking];
-        [self.PYASFProvidingCTL_indicator setIntValue:1*packet.isOutputting];
-        
+        [self.PYASFisTracking_indicator setIntValue:packet.isTracking];
+        [self.PYASFProvidingCTL_indicator setIntValue:packet.isOutputting];
+        [self.SAS1ReceivingGPS_indicator setIntValue:packet.isReceivingGPS];
+
         self.PYASFcameraView.northAngle = northAngle;
         
         [self updateTelemetrySaveFile: self.SAS2telemetrySaveFile: packet];        
@@ -836,8 +837,9 @@
                 [[self.timeSeriesCollection objectForKey:@"SAS2 12.0V"] addPointWithTime:[packet getDate] :[[packet.sbcVoltages objectAtIndex:4] floatValue]];
                 break;
             case 7:
-                [self.SAS2ClockSync_indicator setIntValue:1*packet.isClockSynced];
-                [self.SAS2isSavingImages setIntValue:1*packet.isSavingImages];
+                [self.SAS2ClockSync_indicator setIntValue:packet.isClockSynced];
+                [self.SAS2isPYASSavingImages setIntValue:packet.isPYASSavingImages];
+                [self.SAS2isRASSavingImages setIntValue:packet.isRASSavingImages];
                 break;
             default:
                 break;
@@ -855,8 +857,9 @@
         }
         
         [self.PYASRAspectErrorCodeTextField setAttributedStringValue:attrString];
-        [self.PYASRisTracking_indicator setIntValue:1*packet.isTracking];
-        [self.PYASRProvidingCTL_indicator setIntValue:1*packet.isOutputting];
+        [self.PYASRisTracking_indicator setIntValue:packet.isTracking];
+        [self.PYASRProvidingCTL_indicator setIntValue:packet.isOutputting];
+        [self.SAS2ReceivingGPS_indicator setIntValue:packet.isReceivingGPS];
 
         [self.PYASRcameraView draw];
     
