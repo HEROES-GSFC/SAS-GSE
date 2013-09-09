@@ -250,11 +250,10 @@
     
     [self StartListeningForUDP: GROUND_NETWORK_PORT];
     [self StartListeningForTCP];
-            
+    
+    [self postToLogWindow:@"Application started"];
     self.SAS1telemetrySaveFile = [self OpenTelemetrySaveTextFiles: @"HEROES_SAS1"];
     self.SAS2telemetrySaveFile = [self OpenTelemetrySaveTextFiles: @"HEROES_SAS2"];
-
-    [self postToLogWindow:@"Application started"];
 }
 
 - (void)StartListeningForUDP: (int)port {
@@ -532,8 +531,9 @@
     NSString *writeString = [NSString stringWithFormat:@"%@ Telemetry Log File %@\n", [filename_prefix stringByReplacingOccurrencesOfString:@"_" withString:@" "], [self createDateTimeString:nil]];
     //position handle cursor to the end of file
     [theFileHandle writeData:[writeString dataUsingEncoding:NSUTF8StringEncoding]];
-    writeString = [NSString stringWithFormat:@"time, frame number, camera temp, cpu temp, suncenter x, suncenter y, CTL x, CTL y\n"];
+    writeString = [NSString stringWithFormat:@"time, frame, cpuTemp, pyasTemp, canTemp, airTemp, railTemp, hddTemp, heaterTemp, volt1, volt2, volt3, volt4, sunX, sunY, screenX, screenY, screenRadius, ctlX, ctlY, pyasMax"];
     [theFileHandle writeData:[writeString dataUsingEncoding:NSUTF8StringEncoding]];
+    [self postToLogWindow:[NSString stringWithFormat:@"Opening file %@", filename]];
     return theFileHandle;
 }
 
@@ -705,7 +705,7 @@
 
         self.PYASFcameraView.northAngle = northAngle;
         
-        [self updateTelemetrySaveFile: self.SAS2telemetrySaveFile: packet];        
+        [self updateTelemetrySaveFile: self.SAS1telemetrySaveFile: packet];
         // Update the plot windows
         for (id key in self.PlotWindows) {
             [[self.PlotWindows objectForKey:key] update];
@@ -994,31 +994,28 @@
 
 - (void)updateTelemetrySaveFile: (NSFileHandle *)fileHandle :(DataPacket *)packet{
     
-    NSString *writeString = [NSString stringWithFormat:@"%@,%d,%.2f,%.2f,%.2f,%.2f,%.2f %.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%d\n",
-                                                        [packet getframeTimeString],
-                                                        [packet frameNumber],
-                                                        [packet cpuTemperature],
-                                                        [packet cameraTemperature],
-                                                        [[packet.i2cTemperatures objectAtIndex:0] floatValue],
-                                                        [[packet.i2cTemperatures objectAtIndex:1] floatValue],
-                                                        [[packet.i2cTemperatures objectAtIndex:2] floatValue],
-                                                        [[packet.i2cTemperatures objectAtIndex:3] floatValue],
-                                                        [[packet.i2cTemperatures objectAtIndex:4] floatValue],
-                                                        [[packet.i2cTemperatures objectAtIndex:5] floatValue],
-                                                        [[packet.sbcVoltages objectAtIndex:0] floatValue],
-                                                        [[packet.sbcVoltages objectAtIndex:1] floatValue],
-                                                        [[packet.sbcVoltages objectAtIndex:2] floatValue],
-                                                        [[packet.sbcVoltages objectAtIndex:3] floatValue],
-                                                        [[packet.sbcVoltages objectAtIndex:4] floatValue],
-                                                        [packet.sunCenter pointValue].x,
-                                                        [packet.sunCenter pointValue].y,
-                                                        [packet.screenCenter pointValue].x,
-                                                        [packet.screenCenter pointValue].y,
-                                                        packet.screenRadius,
-                                                        [packet.CTLCommand pointValue].x,
-                                                        [packet.CTLCommand pointValue].y,
-                                                        packet.ImageMax];
-                             
+    NSString *writeString = [NSString stringWithFormat:@"%@,%d,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%d\n",
+                             [packet getframeTimeString],
+                             [packet frameNumber],
+                             ([packet isSAS1] ? [self.SAS1CPUTemperatureLabel floatValue] : [self.SAS2CPUTemperatureLabel floatValue]),
+                             ([packet isSAS1] ? [self.PYASFCameraTemperatureLabel floatValue] : [self.PYASRCameraTemperatureLabel floatValue]),
+                             ([packet isSAS1] ? [self.SAS1CanTemp floatValue] : [self.SAS2CanTemp floatValue]),
+                             ([packet isSAS1] ? [self.SAS1AirTemp floatValue] : [self.SAS2AirTemp floatValue]),
+                             ([packet isSAS1] ? [self.SAS1RailTemp floatValue] : [self.SAS2RailTemp floatValue]),
+                             ([packet isSAS1] ? [self.SAS1HDDTemp floatValue] : [self.SAS2HDDTemp floatValue]),
+                             ([packet isSAS1] ? [self.SAS1HeaterPlateTemp floatValue] : [self.SAS2HeaterPlateTemp floatValue]),
+                             ([packet isSAS1] ? [self.SAS1V1p05Voltage floatValue] : [self.SAS2V1p05Voltage floatValue]),
+                             ([packet isSAS1] ? [self.SAS1V2p5Voltage floatValue] : [self.SAS2V2p5Voltage floatValue]),
+                             ([packet isSAS1] ? [self.SAS1V5Votlage floatValue] : [self.SAS2V5Votlage floatValue]),
+                             ([packet isSAS1] ? [self.SAS1V12Voltage floatValue] : [self.SAS2V12Voltage floatValue]),
+                             [packet.sunCenter pointValue].x,
+                             [packet.sunCenter pointValue].y,
+                             [packet.screenCenter pointValue].x,
+                             [packet.screenCenter pointValue].y,
+                             packet.screenRadius,
+                             [packet.CTLCommand pointValue].x,
+                             [packet.CTLCommand pointValue].y,
+                             ([packet isSAS1] ? [self.PYASFImageMaxTextField intValue] : [self.PYASRImageMaxTextField intValue])];
     [fileHandle writeData:[writeString dataUsingEncoding:NSUTF8StringEncoding]];
 }
 
@@ -1033,9 +1030,9 @@
 //            pixels[ix + iy*xpixels] = pow(pow(ix - xpixels/2.0,2) + pow(iy - ypixels/2.0,2),0.5)/1616.0 * 255;
 //        }
 //    }
-//    
+//
 //    NSData *data = [NSData dataWithBytes:pixels length:sizeof(uint8_t) * xpixels * ypixels];
-//    
+//
 //    self.PYASFcameraView.bkgImage = data;
 //    self.PYASFcameraView.imageXSize = xpixels;
 //    self.PYASFcameraView.imageYSize = ypixels;

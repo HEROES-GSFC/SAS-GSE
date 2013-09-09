@@ -293,6 +293,7 @@
 										<string key="NSSegmentItemLabel">Min</string>
 										<int key="NSSegmentItemTag">1</int>
 										<bool key="NSSegmentItemSelected">YES</bool>
+										<bool key="NSSegmentItemDisabled">YES</bool>
 										<int key="NSSegmentItemImageScaling">0</int>
 									</object>
 								</array>
