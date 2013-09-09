@@ -39,6 +39,7 @@
 		8660983B16B398DD00BE26D1 /* icon.iconset in Resources */ = {isa = PBXBuildFile; fileRef = 8660983A16B398DD00BE26D1 /* icon.iconset */; };
 		8666A002169254AE00B0DACE /* DataPacket.m in Sources */ = {isa = PBXBuildFile; fileRef = 8666A001169254AE00B0DACE /* DataPacket.m */; };
 		86672DF916F7D2BD00F36110 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86672DF816F7D2BD00F36110 /* GLUT.framework */; };
+		866D4BC817DE30EC0001079C /* Packet.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 8643AFE617454F5B003052A6 /* Packet.hpp */; settings = {ATTRIBUTES = (Public, ); }; };
 		8670FBA717068B6100F9C2DC /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8670FBA917068B6100F9C2DC /* AppDelegate.m */; };
 		8685690B174C2CB300104789 /* AutoFlipSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = 8685690A174C2CB300104789 /* AutoFlipSwitch.m */; };
 		86881A74163D9231003CC656 /* ParseDataOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 86881A73163D9231003CC656 /* ParseDataOperation.m */; };
@@ -315,27 +316,27 @@
 		8643AFDE17454F30003052A6 /* SAS lib */ = {
 			isa = PBXGroup;
 			children = (
-				46415E1717CD3F8600B3FD35 /* AspectError.cpp */,
 				46415E1817CD3F8600B3FD35 /* AspectError.hpp */,
+				8643AFF517454F88003052A6 /* TCPReceiver.hpp */,
+				8643AFF717454F88003052A6 /* TCPSender.hpp */,
+				8643AFEF17454F80003052A6 /* UDPReceiver.hpp */,
+				8643AFF117454F80003052A6 /* UDPSender.hpp */,
+				8643AFEC17454F70003052A6 /* Telemetry.hpp */,
+				8643AFE917454F64003052A6 /* Transform.hpp */,
+				8643AFE617454F5B003052A6 /* Packet.hpp */,
+				8643AFE317454F4C003052A6 /* types.hpp */,
+				8643AFE017454F44003052A6 /* Command.hpp */,
+				46415E1717CD3F8600B3FD35 /* AspectError.cpp */,
 				8643B00F17455079003052A6 /* Image.hpp */,
 				8643AFF417454F88003052A6 /* TCPReceiver.cpp */,
-				8643AFF517454F88003052A6 /* TCPReceiver.hpp */,
 				8643AFF617454F88003052A6 /* TCPSender.cpp */,
-				8643AFF717454F88003052A6 /* TCPSender.hpp */,
 				8643AFEE17454F80003052A6 /* UDPReceiver.cpp */,
-				8643AFEF17454F80003052A6 /* UDPReceiver.hpp */,
 				8643AFF017454F80003052A6 /* UDPSender.cpp */,
-				8643AFF117454F80003052A6 /* UDPSender.hpp */,
 				8643AFEB17454F70003052A6 /* Telemetry.cpp */,
-				8643AFEC17454F70003052A6 /* Telemetry.hpp */,
 				8643AFE817454F64003052A6 /* Transform.cpp */,
-				8643AFE917454F64003052A6 /* Transform.hpp */,
 				8643AFE517454F5B003052A6 /* Packet.cpp */,
-				8643AFE617454F5B003052A6 /* Packet.hpp */,
 				8643AFE217454F4C003052A6 /* types.cpp */,
-				8643AFE317454F4C003052A6 /* types.hpp */,
 				8643AFDF17454F44003052A6 /* Command.cpp */,
-				8643AFE017454F44003052A6 /* Command.hpp */,
 				8643AFDC17454F24003052A6 /* Image.cpp */,
 			);
 			name = "SAS lib";
@@ -381,6 +382,17 @@
 		};
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+		866D4BC717DE30D60001079C /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				866D4BC817DE30EC0001079C /* Packet.hpp in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXNativeTarget section */
 		860EF326163605D300B46E35 /* HEROES SAS GSE */ = {
 			isa = PBXNativeTarget;
@@ -390,6 +402,7 @@
 				860EF324163605D300B46E35 /* Frameworks */,
 				860EF325163605D300B46E35 /* Resources */,
 				8635E455171B541A00F69CD2 /* CopyFiles */,
+				866D4BC717DE30D60001079C /* Headers */,
 			);
 			buildRules = (
 			);
@@ -589,14 +602,15 @@
 		860EF357163605D400B46E35 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -613,15 +627,16 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
 		860EF358163605D400B46E35 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -636,6 +651,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
 			};
 			name = Release;
 		};
@@ -647,8 +663,8 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)\"",
 					"\"$(SRCROOT)/HEROES SAS GSE/Frameworks\"",
+					"\"$(SRCROOT)\"",
 				);
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -661,8 +677,10 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
+				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
+				SKIP_INSTALL = YES;
 				USER_HEADER_SEARCH_PATHS = "";
+				VALIDATE_PRODUCT = NO;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -675,10 +693,11 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)\"",
 					"\"$(SRCROOT)/HEROES SAS GSE/Frameworks\"",
+					"\"$(SRCROOT)\"",
 				);
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_OPTIMIZATION_LEVEL = 1;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HEROES SAS GSE/HEROES SAS GSE-Prefix.pch";
 				GCC_VERSION = "";
@@ -689,8 +708,10 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
+				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
+				SKIP_INSTALL = YES;
 				USER_HEADER_SEARCH_PATHS = "";
+				VALIDATE_PRODUCT = NO;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
