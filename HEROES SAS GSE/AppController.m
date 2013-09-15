@@ -527,7 +527,7 @@
         theFileHandle = [NSFileHandle fileHandleForWritingAtPath:filePath];
     }
     //say to handle where's the file fo write
-    [theFileHandle truncateFileAtOffset:[self.SAS1telemetrySaveFile seekToEndOfFile]];
+    [theFileHandle truncateFileAtOffset:[theFileHandle seekToEndOfFile]];
     NSString *writeString = [NSString stringWithFormat:@"%@ Telemetry Log File %@\n", [filename_prefix stringByReplacingOccurrencesOfString:@"_" withString:@" "], [self createDateTimeString:nil]];
     //position handle cursor to the end of file
     [theFileHandle writeData:[writeString dataUsingEncoding:NSUTF8StringEncoding]];
