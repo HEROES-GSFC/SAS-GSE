@@ -165,7 +165,7 @@
     self.hostView.hostedGraph = graph;
     
     [graph.defaultPlotSpace scaleToFitPlots:[graph allPlots]];
-    [graph reloadData];
+    [graph reloadDataIfNeeded];
     [self update];
 }
 #pragma mark -
@@ -177,8 +177,8 @@
 
 -(void)update{
     if (self.data != nil) {
-        float ymin;
-        float ymax;
+        float ymin = 0;
+        float ymax = 100;
         // Axes
         CPTXYAxisSet *axisSet = (CPTXYAxisSet *)self.hostView.hostedGraph.axisSet;
         CPTXYAxis *yAxis = axisSet.yAxis;
@@ -239,14 +239,13 @@
                                                         length:CPTDecimalFromFloat(abs(ymax - ymin))];
         
         //[graph.defaultPlotSpace scaleToFitPlots:[graph allPlots]];
-        [graph reloadData];
+        [graph reloadDataIfNeeded];
     }
 }
 
 -(NSNumber *)numberForPlot:(CPTPlot *)plot field:(NSUInteger)fieldEnum recordIndex:(NSUInteger)index
 {
-    NSString *plot_name = plot.identifier;
-    TimeSeries *currentData = [self.data objectForKey:plot_name];
+    TimeSeries *currentData = [self.data objectForKey:plot.identifier];
     
     if (fieldEnum == CPTScatterPlotFieldX) {
         NSTimeInterval x = [[[currentData time] objectAtIndex:index] timeIntervalSinceDate:self.earliestTime];
@@ -260,8 +259,7 @@
 
 -(NSUInteger)numberOfRecordsForPlot:(CPTPlot *)plot
 {
-    NSString *plot_name = plot.identifier;
-    TimeSeries *currentData = [self.data objectForKey:plot_name];
+    TimeSeries *currentData = [self.data objectForKey:plot.identifier];
     return [[currentData data] count];
 }
 

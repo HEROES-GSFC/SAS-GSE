@@ -8,7 +8,7 @@
 
 #import "DataSeries.h"
 
-#define MAX_CAPACITY 1000
+#define MAX_CAPACITY 100
 
 @interface DataSeries()
 -(float)calculateAverage;

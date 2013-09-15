@@ -601,6 +601,8 @@
         self.PYASFcameraView.fiducialPoints = [packet getFiducialPoints];
         self.PYASFcameraView.fiducialIDs = [packet getFiducialIDs];
         [self.PYASFcameraView setScreenCenter:[packet.screenCenter pointValue].x :[packet.screenCenter pointValue].y];
+        [self.PYASFcameraView setCalibratedScreenCenter: [packet.calibratedScreenCenter pointValue].x :[packet.calibratedScreenCenter pointValue].y];
+
         self.PYASFcameraView.screenRadius = packet.screenRadius;
         self.PYASFcameraView.clockingAngle = packet.clockingAngle;
         
@@ -733,6 +735,7 @@
         self.PYASRcameraView.chordCrossingPoints = [packet getChordPoints];
         self.PYASRcameraView.fiducialPoints = [packet getFiducialPoints];
         [self.PYASRcameraView setScreenCenter:[packet.screenCenter pointValue].x :[packet.screenCenter pointValue].y];
+        [self.PYASRcameraView setCalibratedScreenCenter: [packet.calibratedScreenCenter pointValue].x :[packet.calibratedScreenCenter pointValue].y];
         self.PYASRcameraView.screenRadius = packet.screenRadius;
         self.PYASRcameraView.clockingAngle = packet.clockingAngle;
         self.PYASRcameraView.fiducialIDs = [packet getFiducialIDs];

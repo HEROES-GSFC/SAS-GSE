@@ -59,6 +59,8 @@
 @synthesize aspectErrorCode;
 @synthesize clockingAngle;
 @synthesize screenCenterOffset;
+@synthesize calibratedScreenCenter = _calibratedScreenCenter;
+@synthesize calibratedScreenCenterOffset = _calibratedScreenCenterOffset;
 
 -(id)init{
     self = [super init]; // call our super’s designated initializer
@@ -135,6 +137,23 @@
     return _screenCenter;
 }
 
+- (NSValue *)calibratedScreenCenter
+{
+    if (_calibratedScreenCenter == nil) {
+        _calibratedScreenCenter = [[NSValue alloc] init];
+    }
+    return _calibratedScreenCenter;
+}
+
+- (NSValue *)calibratedScreenCenterOffset
+{
+    if (_calibratedScreenCenterOffset == nil) {
+        _calibratedScreenCenterOffset = [[NSValue alloc] init];
+    }
+    return _calibratedScreenCenterOffset;
+}
+
+
 - (NSValue *)CTLCommand
 {
     if (_CTLCommand == nil) {
@@ -175,19 +194,17 @@
     _isSAS2 = !isSAS1;
     if (isSAS1) {
         self.clockingAngle = CLOCKING_ANGLE_PYASF+TWIST_PYASF+180;
+        self.calibratedScreenCenterOffset = [NSValue valueWithPoint:NSMakePoint(CENTER_X_PYASF, CENTER_Y_PYASF)];
     } else {
         self.clockingAngle = CLOCKING_ANGLE_PYASR+TWIST_PYASR+180;
+        self.calibratedScreenCenterOffset = [NSValue valueWithPoint:NSMakePoint(CENTER_X_PYASR, CENTER_Y_PYASR)];
     }
 }
 
 -(void)setIsSAS2:(BOOL)isSAS2{
     _isSAS2 = isSAS2;
     _isSAS1 = !isSAS2;
-    if (isSAS2) {
-        self.clockingAngle = CLOCKING_ANGLE_PYASR+TWIST_PYASR+180;
-    } else {
-        self.clockingAngle = CLOCKING_ANGLE_PYASF+TWIST_PYASF+180;
-    }
+    [self setIsSAS1:!isSAS2];
 }
 
 @end

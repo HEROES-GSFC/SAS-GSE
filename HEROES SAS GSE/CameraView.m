@@ -20,6 +20,8 @@
 @property (nonatomic) float circleY;
 @property (nonatomic) float screenX;
 @property (nonatomic) float screenY;
+@property (nonatomic) float calibratedScreenX;
+@property (nonatomic) float calibratedScreenY;
 
 // declaration of private methods as needed
 - (void) prepareOpenGL;
@@ -57,6 +59,8 @@
 @synthesize screenY;
 @synthesize clockingAngle;
 @synthesize fiducialIDs = _fiducialIDs;
+@synthesize calibratedScreenX;
+@synthesize calibratedScreenY;
 
 -(id) initWithFrame:(NSRect)frameRect
 {
@@ -67,6 +71,8 @@
         self.circleY = 0.0;
         self.screenX = 500.0;
         self.screenY = 500.0;
+        self.calibratedScreenX = 525.0;
+        self.calibratedScreenY = 525.0;
         self.turnOnBkgImage = NO;
         self.imageExists = NO;
         self.mouseLocation = NSMakePoint(-1, -1);
@@ -92,6 +98,15 @@
     }
     if ((y < [self.numberYPixels floatValue]) && (y > 0)) {
         self.screenY = y;
+    }
+}
+
+- (void) setCalibratedScreenCenter: (float)x :(float)y{
+    if ((x < [self.numberXPixels floatValue]) && (x > 0)) {
+        self.calibratedScreenX = x;
+    }
+    if ((y < [self.numberYPixels floatValue]) && (y > 0)) {
+        self.calibratedScreenY = y;
     }
 }
 
@@ -148,6 +163,7 @@
 {
     NSPoint sunCenter = NSMakePoint(self.circleX, self.circleY);
     NSPoint screenCenter = NSMakePoint(self.screenX, self.screenY);
+    NSPoint calibratedScreenCenter = NSMakePoint(self.calibratedScreenX, self.calibratedScreenY);
     
     // draw the Sun (circle and cross)
     glColor3f(1.0f, 0.0f, 0.0f);
@@ -164,8 +180,12 @@
     
     // draw the screen center
     glColor3f(0.7f, 0.7f, 0.7f);
-    [self drawACross:screenCenter :0.02];
+    [self drawACross:screenCenter :0.015];
 
+    // draw the CALIBRATED screen center
+    glColor3f(0.7f, 0.7f, 0.0f);
+    [self drawACross:calibratedScreenCenter :0.02];
+    
     // draw the screen outline
     glColor3f(0.7f, 0.7f, 0.7f);
     [self drawACircle:screenCenter :self.screenRadius];
@@ -491,7 +511,7 @@
 //		[denoise release];
 //	} // if
     
-    //[super cleanUp];
+    //[super clean];
 } // cleanUp
 
 @end

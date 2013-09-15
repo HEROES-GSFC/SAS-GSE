@@ -26,5 +26,6 @@
 - (void) draw;
 - (void) setCircleCenter: (float)x :(float)y;
 - (void) setScreenCenter: (float)x :(float)y;
+- (void) setCalibratedScreenCenter: (float)x :(float)y;
 
 @end
