@@ -86,7 +86,7 @@
 {
     self = [super initWithWindow:window];
     if (self) {
-        self.lineColorList = [[NSArray alloc] initWithObjects:[CPTColor redColor], [CPTColor blueColor], [CPTColor greenColor], nil];
+        self.lineColorList = [[NSArray alloc] initWithObjects:[CPTColor blackColor], [CPTColor redColor], [CPTColor blueColor], [CPTColor greenColor], [CPTColor orangeColor], [CPTColor purpleColor], [CPTColor grayColor], [CPTColor cyanColor], nil];
     }
     return self;
 }
@@ -195,7 +195,7 @@
         for (NSString *key in self.data) {
             TimeSeries *currentData = [self.data objectForKey:key];
 
-            if (currentData.count != 0) {
+            if ([[currentData data]count] != 0) {
                 if (i == 0) {
                     ymin = currentData.min * 0.8;
                     ymax = currentData.max * 1.2;
@@ -213,7 +213,9 @@
                                 
                 // add annotation to plot
                 NSString *annotationText = [NSString stringWithFormat:@"avg = %f, sig = %f", currentData.average, currentData.standardDeviation];
-                CPTTextLayer *textLayer = [[CPTTextLayer alloc] initWithText:annotationText];
+                CPTMutableTextStyle *textStyle = [[CPTMutableTextStyle alloc] init];
+                textStyle.color = [self.lineColorList objectAtIndex:i];
+                CPTTextLayer *textLayer = [[CPTTextLayer alloc] initWithText:annotationText style: textStyle];
                 //textLayer.backgroundColor = [CPTColor redColor];
                 CPTLayerAnnotation *annotation = [[CPTLayerAnnotation alloc] initWithAnchorLayer:graph.plotAreaFrame];
                 annotation.rectAnchor = CPTRectAnchorTopLeft;
@@ -260,7 +262,7 @@
 {
     NSString *plot_name = plot.identifier;
     TimeSeries *currentData = [self.data objectForKey:plot_name];
-    return currentData.count;
+    return [[currentData data] count];
 }
 
 @end

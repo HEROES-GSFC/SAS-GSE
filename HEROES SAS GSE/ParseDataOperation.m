@@ -145,7 +145,7 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                             
                             //parse this bit field
                             dataPacket.isTracking = (bool)bitread(&status_bitfield, 7, 1);
-                            dataPacket.isSunFound = (bool)bitread(&status_bitfield, 6, 1);
+                            dataPacket.isReceivingGPS = (bool)bitread(&status_bitfield, 6, 1);
                             dataPacket.isOutputting = (bool)bitread(&status_bitfield, 5, 1);
                             AspectCode result = (AspectCode)bitread(&status_bitfield, 0, 5);
                             dataPacket.aspectErrorCode = [NSString stringWithCString:GetMessage(result) encoding:NSUTF8StringEncoding];
@@ -190,7 +190,8 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                                     break;
                                 case 7:
                                     dataPacket.isClockSynced = housekeeping1;
-                                    dataPacket.isSavingImages = housekeeping2;
+                                    dataPacket.isPYASSavingImages = (bool)bitread(&housekeeping2, 0, 1);
+                                    dataPacket.isRASSavingImages = (bool)bitread(&housekeeping2, 1, 1);
                                 default:
                                     break;
                             }

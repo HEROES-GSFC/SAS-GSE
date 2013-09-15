@@ -9,6 +9,8 @@
 #import "DataSeries.h"
 #import "TimeSeries.h"
 
+#define MAX_CAPACITY 1000
+
 @interface TimeSeries()
 @property (nonatomic, strong) NSMutableArray *mytime;
 @end
@@ -27,7 +29,7 @@
 
 -(NSMutableArray *)mytime{
     if (_mytime == nil) {
-        _mytime = [[NSMutableArray alloc] initWithCapacity:2000];
+        _mytime = [[NSMutableArray alloc] initWithCapacity:MAX_CAPACITY];
     }
     return _mytime;
 }
@@ -35,26 +37,18 @@
 - (void) addPointWithTime: (NSDate *) newTime :(float)newPoint{
     [self addPoint:newPoint];
     [self.mytime addObject:newTime];
-    if ([self.mytime count] == 2000) {
-        [self.mytime removeLastObject];
+    if ([self.mytime count] == MAX_CAPACITY) {
+        [self.mytime removeObjectAtIndex:0];
     }
     [self update];
 }
 
 - (NSDate *) earliestTime{
-    if (self.ROIEnabled) {
-        return [[self.time subarrayWithRange:self.ROI] objectAtIndex:0];
-    } else {
-        return [self.time objectAtIndex:0];
-    }
+    return [[self time] objectAtIndex:0];
 }
 
 - (NSDate *) latestTime{
-    if (self.ROIEnabled) {
-        return [[self.time subarrayWithRange:self.ROI] lastObject];
-    } else {
-        return [self.time lastObject];
-    }
+    return [[self time] lastObject];
 }
 
 - (NSArray *) time{

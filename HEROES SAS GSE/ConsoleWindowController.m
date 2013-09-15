@@ -10,6 +10,9 @@
 
 @interface ConsoleWindowController()
 -(void)copyToClipboard:(NSString*)str;
+- (NSString *)createDateTimeString;
+- (NSFileHandle *)openSaveFile;
+@property (nonatomic, strong) NSFileHandle *saveFile;
 @end
 
 @implementation ConsoleWindowController
@@ -52,6 +55,18 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:@"LogMessageACK" object:nil userInfo:[NSDictionary dictionaryWithObject:@"My Test button was pushed" forKey:@"message"]];
 }
 
+- (IBAction)savetofile_button:(NSButton *)sender {
+    if ([sender state] == NSOnState) {
+        if (self.saveFile == nil) {
+            self.saveFile = [[NSFileHandle alloc] init];
+            self.saveFile = [self openSaveFile];
+        }
+    } else {
+        [self.saveFile closeFile];
+        self.saveFile = nil;
+    }
+}
+
 - (void) log:(NSString*) msg
 {
     NSDate *now = [NSDate date];
@@ -70,6 +85,10 @@
                    value:[NSFont fontWithName:@"Helvetica-Bold" size:12.0]
                    range:selectedRange];
     [string endEditing];
+    
+    if (self.saveFile) {
+        [self.saveFile writeData:[[string string] dataUsingEncoding:NSUTF8StringEncoding]];
+    }
     
     [[Console_TextView textStorage] insertAttributedString:string atIndex:[[Console_TextView string] length]];
     
@@ -104,5 +123,33 @@
 -(void)dealloc{
     [[NSNotificationCenter defaultCenter]removeObserver:self name:@"LogMessage" object:nil];
 }
-         
+
+- (NSFileHandle *)openSaveFile{
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *filename = [NSString stringWithFormat:@"SAS-GSE-log_%@.txt", [self createDateTimeString]];
+    
+    NSString *filePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:filename];
+    // open file to save data stream
+    NSFileHandle *theFileHandle = [NSFileHandle fileHandleForWritingAtPath: filePath ];
+    if (theFileHandle == nil) {
+        [[NSFileManager defaultManager] createFileAtPath:filePath contents:nil attributes:nil];
+        theFileHandle = [NSFileHandle fileHandleForWritingAtPath:filePath];
+    }
+    //say to handle where's the file fo write
+    [theFileHandle truncateFileAtOffset:[theFileHandle seekToEndOfFile]];
+    return theFileHandle;
+}
+
+- (NSString *)createDateTimeString{
+    // Create a time string with the format YYYYMMdd_HHmmss
+    // This can be used in file names (for example)
+    //
+    NSDate *currDate = [NSDate date];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
+    [dateFormatter setDateFormat:@"YYYYMMdd_HHmmss"];
+    
+    NSString *dateString = [dateFormatter stringFromDate:currDate];
+    return dateString;
+}
+
 @end

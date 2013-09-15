@@ -16,7 +16,6 @@
 @property (nonatomic) float average;
 @property (nonatomic) float max;
 @property (nonatomic) float min;
-@property (nonatomic) NSUInteger count;
 @property (nonatomic) NSRange ROI;
 @property (nonatomic) int ROIlength;
 @property (nonatomic) BOOL ROIEnabled;
