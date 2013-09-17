@@ -52,19 +52,19 @@
     NSInteger stringLength = [string length];
     
     NSDictionary *firstAttributes = @{
-                                      NSBackgroundColorAttributeName: [NSColor whiteColor]};
+                                      NSBackgroundColorAttributeName: [NSColor whiteColor], NSForegroundColorAttributeName: [NSColor blackColor]};
     [attrString addAttributes:firstAttributes range:NSMakeRange(0, stringLength)];
     
     if ([[attrString string] floatValue] < self.minimum)
     {
         NSDictionary *firstAttributes = @{
-                                          NSBackgroundColorAttributeName: [NSColor blueColor]};
+                                          NSBackgroundColorAttributeName: [NSColor blueColor], NSForegroundColorAttributeName: [NSColor whiteColor]};
         [attrString addAttributes:firstAttributes range:NSMakeRange(0, stringLength)];
     }
     if ([[attrString string] floatValue] > self.maximum)
     {
         NSDictionary *firstAttributes = @{
-                                          NSBackgroundColorAttributeName: [NSColor redColor]};
+                                          NSBackgroundColorAttributeName: [NSColor redColor], NSForegroundColorAttributeName: [NSColor whiteColor]};
         [attrString addAttributes:firstAttributes range:NSMakeRange(0, stringLength)];
     }
    
