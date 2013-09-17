@@ -884,7 +884,7 @@
                 NSArray *objs = [NSArray arrayWithObjects:[self.timeSeriesCollection objectForKey:@"PYAS-F camera temperature"], [self.timeSeriesCollection objectForKey:@"PYAS-R camera temperature"], [self.timeSeriesCollection objectForKey:@"RAS camera temperature"] ,nil];
                 NSArray *keys = [NSArray arrayWithObjects:@"PYAS-F", @"PYAS-R", @"RAS", nil];
                 NSDictionary *data = [[NSDictionary alloc] initWithObjects:objs forKeys:keys];
-                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data];
+                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data name:@"Camera Temperatures"];
                 [newPlotWindow showWindow:self];
                 [self.PlotWindows setObject:newPlotWindow forKey:userChoice];
             }
@@ -892,7 +892,7 @@
                 NSDictionary *data = [[NSDictionary alloc] initWithObjectsAndKeys:
                                       [self.timeSeriesCollection objectForKey:@"SAS1 ctl X solution"], @"PYAS-F",
                                       [self.timeSeriesCollection objectForKey:@"SAS2 ctl X solution"] , @"PYAS-R", nil];
-                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data];
+                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data name:@"CTL X Solutions"];
                 [newPlotWindow showWindow:self];
                 [self.PlotWindows setObject:newPlotWindow forKey:userChoice];
             }
@@ -900,7 +900,7 @@
                 NSDictionary *data = [[NSDictionary alloc] initWithObjectsAndKeys:
                                       [self.timeSeriesCollection objectForKey:@"SAS1 ctl Y solution"], @"PYAS-F",
                                       [self.timeSeriesCollection objectForKey:@"SAS2 ctl Y solution"] , @"PYAS-R", nil];
-                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data];
+                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data name:@"CTL Y Solutions"];
                 [newPlotWindow showWindow:self];
                 [self.PlotWindows setObject:newPlotWindow forKey:userChoice];
             }
@@ -908,15 +908,7 @@
                 NSDictionary *data = [[NSDictionary alloc] initWithObjectsAndKeys:
                                       [self.timeSeriesCollection objectForKey:@"SAS1 ctl R solution"], @"PYAS-F",
                                       [self.timeSeriesCollection objectForKey:@"SAS2 ctl R solution"] , @"PYAS-R", nil];
-                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data];
-                [newPlotWindow showWindow:self];
-                [self.PlotWindows setObject:newPlotWindow forKey:userChoice];
-            }
-            if ([userChoice isEqualToString:@"cpu temperature"]) {
-                NSDictionary *data = [[NSDictionary alloc] initWithObjectsAndKeys:
-                                      [self.timeSeriesCollection objectForKey:@"SAS1 cpu temperature"], @"SAS-2",
-                                      [self.timeSeriesCollection objectForKey:@"SAS2 cpu temperature"] , @"SAS-1", nil];
-                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data];
+                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data name:@"CTL R Solutions"];
                 [newPlotWindow showWindow:self];
                 [self.PlotWindows setObject:newPlotWindow forKey:userChoice];
             }
@@ -930,7 +922,7 @@
                                       [self.timeSeriesCollection objectForKey:@"SAS1 air temperature"] , @"air",
                                       [self.timeSeriesCollection objectForKey:@"SAS1 rail temperature"] , @"rail",
                                       nil];
-                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data];
+                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data name:@"SAS-1 Temperatures"];
                 [newPlotWindow showWindow:self];
                 [self.PlotWindows setObject:newPlotWindow forKey:userChoice];
             }
@@ -944,7 +936,7 @@
                                       [self.timeSeriesCollection objectForKey:@"SAS2 air temperature"] , @"air",
                                       [self.timeSeriesCollection objectForKey:@"SAS2 rail temperature"] , @"rail",
                                       nil];
-                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data];
+                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data name:@"SAS-2 Temperatures"];
                 [newPlotWindow showWindow:self];
                 [self.PlotWindows setObject:newPlotWindow forKey:userChoice];
             }
@@ -956,7 +948,7 @@
                                       [self.timeSeriesCollection objectForKey:@"SAS1 5.0V"] , @"5.0V",
                                       [self.timeSeriesCollection objectForKey:@"SAS1 12.0V"] , @"12.0V",
                                       nil];
-                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data];
+                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data name:@"SAS-1 Voltages"];
                 [newPlotWindow showWindow:self];
                 [self.PlotWindows setObject:newPlotWindow forKey:userChoice];
             }
@@ -968,7 +960,7 @@
                                       [self.timeSeriesCollection objectForKey:@"SAS2 5.0V"] , @"5.0V",
                                       [self.timeSeriesCollection objectForKey:@"SAS2 12.0V"] , @"12.0V",
                                       nil];
-                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data];
+                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data name:@"SAS-2 Voltages"];
                 [newPlotWindow showWindow:self];
                 [self.PlotWindows setObject:newPlotWindow forKey:userChoice];
             }

@@ -9,7 +9,7 @@
 #import "DataSeries.h"
 #import "TimeSeries.h"
 
-#define MAX_CAPACITY 100
+#define MAX_CAPACITY 50
 
 @interface TimeSeries()
 @property (nonatomic, strong) NSMutableArray *mytime;

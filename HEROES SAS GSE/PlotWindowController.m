@@ -76,8 +76,9 @@
     return [super initWithWindowNibName:@"PlotWindowController"];
 }
 
-- (id)initWithData:(NSDictionary *)inputdata{
+- (id)initWithData:(NSDictionary *)inputdata name:(NSString *)name{
     self = [self init];
+    [self.MainWindow setTitle:name];
     self.data = inputdata;
     return self;
 }
@@ -134,7 +135,6 @@
             TimeSeries *currentData = [self.data objectForKey:key];
             if (i == 0) {
                 yAxis.title = currentData.name;
-                [self.MainWindow setTitle:currentData.name];
             }
             
             // Create a plot that uses the data source method
