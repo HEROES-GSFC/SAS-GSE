@@ -239,7 +239,7 @@
                                                         length:CPTDecimalFromFloat(abs(ymax - ymin))];
         
         //[graph.defaultPlotSpace scaleToFitPlots:[graph allPlots]];
-        [graph reloadDataIfNeeded];
+        [graph reloadData];
     }
 }
 
