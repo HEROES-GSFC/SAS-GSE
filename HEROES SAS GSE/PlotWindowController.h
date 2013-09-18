@@ -28,5 +28,5 @@
 @property (nonatomic, strong) NSDictionary *data;
 
 -(void) update;
-- (id)initWithData:(NSDictionary *)inputdata name:(NSString *)name;
+- (id)initWithData:(NSDictionary *)inputdata name:(NSString *)string;
 @end

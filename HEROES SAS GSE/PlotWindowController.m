@@ -76,9 +76,9 @@
     return [super initWithWindowNibName:@"PlotWindowController"];
 }
 
-- (id)initWithData:(NSDictionary *)inputdata name:(NSString *)name{
+- (id)initWithData:(NSDictionary *)inputdata name:(NSString *)string{
     self = [self init];
-    [self.MainWindow setTitle:name];
+    [self.MainWindow setTitle:string];
     self.data = inputdata;
     return self;
 }

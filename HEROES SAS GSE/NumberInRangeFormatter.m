@@ -67,7 +67,6 @@
                                           NSBackgroundColorAttributeName: [NSColor redColor], NSForegroundColorAttributeName: [NSColor whiteColor]};
         [attrString addAttributes:firstAttributes range:NSMakeRange(0, stringLength)];
     }
-   
     return attrString;
 }
 
