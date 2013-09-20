@@ -135,34 +135,30 @@
     NumberInRangeFormatter *formatter;
     
     formatter = [self.SAS1CPUTemperatureLabel formatter];
-    formatter.maximum = 90;
-    formatter.minimum = -20;
+    formatter.maximum = 70;
+    formatter.minimum = 5;
     formatter = [self.SAS2CPUTemperatureLabel formatter];
-    formatter.maximum = 90;
-    formatter.minimum = -20;
+    formatter.maximum = 70;
+    formatter.minimum = 5;
     formatter = [self.PYASFCameraTemperatureLabel formatter];
-    formatter.maximum = 90;
-    formatter.minimum = -20;
+    formatter.maximum = 55;
+    formatter.minimum = -25;
     formatter = [self.PYASRCameraTemperatureLabel formatter];
-    formatter.maximum = 90;
-    formatter.minimum = -20;
+    formatter.maximum = 55;
+    formatter.minimum = -25;
     formatter = [self.RASCameraTemperatureLabel formatter];
-    formatter.maximum = 90;
-    formatter.minimum = -20;
+    formatter.maximum = 55;
+    formatter.minimum = -25;
 
-    NumberInRangeFormatter *TemperatureFormatter = [[NumberInRangeFormatter alloc] init];
-    TemperatureFormatter.maximum = 100;
-    TemperatureFormatter.minimum = -20;
-    
     formatter = [self.SAS1CPUHeatSinkTemp formatter];
-    formatter.maximum = 100;
-    formatter.minimum = -20;
+    formatter.maximum = 70;
+    formatter.minimum = 5;
     formatter = [self.SAS1CanTemp formatter];
-    formatter.maximum = 100;
-    formatter.minimum = -20;
+    formatter.maximum = 70;
+    formatter.minimum = 10;
     formatter = [self.SAS1HDDTemp formatter];
-    formatter.maximum = 100;
-    formatter.minimum = -20;
+    formatter.maximum = 65;
+    formatter.minimum = 5;
     formatter = [self.SAS1HeaterPlateTemp formatter];
     formatter.maximum = 100;
     formatter.minimum = -20;
@@ -174,14 +170,14 @@
     formatter.minimum = -20;
     
     formatter = [self.SAS2CPUHeatSinkTemp formatter];
-    formatter.maximum = 100;
-    formatter.minimum = -20;
+    formatter.maximum = 70;
+    formatter.minimum = 5;
     formatter = [self.SAS2CanTemp formatter];
-    formatter.maximum = 100;
-    formatter.minimum = -20;
+    formatter.maximum = 70;
+    formatter.minimum = 10;
     formatter = [self.SAS2HDDTemp formatter];
-    formatter.maximum = 100;
-    formatter.minimum = -20;
+    formatter.maximum = 65;
+    formatter.minimum = 5;
     formatter = [self.SAS2HeaterPlateTemp formatter];
     formatter.maximum = 100;
     formatter.minimum = -20;
@@ -213,32 +209,32 @@
     formatter.minimum = 75;
     
     formatter = [self.SAS1V2p5Voltage formatter];
-    formatter.maximum = 2.5 * 1.20;
-    formatter.minimum = 2.5 * 0.80;
+    formatter.maximum = 2.5 * 1.10;
+    formatter.minimum = 2.5 * 0.90;
     formatter = [self.SAS2V2p5Voltage formatter];
-    formatter.maximum = 2.5 * 1.20;
-    formatter.minimum = 2.5 * 0.80;
+    formatter.maximum = 2.5 * 1.10;
+    formatter.minimum = 2.5 * 0.90;
     
     formatter = [self.SAS1V3p3Voltage formatter];
-    formatter.maximum = 3.3 * 1.20;
-    formatter.minimum = 3.3 * 0.80;
+    formatter.maximum = 3.3 * 1.10;
+    formatter.minimum = 3.3 * 0.90;
     formatter = [self.SAS2V3p3Voltage formatter];
-    formatter.maximum = 3.3 * 1.20;
-    formatter.minimum = 3.3 * 0.80;
+    formatter.maximum = 3.3 * 1.10;
+    formatter.minimum = 3.3 * 0.90;
     
     formatter = [self.SAS1V5Votlage formatter];
-    formatter.maximum = 5.0 * 1.20;
-    formatter.minimum = 5.0 * 0.80;
+    formatter.maximum = 5.0 * 1.10;
+    formatter.minimum = 5.0 * 0.90;
     formatter = [self.SAS2V5Votlage formatter];
-    formatter.maximum = 5.0 * 1.20;
-    formatter.minimum = 5.0 * 0.80;
+    formatter.maximum = 5.0 * 1.10;
+    formatter.minimum = 5.0 * 0.90;
     
     formatter = [self.SAS1V12Voltage formatter];
-    formatter.maximum = 12.0 * 1.20;
-    formatter.minimum = 12.0 * 0.80;
+    formatter.maximum = 12.0 * 1.10;
+    formatter.minimum = 12.0 * 0.90;
     formatter = [self.SAS2V12Voltage formatter];
-    formatter.maximum = 12.0 * 1.20;
-    formatter.minimum = 12.0 * 0.80;
+    formatter.maximum = 12.0 * 1.10;
+    formatter.minimum = 12.0 * 0.90;
     
     for (NSString *title in self.PlotWindowsAvailable) {
             [self.TimeProfileMenu addItemWithTitle:title action:NULL keyEquivalent:@""];
@@ -601,6 +597,8 @@
         self.PYASFcameraView.fiducialPoints = [packet getFiducialPoints];
         self.PYASFcameraView.fiducialIDs = [packet getFiducialIDs];
         [self.PYASFcameraView setScreenCenter:[packet.screenCenter pointValue].x :[packet.screenCenter pointValue].y];
+        [self.PYASFcameraView setCalibratedScreenCenter: [packet.calibratedScreenCenter pointValue].x :[packet.calibratedScreenCenter pointValue].y];
+
         self.PYASFcameraView.screenRadius = packet.screenRadius;
         self.PYASFcameraView.clockingAngle = packet.clockingAngle;
         
@@ -733,6 +731,7 @@
         self.PYASRcameraView.chordCrossingPoints = [packet getChordPoints];
         self.PYASRcameraView.fiducialPoints = [packet getFiducialPoints];
         [self.PYASRcameraView setScreenCenter:[packet.screenCenter pointValue].x :[packet.screenCenter pointValue].y];
+        [self.PYASRcameraView setCalibratedScreenCenter: [packet.calibratedScreenCenter pointValue].x :[packet.calibratedScreenCenter pointValue].y];
         self.PYASRcameraView.screenRadius = packet.screenRadius;
         self.PYASRcameraView.clockingAngle = packet.clockingAngle;
         self.PYASRcameraView.fiducialIDs = [packet getFiducialIDs];
@@ -885,7 +884,7 @@
                 NSArray *objs = [NSArray arrayWithObjects:[self.timeSeriesCollection objectForKey:@"PYAS-F camera temperature"], [self.timeSeriesCollection objectForKey:@"PYAS-R camera temperature"], [self.timeSeriesCollection objectForKey:@"RAS camera temperature"] ,nil];
                 NSArray *keys = [NSArray arrayWithObjects:@"PYAS-F", @"PYAS-R", @"RAS", nil];
                 NSDictionary *data = [[NSDictionary alloc] initWithObjects:objs forKeys:keys];
-                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data];
+                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data name:@"Camera Temperatures"];
                 [newPlotWindow showWindow:self];
                 [self.PlotWindows setObject:newPlotWindow forKey:userChoice];
             }
@@ -893,7 +892,7 @@
                 NSDictionary *data = [[NSDictionary alloc] initWithObjectsAndKeys:
                                       [self.timeSeriesCollection objectForKey:@"SAS1 ctl X solution"], @"PYAS-F",
                                       [self.timeSeriesCollection objectForKey:@"SAS2 ctl X solution"] , @"PYAS-R", nil];
-                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data];
+                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data name:@"CTL X Solutions"];
                 [newPlotWindow showWindow:self];
                 [self.PlotWindows setObject:newPlotWindow forKey:userChoice];
             }
@@ -901,7 +900,7 @@
                 NSDictionary *data = [[NSDictionary alloc] initWithObjectsAndKeys:
                                       [self.timeSeriesCollection objectForKey:@"SAS1 ctl Y solution"], @"PYAS-F",
                                       [self.timeSeriesCollection objectForKey:@"SAS2 ctl Y solution"] , @"PYAS-R", nil];
-                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data];
+                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data name:@"CTL Y Solutions"];
                 [newPlotWindow showWindow:self];
                 [self.PlotWindows setObject:newPlotWindow forKey:userChoice];
             }
@@ -909,15 +908,7 @@
                 NSDictionary *data = [[NSDictionary alloc] initWithObjectsAndKeys:
                                       [self.timeSeriesCollection objectForKey:@"SAS1 ctl R solution"], @"PYAS-F",
                                       [self.timeSeriesCollection objectForKey:@"SAS2 ctl R solution"] , @"PYAS-R", nil];
-                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data];
-                [newPlotWindow showWindow:self];
-                [self.PlotWindows setObject:newPlotWindow forKey:userChoice];
-            }
-            if ([userChoice isEqualToString:@"cpu temperature"]) {
-                NSDictionary *data = [[NSDictionary alloc] initWithObjectsAndKeys:
-                                      [self.timeSeriesCollection objectForKey:@"SAS1 cpu temperature"], @"SAS-2",
-                                      [self.timeSeriesCollection objectForKey:@"SAS2 cpu temperature"] , @"SAS-1", nil];
-                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data];
+                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data name:@"CTL R Solutions"];
                 [newPlotWindow showWindow:self];
                 [self.PlotWindows setObject:newPlotWindow forKey:userChoice];
             }
@@ -931,7 +922,7 @@
                                       [self.timeSeriesCollection objectForKey:@"SAS1 air temperature"] , @"air",
                                       [self.timeSeriesCollection objectForKey:@"SAS1 rail temperature"] , @"rail",
                                       nil];
-                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data];
+                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data name:@"SAS-1 Temperatures"];
                 [newPlotWindow showWindow:self];
                 [self.PlotWindows setObject:newPlotWindow forKey:userChoice];
             }
@@ -945,7 +936,7 @@
                                       [self.timeSeriesCollection objectForKey:@"SAS2 air temperature"] , @"air",
                                       [self.timeSeriesCollection objectForKey:@"SAS2 rail temperature"] , @"rail",
                                       nil];
-                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data];
+                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data name:@"SAS-2 Temperatures"];
                 [newPlotWindow showWindow:self];
                 [self.PlotWindows setObject:newPlotWindow forKey:userChoice];
             }
@@ -957,7 +948,7 @@
                                       [self.timeSeriesCollection objectForKey:@"SAS1 5.0V"] , @"5.0V",
                                       [self.timeSeriesCollection objectForKey:@"SAS1 12.0V"] , @"12.0V",
                                       nil];
-                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data];
+                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data name:@"SAS-1 Voltages"];
                 [newPlotWindow showWindow:self];
                 [self.PlotWindows setObject:newPlotWindow forKey:userChoice];
             }
@@ -969,7 +960,7 @@
                                       [self.timeSeriesCollection objectForKey:@"SAS2 5.0V"] , @"5.0V",
                                       [self.timeSeriesCollection objectForKey:@"SAS2 12.0V"] , @"12.0V",
                                       nil];
-                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data];
+                PlotWindowController *newPlotWindow = [[PlotWindowController alloc] initWithData:data name:@"SAS-2 Voltages"];
                 [newPlotWindow showWindow:self];
                 [self.PlotWindows setObject:newPlotWindow forKey:userChoice];
             }

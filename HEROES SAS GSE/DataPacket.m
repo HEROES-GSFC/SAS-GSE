@@ -15,14 +15,14 @@
 #define NUM_VOLTAGE_READINGS 5
 
 //Calibrated parameters
-#define CLOCKING_ANGLE_PYASF -33.26
-#define CENTER_X_PYASF 0
-#define CENTER_Y_PYASF 0
-#define TWIST_PYASF 180.0
-#define CLOCKING_ANGLE_PYASR -53.00
-#define CENTER_X_PYASR -210
-#define CENTER_Y_PYASR 56
-#define TWIST_PYASR 0.0
+#define CLOCKING_ANGLE_PYASF -32.425 //model is -33.26
+#define CENTER_X_PYASF    124.68 //mils
+#define CENTER_Y_PYASF    -74.64 //mils
+#define TWIST_PYASF 180.0 //needs to be ~180
+#define CLOCKING_ANGLE_PYASR -52.175 //model is -53.26
+#define CENTER_X_PYASR -105.59 //mils
+#define CENTER_Y_PYASR   -48.64 //mils
+#define TWIST_PYASR 0.0 //needs to be ~0
 
 @interface DataPacket()
 @property (nonatomic, strong) NSMutableArray *chordPoints;
@@ -59,6 +59,8 @@
 @synthesize aspectErrorCode;
 @synthesize clockingAngle;
 @synthesize screenCenterOffset;
+@synthesize calibratedScreenCenter = _calibratedScreenCenter;
+@synthesize calibratedScreenCenterOffset = _calibratedScreenCenterOffset;
 
 -(id)init{
     self = [super init]; // call our super’s designated initializer
@@ -135,6 +137,23 @@
     return _screenCenter;
 }
 
+- (NSValue *)calibratedScreenCenter
+{
+    if (_calibratedScreenCenter == nil) {
+        _calibratedScreenCenter = [[NSValue alloc] init];
+    }
+    return _calibratedScreenCenter;
+}
+
+- (NSValue *)calibratedScreenCenterOffset
+{
+    if (_calibratedScreenCenterOffset == nil) {
+        _calibratedScreenCenterOffset = [[NSValue alloc] init];
+    }
+    return _calibratedScreenCenterOffset;
+}
+
+
 - (NSValue *)CTLCommand
 {
     if (_CTLCommand == nil) {
@@ -175,19 +194,17 @@
     _isSAS2 = !isSAS1;
     if (isSAS1) {
         self.clockingAngle = CLOCKING_ANGLE_PYASF+TWIST_PYASF+180;
+        self.calibratedScreenCenterOffset = [NSValue valueWithPoint:NSMakePoint(CENTER_X_PYASF, CENTER_Y_PYASF)];
     } else {
         self.clockingAngle = CLOCKING_ANGLE_PYASR+TWIST_PYASR+180;
+        self.calibratedScreenCenterOffset = [NSValue valueWithPoint:NSMakePoint(CENTER_X_PYASR, CENTER_Y_PYASR)];
     }
 }
 
 -(void)setIsSAS2:(BOOL)isSAS2{
     _isSAS2 = isSAS2;
     _isSAS1 = !isSAS2;
-    if (isSAS2) {
-        self.clockingAngle = CLOCKING_ANGLE_PYASR+TWIST_PYASR+180;
-    } else {
-        self.clockingAngle = CLOCKING_ANGLE_PYASF+TWIST_PYASF+180;
-    }
+    [self setIsSAS1:!isSAS2];
 }
 
 @end

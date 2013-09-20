@@ -227,6 +227,7 @@ NSString *kReceiveAndParseDataDidFinish = @"ReceiveAndParseDataDidFinish";
                             
                             dataPacket.screenCenter = [NSValue valueWithPoint:NSMakePoint(-x_intercept/x_slope, -y_intercept/y_slope)];
                             dataPacket.screenRadius = 0.5* ((3000.0/fabs(x_slope)) + (3000.0/fabs(y_slope)));
+                            dataPacket.calibratedScreenCenter = [NSValue valueWithPoint:NSMakePoint((-x_intercept + dataPacket.calibratedScreenCenterOffset.pointValue.x)/x_slope, (-y_intercept + dataPacket.calibratedScreenCenterOffset.pointValue.y)/y_slope)];
                             
                             uint8_t image_max;
                             tm_packet >> image_max;

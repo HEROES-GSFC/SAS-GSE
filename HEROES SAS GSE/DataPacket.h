@@ -23,6 +23,7 @@
 @property (nonatomic) BOOL isSAS1;
 @property (nonatomic) BOOL isSAS2;
 @property (nonatomic) NSValue *screenCenter;
+@property (nonatomic) NSValue *calibratedScreenCenter;
 @property (nonatomic) float screenRadius;
 @property (nonatomic) NSMutableArray *i2cTemperatures;
 @property (nonatomic) NSMutableArray *sbcVoltages;
@@ -35,6 +36,7 @@
 @property (nonatomic) NSString *aspectErrorCode;
 @property (nonatomic) float clockingAngle;
 @property (nonatomic) NSValue *screenCenterOffset;
+@property (nonatomic) NSValue *calibratedScreenCenterOffset;
 
 -(NSString *) getframeTimeString;
 -(void) addChordPoint: (NSPoint) point :(int) index;

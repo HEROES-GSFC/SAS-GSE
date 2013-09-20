@@ -76,8 +76,9 @@
     return [super initWithWindowNibName:@"PlotWindowController"];
 }
 
-- (id)initWithData:(NSDictionary *)inputdata{
+- (id)initWithData:(NSDictionary *)inputdata name:(NSString *)string{
     self = [self init];
+    [self.MainWindow setTitle:string];
     self.data = inputdata;
     return self;
 }
@@ -134,7 +135,6 @@
             TimeSeries *currentData = [self.data objectForKey:key];
             if (i == 0) {
                 yAxis.title = currentData.name;
-                [self.MainWindow setTitle:currentData.name];
             }
             
             // Create a plot that uses the data source method
@@ -165,7 +165,7 @@
     self.hostView.hostedGraph = graph;
     
     [graph.defaultPlotSpace scaleToFitPlots:[graph allPlots]];
-    [graph reloadData];
+    [graph reloadDataIfNeeded];
     [self update];
 }
 #pragma mark -
@@ -177,8 +177,8 @@
 
 -(void)update{
     if (self.data != nil) {
-        float ymin;
-        float ymax;
+        float ymin = 0;
+        float ymax = 100;
         // Axes
         CPTXYAxisSet *axisSet = (CPTXYAxisSet *)self.hostView.hostedGraph.axisSet;
         CPTXYAxis *yAxis = axisSet.yAxis;
@@ -245,8 +245,7 @@
 
 -(NSNumber *)numberForPlot:(CPTPlot *)plot field:(NSUInteger)fieldEnum recordIndex:(NSUInteger)index
 {
-    NSString *plot_name = plot.identifier;
-    TimeSeries *currentData = [self.data objectForKey:plot_name];
+    TimeSeries *currentData = [self.data objectForKey:plot.identifier];
     
     if (fieldEnum == CPTScatterPlotFieldX) {
         NSTimeInterval x = [[[currentData time] objectAtIndex:index] timeIntervalSinceDate:self.earliestTime];
@@ -260,8 +259,7 @@
 
 -(NSUInteger)numberOfRecordsForPlot:(CPTPlot *)plot
 {
-    NSString *plot_name = plot.identifier;
-    TimeSeries *currentData = [self.data objectForKey:plot_name];
+    TimeSeries *currentData = [self.data objectForKey:plot.identifier];
     return [[currentData data] count];
 }
 
