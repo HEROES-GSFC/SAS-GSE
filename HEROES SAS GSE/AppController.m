@@ -209,32 +209,32 @@
     formatter.minimum = 75;
     
     formatter = [self.SAS1V2p5Voltage formatter];
-    formatter.maximum = 2.5 * 1.20;
-    formatter.minimum = 2.5 * 0.80;
+    formatter.maximum = 2.5 * 1.10;
+    formatter.minimum = 2.5 * 0.90;
     formatter = [self.SAS2V2p5Voltage formatter];
-    formatter.maximum = 2.5 * 1.20;
-    formatter.minimum = 2.5 * 0.80;
+    formatter.maximum = 2.5 * 1.10;
+    formatter.minimum = 2.5 * 0.90;
     
     formatter = [self.SAS1V3p3Voltage formatter];
-    formatter.maximum = 3.3 * 1.20;
-    formatter.minimum = 3.3 * 0.80;
+    formatter.maximum = 3.3 * 1.10;
+    formatter.minimum = 3.3 * 0.90;
     formatter = [self.SAS2V3p3Voltage formatter];
-    formatter.maximum = 3.3 * 1.20;
-    formatter.minimum = 3.3 * 0.80;
+    formatter.maximum = 3.3 * 1.10;
+    formatter.minimum = 3.3 * 0.90;
     
     formatter = [self.SAS1V5Votlage formatter];
-    formatter.maximum = 5.0 * 1.20;
-    formatter.minimum = 5.0 * 0.80;
+    formatter.maximum = 5.0 * 1.10;
+    formatter.minimum = 5.0 * 0.90;
     formatter = [self.SAS2V5Votlage formatter];
-    formatter.maximum = 5.0 * 1.20;
-    formatter.minimum = 5.0 * 0.80;
+    formatter.maximum = 5.0 * 1.10;
+    formatter.minimum = 5.0 * 0.90;
     
     formatter = [self.SAS1V12Voltage formatter];
-    formatter.maximum = 12.0 * 1.20;
-    formatter.minimum = 12.0 * 0.80;
+    formatter.maximum = 12.0 * 1.10;
+    formatter.minimum = 12.0 * 0.90;
     formatter = [self.SAS2V12Voltage formatter];
-    formatter.maximum = 12.0 * 1.20;
-    formatter.minimum = 12.0 * 0.80;
+    formatter.maximum = 12.0 * 1.10;
+    formatter.minimum = 12.0 * 0.90;
     
     for (NSString *title in self.PlotWindowsAvailable) {
             [self.TimeProfileMenu addItemWithTitle:title action:NULL keyEquivalent:@""];

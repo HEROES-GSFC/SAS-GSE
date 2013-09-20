@@ -3789,7 +3789,6 @@
 											<string key="NSFrame">{{59, 22}, {56, 22}}</string>
 											<reference key="NSSuperview" ref="348958171"/>
 											<reference key="NSWindow"/>
-											<reference key="NSNextKeyView"/>
 											<string key="NSReuseIdentifierKey">_NS:1535</string>
 											<string key="NSAntiCompressionPriority">{1000, 750}</string>
 											<bool key="NSEnabled">YES</bool>
@@ -4363,7 +4362,6 @@
 											<string key="NSFrame">{{241, 38}, {51, 17}}</string>
 											<reference key="NSSuperview" ref="597301802"/>
 											<reference key="NSWindow"/>
-											<reference key="NSNextKeyView"/>
 											<string key="NSReuseIdentifierKey">_NS:1535</string>
 											<bool key="NSEnabled">YES</bool>
 											<object class="NSTextFieldCell" key="NSCell" id="571283357">
@@ -18443,6 +18441,14 @@
 				<boolean value="NO" key="3811.IBNSViewMetadataTranslatesAutoresizingMaskIntoConstraints"/>
 				<string key="3811.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="3812.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<object class="NSMutableDictionary" key="3818.IBAttributePlaceholdersKey">
+					<string key="NS.key.0">ToolTip</string>
+					<object class="IBToolTipAttribute" key="NS.object.0">
+						<string key="name">ToolTip</string>
+						<reference key="object" ref="380564239"/>
+						<string key="toolTip">Green if clock sync is better than 1 ms</string>
+					</object>
+				</object>
 				<array key="3818.IBNSViewMetadataConstraints">
 					<reference ref="720788041"/>
 				</array>
@@ -18451,6 +18457,14 @@
 				<string key="3819.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="3820.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="3824.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<object class="NSMutableDictionary" key="3825.IBAttributePlaceholdersKey">
+					<string key="NS.key.0">ToolTip</string>
+					<object class="IBToolTipAttribute" key="NS.object.0">
+						<string key="name">ToolTip</string>
+						<reference key="object" ref="680158834"/>
+						<string key="toolTip">Green if clock sync is better than 1 ms</string>
+					</object>
+				</object>
 				<array key="3825.IBNSViewMetadataConstraints">
 					<reference ref="537944503"/>
 				</array>
@@ -18520,6 +18534,14 @@
 				<string key="4001.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="401.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="402.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<object class="NSMutableDictionary" key="4024.IBAttributePlaceholdersKey">
+					<string key="NS.key.0">ToolTip</string>
+					<object class="IBToolTipAttribute" key="NS.object.0">
+						<string key="name">ToolTip</string>
+						<reference key="object" ref="1042693307"/>
+						<string key="toolTip">Green if receiving packets</string>
+					</object>
+				</object>
 				<boolean value="NO" key="4024.IBNSViewMetadataTranslatesAutoresizingMaskIntoConstraints"/>
 				<string key="4024.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="403.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -18529,10 +18551,26 @@
 				<string key="406.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="4064.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="4065.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<object class="NSMutableDictionary" key="4066.IBAttributePlaceholdersKey">
+					<string key="NS.key.0">ToolTip</string>
+					<object class="IBToolTipAttribute" key="NS.object.0">
+						<string key="name">ToolTip</string>
+						<reference key="object" ref="286082159"/>
+						<string key="toolTip">Green if receiving packets</string>
+					</object>
+				</object>
 				<boolean value="NO" key="4066.IBNSViewMetadataTranslatesAutoresizingMaskIntoConstraints"/>
 				<string key="4066.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="407.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="408.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<object class="NSMutableDictionary" key="4082.IBAttributePlaceholdersKey">
+					<string key="NS.key.0">ToolTip</string>
+					<object class="IBToolTipAttribute" key="NS.object.0">
+						<string key="name">ToolTip</string>
+						<reference key="object" ref="1040744193"/>
+						<string key="toolTip">Green if temperature is not 0</string>
+					</object>
+				</object>
 				<boolean value="NO" key="4082.IBNSViewMetadataTranslatesAutoresizingMaskIntoConstraints"/>
 				<string key="4082.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="4087.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -18540,6 +18578,14 @@
 				<string key="4089.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="409.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="4090.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<object class="NSMutableDictionary" key="4091.IBAttributePlaceholdersKey">
+					<string key="NS.key.0">ToolTip</string>
+					<object class="IBToolTipAttribute" key="NS.object.0">
+						<string key="name">ToolTip</string>
+						<reference key="object" ref="947245186"/>
+						<string key="toolTip">Green if temperature is not 0</string>
+					</object>
+				</object>
 				<boolean value="NO" key="4091.IBNSViewMetadataTranslatesAutoresizingMaskIntoConstraints"/>
 				<string key="4091.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="4096.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -18547,6 +18593,14 @@
 				<string key="4098.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="410.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="4100.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<object class="NSMutableDictionary" key="4101.IBAttributePlaceholdersKey">
+					<string key="NS.key.0">ToolTip</string>
+					<object class="IBToolTipAttribute" key="NS.object.0">
+						<string key="name">ToolTip</string>
+						<reference key="object" ref="1057310045"/>
+						<string key="toolTip">Green if temperature is not 0</string>
+					</object>
+				</object>
 				<boolean value="NO" key="4101.IBNSViewMetadataTranslatesAutoresizingMaskIntoConstraints"/>
 				<string key="4101.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="4106.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>

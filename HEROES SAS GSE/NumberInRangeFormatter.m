@@ -52,7 +52,7 @@
     NSInteger stringLength = [string length];
     
     NSDictionary *firstAttributes = @{
-                                      NSBackgroundColorAttributeName: [NSColor whiteColor], NSForegroundColorAttributeName: [NSColor blackColor]};
+                                      NSBackgroundColorAttributeName: [NSColor whiteColor]};
     [attrString addAttributes:firstAttributes range:NSMakeRange(0, stringLength)];
     
     if ([[attrString string] floatValue] < self.minimum)
